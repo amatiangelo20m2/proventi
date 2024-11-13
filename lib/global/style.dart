@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import '../api/restaurant_client/lib/api.dart';
 import '../app/core/booking/crud_widget/create_booking_lista_attesa.dart';
 
-var globalBlue = Color(0xFF38b6FF);
+var globalGold = Color(0xFFD4B26A);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 

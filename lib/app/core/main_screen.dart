@@ -136,10 +136,7 @@ class _MainScreenState extends State<MainScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SvgPicture.asset(
-                  'assets/svg/logo_20_black.svg',
-                  width: 70,
-                ),
+                Image.asset( 'assets/images/20whitenb.png', fit: BoxFit.contain, height: 50,),
                 FloatingActionButton(
                   mini: true,
                   heroTag: "btn1",

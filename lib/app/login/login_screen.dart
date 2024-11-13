@@ -94,17 +94,17 @@ class _LoginPageState extends State<LoginPage> {
         builder:
             (BuildContext context, RestaurantStateManager value, Widget? child) {
           return CupertinoPageScaffold(
-
+            backgroundColor: Colors.black,
             child: Stack(
               children: [
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 5),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('assets/images/logo.png', width: 60),
+                          Image.asset('assets/images/logo.png', width: 190),
                           const SizedBox(height: 16),
                           CupertinoTextField(
                             clearButtonMode: OverlayVisibilityMode.always,
@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 16),
                           CupertinoTextField(
                             controller: _usernameController,
                             placeholder: 'Username',
@@ -136,7 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 32),
                           CupertinoButton(
-                            color: globalBlue,
+
+                            color: globalGold,
                             onPressed: _isLoading ? null : _login,
                             child: const Text('Login'),
                           ),

@@ -98,7 +98,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
       msg: 'Presenze data $_selectedDate',
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: globalBlue,
+      backgroundColor: globalGold,
       textColor: Colors.white,
       fontSize: 12.0,
     );

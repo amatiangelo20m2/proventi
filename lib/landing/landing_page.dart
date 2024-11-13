@@ -50,11 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              color: Colors.blueGrey,
-              'assets/images/20_white.svg',
-              height: 123,
-            ),
+            Image.asset('assets/images/logo.png', width: 190),
 
             const SizedBox(height: 20),
             const CupertinoActivityIndicator(color: Colors.white,)
