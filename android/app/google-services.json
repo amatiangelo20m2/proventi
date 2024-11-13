@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "449304101324",
+    "project_id": "proventi-80a7c",
+    "storage_bucket": "proventi-80a7c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449304101324:android:79b78cfd7ee70d0ea11d69",
+        "android_client_info": {
+          "package_name": "com.proventi.app.proventi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC78kH8qhtx3bmllgy5HXtUWRZLfV8pSv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
