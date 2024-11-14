@@ -90,6 +90,7 @@ class Pro20 extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NotificationStateManager()),
         ChangeNotifierProvider(create: (context) => EmployeeStateManager()),
         ChangeNotifierProvider(create: (context) => CustomerStateManager()),
+
         ChangeNotifierProvider(create: (context) => CommunicationStateManager()),
       ],
       child: MaterialApp(
