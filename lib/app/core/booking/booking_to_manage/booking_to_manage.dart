@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 
 import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
 import '../booking_confirmed/booking_card.dart';
+import 'booking_to_manage_card.dart';
 
 class BookingManager extends StatefulWidget {
   const BookingManager({super.key});
@@ -20,6 +22,8 @@ class _BookingManagerState extends State<BookingManager> {
     super.initState();
   }
 
+  String queryString = '';
+
   @override
   Widget build(BuildContext context) {
     return Consumer<RestaurantStateManager>(
@@ -30,20 +34,41 @@ class _BookingManagerState extends State<BookingManager> {
               .where((booking) => booking.status == BookingDTOStatusEnum.IN_ATTESA)
               .toList(),
         );
-
         return RefreshIndicator(
           onRefresh: () async {
             await restaurantStateManager.refresh(DateTime.now());
           },
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 160),
-            itemCount: groupedBookings.keys.length,
-            itemBuilder: (context, index) {
-              final date = groupedBookings.keys.elementAt(index);
-              final bookings = groupedBookings[date]!;
+          child: Column(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 2, bottom: 3),
+                  child: CupertinoTextField(
+                    onChanged: (newQuery){
+                      setState(() {
+                        queryString = newQuery;
+                      });
+                    },
+                    clearButtonMode: OverlayVisibilityMode.always,
+                    placeholder: 'Ricerca per nome cliente',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 160),
+                  itemCount: groupedBookings.keys.length,
+                  itemBuilder: (context, index) {
+                    final date = groupedBookings.keys.elementAt(index);
+                    final bookings = groupedBookings[date]!;
 
-              return _buildDateGroup(date, bookings, restaurantStateManager);
-            },
+                    return _buildDateGroup(date, bookings, restaurantStateManager);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -72,28 +97,33 @@ class _BookingManagerState extends State<BookingManager> {
   }
 
   Widget _buildDateGroup(DateTime date, List<BookingDTO> bookings, RestaurantStateManager restaurantStateManager) {
-    return Container(
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Prenotazioni di ${italianDateFormat.format(date)}'.toUpperCase(),
-              style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                'Prenotazioni in attesa di conferma di ${italianDateFormat.format(date)}'.toUpperCase(),
+                style: TextStyle(
+                    fontSize: 13,
+                    color: globalGoldDark,
+                    fontWeight: FontWeight.bold),
+              ),
+
+            ],
           ),
-          ...bookings.map((booking) {
-            return ReservationCard(
-              booking: booking,
-              formDTOs: restaurantStateManager.currentBranchForms!,
-            );
-          }).toList(),
-        ],
-      ),
+        ),
+        ...bookings.where((element) => element.customer!.firstName
+        !.toLowerCase().contains(queryString.toLowerCase())).map((booking) {
+          return BookingToManageCard(
+            booking: booking,
+            formDTOs: restaurantStateManager.currentBranchForms!,
+          );
+        }).toList(),
+      ],
     );
   }
 }

@@ -47,27 +47,19 @@ class RestaurantStateManager extends ChangeNotifier {
     _formControllerApi = FormControllerApi(_restaurantClient);
   }
 
-  Future<void> setCurrentEmployee(EmployeeDTO employee, DateTime dateTime) async {
+  Future<void> setDataEmployeeAndRetrieveData(EmployeeDTO employee, DateTime dateTime) async {
     _currentEmployee = employee;
     final prefs = await SharedPreferences.getInstance();
-
-    // Save a String value
     await prefs.setString('branchCode', _currentEmployee!.branchCode!);
 
-    _restaurantConfiguration = await _restaurantControllerApi.retrieveConfiguration(_currentEmployee!.branchCode!);
+    _restaurantConfiguration = await _restaurantControllerApi.retrieveConfiguration(_currentEmployee!.branchCode!,'XXX');
     _currentBranchForms = await _formControllerApi.retrieveByBranchCode(_currentEmployee!.branchCode!);
+
     selectBookingForCurrentDay(dateTime);
     fetchAllBookings();
     notifyListeners();
-  }
 
-  Future<void> refresh(DateTime currentDateTime) async {
 
-    _restaurantConfiguration = await _restaurantControllerApi.retrieveConfiguration(_currentEmployee!.branchCode!);
-    _currentBranchForms = await _formControllerApi.retrieveByBranchCode(_currentEmployee!.branchCode!);
-    selectBookingForCurrentDay(currentDateTime);
-    fetchAllBookings();
-    notifyListeners();
   }
 
   List<BookingDTO>? get currentBookings {
@@ -78,7 +70,7 @@ class RestaurantStateManager extends ChangeNotifier {
     // Make the API call to update the booking
 
     BookingDTO? bookingDTOUpdated = await _bookingControllerApi.updateBooking(bookingDTO);
-    refresh(DateTime.now());
+    setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
   }
 
 
@@ -103,35 +95,7 @@ class RestaurantStateManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createBooking() async {
-
-    BookingDTO? bookingDTO = await _bookingControllerApi.create(BookingDTO(
-        bookingId: 123,
-        formCode: '',
-        branchCode: currentEmployee!.branchCode!,
-        bookingCode: '',
-        bookingDate: DateTime.now(),
-        timeSlot: TimeSlot(
-          bookingHour: DateTime.now().hour,
-          bookingMinutes: DateTime.now().minute + 1,
-        ),
-        numGuests: 4,
-        status: BookingDTOStatusEnum.LISTA_ATTESA,
-        specialRequests: "Please prepare a high chair.",
-        customer: CustomerDTO(
-            firstName: 'Angelo',
-            lastName: 'Amati',
-            phone: '3454937047',
-            prefix: '39',
-            email: 'amati.angelo90@gmail.com'
-        ),
-        createdAt: DateTime.now(),
-        timeWaitingFastQueueMinutes: 1,
-        bookingSource: BookingDTOBookingSourceEnum.WEB,
-        comingWithDogs: false
-    ));
-
-    refresh(DateTime.now());
-
+  refresh(DateTime dateTime) {
+    setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
   }
 }

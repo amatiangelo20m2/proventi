@@ -8,3 +8,4 @@ String customBasePath = '${host}:8088/ventimetriservice';
 String customBasePathEventi = '${host}:8088/eventiservice';
 String customBasePathNotification = '${host}:8088/notificationservice';
 String customBasePathRestaurant = '${host}:8088/restaurantservice';
+String customBasePathCommunication = '${host}:8088/communicationservice';

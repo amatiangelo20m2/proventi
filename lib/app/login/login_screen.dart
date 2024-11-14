@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
         builder:
             (BuildContext context, RestaurantStateManager value, Widget? child) {
           return CupertinoPageScaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.grey[900],
             child: Stack(
               children: [
                 Center(
@@ -189,14 +189,16 @@ class _LoginPageState extends State<LoginPage> {
           mdd);
 
       if (response.statusCode == 202) {
-        showCupertinoAlert(context, 'Info', 'bravo');
+        showCupertinoAlert(context, 'Info', 'Accesso eseguito!');
 
         if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+
           EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
               .restaurantClient
               .deserializeAsync(await _decodeBodyBytes(response), 'EmployeeDTO') as EmployeeDTO;
 
-          await Provider.of<RestaurantStateManager>(context, listen: false).setCurrentEmployee(employeeDTO, DateTime.now());
+          await Provider.of<RestaurantStateManager>(context, listen: false)
+              .setDataEmployeeAndRetrieveData(employeeDTO, DateTime.now());
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const MainScreen()),
           );

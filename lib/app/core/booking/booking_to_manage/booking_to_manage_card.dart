@@ -12,11 +12,11 @@ import 'package:badges/badges.dart' as badges;
 
 import '../../whatsapp/chat_whatsapp.dart';
 
-class ReservationCard extends StatelessWidget {
+class BookingToManageCard extends StatelessWidget {
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
 
-  const ReservationCard({required this.booking,
+  const BookingToManageCard({required this.booking,
     required this.formDTOs});
 
   @override
@@ -27,9 +27,7 @@ class ReservationCard extends StatelessWidget {
           case BookingDTOStatusEnum.IN_ATTESA:
             _showBookingActionMenuListaAttesta(context, booking);
             break;
-          case BookingDTOStatusEnum.CONFERMATO:
-            _showBookingActionMenuConfermato(context, booking);
-            break;
+
           case BookingDTOStatusEnum.RIFIUTATO:
             _showBookingActionMenuRifiutato(context, booking);
             break;
@@ -312,7 +310,17 @@ class ReservationCard extends StatelessWidget {
           ],
         ),
         actions: [
-
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Provider.of<RestaurantStateManager>(context, listen: false)
+                  .updateBooking(BookingDTO(
+                bookingCode: booking.bookingCode,
+                status: BookingDTOStatusEnum.CONFERMATO
+              ));
+              Navigator.pop(context, null);
+            },
+            child: const Text('Conferma prenotazione'),
+          ),
 
           CupertinoActionSheetAction(
             onPressed: () {
@@ -350,79 +358,7 @@ class ReservationCard extends StatelessWidget {
       ),
     );
   }
-  void _showBookingActionMenuConfermato(BuildContext context, BookingDTO booking) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
-                  Text(booking.customer!.phone!),
-                  Text(booking.customer!.email!),
-                  Text(booking.formCode!),
-                  Text('Stato:' + booking.status!.value),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: IconButton(onPressed: () {
-              }, icon: Icon(CupertinoIcons.phone)),
-            ),
-          ],
-        ),
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                status: BookingDTOStatusEnum.ARRIVATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: const Text('Arrivato'),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  status: BookingDTOStatusEnum.NON_ARRIVATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: const Text('Non arrivato'),
-          ),
 
-
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                bookingId: booking.bookingId,
-                status: BookingDTOStatusEnum.ELIMINATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: Text('Elimina'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          isDefaultAction: true,
-          child: const Text('Indietro'),
-        ),
-      ),
-    );
-  }
   void _showBookingActionMenuRifiutato(BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,

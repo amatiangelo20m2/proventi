@@ -30,6 +30,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
             padding: const EdgeInsets.all(8.0),
             child: CupertinoTextField(
               placeholder: 'Ricerca clienti...',
+              style: TextStyle(fontSize: 12),
               onChanged: (value) {
                 setState(() {
                   searchQuery = value;

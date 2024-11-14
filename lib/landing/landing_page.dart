@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:proventi/global/style.dart';
 import '../app/login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,15 +46,15 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey[900],
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo.png', width: 190),
+            Image.asset('assets/images/logo.png', width: MediaQuery.of(context).size.height/2),
 
             const SizedBox(height: 20),
-            const CupertinoActivityIndicator(color: Colors.white,)
+            CupertinoActivityIndicator(color: globalGold, radius: 25,)
           ],
         ),
       ),

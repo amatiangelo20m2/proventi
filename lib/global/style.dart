@@ -8,6 +8,7 @@ import '../api/restaurant_client/lib/api.dart';
 import '../app/core/booking/crud_widget/create_booking_lista_attesa.dart';
 
 var globalGold = Color(0xFFD4B26A);
+var globalGoldDark = Color(0xFFae801f);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 
@@ -46,11 +47,11 @@ Color getStatusColor(BookingDTOStatusEnum statusEnum) {
     case BookingDTOStatusEnum.CONFERMATO:
       return CupertinoColors.activeGreen;
     case BookingDTOStatusEnum.IN_ATTESA:
-      return Colors.deepOrangeAccent;
+      return globalGold;
     case BookingDTOStatusEnum.RIFIUTATO:
       return CupertinoColors.destructiveRed;
     case BookingDTOStatusEnum.ARRIVATO:
-      return CupertinoColors.activeBlue;
+      return CupertinoColors.link;
     case BookingDTOStatusEnum.NON_ARRIVATO:
       return Colors.blueGrey;
     case BookingDTOStatusEnum.LISTA_ATTESA:
@@ -93,5 +94,17 @@ getFormEmoji(List<FormDTO> formDTOs, BookingDTO booking) {
     }else {
       return formDTOs.where((element) => element.formCode == booking.formCode).first.outputNameForCustomer;
     }
+  }
+}
+getSourceEmoji(BookingDTOBookingSourceEnum source) {
+  switch(source){
+    case BookingDTOBookingSourceEnum.APP:
+      return '';
+    case BookingDTOBookingSourceEnum.APP_CUSTOMER:
+      return '';
+    case BookingDTOBookingSourceEnum.WEB:
+      return '';
+    default:
+      return '';
   }
 }

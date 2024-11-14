@@ -12,98 +12,15 @@ import 'package:badges/badges.dart' as badges;
 
 import '../../whatsapp/chat_whatsapp.dart';
 
-class ReservationCard extends StatelessWidget {
+class ProcessedBookingCard extends StatelessWidget {
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
 
-  const ReservationCard({required this.booking,
+  const ProcessedBookingCard({required this.booking,
     required this.formDTOs});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        switch(booking.status){
-          case BookingDTOStatusEnum.IN_ATTESA:
-            _showBookingActionMenuListaAttesta(context, booking);
-            break;
-          case BookingDTOStatusEnum.CONFERMATO:
-            _showBookingActionMenuConfermato(context, booking);
-            break;
-          case BookingDTOStatusEnum.RIFIUTATO:
-            _showBookingActionMenuRifiutato(context, booking);
-            break;
-        }
-
-      },
-      child: Dismissible(
-        key: Key(booking.bookingCode.toString()),
-        confirmDismiss: (direction) async {
-          // Show the confirmation dialog based on the swipe direction
-          if (direction == DismissDirection.endToStart) {
-            // Asking confirmation for cancellation
-            bool? result = await _showConfirmationDialog(context, 'Conferma arrivo di ${booking.customer!.firstName!}?', 'Si', 'No' );
-
-            if (result == true) {
-              return await _setAsArrivedReservation(context);
-            }
-          } else if (direction == DismissDirection.startToEnd) {
-            // Asking confirmation for confirmation
-            bool? result = await _showConfirmationDialog(context, '${booking.customer!.firstName!} non è arrivato?', 'Si', 'No');
-
-            if (result == true) {
-              return await _refuseReservation(context);
-            }
-          }
-          return false;
-        },
-        background: _buildSwipeBackground(
-          alignment: Alignment.centerLeft,
-          color: CupertinoColors.destructiveRed,
-          icon: CupertinoIcons.clear_circled,
-        ),
-        secondaryBackground: _buildSwipeBackground(
-          alignment: Alignment.centerRight,
-          color: CupertinoColors.activeGreen,
-          icon: CupertinoIcons.check_mark_circled,
-        ),
-        child: _buildCardContent(context),
-      ),
-    );
-  }
-
-  Future<bool?> _setAsArrivedReservation(BuildContext context) async {
-
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.ARRIVATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
-    return false;
-  }
-
-  Future<bool?> _refuseReservation(BuildContext context) async {
-    booking.status = BookingDTOStatusEnum.NON_ARRIVATO;
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.NON_ARRIVATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' aggiornata come non arrivata ❌' );
-    return false; // Prevent automatic dismissal
-  }
-
-  void _showSnackbar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  Widget _buildCardContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
       child: Container(
@@ -180,6 +97,37 @@ class ReservationCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool?> _setAsArrivedReservation(BuildContext context) async {
+
+    Provider.of<RestaurantStateManager>(context, listen: false)
+        .updateBooking(BookingDTO(
+        bookingCode: booking.bookingCode,
+        status: BookingDTOStatusEnum.ARRIVATO
+    ));
+    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
+    return false;
+  }
+
+  Future<bool?> _refuseReservation(BuildContext context) async {
+    booking.status = BookingDTOStatusEnum.NON_ARRIVATO;
+    Provider.of<RestaurantStateManager>(context, listen: false)
+        .updateBooking(BookingDTO(
+        bookingCode: booking.bookingCode,
+        status: BookingDTOStatusEnum.NON_ARRIVATO
+    ));
+    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' aggiornata come non arrivata ❌' );
+    return false; // Prevent automatic dismissal
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Row _buildCustomerInfo() {
@@ -331,9 +279,9 @@ class ReservationCard extends StatelessWidget {
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                bookingId: booking.bookingId,
-                status: BookingDTOStatusEnum.ELIMINATO
+                  bookingCode: booking.bookingCode,
+                  bookingId: booking.bookingId,
+                  status: BookingDTOStatusEnum.ELIMINATO
               ));
               Navigator.pop(context, null);
             },
@@ -380,8 +328,8 @@ class ReservationCard extends StatelessWidget {
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                status: BookingDTOStatusEnum.ARRIVATO
+                  bookingCode: booking.bookingCode,
+                  status: BookingDTOStatusEnum.ARRIVATO
               ));
               Navigator.pop(context, null);
             },
@@ -404,9 +352,9 @@ class ReservationCard extends StatelessWidget {
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                bookingId: booking.bookingId,
-                status: BookingDTOStatusEnum.ELIMINATO
+                  bookingCode: booking.bookingCode,
+                  bookingId: booking.bookingId,
+                  status: BookingDTOStatusEnum.ELIMINATO
               ));
               Navigator.pop(context, null);
             },

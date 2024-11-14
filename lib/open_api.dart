@@ -15,4 +15,12 @@ class OpenApi extends OpenapiGeneratorConfig {}
     generatorName: Generator.dart,
     outputDirectory: 'lib/api/restaurant_client')
 class OpenApiRestaurantClient extends OpenapiGeneratorConfig {}
+
+@Openapi(
+    additionalProperties:
+    AdditionalProperties(pubName: 'ventimetri_api_communication', pubAuthor: 'Angelo Amati'),
+    inputSpecFile: 'lib/json/communication_service.yaml',
+    generatorName: Generator.dart,
+    outputDirectory: 'lib/api/communication_client')
+class OpenApiCommunicationClient extends OpenapiGeneratorConfig {}
 ///flutter pub run build_runner build --delete-conflicting-outputs lancia questo comando per generare il codice client per il servizio

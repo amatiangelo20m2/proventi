@@ -42,11 +42,11 @@ class EmployeeStateManager with ChangeNotifier {
     print('Current branch code (for restaurant configuration purposes): ' + prefs.getString('branch_code').toString());
     print('User code (for notification purposes): ' + prefs.getString('user_code').toString());
 
-    branchCode = prefs.getString('branch_code').toString();
+    branchCode = prefs.getString('branchCode').toString();
     userCode = prefs.getString('user_code').toString();
     branchName = prefs.getString('branch_name').toString();
 
-    RestaurantDTO? restaurantDTO = await _restaurantControllerApi.retrieveConfiguration(branchCode);
+    RestaurantDTO? restaurantDTO = await _restaurantControllerApi.retrieveConfiguration(branchCode,'XXX');
 
     print('Restaurant conf found: ' + restaurantDTO.toString());
     currentEmployeeList = [];

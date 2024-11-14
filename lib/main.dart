@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -89,6 +90,7 @@ class Pro20 extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NotificationStateManager()),
         ChangeNotifierProvider(create: (context) => EmployeeStateManager()),
         ChangeNotifierProvider(create: (context) => CustomerStateManager()),
+        ChangeNotifierProvider(create: (context) => CommunicationStateManager()),
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey, // Make sure to add the navigator key here
@@ -106,7 +108,7 @@ class Pro20 extends StatelessWidget {
         title: 'Pro20',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
           useMaterial3: true,
           fontFamily: 'Helvetica',
 

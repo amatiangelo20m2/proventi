@@ -42,7 +42,6 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
             itemBuilder: (context, index) {
               final date = groupedBookings.keys.elementAt(index);
               final bookings = groupedBookings[date]!;
-
               return _buildDateGroup(date, bookings, restaurantStateManager);
             },
           ),

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../../../global/style.dart';
@@ -20,6 +22,8 @@ class _FastQueueState extends State<FastQueue> {
     super.initState();
   }
 
+  String queryString = '';
+
   @override
   Widget build(BuildContext context) {
     return Consumer<RestaurantStateManager>(
@@ -27,7 +31,8 @@ class _FastQueueState extends State<FastQueue> {
         // Filter and group bookings by date
         final Map<DateTime, List<BookingDTO>> groupedBookings = _groupBookingsByDate(
           restaurantStateManager.allBookings!
-              .where((booking) => booking.status == BookingDTOStatusEnum.LISTA_ATTESA)
+              .where((booking) => booking.status == BookingDTOStatusEnum.LISTA_ATTESA
+              && (booking.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase().toString()) || booking.customer!.lastName!.toLowerCase().contains(queryString.toLowerCase().toString())))
               .toList(),
         );
 
@@ -36,20 +41,42 @@ class _FastQueueState extends State<FastQueue> {
             await restaurantStateManager.refresh(DateTime.now());
           },
           child: Stack(children: [
-            ListView.builder(
-              padding: const EdgeInsets.only(bottom: 160),
-              itemCount: groupedBookings.keys.length,
-              itemBuilder: (context, index) {
-                final date = groupedBookings.keys.elementAt(index);
-                final bookings = groupedBookings[date]!;
+            Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 2, bottom: 3),
+                    child: CupertinoTextField(
+                      onChanged: (newQuery){
+                        setState(() {
+                          queryString = newQuery;
+                        });
+                      },
+                      clearButtonMode: OverlayVisibilityMode.always,
+                      placeholder: 'Ricerca per nome cliente',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 160),
+                    itemCount: groupedBookings.keys.length,
+                    itemBuilder: (context, index) {
+                      final date = groupedBookings.keys.elementAt(index);
+                      final bookings = groupedBookings[date]!;
 
-                return _buildDateGroup(date, bookings, restaurantStateManager);
-              },
+                      return _buildDateGroup(date, bookings, restaurantStateManager);
+                    },
+                  ),
+                ),
+              ],
             ),
             Positioned(right: 0, bottom: 0, child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: FloatingActionButton(
-                backgroundColor: getStatusColor(BookingDTOStatusEnum.LISTA_ATTESA),
+                backgroundColor: globalGold,
                 onPressed: () {
                   showFormBottomSheet(context, BookingDTOStatusEnum.LISTA_ATTESA);
                 },
@@ -91,9 +118,10 @@ class _FastQueueState extends State<FastQueue> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Lista di Attesa di ${italianDateFormat.format(date)}'.toUpperCase(),
-              style: const TextStyle(
+              'Prelazione su fila di ${italianDateFormat.format(date)}'.toUpperCase(),
+              style: TextStyle(
                   fontSize: 13,
+                  color: globalGoldDark,
                   fontWeight: FontWeight.bold),
             ),
           ),
@@ -108,12 +136,14 @@ class _FastQueueState extends State<FastQueue> {
   }
 
   void showFormBottomSheet(BuildContext context, BookingDTOStatusEnum bookingStatus) {
-    showModalBottomSheet(
-        elevation: 10,
-        backgroundColor: getStatusColor(bookingStatus).withOpacity(0.2),
-        context: context,
-        isScrollControlled: true, // Allows modal to adjust to keyboard
-        builder: (context) => CreateBookingListAttesa()
+
+    showCupertinoModalBottomSheet(
+      expand: true,
+      elevation: 10,
+      context: context,
+      builder: (BuildContext context) {
+        return CreateBookingListAttesa();
+      },
     );
   }
 }

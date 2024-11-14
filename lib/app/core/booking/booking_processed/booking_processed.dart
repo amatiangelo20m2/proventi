@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-
 import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
-import '../booking_confirmed/booking_card.dart';
+import 'booking_processed_card.dart';
 
 class ProcessedBookings extends StatefulWidget {
   const ProcessedBookings({super.key});
@@ -81,13 +80,14 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Prenotazioni processate di ${italianDateFormat.format(date)}'.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 10,
+                  color: globalGoldDark,
                   fontWeight: FontWeight.bold),
             ),
           ),
           ...bookings.map((booking) {
-            return ReservationCard(
+            return ProcessedBookingCard(
               booking: booking,
               formDTOs: restaurantStateManager.currentBranchForms!,
             );
