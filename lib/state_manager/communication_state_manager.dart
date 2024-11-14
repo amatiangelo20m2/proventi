@@ -1,3 +1,4 @@
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,18 +51,35 @@ class CommunicationStateManager extends ChangeNotifier {
     return chatDataSet;
   }
 
+
+
+  Future<void> sendWhatsAppMessage(String message, String number, ChatMessage chatMessage) async {
+    final prefs = await SharedPreferences.getInstance();
+    String branchCode = prefs.getString('branchCode').toString();
+    await whatsAppConfigurationControllerApi.sendMessage(branchCode, message, number);
+
+    messages.add(chatMessage);
+    notifyListeners();
+
+
+  }
+
+  List<ChatMessage> messages = [];
+
   Future<ChatMessagesResponseDTO?> retrieveChatSpecificWithUserData(String customerNumber) async {
+
     final prefs = await SharedPreferences.getInstance();
     String branchCode = prefs.getString('branchCode').toString();
 
     ChatMessagesResponseDTO? chatMessageResponseDTO = await whatsAppConfigurationControllerApi.fetchMessages(branchCode,customerNumber, '20', false);
+
+
     return chatMessageResponseDTO;
   }
 
-  Future<void> sendWhatsAppMessage(String message, String number) async {
-    final prefs = await SharedPreferences.getInstance();
-    String branchCode = prefs.getString('branchCode').toString();
-    await whatsAppConfigurationControllerApi.sendMessage(branchCode, message, number);
+  void setCurrentMessages(List<ChatMessage> mapMessages) {
+    messages = mapMessages;
+    notifyListeners();
 
   }
 

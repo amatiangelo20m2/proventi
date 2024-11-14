@@ -1,8 +1,9 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import provider
-import 'package:proventi/api/restaurant_client/lib/api.dart'; // Make sure the import is correct
+import 'package:proventi/global/style.dart';
+import 'package:provider/provider.dart';
+import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../../api/communication_client/lib/api.dart';
 import '../../../state_manager/communication_state_manager.dart';
 
@@ -26,8 +27,6 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
 
   // Define the other user (User 2)
   late ChatUser user2;
-
-  List<ChatMessage> messages = [];
 
   @override
   void initState() {
@@ -55,7 +54,7 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
       ),
       body: Consumer<CommunicationStateManager>(
         builder: (context, communicationStateManager, child) {
-          // Trigger the API call to retrieve chat messages
+
           Future<ChatMessagesResponseDTO?> chatMessagesFuture =
           communicationStateManager.retrieveChatSpecificWithUserData(
               widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!);
@@ -71,24 +70,30 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (snapshot.hasData) {
                 // Map the data to ChatMessages and show it in DashChat widget
-                List<ChatMessage> mappedMessages = mapMessages(snapshot.data!.data.toList().reversed.toList());
+                communicationStateManager.setCurrentMessages(
+                    mapMessages(snapshot.data!.data.toList().reversed.toList()));
 
                 return Container(
                   color: Colors.grey[900],
-                  child: RefreshIndicator(
-
-                    onRefresh: () async {
-                      setState(() {
-
-                      });
-                    },
-                    child: DashChat(
-                      currentUser: user1,
-                      onSend: (ChatMessage message) {
-                        communicationStateManager.sendWhatsAppMessage(message.text, user2.id.replaceAll('@c.us', ''));
-                      },
-                      messages: mappedMessages.reversed.toList(),
+                  child: DashChat(
+                    messageOptions: MessageOptions(
+                      currentUserContainerColor: globalGoldDark,
+                      containerColor: Colors.grey[300]!, // Other users' message background color
+                      currentUserTextColor: Colors.white, // Sender's message text color
+                      textColor: Colors.black, // Other users' message text color
                     ),
+                    currentUser: user1,
+                    onSend: (ChatMessage message) {
+                      communicationStateManager.sendWhatsAppMessage(
+                          message.text,
+                          user2.id.replaceAll('@c.us', ''),
+                        ChatMessage(
+                          text: message.text,
+                          user: message.user,
+                          createdAt: DateTime.now(),
+                        ),);
+                    },
+                    messages: communicationStateManager.messages.reversed.toList(),
                   ),
                 );
               } else {
@@ -119,16 +124,5 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
     });
 
     return list;
-  }
-
-  // Function to add a message to the chat (if needed)
-  void addMessage(ChatMessage message) {
-    setState(() {
-      messages.add(ChatMessage(
-        text: message.text,
-        user: message.user,
-        createdAt: DateTime.now(),
-      ));
-    });
   }
 }
