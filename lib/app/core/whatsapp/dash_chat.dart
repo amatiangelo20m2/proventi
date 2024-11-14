@@ -17,7 +17,6 @@ class DashChatCustomized20 extends StatefulWidget {
 }
 
 class _DashChatCustomized20State extends State<DashChatCustomized20> {
-
   // Define the current user (User 1)
   ChatUser user1 = ChatUser(
     id: '1',
@@ -27,6 +26,10 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
 
   // Define the other user (User 2)
   late ChatUser user2;
+  List<ChatMessage> chatMessages = [];
+  bool isLoading = true;
+  bool hasError = false;
+  String errorMessage = '';
 
   @override
   void initState() {
@@ -38,91 +41,127 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
       firstName: widget.bookingDTO.customer!.firstName!,
       lastName: widget.bookingDTO.customer!.lastName!,
     );
+
+    // Fetch the chat messages when the screen is loaded
+    _loadChatMessages();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  // Fetch chat messages in initState
+  Future<void> _loadChatMessages() async {
+    try {
+      final communicationStateManager = context.read<CommunicationStateManager>();
+      final chatMessagesResponse = await communicationStateManager.retrieveChatSpecificWithUserData(
+        widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!,
+      );
 
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.grey[900],
-        surfaceTintColor: Colors.grey[900],
-        title: Text('${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}',
-          style: TextStyle(fontSize: 15, color: CupertinoColors.white),
-        ),
-      ),
-      body: Consumer<CommunicationStateManager>(
-        builder: (context, communicationStateManager, child) {
-
-          Future<ChatMessagesResponseDTO?> chatMessagesFuture =
-          communicationStateManager.retrieveChatSpecificWithUserData(
-              widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!);
-
-          return FutureBuilder<ChatMessagesResponseDTO?>(
-            future: chatMessagesFuture, // Use the future from the Consumer
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // Show loading spinner while waiting for data
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                // Show error message if there is an error
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (snapshot.hasData) {
-                // Map the data to ChatMessages and show it in DashChat widget
-                communicationStateManager.setCurrentMessages(
-                    mapMessages(snapshot.data!.data.toList().reversed.toList()));
-
-                return Container(
-                  color: Colors.grey[900],
-                  child: DashChat(
-                    messageOptions: MessageOptions(
-                      currentUserContainerColor: globalGoldDark,
-                      containerColor: Colors.grey[300]!, // Other users' message background color
-                      currentUserTextColor: Colors.white, // Sender's message text color
-                      textColor: Colors.black, // Other users' message text color
-                    ),
-                    currentUser: user1,
-                    onSend: (ChatMessage message) {
-                      communicationStateManager.sendWhatsAppMessage(
-                          message.text,
-                          user2.id.replaceAll('@c.us', ''),
-                        ChatMessage(
-                          text: message.text,
-                          user: message.user,
-                          createdAt: DateTime.now(),
-                        ),);
-                    },
-                    messages: communicationStateManager.messages.reversed.toList(),
-                  ),
-                );
-              } else {
-                // Show message if no data is returned
-                return Center(child: Text('No messages found.'));
-              }
-            },
-          );
-        },
-      ),
-    );
+      setState(() {
+        if (chatMessagesResponse != null && chatMessagesResponse.data.isNotEmpty) {
+          chatMessages = _mapMessages(chatMessagesResponse.data.toList().reversed.toList());
+          isLoading = false;
+          hasError = false;
+        } else {
+          hasError = true;
+          errorMessage = 'No messages found.';
+          isLoading = false;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        hasError = true;
+        errorMessage = 'Error loading messages: $e';
+      });
+    }
   }
 
   // Map API response data to DashChat's ChatMessage
-  List<ChatMessage> mapMessages(List<MessageDataDTO> messageDataList) {
+  List<ChatMessage> _mapMessages(List<MessageDataDTO> messageDataList) {
     List<ChatMessage> list = [];
     messageDataList.forEach((element) {
       bool isFromUser2 = element.from == user2.id;
 
-      // Add message to the list with appropriate alignment
       list.add(ChatMessage(
         text: element.body ?? '',
-        user: isFromUser2 ? user2 : user1, // Set the user for the message
+        user: isFromUser2 ? user2 : user1,
         createdAt: DateTime.fromMillisecondsSinceEpoch(element.timestamp ?? 0),
         isMarkdown: false, // No markdown, you can enable this if needed
-
       ));
     });
 
     return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CommunicationStateManager>(
+      builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
+        return Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
+            backgroundColor: Colors.grey[900],
+            surfaceTintColor: Colors.grey[900],
+            title: Text(
+              '${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}',
+              style: const TextStyle(fontSize: 15, color: CupertinoColors.white),
+            ),
+            actions: [
+              FutureBuilder<String?>(
+              future: communicationStateManager.whatsAppConfigurationControllerApi.retrieveUserPhoto(widget.bookingDTO.branchCode!, widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!),  // The API call
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show a loading spinner while waiting
+                  return const SizedBox(height: 0,);
+                } else if (snapshot.hasError) {
+                  return const Icon(Icons.error, color: Colors.red);
+                } else if (snapshot.hasData) {
+                  // Display the image in an avatar
+                  String imageUrl = snapshot.data!;
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 20, // Size of the circle
+                      backgroundImage: NetworkImage(imageUrl), // Load the image from the URL
+                      backgroundColor: Colors.transparent, // Optional: Make the background transparent
+                    ),
+                  );
+                } else {
+                  // Handle the case where no data is returned
+                  return const Icon(Icons.error, color: Colors.red);
+                }
+              },
+            ),
+            ],
+          ),
+          body: isLoading
+              ? Center(child: CircularProgressIndicator()) // Loading indicator
+              : hasError
+              ? Center(child: Text(errorMessage)) // Error message
+              : Container(
+            color: Colors.grey[900],
+            child: DashChat(
+              messageOptions: MessageOptions(
+                currentUserContainerColor: globalGoldDark,
+                containerColor: Colors.grey[300]!,
+                currentUserTextColor: Colors.white,
+                textColor: Colors.black,
+              ),
+              currentUser: user1,
+              onSend: (ChatMessage message) {
+                communicationStateManager.sendWhatsAppMessage(
+                  user2.id.replaceAll('@c.us', ''),
+                  ChatMessage(
+                    text: message.text,
+                    user: message.user,
+                    createdAt: DateTime.now(),
+                  ),
+                );
+              },
+              messages: chatMessages.reversed.toList(),
+            ),
+          ),
+        );
+      },
+
+    );
   }
 }

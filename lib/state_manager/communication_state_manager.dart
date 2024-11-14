@@ -53,14 +53,13 @@ class CommunicationStateManager extends ChangeNotifier {
 
 
 
-  Future<void> sendWhatsAppMessage(String message, String number, ChatMessage chatMessage) async {
+  Future<void> sendWhatsAppMessage(String phone, ChatMessage chatMessage) async {
     final prefs = await SharedPreferences.getInstance();
     String branchCode = prefs.getString('branchCode').toString();
-    await whatsAppConfigurationControllerApi.sendMessage(branchCode, message, number);
+    await whatsAppConfigurationControllerApi.sendMessage(branchCode, chatMessage.text, phone);
 
-    messages.add(chatMessage);
+    messages.insert(0, chatMessage);
     notifyListeners();
-
 
   }
 
