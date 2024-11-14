@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -190,10 +191,11 @@ class ReservationCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              booking.customer?.firstName ?? '',
+              booking.customer!.firstName!,
               style: TextStyle(
                 fontSize: 14,
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ?
+                TextDecoration.lineThrough : TextDecoration.none,
                 color: Colors.blueGrey.shade900,
               ),
             ),
@@ -201,7 +203,8 @@ class ReservationCard extends StatelessWidget {
               booking.customer?.lastName ?? '',
 
               style: TextStyle(
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ?
+                TextDecoration.lineThrough : TextDecoration.none,
 
                 fontSize: 11,
                 color: Colors.blueGrey.shade900,
@@ -494,5 +497,9 @@ class ReservationCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  String retrieveFlagByCountryCode(String prefix) {
+    return '';
   }
 }

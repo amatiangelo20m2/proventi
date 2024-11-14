@@ -326,13 +326,17 @@ class _BookingScreenState extends State<BookingScreen> {
                       Row(
 
                         children: [
-                          Text(restaurantManager
-                              .retrieveTotalGuestsNumberForDayAndActiveBookings(
-                              _selectedDate) +
-                              '/' +
-                              restaurantManager
-                                  .restaurantConfiguration!.capacity
-                                  .toString() +  '  ', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+                          Row(
+                            children: [
+                              Text(restaurantManager
+                                  .retrieveTotalGuestsNumberForDayAndActiveBookings(
+                                  _selectedDate), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
+                              Text(
+                                  ' / ${restaurantManager
+                                      .restaurantConfiguration!.capacity}  ', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+
+                            ],
+                          ),
                         ],
                       )
                     ],
