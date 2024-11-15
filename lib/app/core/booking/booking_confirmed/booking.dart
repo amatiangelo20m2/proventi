@@ -184,12 +184,12 @@ class _BookingScreenState extends State<BookingScreen> {
                           valueFontSize: 5.0,
                           toggleSize: 30.0,
                           value: confermato,
-                          activeColor: Colors.green,
+                          activeColor: elegantGreen,
                           activeText: 'CONFERMATE',
                           inactiveText: 'RIFIUTATE',
-                          activeIcon: Icon(Icons.check_circle, color: Colors.green,),
-                          inactiveIcon: Icon(CupertinoIcons.clear_circled_solid, color: Colors.red,),
-                          inactiveColor: Colors.redAccent,
+                          activeIcon: Icon(Icons.check_circle, color: elegantGreen),
+                          inactiveIcon: Icon(CupertinoIcons.clear_circled_solid, color: elegantRed),
+                          inactiveColor: elegantRed,
                           borderRadius: 25.0,
                           padding: 1.0,
                           showOnOff: true,
@@ -201,15 +201,13 @@ class _BookingScreenState extends State<BookingScreen> {
                                     [BookingDTOStatusEnum.CONFERMATO, BookingDTOStatusEnum.NON_ARRIVATO];
                                 Fluttertoast.showToast(
                                     msg: 'Prenotazioni in stato ${currentBookingStatus}',
-                                    backgroundColor: Colors.green.shade700
-
+                                    backgroundColor: elegantGreen,
                                 );
                               }else{
-
                                 currentBookingStatus = [
                                     BookingDTOStatusEnum.RIFIUTATO ];
                                 Fluttertoast.showToast(
-                                    backgroundColor: Colors.redAccent,
+                                    backgroundColor: elegantRed,
                                     msg:
                                     'Prenotazioni in stato ${currentBookingStatus}');
                               }
@@ -227,8 +225,8 @@ class _BookingScreenState extends State<BookingScreen> {
                           inactiveText: '',
                           activeColor: globalGold,
                           activeIcon: Icon(Icons.sunny, color: globalGold,),
-                          inactiveIcon: Icon(CupertinoIcons.moon, color: Colors.blueAccent,),
-                          inactiveColor: Colors.blueAccent.shade700,
+                          inactiveIcon: Icon(CupertinoIcons.moon, color: elegantBlue),
+                          inactiveColor: elegantBlue,
                           borderRadius: 25.0,
                           padding: 1.0,
                           showOnOff: true,
@@ -243,7 +241,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                 );
                               }else{
                                 Fluttertoast.showToast(
-                                    backgroundColor: Colors.blueAccent.shade700,
+                                    backgroundColor: elegantBlue,
                                     msg:
                                     'Prenotazioni cena');
                               }
@@ -390,7 +388,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               borderRadius: BorderRadius.circular(15)
                             ),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   capitalizeFirstLetter(DateFormat.E('it')
@@ -403,8 +401,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                           ? Colors.white
                                           : Colors.black),
                                 ),
-                                const SizedBox(height: 1),
-
                                 Text(
                                   '${day.day}.${day.month}',
                                   style: TextStyle(
@@ -413,7 +409,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                           : Colors.black,
                                       fontSize: 12),
                                 ),
-                                const SizedBox(height: 1),
                                 _buildCurrentDaySituationWidget(
                                     restaurantManager.allBookings!
                                         .where((element) => isSameDay(
@@ -591,52 +586,72 @@ class _BookingScreenState extends State<BookingScreen> {
         .where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO)
         .length;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        badges.Badge(
-          showBadge: currentGuestNumber > 0,
-          badgeStyle: const badges.BadgeStyle(badgeColor: Colors.blue),
-          badgeContent: Row(
-            children: [
-              Icon(Icons.people_outline, size: 15, color: CupertinoColors.white,),
-              Text(
-                currentGuestNumber.toString(),
-                style: const TextStyle(fontSize: 10, color: CupertinoColors.white),
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if(currentGuestNumber> 0) Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: elegantBlue,
+                shape: BoxShape.circle, // Makes the container circular
               ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 1),
-        badges.Badge(
-          showBadge: tables > 0,
-          badgeStyle: badges.BadgeStyle(badgeColor: Colors.green),
-          badgeContent: Row(
-            children: [
-              Icon(Icons.table_restaurant, size: 15, color: CupertinoColors.white,),
-              Text(
-                tables.toString().toString(),
-                style: TextStyle(fontSize: 7, color: CupertinoColors.white),
+
+              child: Column(
+                children: [
+                  Icon(Icons.people_outline, size: 15, color: CupertinoColors.white,),
+                  Text(
+                    currentGuestNumber.toString(),
+                    style: const TextStyle(fontSize: 10, color: CupertinoColors.white),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-        const SizedBox(width: 1),
-        badges.Badge(
-          badgeStyle: badges.BadgeStyle(badgeColor: Colors.red),
-          showBadge: refused > 0,
-          badgeContent: Row(
-            children: [
-              Icon(CupertinoIcons.clear_circled, size: 15, color: CupertinoColors.white,),
-              Text(
-                refused.toString(),
-                style: const TextStyle(fontSize: 7, color: CupertinoColors.white),
+          if(tables > 0) Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: elegantGreen,
+                shape: BoxShape.circle, // Makes the container circular
               ),
-            ],
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.table_restaurant, size: 15, color: CupertinoColors.white,),
+                  Text(
+                    tables.toString().toString(),
+                    style: TextStyle(fontSize: 10, color: CupertinoColors.white),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+          if (refused > 0) Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: elegantRed,
+                shape: BoxShape.circle, // Makes the container circular
+              ),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(CupertinoIcons.clear_circled, size: 15, color: CupertinoColors.white,),
+                  Text(
+                    refused.toString(),
+                    style: const TextStyle(fontSize: 10, color: CupertinoColors.white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

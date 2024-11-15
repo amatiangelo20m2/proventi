@@ -12,6 +12,8 @@ import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:badges/badges.dart' as badges;
 
+import '../../../../global/date_methods_utility.dart';
+
 class ReservationCard extends StatelessWidget {
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
@@ -224,25 +226,6 @@ class ReservationCard extends StatelessWidget {
     );
   }
 
-  _buildTimeBooking(BuildContext context) {
-    return Wrap(
-      children: [
-        const Icon(CupertinoIcons.clock, color: Colors.blueGrey,),
-        Column(
-          children: [
-            Text(
-              ' ${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
-              style: TextStyle(
-                fontSize: 13,
-
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   CupertinoButton _buildStatusButton(BuildContext context) {
     return CupertinoButton(
@@ -274,16 +257,8 @@ class ReservationCard extends StatelessWidget {
             color: CupertinoColors.label,
           ),
         ),
-        const SizedBox(width: 12),
-        Icon(CupertinoIcons.clock, color: Colors.blueGrey.shade900),
         const SizedBox(width: 2),
-        Text(
-          '${booking.timeSlot!.bookingHour.toString()}:${booking.timeSlot!.bookingHour}',
-          style: const TextStyle(
-            fontSize: 13,
-            color: CupertinoColors.label,
-          ),
-        ),
+        buildTimeBooking(booking)
       ],
     );
   }

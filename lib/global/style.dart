@@ -9,6 +9,9 @@ import '../app/core/booking/crud_widget/create_booking_lista_attesa.dart';
 
 var globalGold = Color(0xFFD4B26A);
 var globalGoldDark = Color(0xFFae801f);
+var elegantRed = Color(0xFFD32F2F);
+var elegantGreen = Color(0xFF4CAF50);
+var elegantBlue = Color(0xFF3A6EA5);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 
@@ -45,13 +48,13 @@ getItalianMonthAbbreviation(monthNumber) {
 Color getStatusColor(BookingDTOStatusEnum statusEnum) {
   switch (statusEnum) {
     case BookingDTOStatusEnum.CONFERMATO:
-      return CupertinoColors.activeGreen;
+      return elegantGreen;
     case BookingDTOStatusEnum.IN_ATTESA:
       return globalGold;
     case BookingDTOStatusEnum.RIFIUTATO:
-      return CupertinoColors.destructiveRed;
+      return elegantRed;
     case BookingDTOStatusEnum.ARRIVATO:
-      return CupertinoColors.link;
+      return elegantBlue;
     case BookingDTOStatusEnum.NON_ARRIVATO:
       return Colors.blueGrey;
     case BookingDTOStatusEnum.LISTA_ATTESA:
