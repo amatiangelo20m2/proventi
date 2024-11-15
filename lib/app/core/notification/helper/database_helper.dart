@@ -66,6 +66,8 @@ class DatabaseHelper {
 
   // Set all notifications' read status to '1'
   Future<void> setAllNotificationToReadStatus() async {
+
+    print('Set notification to 0');
     final db = await instance.database;
     await db.update(
       'notifications',

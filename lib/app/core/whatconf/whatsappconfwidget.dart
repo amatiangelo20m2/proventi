@@ -38,7 +38,7 @@ class WhatsAppConfWidget extends StatelessWidget {
           Widget? child) {
         return FutureBuilder<WhatsAppConfigurationDTO?>(
           future: communicationStateManager
-              .retrieveWaApiConfStatus(), // The API call
+              .retrieveWaApiConfStatus(),
           builder: (context, snapshot) {
             if (snapshot.connectionState ==
                 ConnectionState.waiting) {

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/app/core/notification/state_manager/notification_state_manager.dart';
 import 'package:intl/intl.dart';
@@ -13,13 +14,20 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+
+
+
   @override
   Widget build(BuildContext context) {
     final notificationProvider = Provider.of<NotificationStateManager>(context);
 
     return Scaffold(
-
       appBar: AppBar(
+        leading: IconButton(icon: Icon(CupertinoIcons.back, color: Colors.grey[900],),
+          onPressed: () {
+            notificationProvider.fetchNotifications();
+            Navigator.of(context).pop();
+          },),
         title: const Text('Notifiche', style: TextStyle(fontWeight: FontWeight.bold)),
         elevation: 0,
         actions: [
@@ -57,54 +65,60 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Widget _buildNotificationList(NotificationStateManager notificationProvider) {
 
-    return AnimatedList(
-      initialItemCount: notificationProvider.notifications.length,
-      itemBuilder: (context, index, animation) {
-        final notification = notificationProvider.notifications[index];
-        return SizeTransition(
-          sizeFactor: animation,
-          child: Dismissible(
-            key: Key(notification.id.toString()),
-            direction: DismissDirection.endToStart,
-            onDismissed: (direction) {
-              notificationProvider.deleteNotification(notification.id!);
-              AnimatedList.of(context).removeItem(
-                index,
-                    (context, animation) => Container(), // Empty animation on delete
-              );
-            },
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            child: Card(
-              surfaceTintColor: Colors.white,
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.blueGrey.withOpacity(0.1),
-                  child: badges.Badge(
+    return Consumer<NotificationStateManager>(
+      builder: (BuildContext context, NotificationStateManager value, Widget? child) {
+        value.setAllNotificationToRead(false);
+        return AnimatedList(
+          initialItemCount: notificationProvider.notifications.length,
+          itemBuilder: (context, index, animation) {
+            final notification = notificationProvider.notifications[index];
+            return SizeTransition(
+              sizeFactor: animation,
+              child: Dismissible(
+                key: Key(notification.id.toString()),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  notificationProvider.deleteNotification(notification.id!);
+                  AnimatedList.of(context).removeItem(
+                    index,
+                        (context, animation) => Container(), // Empty animation on delete
+                  );
+                },
 
-                      showBadge: notification.read == '0',
-                      badgeAnimation: const badges.BadgeAnimation.scale(),
-                      child: Icon(Icons.notifications, color: Colors.blueGrey.shade700)),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                title: Text(
-                  notification.title,
-                  style:  TextStyle(fontSize: 13, color: Colors.blueGrey.shade900),
-                ),
-                subtitle: Text(notification.body,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11),),
-                trailing: Text(
-                  _formatDate(notification.dateReceived),
-                  style: TextStyle(fontSize: 10, color: Colors.blueGrey.shade900),
+                child: Card(
+                  surfaceTintColor: Colors.white,
+                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.blueGrey.withOpacity(0.1),
+                      child: badges.Badge(
+
+                          showBadge: notification.read == '0',
+                          badgeAnimation: const badges.BadgeAnimation.scale(),
+                          child: Icon(Icons.notifications, color: Colors.blueGrey.shade700)),
+                    ),
+                    title: Text(
+                      notification.title,
+                      style:  TextStyle(fontSize: 13, color: Colors.blueGrey.shade900),
+                    ),
+                    subtitle: Text(notification.body,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11),),
+                    trailing: Text(
+                      _formatDate(notification.dateReceived),
+                      style: TextStyle(fontSize: 10, color: Colors.blueGrey.shade900),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -116,5 +130,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
     }
     final DateTime parsedDate = DateTime.parse(date);
     return DateFormat('dd MMM yy\n    HH:mm').format(parsedDate);
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 }

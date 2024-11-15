@@ -1,6 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -64,18 +68,62 @@ Future<void> _setupFirebaseMessaging() async {
           body: message.notification!.body!,
         dateReceived: DateTime.now().toUtc().toIso8601String(),
         read: '0',
-        navigationPage: 'XXX', );
+        navigationPage: 'XXX');
 
     try{
-      print('12');
+
       BuildContext context = navigatorKey.currentContext!;
       NotificationStateManager notificationProvider = Provider.of<NotificationStateManager>(context, listen: false);
+      RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
       print('Notification with open app: ${notification.toMap()}');
       await notificationProvider.addNotification(notification);
+      await restaurantStateManager.refresh(DateTime.now());
+
+      showDialogPushNotification(context, message);
+
     }catch(e){
       print('Exception' + e.toString());
     }
   });
+}
+
+void showDialogPushNotification(BuildContext context, RemoteMessage message) {
+
+  AwesomeDialog(
+    dialogBackgroundColor: Colors.grey[900],
+    context: context,
+    dialogType: DialogType.info,
+    borderSide: BorderSide(
+      color: globalGold,
+      width: 2,
+    ),
+    width: MediaQuery.of(context).size.width / 1.5,
+    buttonsBorderRadius: const BorderRadius.all(
+      Radius.circular(2),
+    ),
+    titleTextStyle: TextStyle(color: globalGold),
+    descTextStyle: const TextStyle(color: CupertinoColors.white, fontSize: 13, ),
+    btnOk: Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: CupertinoButton(
+        color: globalGold,
+        borderRadius: BorderRadius.circular(8),
+        onPressed: () {
+
+        }, child: const Text('Gestisci la prenotazione', style: TextStyle(color: CupertinoColors.white, fontSize: 15),),
+      ),
+    ),
+
+    dismissOnTouchOutside: true,
+    dismissOnBackKeyPress: false,
+    headerAnimationLoop: true,
+    animType: AnimType.topSlide,
+    title: message.notification!.title,
+    desc: message.notification!.body!,
+    showCloseIcon: false, btnCancelOnPress: null,
+    btnOkOnPress: () {},
+  ).show();
+
 }
 
 

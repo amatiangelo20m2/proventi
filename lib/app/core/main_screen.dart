@@ -119,7 +119,7 @@ class _MainScreenState extends State<MainScreen> {
                     style: TextStyle(color: CupertinoColors.white),
                   ),
                   subtitle: Text(
-                    'xxx',
+                    '---',
                     style: TextStyle(color: CupertinoColors.white),
                   ),
                   leading: Icon(
@@ -159,7 +159,8 @@ class _MainScreenState extends State<MainScreen> {
                     builder: (BuildContext context,
                         NotificationStateManager value, Widget? child) {
                       return IconButton(
-                          onPressed: () {
+                          onPressed: () async {
+
                             Navigator.pushNamed(
                                 context, NotificationsPage.routeName);
                           },
