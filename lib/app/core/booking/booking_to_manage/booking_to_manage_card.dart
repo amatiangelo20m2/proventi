@@ -122,7 +122,7 @@ class BookingToManageCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildCustomerInfo(),
-              Text(getFormEmoji(formDTOs, booking)),
+              Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: globalGoldDark),),
               _buildGuestInfo(),
               Row(
                 children: [
@@ -177,6 +177,7 @@ class BookingToManageCard extends StatelessWidget {
                   }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
                 ],
               ),
+              Text(getFormEmoji(formDTOs, booking)),
               _buildStatusButton(context),
             ],
           ),
@@ -302,8 +303,16 @@ class BookingToManageCard extends StatelessWidget {
                   Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
-                  Text(booking.formCode!),
-                  Text('Stato:' + booking.status!.value),
+                  Text('Codice prenotazione:' + booking.bookingCode!, style: TextStyle(fontSize: 7),),
+                  Text('Codice form:' + booking.formCode! + getFormEmoji(formDTOs, booking), style: TextStyle(fontSize: 7),),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.circle, color: getStatusColor(booking.status!),),
+                      Text(booking.status!.value.replaceAll('_', '')),
+                    ],
+                  ),
                 ],
               ),
             ),

@@ -66,8 +66,9 @@ Future<void> _setupFirebaseMessaging() async {
 
       final notification = NotificationModel(title: message.notification!.title!,
           body: message.notification!.body!,
-        dateReceived: DateTime.now().toUtc().toIso8601String(),
+        dateReceived: DateTime.now().toIso8601String(),
         read: '0',
+        bookingId: message.data['id_booking'],
         navigationPage: 'XXX');
 
     try{
@@ -79,6 +80,7 @@ Future<void> _setupFirebaseMessaging() async {
       await notificationProvider.addNotification(notification);
       await restaurantStateManager.refresh(DateTime.now());
 
+      print('Show dialog notification');
       showDialogPushNotification(context, message);
 
     }catch(e){
@@ -119,7 +121,7 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
     headerAnimationLoop: true,
     animType: AnimType.topSlide,
     title: message.notification!.title,
-    desc: message.notification!.body!,
+    desc: message.notification!.body! + '\n\nCodice prenotazione: ' + message.data['id_booking'],
     showCloseIcon: false, btnCancelOnPress: null,
     btnOkOnPress: () {},
   ).show();

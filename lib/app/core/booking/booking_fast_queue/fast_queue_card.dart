@@ -212,7 +212,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
               Consumer<NotificationStateManager>(
                 builder: (BuildContext context, NotificationStateManager notificationManager, Widget? child) {
                   return IconButton(onPressed: () async {
-                    await notificationManager.addNotification(NotificationModel(title: 'asd', body: 'sasdds', dateReceived: '2024-12-12', read: '0', navigationPage: '1232133'));
+                    //await notificationManager.addNotification(NotificationModel(title: 'asd', body: 'sasdds', dateReceived: '2024-12-12', read: '0', navigationPage: '1232133'));
                   }, icon: const Icon(CupertinoIcons.paperplane));
                 },
               ),
@@ -386,6 +386,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
           body: 'Manda il messaggio di invito',
           dateReceived: DateTime.now().toLocal().toString(),
           read: '0',
+          bookingId: 'XXXXXX',
           navigationPage: 'QUEUE_FAST',
         ),
       );

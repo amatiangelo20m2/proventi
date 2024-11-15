@@ -23,6 +23,7 @@ class DatabaseHelper {
   }
 
   Future<void> _createDB(Database db, int version) async {
+    await db.execute('DROP TABLE IF EXISTS notifications');
     await db.execute('''
       CREATE TABLE notifications (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,6 +31,7 @@ class DatabaseHelper {
         body TEXT NOT NULL,
         dateReceived TEXT NOT NULL,
         read TEXT NOT NULL,
+        bookingId TEXT,
         navigationPage TEXT NOT NULL
       )
     ''');

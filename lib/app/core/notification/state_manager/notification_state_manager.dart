@@ -16,6 +16,12 @@ class NotificationStateManager with ChangeNotifier {
   Future<void> fetchNotifications() async {
     _notifications.clear();
     _notifications = await DatabaseHelper.instance.fetchAllNotifications();
+
+    _notifications.forEach((element) {
+      print(element.title + ' - ' + element.bookingId);
+    });
+
+
     print('Al momento ci sono queste notifiche: ' + notifications.length.toString());
     notifyListeners();
   }

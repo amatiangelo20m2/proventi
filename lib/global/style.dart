@@ -108,3 +108,12 @@ getSourceEmoji(BookingDTOBookingSourceEnum source) {
       return '';
   }
 }
+
+String formatDuration(Duration duration) {
+  int hours = duration.inHours;
+  int minutes = duration.inMinutes.remainder(60); // Get the remainder minutes after extracting hours
+
+  // Format the output as hh:mm
+  String formattedTime = '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+  return formattedTime;
+}

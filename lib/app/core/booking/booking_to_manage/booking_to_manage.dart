@@ -64,7 +64,10 @@ class _BookingManagerState extends State<BookingManager> {
                     final date = groupedBookings.keys.elementAt(index);
                     final bookings = groupedBookings[date]!;
 
-                    return _buildDateGroup(date, bookings, restaurantStateManager);
+                    return _buildDateGroup(
+                        date,
+                        bookings,
+                        restaurantStateManager);
                   },
                 ),
               ),
@@ -97,6 +100,9 @@ class _BookingManagerState extends State<BookingManager> {
   }
 
   Widget _buildDateGroup(DateTime date, List<BookingDTO> bookings, RestaurantStateManager restaurantStateManager) {
+
+    //sorting date from the newst to the oldest reservation
+    bookings.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

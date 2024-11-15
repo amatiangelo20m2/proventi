@@ -107,9 +107,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       notification.title,
                       style:  TextStyle(fontSize: 13, color: Colors.blueGrey.shade900),
                     ),
-                    subtitle: Text(notification.body,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11),),
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(notification.body,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11),),
+
+                        Text('Codice prenotazione:' + notification.bookingId,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 7),),
+                      ],
+                    ),
                     trailing: Text(
                       _formatDate(notification.dateReceived),
                       style: TextStyle(fontSize: 10, color: Colors.blueGrey.shade900),
