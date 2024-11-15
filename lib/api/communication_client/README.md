@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:14016/communicationservice*
+All URIs are relative to *http://192.168.1.4:22569/communicationservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

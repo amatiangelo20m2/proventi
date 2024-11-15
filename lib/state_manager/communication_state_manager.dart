@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,14 +43,32 @@ class CommunicationStateManager extends ChangeNotifier {
     String branchCode = prefs.getString('branchCode').toString();
     // Make the API call
     currentWhatsAppConfigurationDTO = await whatsAppConfigurationControllerApi.retrieveWaApiConfStatus(branchCode);
+    if(currentWhatsAppConfigurationDTO != null){
+
+      //TODO: active the chat whatsapp retrieve when is ready
+      //retrieveChatData();
+    }
     return currentWhatsAppConfigurationDTO;
   }
 
-  Future<Set<AllChatListDataDTO>?> retrieveChatData() async {
-    final prefs = await SharedPreferences.getInstance();
-    String branchCode = prefs.getString('branchCode').toString();
-    Set<AllChatListDataDTO>? chatDataSet = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 100);
-    return chatDataSet;
+  Set<AllChatListDataDTO>? chatDataSet = HashSet();
+
+  Future<void> retrieveChatData() async {
+    try{
+      print('chat data set${chatDataSet!.length.toString()}');
+      final prefs = await SharedPreferences.getInstance();
+      print('chat data set${chatDataSet!.length.toString()}');
+      String branchCode = prefs.getString('branchCode').toString();
+      print('chat data set${chatDataSet!.length.toString()}');
+      chatDataSet = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 10);
+      print('chat data set${chatDataSet!.length.toString()}');
+
+    }catch(e){
+      print('chat data set${chatDataSet!.length.toString()}');
+      print('Error: ' + e.toString());
+    }
+
+    notifyListeners();
   }
 
 

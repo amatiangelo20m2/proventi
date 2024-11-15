@@ -165,11 +165,13 @@ class BookingToManageCard extends StatelessWidget {
                   ),
                   GestureDetector(onTap: () {
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DashChatCustomized20(bookingDTO: booking,),
-                      ),
+                    showCupertinoModalBottomSheet(
+                      expand: true,
+                      elevation: 10,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DashChatCustomized20(bookingDTO: booking,);
+                      },
                     );
 
                   }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),

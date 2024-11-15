@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
 import 'package:proventi/app/core/whatsapp/dash_chat.dart';
+import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
@@ -165,18 +166,23 @@ class ReservationCard extends StatelessWidget {
                       );
                     }, icon: const Icon(CupertinoIcons.settings_solid)),
                   ),
-                  IconButton(onPressed: () {
+                  Consumer<CommunicationStateManager>(
+                    builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
+                      return IconButton(onPressed: () {
+                        showCupertinoModalBottomSheet(
+                          expand: true,
+                          elevation: 10,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DashChatCustomized20(bookingDTO: booking,);
+                          },
+                        );
 
+                      }, icon: badges.Badge(
 
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DashChatCustomized20(bookingDTO: booking,),
-                      ),
-                    );
-
-                  }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
+                          badgeContent: Text(value.chatDataSet!.length.toString(),),
+                          child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green)),);
+                    },)
                 ],
               ),
               _buildStatusButton(context),

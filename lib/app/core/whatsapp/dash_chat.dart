@@ -96,6 +96,7 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
     return Consumer<CommunicationStateManager>(
       builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
         return Scaffold(
+          backgroundColor: Colors.grey[900],
           appBar: AppBar(
             iconTheme: const IconThemeData(color: Colors.white),
             backgroundColor: Colors.grey[900],
@@ -106,7 +107,8 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
             ),
             actions: [
               FutureBuilder<String?>(
-              future: communicationStateManager.whatsAppConfigurationControllerApi.retrieveUserPhoto(widget.bookingDTO.branchCode!, widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!),  // The API call
+              future: communicationStateManager.whatsAppConfigurationControllerApi
+                  .retrieveUserPhoto(widget.bookingDTO.branchCode!, widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!),  // The API call
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   // Show a loading spinner while waiting
@@ -133,32 +135,32 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
             ],
           ),
           body: isLoading
-              ? Center(child: CircularProgressIndicator()) // Loading indicator
+              ? Center(child: CupertinoActivityIndicator(color: globalGold, radius: 15,)) // Loading indicator
               : hasError
               ? Center(child: Text(errorMessage)) // Error message
               : Container(
             color: Colors.grey[900],
-            child: DashChat(
-              messageOptions: MessageOptions(
-                currentUserContainerColor: globalGoldDark,
-                containerColor: Colors.grey[300]!,
-                currentUserTextColor: Colors.white,
-                textColor: Colors.black,
-              ),
-              currentUser: user1,
-              onSend: (ChatMessage message) {
-                communicationStateManager.sendWhatsAppMessage(
-                  user2.id.replaceAll('@c.us', ''),
-                  ChatMessage(
-                    text: message.text,
-                    user: message.user,
-                    createdAt: DateTime.now(),
+                child: DashChat(
+                  messageOptions: MessageOptions(
+                    currentUserContainerColor: globalGoldDark,
+                    containerColor: Colors.grey[300]!,
+                    currentUserTextColor: Colors.white,
+                    textColor: Colors.black,
                   ),
-                );
-              },
-              messages: chatMessages.reversed.toList(),
-            ),
-          ),
+                  currentUser: user1,
+                  onSend: (ChatMessage message) {
+                    communicationStateManager.sendWhatsAppMessage(
+                      user2.id.replaceAll('@c.us', ''),
+                      ChatMessage(
+                        text: message.text,
+                        user: message.user,
+                        createdAt: DateTime.now(),
+                      ),
+                    );
+                  },
+                  messages: chatMessages.reversed.toList(),
+                ),
+              ),
         );
       },
 
