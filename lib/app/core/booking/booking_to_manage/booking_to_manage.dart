@@ -127,6 +127,7 @@ class _BookingManagerState extends State<BookingManager> {
           return BookingToManageCard(
             booking: booking,
             formDTOs: restaurantStateManager.currentBranchForms!,
+            restaurantDTO: restaurantStateManager.restaurantConfiguration!,
           );
         }).toList(),
       ],

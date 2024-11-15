@@ -14,11 +14,12 @@ import 'package:badges/badges.dart' as badges;
 import '../../../../global/date_methods_utility.dart';
 
 class BookingToManageCard extends StatelessWidget {
+  final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
 
   const BookingToManageCard({required this.booking,
-    required this.formDTOs});
+    required this.formDTOs, required this.restaurantDTO});
 
   @override
   Widget build(BuildContext context) {
@@ -249,8 +250,22 @@ class BookingToManageCard extends StatelessWidget {
             color: CupertinoColors.label,
           ),
         ),
+
         const SizedBox(width: 12),
-        buildTimeBooking(booking)
+        buildTimeBooking(booking),
+        isLunchTime(booking, restaurantDTO) ?
+        Card(
+            color: globalGoldDark,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Icon(Icons.sunny, color: CupertinoColors.white,),
+            )) :
+        Card(
+            color: elegantBlue,
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Icon(CupertinoIcons.moon_stars, color: CupertinoColors.white),
+            )),
       ],
     );
   }
