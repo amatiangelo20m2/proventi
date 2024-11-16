@@ -89,3 +89,24 @@ String formatTimeRange(TimeRange timeRange) {
   // Return the formatted string
   return '$openingTime - $closingTime';
 }
+
+List<String> generateTimeSlots(TimeRange timeRange) {
+  List<String> timeSlots = [];
+
+  // Check if the time ranges are valid. If not, use default values.
+  int startLunchHour = timeRange.openingHour ?? 12; // Default to 12 if null
+  int startLunchMinute = timeRange.openingMinutes ?? 0; // Default to 0 if null
+  int endLunchHour = timeRange.closingHour ?? 14; // Default to 14 (2 PM) if null
+  int endLunchMinute = timeRange.closingMinutes ?? 0; // Default to 0 if null
+
+  // Create time slots for lunch
+  DateTime startLunch = DateTime(0, 0, 0, startLunchHour, startLunchMinute);
+  DateTime endLunch = DateTime(0, 0, 0, endLunchHour, endLunchMinute);
+
+  while (startLunch.isBefore(endLunch) || startLunch.isAtSameMomentAs(endLunch)) {
+    timeSlots.add(DateFormat('H:mm').format(startLunch));
+    startLunch = startLunch.add(const Duration(minutes: 15));
+  }
+
+  return timeSlots;
+}

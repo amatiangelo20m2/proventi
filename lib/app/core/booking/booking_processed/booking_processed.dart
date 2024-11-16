@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../../../global/style.dart';
@@ -14,6 +15,8 @@ class ProcessedBookings extends StatefulWidget {
 }
 
 class _ProcessedBookingsState extends State<ProcessedBookings> {
+  String queryString = '';
+
   @override
   void initState() {
     super.initState();
@@ -27,22 +30,47 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
         // Filter and group bookings by date
         final Map<DateTime, List<BookingDTO>> groupedBookings = _groupBookingsByDate(
           restaurantStateManager.allBookings!
-              .where((booking) => booking.status == BookingDTOStatusEnum.ARRIVATO || booking.status == BookingDTOStatusEnum.ELIMINATO)
+              .where((booking) => booking.status == BookingDTOStatusEnum.ARRIVATO
+              || booking.status == BookingDTOStatusEnum.ELIMINATO
+              || booking.status == BookingDTOStatusEnum.NON_ARRIVATO)
               .toList());
 
         return RefreshIndicator(
           onRefresh: () async {
             await restaurantStateManager.refresh(DateTime.now());
           },
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 160),
-            itemCount: groupedBookings.keys.length,
-            itemBuilder: (context, index) {
-              final date = groupedBookings.keys.elementAt(index);
-              final bookings = groupedBookings[date]!;
+          child: Column(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 2, bottom: 3),
+                  child: CupertinoTextField(
+                    onChanged: (newQuery){
+                      setState(() {
+                        queryString = newQuery;
+                      });
+                    },
 
-              return _buildDateGroup(date, bookings, restaurantStateManager);
-            },
+                    clearButtonMode: OverlayVisibilityMode.always,
+                    placeholder: 'Ricerca per nome cliente o numero',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 160),
+                  itemCount: groupedBookings.keys.length,
+                  itemBuilder: (context, index) {
+                    final date = groupedBookings.keys.elementAt(index);
+                    final bookings = groupedBookings[date]!;
+                
+                    return _buildDateGroup(date, bookings, restaurantStateManager);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -76,6 +104,7 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -86,7 +115,9 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
                   fontWeight: FontWeight.bold),
             ),
           ),
-          ...bookings.map((booking) {
+          ...bookings.where((element) => element.customer!.firstName!
+              .toLowerCase().contains(queryString.toLowerCase()) || element.customer!
+              .phone!.toLowerCase().contains(queryString.toLowerCase())).map((booking) {
             return ProcessedBookingCard(
               booking: booking,
               formDTOs: restaurantStateManager.currentBranchForms!,

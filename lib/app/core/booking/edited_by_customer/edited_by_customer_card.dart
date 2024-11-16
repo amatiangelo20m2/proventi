@@ -86,38 +86,42 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(flex: 1, child: _buildCustomerInfo()),
-              Expanded(flex: 1, child: _buildDateWidget()),
-              Expanded(flex: 1, child: Text(getFormEmoji(formDTOs, booking))),
-              Expanded(flex: 1, child: _buildGuestInfo()),
-              Expanded(flex: 1, child: _buildTimeBooking(context)),
+              _buildCustomerInfo(),
+              _buildDateWidget(),
+              Text(getFormEmoji(formDTOs, booking)),
+              _buildGuestInfo(),
+              _buildTimeBooking(context),
 
-              Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          CupertinoIcons.settings_solid,
-                          color: Colors.blueGrey,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(CupertinoIcons.doc_plaintext),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          FontAwesomeIcons.whatsapp,
-                          color: Colors.green,
-                        ),
-                      )
-                    ],
-                  )),
-              Expanded(flex: 1, child: _buildStatusButton(context)),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.settings_solid,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(CupertinoIcons.doc_plaintext),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      FontAwesomeIcons.whatsapp,
+                      color: Colors.green,
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
+                  Text(booking.status!.value!, style: TextStyle(fontSize: 4),)
+                ],
+              ),
             ],
           ),
         ),
@@ -128,27 +132,25 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
   Row _buildCustomerInfo() {
     return Row(
       children: [
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                booking.customer?.firstName ?? '',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.blueGrey.shade900,
-                ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              booking.customer?.firstName ?? '',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.blueGrey.shade900,
               ),
-              Text(
-                booking.customer?.lastName ?? '',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.blueGrey.shade900,
-                ),
+            ),
+            Text(
+              booking.customer?.lastName ?? '',
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.blueGrey.shade900,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -194,22 +196,6 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
           ],
         )
       ],
-    );
-  }
-
-  CupertinoButton _buildStatusButton(BuildContext context) {
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: getStatusColor(booking.status!),
-      borderRadius: BorderRadius.circular(8),
-      onPressed: () {},
-      child: Text(
-        booking.status!.value.toString().replaceAll('_', ' '),
-        style: const TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 8,
-        ),
-      ),
     );
   }
 

@@ -15,12 +15,12 @@ class RestaurantStateManager extends ChangeNotifier {
   late RestaurantControllerApi _restaurantControllerApi;
   late BookingControllerApi _bookingControllerApi;
   late FormControllerApi _formControllerApi;
+  late CustomerControllerApi _customerControllerApi;
 
   RestaurantDTO? _restaurantConfiguration;
 
   EmployeeDTO? _currentEmployee;
 
-  List<BookingDTO>? _currentBookings = [];
   List<BookingDTO>? _allBookings = [];
 
   List<FormDTO>? _currentBranchForms = [];
@@ -31,6 +31,7 @@ class RestaurantStateManager extends ChangeNotifier {
   List<BookingDTO>? get allBookings => _allBookings;
   ApiClient get restaurantClient => _restaurantClient;
   RestaurantControllerApi get restaurantControllerApi => _restaurantControllerApi;
+  CustomerControllerApi get customerControllerApi => _customerControllerApi;
   EmployeeDTO? get currentEmployee => _currentEmployee;
   List<FormDTO>? get currentBranchForms => _currentBranchForms;
 
@@ -45,6 +46,7 @@ class RestaurantStateManager extends ChangeNotifier {
     _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
     _bookingControllerApi = BookingControllerApi(_restaurantClient);
     _formControllerApi = FormControllerApi(_restaurantClient);
+    _customerControllerApi = CustomerControllerApi(_restaurantClient);
   }
 
   Future<void> setDataEmployeeAndRetrieveData(EmployeeDTO employee, DateTime dateTime) async {
@@ -54,16 +56,8 @@ class RestaurantStateManager extends ChangeNotifier {
 
     _restaurantConfiguration = await _restaurantControllerApi.retrieveConfiguration(_currentEmployee!.branchCode!,'XXX');
     _currentBranchForms = await _formControllerApi.retrieveByBranchCode(_currentEmployee!.branchCode!);
-
-    selectBookingForCurrentDay(dateTime);
     fetchAllBookings();
     notifyListeners();
-
-
-  }
-
-  List<BookingDTO>? get currentBookings {
-    return _currentBookings;
   }
 
   updateBooking(BookingDTO bookingDTO) async {
@@ -71,13 +65,6 @@ class RestaurantStateManager extends ChangeNotifier {
 
     BookingDTO? bookingDTOUpdated = await _bookingControllerApi.updateBooking(bookingDTO);
     setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
-  }
-
-
-  Future<void> selectBookingForCurrentDay(DateTime dateTime) async {
-    _currentBookings!.clear();
-    _currentBookings = _allBookings!.where((element) => isSameDay(element.bookingDate!, dateTime)).toList();
-    notifyListeners();
   }
 
   retrieveTotalGuestsNumberForDayAndActiveBookings(DateTime day) {
@@ -96,6 +83,10 @@ class RestaurantStateManager extends ChangeNotifier {
   }
 
   refresh(DateTime dateTime) {
-    setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
+    setDataEmployeeAndRetrieveData(_currentEmployee!, dateTime);
+  }
+
+  List<BookingDTO> bookingFilteredByCurrentDate(DateTime date){
+    return _allBookings!.where((element) => isSameDay(element.bookingDate!, date)).toList();
   }
 }

@@ -2,10 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-
-import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
-import '../booking_confirmed/booking_card.dart';
 import 'edited_by_customer_card.dart';
 
 class BookingEditedByCustomer extends StatefulWidget {
@@ -16,6 +13,8 @@ class BookingEditedByCustomer extends StatefulWidget {
 }
 
 class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
+  String queryString = '';
+
   @override
   void initState() {
     super.initState();
@@ -36,14 +35,37 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
           onRefresh: () async {
             await restaurantStateManager.refresh(DateTime.now());
           },
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 160),
-            itemCount: groupedBookings.keys.length,
-            itemBuilder: (context, index) {
-              final date = groupedBookings.keys.elementAt(index);
-              final bookings = groupedBookings[date]!;
-              return _buildDateGroup(date, bookings, restaurantStateManager);
-            },
+          child: Column(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 2, bottom: 3),
+                  child: CupertinoTextField(
+                    onChanged: (newQuery){
+                      setState(() {
+                        queryString = newQuery;
+                      });
+                    },
+
+                    clearButtonMode: OverlayVisibilityMode.always,
+                    placeholder: 'Ricerca per nome cliente o numero',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 160),
+                  itemCount: groupedBookings.keys.length,
+                  itemBuilder: (context, index) {
+                    final date = groupedBookings.keys.elementAt(index);
+                    final bookings = groupedBookings[date]!;
+                    return _buildDateGroup(date, bookings, restaurantStateManager);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -71,7 +93,9 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
     return {for (var key in sortedKeys) key: groupedBookings[key]!};
   }
 
-  Widget _buildDateGroup(DateTime date, List<BookingDTO> bookings, RestaurantStateManager restaurantStateManager) {
+  Widget _buildDateGroup(DateTime date,
+      List<BookingDTO> bookings,
+      RestaurantStateManager restaurantStateManager) {
     return Container(
 
       child: Column(
@@ -85,7 +109,8 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
                   fontWeight: FontWeight.bold),
             ),
           ),
-          ...bookings.map((booking) {
+          ...bookings.where((element) => element.customer!.firstName!
+              .toLowerCase().contains(queryString.toLowerCase()) || element.customer!.phone!.toLowerCase().contains(queryString.toLowerCase())).map((booking) {
             return ReservationEditedByCustomerCard(
               booking: booking,
               formDTOs: restaurantStateManager.currentBranchForms!,

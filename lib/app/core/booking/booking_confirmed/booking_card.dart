@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -20,7 +21,7 @@ class ReservationCard extends StatelessWidget {
   final List<FormDTO> formDTOs;
   final Color shadeColor;
 
-  const ReservationCard({required this.booking,
+  const ReservationCard({super.key, required this.booking,
     required this.formDTOs, required this.restaurantDTO, required this.shadeColor});
 
   @override
@@ -83,7 +84,6 @@ class ReservationCard extends StatelessWidget {
         bookingCode: booking.bookingCode,
         status: BookingDTOStatusEnum.ARRIVATO
     ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
     return false;
   }
 
@@ -119,7 +119,7 @@ class ReservationCard extends StatelessWidget {
               color: CupertinoColors.systemGrey.withOpacity(0.2),
               blurRadius: 4.0,
               spreadRadius: 1.0,
-              offset: Offset(0, 2), // changes position of shadow
+              offset: const Offset(0, 2), // changes position of shadow
             ),
           ],
         ),
@@ -156,19 +156,16 @@ class ReservationCard extends StatelessWidget {
                     }
                   },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20, left: 20),
-                    child: IconButton(onPressed: (){
-                      showCupertinoModalBottomSheet(
-                        expand: true,
-                        elevation: 10,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return BookingEdit(bookingDTO: booking,);
-                        },
-                      );
-                    }, icon: const Icon(CupertinoIcons.settings_solid)),
-                  ),
+                  IconButton(onPressed: (){
+                    showCupertinoModalBottomSheet(
+                      expand: true,
+                      elevation: 10,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
+                      },
+                    );
+                  }, icon: const Icon(CupertinoIcons.settings_solid)),
                   Consumer<CommunicationStateManager>(
                     builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
                       return IconButton(onPressed: () {
@@ -181,14 +178,17 @@ class ReservationCard extends StatelessWidget {
                           },
                         );
 
-                      }, icon: badges.Badge(
-
-                          badgeContent: Text(value.chatDataSet!.length.toString(),),
-                          child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green)),);
+                      }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 20,),);
                     },)
                 ],
               ),
-              _buildStatusButton(context),
+
+              Column(
+                children: [
+                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
+                  Text(booking.status!.value!, style: TextStyle(fontSize: 4),)
+                ],
+              ),
             ],
           ),
         ),
@@ -227,24 +227,6 @@ class ReservationCard extends StatelessWidget {
     );
   }
 
-
-  CupertinoButton _buildStatusButton(BuildContext context) {
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: getStatusColor(booking.status!),
-      borderRadius: BorderRadius.circular(8),
-      onPressed: () {
-
-      },
-      child: Text(
-        booking.status!.value.toString().replaceAll('_', ' '),
-        style: const TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 10,
-        ),
-      ),
-    );
-  }
 
   Row _buildGuestInfo() {
     return Row(
@@ -454,11 +436,11 @@ class ReservationCard extends StatelessWidget {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
                   bookingCode: booking.bookingCode,
-                  status: BookingDTOStatusEnum.ARRIVATO
+                  status: BookingDTOStatusEnum.CONFERMATO
               ));
               Navigator.pop(context, null);
             },
-            child: const Text('Conferma Arrivo'),
+            child: const Text('Converti in CONFERMATA'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(

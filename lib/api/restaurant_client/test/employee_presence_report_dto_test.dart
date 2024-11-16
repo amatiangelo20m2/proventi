@@ -46,23 +46,23 @@ void main() {
       // TODO
     });
 
-    // bool presentAtDinner
-    test('to test the property `presentAtDinner`', () async {
-      // TODO
-    });
-
     // bool presentAtLunch
     test('to test the property `presentAtLunch`', () async {
       // TODO
     });
 
-    // bool holiday
-    test('to test the property `holiday`', () async {
+    // bool presentAtDinner
+    test('to test the property `presentAtDinner`', () async {
       // TODO
     });
 
     // bool illness
     test('to test the property `illness`', () async {
+      // TODO
+    });
+
+    // bool holiday
+    test('to test the property `holiday`', () async {
       // TODO
     });
 

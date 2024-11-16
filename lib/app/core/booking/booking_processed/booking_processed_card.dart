@@ -10,6 +10,7 @@ import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:url_launcher/url_launcher.dart';
 
 class ProcessedBookingCard extends StatelessWidget {
   final BookingDTO booking;
@@ -71,16 +72,20 @@ class ProcessedBookingCard extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 20, left: 20),
-                    child: IconButton(onPressed: (){
-                      showCupertinoModalBottomSheet(
-                        expand: true,
-                        elevation: 10,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return BookingEdit(bookingDTO: booking,);
-                        },
-                      );
-                    }, icon: const Icon(CupertinoIcons.settings_solid)),
+                    child: Consumer<RestaurantStateManager>(
+                      builder: (BuildContext context, RestaurantStateManager value, Widget? child) {
+
+                        return IconButton(icon: Icon(CupertinoIcons.settings_solid, color: Colors.grey[900],), onPressed: (){
+                          showCupertinoModalBottomSheet(
+                            expand: true,
+                            elevation: 10,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return BookingEdit(bookingDTO: booking, restaurantDTO: value.restaurantConfiguration!,);
+                            },
+                          );
+                        },);
+                      },),
                   ),
                   GestureDetector(onTap: () {
 
@@ -94,7 +99,12 @@ class ProcessedBookingCard extends StatelessWidget {
                   }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
                 ],
               ),
-              _buildStatusButton(context),
+              Column(
+                children: [
+                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
+                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
+                ],
+              ),
             ],
           ),
         ),
@@ -109,7 +119,6 @@ class ProcessedBookingCard extends StatelessWidget {
         bookingCode: booking.bookingCode,
         status: BookingDTOStatusEnum.ARRIVATO
     ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
     return false;
   }
 
@@ -158,6 +167,16 @@ class ProcessedBookingCard extends StatelessWidget {
                 color: Colors.blueGrey.shade900,
               ),
             ),
+            Text(
+              booking.customer!.prefix! + booking.customer!.phone!,
+
+              style: TextStyle(
+                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+
+                fontSize: 11,
+                color: Colors.blueGrey.shade900,
+              ),
+            ),
           ],
         ),
       ],
@@ -181,24 +200,6 @@ class ProcessedBookingCard extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  CupertinoButton _buildStatusButton(BuildContext context) {
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: getStatusColor(booking.status!),
-      borderRadius: BorderRadius.circular(8),
-      onPressed: () {
-
-      },
-      child: Text(
-        booking.status!.value.toString().replaceAll('_', ' '),
-        style: const TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 10,
-        ),
-      ),
     );
   }
 
@@ -394,7 +395,13 @@ class ProcessedBookingCard extends StatelessWidget {
             ),
             Positioned(
               right: 0,
-              child: IconButton(onPressed: () {
+              child: IconButton(onPressed: () async {
+                Uri urlPhone = Uri(scheme: 'tel', path :booking.customer!.prefix! + booking.customer!.phone!);
+                if (await canLaunchUrl(urlPhone)) {
+                await launchUrl(urlPhone);  // Open the phone dialer
+                } else {
+                throw 'Could not open the phone dialer.';
+                }
               }, icon: Icon(CupertinoIcons.phone)),
             ),
           ],

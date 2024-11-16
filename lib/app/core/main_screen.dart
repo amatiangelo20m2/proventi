@@ -24,7 +24,9 @@ import 'notification/state_manager/notification_state_manager.dart';
 class MainScreen extends StatefulWidget {
   static const String routeName = 'main_screen';
 
-  const MainScreen({super.key});
+  const MainScreen({super.key, required this.pageIndex});
+
+  final int pageIndex;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -32,6 +34,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _pageIndex = 0;
+
+
+  @override
+  void initState() {
+    super.initState();
+    setPageIndex(widget.pageIndex);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +60,8 @@ class _MainScreenState extends State<MainScreen> {
             unselectedIconTheme: const IconThemeData(color: Colors.grey),
             unselectedFontSize: 7,
             onTap: (index) {
-              setState(() {
-                _pageIndex = index;
-              });
+              restaurantStateManager.refresh(DateTime.now());
+              setPageIndex(index);
             },
             items: [
               _buildBottomNavigationBarItem(
@@ -96,12 +104,8 @@ class _MainScreenState extends State<MainScreen> {
               _buildBottomNavigationBarItem(
                 svgPath: 'assets/svg/check.svg',
                 label: 'PROCESSATE',
-                badgeColor: getStatusColor(BookingDTOStatusEnum.ARRIVATO),
-                badgeCount: restaurantStateManager.allBookings!
-                    .where((element) =>
-                        element.status == BookingDTOStatusEnum.ARRIVATO ||
-                        element.status == BookingDTOStatusEnum.RIFIUTATO)
-                    .length,
+                badgeColor: Colors.black,
+                badgeCount: 0,
               ),
             ],
           ),
@@ -113,7 +117,7 @@ class _MainScreenState extends State<MainScreen> {
                   height: 50,
                 ),
                 Image.asset('assets/images/logo.png', width: 190),
-                const ListTile(
+                ListTile(
                   title: Text(
                     'Proventi',
                     style: TextStyle(color: CupertinoColors.white),
@@ -150,59 +154,60 @@ class _MainScreenState extends State<MainScreen> {
           appBar: AppBar(
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
-            actions: [
+            actions: const [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   WhatsAppConfWidget(),
-                  Consumer<NotificationStateManager>(
-                    builder: (BuildContext context,
-                        NotificationStateManager value, Widget? child) {
-                      return IconButton(
-                          onPressed: () async {
-
-                            Navigator.pushNamed(
-                                context, NotificationsPage.routeName);
-                          },
-                          icon: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: badges.Badge(
-                                showBadge: value.notifications
-                                    .where((element) => element.read == '0')
-                                    .isNotEmpty,
-                                badgeContent: Text(
-                                  value.notifications
-                                      .where((element) => element.read == '0')
-                                      .length
-                                      .toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 11),
-                                ),
-                                position: badges.BadgePosition.topEnd(),
-                                child: const Icon(CupertinoIcons.bell)),
-                          ));
-                    },
-                  ),
+                  //Consumer<NotificationStateManager>(
+            //  builder: (BuildContext context,
+            //           NotificationStateManager value, Widget? child) {
+            //         return IconButton(
+                  ////             onPressed: () async {
+            //        Navigator.pushNamed(
+        //                  context, NotificationsPage.routeName);
+            //                },
+          //            icon: Padding(
+          //                padding: const EdgeInsets.only(right: 10),
+            ////                child: badges.Badge(
+            //                showBadge: value.notifications
+            //                      .where((element) => element.read == '0')
+            //                      .isNotEmpty,
+          //                  badgeContent: Text(
+            //                      value.notifications
+            //                        .where((element) => element.read == '0')
+            //                        .length
+          //                        .toString(),
+            //                      style: const TextStyle(
+          //                        color: Colors.white, fontSize: 11),
+            //                    ),
+            ////                  position: badges.BadgePosition.topEnd(),
+          //                child: const Icon(CupertinoIcons.bell)),
+                  //                ));
+        //            },
+      //      ),
                 ],
               ),
             ],
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset('assets/images/logo.png', width: 60),
-                Text(restaurantStateManager.restaurantConfiguration!.restaurantName!, style: TextStyle(fontSize: 15),),
-
+                Image.asset('assets/images/logo.png', width: 30),
+                Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
+                  style: TextStyle(fontSize: 15, color: Colors.grey[900]),),
               ],
             ),
           ),
-          body: getPageByIndex(_pageIndex),
+          body: getPageByIndex(_pageIndex,
+              restaurantStateManager),
           backgroundColor: Colors.white,
         );
       },
     );
   }
 
-  getPageByIndex(int pageIndex) {
+  getPageByIndex(int pageIndex, RestaurantStateManager restaurantStateManager) {
+
     switch (pageIndex) {
       case 0:
         return const BookingScreen();
@@ -239,5 +244,11 @@ class _MainScreenState extends State<MainScreen> {
       ),
       label: label,
     );
+  }
+
+  void setPageIndex(int index) {
+    setState(() {
+      _pageIndex = index;
+    });
   }
 }

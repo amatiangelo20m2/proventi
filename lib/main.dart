@@ -11,6 +11,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app/core/customer/customer_state_manager.dart';
 import 'app/core/employee/reports/state_manager/employee_state_manager.dart';
+import 'app/core/main_screen.dart';
 import 'app/core/notification/model/notification_entity.dart';
 import 'app/core/notification/state_manager/notification_state_manager.dart';
 import 'landing/landing_page.dart';
@@ -20,6 +21,15 @@ import 'state_manager/restaurant_state_manager.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // Handle background messages if needed
   print('Handling a background message: ${message.messageId}');
+
+  print('CIAONEENEENNEEN');
+
+  BuildContext context = navigatorKey.currentContext!;
+
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 1,)),
+  );
+
 }
 
 Future<void> main() async {
@@ -55,7 +65,10 @@ Future<void> _setupFirebaseMessaging() async {
     print('User declined or has not accepted permission');
   }
 
+
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
 
   // Handle messages when the app is in the foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -94,12 +107,11 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
   AwesomeDialog(
     dialogBackgroundColor: Colors.grey[900],
     context: context,
-    dialogType: DialogType.info,
+    dialogType: DialogType.success,
     borderSide: BorderSide(
       color: globalGold,
       width: 2,
     ),
-    width: MediaQuery.of(context).size.width / 1.5,
     buttonsBorderRadius: const BorderRadius.all(
       Radius.circular(2),
     ),
@@ -111,8 +123,14 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
         color: globalGold,
         borderRadius: BorderRadius.circular(8),
         onPressed: () {
+          String bookingId = message.data['id_booking'];
 
-        }, child: const Text('Gestisci la prenotazione', style: TextStyle(color: CupertinoColors.white, fontSize: 15),),
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 1,)),
+          );
+
+
+        }, child: const Text('Gestisci la prenotazione', style: TextStyle(color: CupertinoColors.white),),
       ),
     ),
 
@@ -121,13 +139,12 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
     headerAnimationLoop: true,
     animType: AnimType.topSlide,
     title: message.notification!.title,
-    desc: message.notification!.body! + '\n\nCodice prenotazione: ' + message.data['id_booking'],
+    desc: message.notification!.body!,
     showCloseIcon: false, btnCancelOnPress: null,
     btnOkOnPress: () {},
   ).show();
 
 }
-
 
 class Pro20 extends StatelessWidget {
   const Pro20({super.key});

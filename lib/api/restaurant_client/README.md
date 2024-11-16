@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:19362/restaurantservice*
+All URIs are relative to *http://192.168.1.4:41393/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -69,6 +69,7 @@ Class | Method | HTTP request | Description
 *BookingControllerApi* | [**updateBooking**](doc//BookingControllerApi.md#updatebooking) | **PUT** /api/booking/updatebooking | 
 *CustomerControllerApi* | [**findcustomerByPhoneAndPrefix**](doc//CustomerControllerApi.md#findcustomerbyphoneandprefix) | **GET** /api/customer/retrieve/{prefix}/{phoneNumber} | 
 *CustomerControllerApi* | [**save**](doc//CustomerControllerApi.md#save) | **POST** /api/customer/save | 
+*CustomerControllerApi* | [**updateCustomer**](doc//CustomerControllerApi.md#updatecustomer) | **PUT** /api/customer/updatecustomer | 
 *FormControllerApi* | [**addDefaultTimeRangeForAllDays**](doc//FormControllerApi.md#adddefaulttimerangeforalldays) | **PUT** /api/form/create/defaulttimerange/{formCode} | 
 *FormControllerApi* | [**addSpecialDayConf**](doc//FormControllerApi.md#addspecialdayconf) | **PUT** /api/form/add/specialdayconf/{formCode} | 
 *FormControllerApi* | [**addTimeRange**](doc//FormControllerApi.md#addtimerange) | **PUT** /api/form/add/timerange/{formCode}/{dayOfWeek} | 

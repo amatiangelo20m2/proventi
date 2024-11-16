@@ -27,5 +27,10 @@ void main() {
       // TODO
     });
 
+    //Future<CustomerDTO> updateCustomer(CustomerDTO customerDTO) async
+    test('test updateCustomer', () async {
+      // TODO
+    });
+
   });
 }

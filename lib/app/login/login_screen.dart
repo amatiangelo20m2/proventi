@@ -10,6 +10,8 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import '../../global/style.dart';
 import '../../state_manager/restaurant_state_manager.dart';
 
@@ -20,28 +22,62 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController(text: '111');
-  final TextEditingController _passwordController = TextEditingController(text: '111');
-  final TextEditingController _branchCodeController = TextEditingController(text: 'B0A62D6AD1');
+  final TextEditingController _usernameController = TextEditingController(text: '');
+  final TextEditingController _passwordController = TextEditingController(text: '');
+  final TextEditingController _branchCodeController = TextEditingController(text: '');
 
   MobileDeviceDetails mdd = MobileDeviceDetails();
   bool _isLoading = false;
+
+  bool _rememberCredentials = false;
 
   @override
   void initState() {
     super.initState();
     _fetchDeviceInfo();
     _retrieveFcmToken();
+    _loadSavedCredentials();
     _checkIfUserAlreadyLoggedIn();
   }
 
+
+  Future<void> _loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _rememberCredentials = prefs.getBool('rememberCredentials') ?? false;
+
+      if (_rememberCredentials) {
+        _usernameController.text = prefs.getString('username') ?? '';
+        _passwordController.text = prefs.getString('password') ?? '';
+        _branchCodeController.text = prefs.getString('branchCode') ?? '';
+      }
+    });
+  }
+
+  Future<void> _saveCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (_rememberCredentials) {
+      await prefs.setBool('rememberCredentials', true);
+      await prefs.setString('username', _usernameController.text);
+      await prefs.setString('password', _passwordController.text);
+      await prefs.setString('branchCode', _branchCodeController.text);
+    } else {
+      await prefs.remove('rememberCredentials');
+      await prefs.remove('username');
+      await prefs.remove('password');
+      await prefs.remove('branchCode');
+    }
+  }
 
   Future<void> _checkIfUserAlreadyLoggedIn() async {
     var employeeDTO = Provider.of<RestaurantStateManager>(context, listen: false).currentEmployee;
     if(employeeDTO != null){
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainScreen()),
+        MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
       );
     }
   }
@@ -93,9 +129,9 @@ class _LoginPageState extends State<LoginPage> {
       child: Consumer<RestaurantStateManager>(
         builder:
             (BuildContext context, RestaurantStateManager value, Widget? child) {
-          return CupertinoPageScaffold(
+          return Scaffold(
             backgroundColor: Colors.grey[900],
-            child: Stack(
+            body: Stack(
               children: [
                 Center(
                   child: Padding(
@@ -109,6 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                           CupertinoTextField(
                             clearButtonMode: OverlayVisibilityMode.always,
                             controller: _branchCodeController,
+                            keyboardType: TextInputType.text,
                             placeholder: 'Codice Attività',
                             inputFormatters: [
                               LengthLimitingTextInputFormatter(10),
@@ -135,12 +172,29 @@ class _LoginPageState extends State<LoginPage> {
                             padding: const EdgeInsets.all(10),
                           ),
                           const SizedBox(height: 32),
-                          CupertinoButton(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CupertinoCheckbox(
+                                  activeColor: globalGold,
+                                  value: _rememberCredentials,
+                                  onChanged: (re){
+                                    setState(() {
+                                      _rememberCredentials = !_rememberCredentials;
+                                    });
+                                  }),
+                              Text('Ricorda credenziali', style: TextStyle(color: CupertinoColors.white, fontSize: 15),),
 
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          CupertinoButton(
                             color: globalGold,
                             onPressed: _isLoading ? null : _login,
                             child: const Text('Login'),
                           ),
+                          const SizedBox(height: 32),
+
                         ],
                       ),
                     ),
@@ -199,8 +253,12 @@ class _LoginPageState extends State<LoginPage> {
 
           await Provider.of<RestaurantStateManager>(context, listen: false)
               .setDataEmployeeAndRetrieveData(employeeDTO, DateTime.now());
+
+          await _saveCredentials(); // Save credentials if the login is successful
+
+          
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
           );
         }else{
           showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');

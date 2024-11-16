@@ -8,6 +8,7 @@ import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../api/restaurant_client/lib/api.dart';
+import '../../../../global/date_methods_utility.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
 import '../../customer/customer_state_manager.dart';
 
@@ -88,28 +89,6 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
   }
 
 
-  List<String> _generateTimeSlots(TimeRange timeRange) {
-    List<String> timeSlots = [];
-
-    // Check if the time ranges are valid. If not, use default values.
-    int startLunchHour = timeRange.openingHour ?? 12; // Default to 12 if null
-    int startLunchMinute = timeRange.openingMinutes ?? 0; // Default to 0 if null
-    int endLunchHour = timeRange.closingHour ?? 14; // Default to 14 (2 PM) if null
-    int endLunchMinute = timeRange.closingMinutes ?? 0; // Default to 0 if null
-
-    // Create time slots for lunch
-    DateTime startLunch = DateTime(0, 0, 0, startLunchHour, startLunchMinute);
-    DateTime endLunch = DateTime(0, 0, 0, endLunchHour, endLunchMinute);
-
-    while (startLunch.isBefore(endLunch) || startLunch.isAtSameMomentAs(endLunch)) {
-      timeSlots.add(DateFormat('H:mm').format(startLunch));
-      startLunch = startLunch.add(const Duration(minutes: 15));
-    }
-
-    return timeSlots;
-  }
-
-
   String? selectedTime;
   int? selectedHour;
   int? selectedMinute;
@@ -131,8 +110,8 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
     return Material(
       child: Consumer<RestaurantStateManager>(
         builder: (BuildContext context, RestaurantStateManager restaurantStateManager, Widget? child) {
-          List<String> timeSlotLunch = _generateTimeSlots(restaurantStateManager.restaurantConfiguration!.daylyTimeWorkingRange!);
-          List<String> timeSlotDinner = _generateTimeSlots(restaurantStateManager.restaurantConfiguration!.nightTimeWorkingRange!);
+          List<String> timeSlotLunch = generateTimeSlots(restaurantStateManager.restaurantConfiguration!.daylyTimeWorkingRange!);
+          List<String> timeSlotDinner = generateTimeSlots(restaurantStateManager.restaurantConfiguration!.nightTimeWorkingRange!);
           return CupertinoPageScaffold(
             navigationBar: const CupertinoNavigationBar(
               middle: Text("Crea prenotazione"),
@@ -337,6 +316,18 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
 
                         if (bookingDTO != null) {
                           restaurantStateManager.refresh(DateTime.now());
+
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            webShowClose: true,
+                            timeInSecForIosWeb: 6,
+                            msg: 'Prenotazione per ${bookingDTO.customer!.firstName!} alle ore ${bookingDTO.timeSlot!.bookingHour!}:${bookingDTO.timeSlot!.bookingMinutes} per ${italianDateFormat.format(bookingDTO.bookingDate!)} creata',
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.grey[900],
+                            textColor: Colors.white,
+                            fontSize: 12.0,
+                          );
                         } else {
                           Fluttertoast.showToast(
                             webShowClose: true,
@@ -350,7 +341,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                           );
                         }
 
-                        Navigator.pop(context);
+
                       },
                     ),
                   ],
@@ -386,9 +377,10 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 3, left: 2),
                                 child: Chip(
+                                  backgroundColor: globalGoldDark,
                                     label: Text('${currentCustomerDTOList[index].firstName!} '
                                         '${currentCustomerDTOList[index].lastName!} '
-                                        '(+${currentCustomerDTOList[index].prefix!})${currentCustomerDTOList[index].phone!}', style: TextStyle(fontSize: 10),
+                                        '(+${currentCustomerDTOList[index].prefix!})${currentCustomerDTOList[index].phone!}', style: TextStyle(fontSize: 10, color: CupertinoColors.white),
                                     )
                                 ),
                               ),

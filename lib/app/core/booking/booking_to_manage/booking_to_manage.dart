@@ -40,6 +40,13 @@ class _BookingManagerState extends State<BookingManager> {
           },
           child: Column(
             children: [
+              Text(
+                'Prenotazioni in attesa di conferma',
+                style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey[900],
+                    fontWeight: FontWeight.bold),
+              ),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -99,7 +106,9 @@ class _BookingManagerState extends State<BookingManager> {
     return {for (var key in sortedKeys) key: groupedBookings[key]!};
   }
 
-  Widget _buildDateGroup(DateTime date, List<BookingDTO> bookings, RestaurantStateManager restaurantStateManager) {
+  Widget _buildDateGroup(DateTime date,
+      List<BookingDTO> bookings,
+      RestaurantStateManager restaurantStateManager) {
 
     //sorting date from the newst to the oldest reservation
     bookings.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
@@ -111,12 +120,28 @@ class _BookingManagerState extends State<BookingManager> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text(
-                'Prenotazioni in attesa di conferma di ${italianDateFormat.format(date)}'.toUpperCase(),
-                style: TextStyle(
-                    fontSize: 13,
-                    color: globalGoldDark,
-                    fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${italianDateFormat.format(date)}'.toUpperCase(),
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: globalGoldDark,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    children: [
+                      Text(restaurantStateManager
+                          .retrieveTotalGuestsNumberForDayAndActiveBookings(
+                          date), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
+                      Text(
+                        ' / ${restaurantStateManager
+                            .restaurantConfiguration!.capacity}  ', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+
+                    ],
+                  )
+                ],
               ),
 
             ],

@@ -10,6 +10,7 @@ import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../global/date_methods_utility.dart';
 
@@ -42,14 +43,14 @@ class BookingToManageCard extends StatelessWidget {
           // Show the confirmation dialog based on the swipe direction
           if (direction == DismissDirection.endToStart) {
             // Asking confirmation for cancellation
-            bool? result = await _showConfirmationDialog(context, 'Conferma arrivo di ${booking.customer!.firstName!}?', 'Si', 'No' );
+            bool? result = await _showConfirmationDialog(context, 'Conferma prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No' );
 
             if (result == true) {
               return await _setAsArrivedReservation(context);
             }
           } else if (direction == DismissDirection.startToEnd) {
             // Asking confirmation for confirmation
-            bool? result = await _showConfirmationDialog(context, '${booking.customer!.firstName!} non è arrivato?', 'Si', 'No');
+            bool? result = await _showConfirmationDialog(context, 'Rifiuta prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No');
 
             if (result == true) {
               return await _refuseReservation(context);
@@ -77,18 +78,18 @@ class BookingToManageCard extends StatelessWidget {
     Provider.of<RestaurantStateManager>(context, listen: false)
         .updateBooking(BookingDTO(
         bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.ARRIVATO
+        status: BookingDTOStatusEnum.CONFERMATO
     ));
     _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
     return false;
   }
 
   Future<bool?> _refuseReservation(BuildContext context) async {
-    booking.status = BookingDTOStatusEnum.NON_ARRIVATO;
+
     Provider.of<RestaurantStateManager>(context, listen: false)
         .updateBooking(BookingDTO(
         bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.NON_ARRIVATO
+        status: BookingDTOStatusEnum.RIFIUTATO
     ));
     _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' aggiornata come non arrivata ❌' );
     return false; // Prevent automatic dismissal
@@ -153,19 +154,16 @@ class BookingToManageCard extends StatelessWidget {
                     }
                   },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20, left: 20),
-                    child: IconButton(onPressed: (){
-                      showCupertinoModalBottomSheet(
-                        expand: true,
-                        elevation: 10,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return BookingEdit(bookingDTO: booking,);
-                        },
-                      );
-                    }, icon: const Icon(CupertinoIcons.settings_solid)),
-                  ),
+                  IconButton(onPressed: (){
+                    showCupertinoModalBottomSheet(
+                      expand: true,
+                      elevation: 10,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
+                      },
+                    );
+                  }, icon: const Icon(CupertinoIcons.settings_solid)),
                   GestureDetector(onTap: () {
 
                     showCupertinoModalBottomSheet(
@@ -181,7 +179,12 @@ class BookingToManageCard extends StatelessWidget {
                 ],
               ),
               Text(getFormEmoji(formDTOs, booking)),
-              _buildStatusButton(context),
+              Column(
+                children: [
+                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
+                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
+                ],
+              ),
             ],
           ),
         ),
@@ -220,23 +223,6 @@ class BookingToManageCard extends StatelessWidget {
     );
   }
 
-  CupertinoButton _buildStatusButton(BuildContext context) {
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: getStatusColor(booking.status!),
-      borderRadius: BorderRadius.circular(8),
-      onPressed: () {
-
-      },
-      child: Text(
-        booking.status!.value.toString().replaceAll('_', ' '),
-        style: const TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 10,
-        ),
-      ),
-    );
-  }
 
   Row _buildGuestInfo() {
     return Row(
@@ -307,7 +293,15 @@ class BookingToManageCard extends StatelessWidget {
             ),
             Positioned(
               right: 0,
-              child: IconButton(onPressed: () {
+              child: IconButton(onPressed: () async {
+
+
+                Uri urlPhone = Uri(scheme: 'tel', path :booking.customer!.prefix! + booking.customer!.phone!);
+                if (await canLaunchUrl(urlPhone)) {
+                  await launchUrl(urlPhone);  // Open the phone dialer
+                } else {
+                  throw 'Could not open the phone dialer.';
+                }
               }, icon: Icon(CupertinoIcons.phone)),
             ),
           ],
@@ -348,7 +342,7 @@ class BookingToManageCard extends StatelessWidget {
               ));
               Navigator.pop(context, null);
             },
-            child: Text('Cancella'),
+            child: Text('Elimina'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(

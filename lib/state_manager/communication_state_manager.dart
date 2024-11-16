@@ -102,4 +102,19 @@ class CommunicationStateManager extends ChangeNotifier {
 
   }
 
+
+  Map<String, String> urlsPhotos = Map();
+
+
+  retrievePhotoUrlByPhone(String branchCode, String phoneNumber) async {
+
+    if(urlsPhotos.containsKey(phoneNumber)){
+      return urlsPhotos[phoneNumber];
+    }else{
+      String? photoUrl = await whatsAppConfigurationControllerApi.retrieveUserPhoto(branchCode, phoneNumber);
+      urlsPhotos.putIfAbsent(phoneNumber, () => photoUrl!);
+      return photoUrl;
+    }
+  }
+
 }

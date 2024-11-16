@@ -7,11 +7,11 @@ import 'package:intl/intl.dart';
 import '../api/restaurant_client/lib/api.dart';
 import '../app/core/booking/crud_widget/create_booking_lista_attesa.dart';
 
-var globalGold = Color(0xFFD4B26A);
-var globalGoldDark = Color(0xFFae801f);
-var elegantRed = Color(0xFFD32F2F);
-var elegantGreen = Color(0xFF4CAF50);
-var elegantBlue = Color(0xFF3A6EA5);
+var globalGold = const Color(0xFFD4B26A);
+var globalGoldDark = const Color(0xFFae801f);
+var elegantRed = const Color(0xFFD32F2F);
+var elegantGreen = const Color(0xFF4CAF50);
+var elegantBlue = const Color(0xFF3F6EA5);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 
@@ -54,19 +54,43 @@ Color getStatusColor(BookingDTOStatusEnum statusEnum) {
     case BookingDTOStatusEnum.RIFIUTATO:
       return elegantRed;
     case BookingDTOStatusEnum.ARRIVATO:
-      return elegantBlue;
+      return elegantGreen;
     case BookingDTOStatusEnum.NON_ARRIVATO:
-      return Colors.blueGrey;
+      return Colors.grey;
     case BookingDTOStatusEnum.LISTA_ATTESA:
       return Colors.teal.shade300;
     case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
       return Colors.purple;
     case BookingDTOStatusEnum.ELIMINATO:
-      return CupertinoColors.black;
+      return elegantRed;
     default:
       return CupertinoColors.systemGrey;
   }
 }
+
+IconData getIconByStatus(BookingDTOStatusEnum statusEnum) {
+  switch (statusEnum) {
+    case BookingDTOStatusEnum.CONFERMATO:
+      return CupertinoIcons.check_mark_circled;
+    case BookingDTOStatusEnum.IN_ATTESA:
+      return CupertinoIcons.question_circle;
+    case BookingDTOStatusEnum.RIFIUTATO:
+      return CupertinoIcons.clear_circled;
+    case BookingDTOStatusEnum.ARRIVATO:
+      return CupertinoIcons.arrow_down_square_fill;
+    case BookingDTOStatusEnum.NON_ARRIVATO:
+      return CupertinoIcons.nosign;
+    case BookingDTOStatusEnum.LISTA_ATTESA:
+      return CupertinoIcons.person_3;
+    case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
+      return CupertinoIcons.pen;
+    case BookingDTOStatusEnum.ELIMINATO:
+      return CupertinoIcons.trash;
+    default:
+      return CupertinoIcons.ant_circle;
+  }
+}
+
 
 void showCupertinoAlert(BuildContext context, String title, String message) {
   showCupertinoDialog(
@@ -120,3 +144,12 @@ String formatDuration(Duration duration) {
   String formattedTime = '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   return formattedTime;
 }
+
+double getRelativeSize(BuildContext context, double size) {
+  // Get the screen width
+  double screenWidth = MediaQuery.of(context).size.width;
+  double relativeSize = size * (screenWidth / 375); // 375 is the design width (reference screen size)
+
+  return relativeSize;
+}
+

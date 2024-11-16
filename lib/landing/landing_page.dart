@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo.png', width: MediaQuery.of(context).size.height/2),
+            Image.asset('assets/images/logo.png', width: MediaQuery.of(context).size.width/2),
 
             const SizedBox(height: 20),
             CupertinoActivityIndicator(color: globalGold, radius: 25,)

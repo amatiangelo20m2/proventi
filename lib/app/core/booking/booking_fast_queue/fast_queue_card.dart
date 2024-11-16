@@ -199,16 +199,20 @@ class _FastQueueCardState extends State<FastQueueCard> {
               ),
               _buildGuestInfo(),
               _buildTimeBooking(context),
-              IconButton(icon: Icon(CupertinoIcons.settings_solid, color: Colors.grey[900],), onPressed: (){
-                showCupertinoModalBottomSheet(
-                  expand: true,
-                  elevation: 10,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return BookingEdit(bookingDTO: widget.booking,);
-                  },
-                );
-              },),
+              Consumer<RestaurantStateManager>(
+                builder: (BuildContext context, RestaurantStateManager value, Widget? child) {
+
+                  return IconButton(icon: Icon(CupertinoIcons.settings_solid, color: Colors.grey[900],), onPressed: (){
+                    showCupertinoModalBottomSheet(
+                      expand: true,
+                      elevation: 10,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return BookingEdit(bookingDTO: widget.booking, restaurantDTO: value.restaurantConfiguration!,);
+                      },
+                    );
+                  },);
+                },),
               Consumer<NotificationStateManager>(
                 builder: (BuildContext context, NotificationStateManager notificationManager, Widget? child) {
                   return IconButton(onPressed: () async {
@@ -216,7 +220,12 @@ class _FastQueueCardState extends State<FastQueueCard> {
                   }, icon: const Icon(CupertinoIcons.paperplane));
                 },
               ),
-              _buildStatusButton(context),
+              Column(
+                children: [
+                  Icon(getIconByStatus(widget.booking.status!), color: getStatusColor(widget.booking.status!),),
+                  Text(widget.booking.status!.value!, style: TextStyle(fontSize: 4),)
+                ],
+              ),
             ],
           ),
         ),
@@ -260,24 +269,6 @@ class _FastQueueCardState extends State<FastQueueCard> {
           ),
         ),
       ],
-    );
-  }
-
-  CupertinoButton _buildStatusButton(BuildContext context) {
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: getStatusColor(widget.booking.status!),
-      borderRadius: BorderRadius.circular(8),
-      onPressed: () {
-
-      },
-      child: Text(
-        widget.booking.status!.value.toString().replaceAll('_', ' '),
-        style: const TextStyle(
-          color: CupertinoColors.white,
-          fontSize: 10,
-        ),
-      ),
     );
   }
 
