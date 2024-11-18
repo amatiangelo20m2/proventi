@@ -32,9 +32,6 @@ class _BookingScreenState extends State<BookingScreen> {
   bool isTodaySelected = true;
   bool isTomorrowSelected = false;
 
-  bool _searchField = true;
-
-
   List<BookingDTOStatusEnum> currentBookingStatus = [ BookingDTOStatusEnum.CONFERMATO];
 
   int? index = 0;
@@ -178,7 +175,23 @@ class _BookingScreenState extends State<BookingScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: 10, right: 10, top: 8, bottom: 3),
+                      child: CupertinoTextField(
+                        onChanged: (newQuery){
+                          setState(() {
+                            queryString = newQuery;
+                          });
+                        },
+                        clearButtonMode: OverlayVisibilityMode.always,
+                        style: TextStyle(fontSize: 16),
+                        placeholder:
+                        'Ricerca per nome o cellulare',
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -266,14 +279,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               },
                               icon: const Icon(CupertinoIcons.calendar,
                                   color: Colors.blueGrey)),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _searchField = !_searchField;
-                                });
-                              },
-                              icon: const Icon(CupertinoIcons.search,
-                                  color: Colors.blueGrey)),
+
                           //IconButton(
                           //    onPressed: () {
                           //      _showSortMenu(context);
@@ -400,24 +406,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
 
-                  if (_searchField)
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 10, right: 10, top: 2, bottom: 3),
-                        child: CupertinoTextField(
-                          onChanged: (newQuery){
-                            setState(() {
-                              queryString = newQuery;
-                            });
-                          },
-                          clearButtonMode: OverlayVisibilityMode.always,
-                          style: TextStyle(fontSize: 12),
-                          placeholder:
-                              'Ricerca per nome o cellulare',
-                        ),
-                      ),
-                    ),
+
                   dailiyIndexInfininte == 0 ? Expanded(
                     flex: 5,
                     child: RefreshIndicator(

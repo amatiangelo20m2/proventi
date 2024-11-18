@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -35,6 +37,12 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
               || booking.status == BookingDTOStatusEnum.NON_ARRIVATO)
               .toList());
 
+        final Map<DateTime, List<BookingDTO>> sortedGroupedBookings =
+        SplayTreeMap<DateTime, List<BookingDTO>>.from(
+          groupedBookings,
+              (a, b) => b.compareTo(a),
+        );
+
         return RefreshIndicator(
           onRefresh: () async {
             await restaurantStateManager.refresh(DateTime.now());
@@ -44,7 +52,7 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 2, bottom: 3),
+                      left: 10, right: 10, top: 8, bottom: 3),
                   child: CupertinoTextField(
                     onChanged: (newQuery){
                       setState(() {
@@ -54,17 +62,17 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
 
                     clearButtonMode: OverlayVisibilityMode.always,
                     placeholder: 'Ricerca per nome cliente o numero',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
               ),
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.only(bottom: 160),
-                  itemCount: groupedBookings.keys.length,
+                  itemCount: sortedGroupedBookings.keys.length,
                   itemBuilder: (context, index) {
-                    final date = groupedBookings.keys.elementAt(index);
-                    final bookings = groupedBookings[date]!;
+                    final date = sortedGroupedBookings.keys.elementAt(index);
+                    final bookings = sortedGroupedBookings[date]!;
                 
                     return _buildDateGroup(date, bookings, restaurantStateManager);
                   },

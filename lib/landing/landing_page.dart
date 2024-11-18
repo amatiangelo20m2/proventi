@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:proventi/global/style.dart';
 import '../app/login/login_screen.dart';
 
@@ -14,27 +13,32 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
 
+    // Initialize the AnimationController
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2200),
-    )..forward();
+    )..repeat(reverse: true);
 
+    // Define scaling and rotation animations
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
 
+    // Load data after delay
+    _loadData();
   }
-
 
   Future<void> _loadData() async {
     await Future.delayed(const Duration(seconds: 3));
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const LoginPage()),
     );
-
   }
 
   @override
@@ -51,10 +55,24 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logo.png', width: MediaQuery.of(context).size.width/2),
-
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: child,
+                );
+              },
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: MediaQuery.of(context).size.width / 2,
+              ),
+            ),
             const SizedBox(height: 20),
-            CupertinoActivityIndicator(color: globalGold, radius: 25,)
+            CupertinoActivityIndicator(
+              color: globalGold,
+              radius: 25,
+            ),
           ],
         ),
       ),

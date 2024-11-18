@@ -48,9 +48,12 @@ class _MainScreenState extends State<MainScreen> {
       builder: (BuildContext context,
           RestaurantStateManager restaurantStateManager, Widget? child) {
         return Scaffold(
+
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _pageIndex,
             selectedItemColor: Colors.blueGrey,
+            backgroundColor: Colors.red,
+            useLegacyColorScheme: true,
             unselectedItemColor: Colors.grey,
             selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
             unselectedLabelStyle: const TextStyle(fontSize: 8),
@@ -151,9 +154,14 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
+
           appBar: AppBar(
-            surfaceTintColor: Colors.white,
-            backgroundColor: Colors.white,
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+              size: 30,
+            ),
+            surfaceTintColor: Colors.grey[900],
+            backgroundColor: Colors.grey[900],
             actions: const [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -192,15 +200,14 @@ class _MainScreenState extends State<MainScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset('assets/images/logo.png', width: 30),
+                Image.asset('assets/images/logo.png', width: 50),
                 Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
-                  style: TextStyle(fontSize: 15, color: Colors.grey[900]),),
+                  style: TextStyle(fontSize: 15, color: Colors.white),),
               ],
             ),
           ),
           body: getPageByIndex(_pageIndex,
               restaurantStateManager),
-          backgroundColor: Colors.white,
         );
       },
     );

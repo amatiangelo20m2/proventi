@@ -63,11 +63,11 @@ class _BookingEditState extends State<BookingEdit> {
     _phoneController = TextEditingController(text: widget.bookingDTO.customer!.phone ?? '');
     _capController = TextEditingController(text: widget.bookingDTO.customer!.postalCode ?? '');
 
-    _timeSlotController = TextEditingController(text: widget.bookingDTO.timeSlot!.bookingHour!.toString() + ':' + widget.bookingDTO.timeSlot!.bookingMinutes!.toString());
+    _timeSlotController = TextEditingController(text: '${widget.bookingDTO.timeSlot!.bookingHour!}:${widget.bookingDTO.timeSlot!.bookingMinutes!}');
 
     _numGuestsController = TextEditingController(text: widget.bookingDTO.numGuests?.toString());
     _specialRequestsController = TextEditingController(text: widget.bookingDTO.specialRequests);
-    _selectedNewDate = widget.bookingDTO.bookingDate!;
+    _selectedNewDate = DateTime(widget.bookingDTO.bookingDate!.year, widget.bookingDTO.bookingDate!.month, widget.bookingDTO.bookingDate!.day, 2);
   }
 
   @override

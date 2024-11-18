@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 5),
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 6),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

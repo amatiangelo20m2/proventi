@@ -29,9 +29,6 @@ class ReservationCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         switch(booking.status){
-          case BookingDTOStatusEnum.IN_ATTESA:
-            _showBookingActionMenuListaAttesta(context, booking);
-            break;
           case BookingDTOStatusEnum.CONFERMATO:
             _showBookingActionMenuConfermato(context, booking);
             break;

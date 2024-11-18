@@ -102,7 +102,8 @@ class ProcessedBookingCard extends StatelessWidget {
               Column(
                 children: [
                   Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
-                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
+                  Text(booking.status!.value, style: TextStyle(fontSize: 4),),
+                  Text(booking.bookingId.toString(), style: TextStyle(fontSize: 8),)
                 ],
               ),
             ],
