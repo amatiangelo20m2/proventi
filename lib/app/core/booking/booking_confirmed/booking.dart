@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/global/date_methods_utility.dart';
@@ -11,10 +9,10 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/booking/crud_widget/create_booking_confermato.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:vibration/vibration.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
+import '../../../custom_widgets/appinio_animated_toggle_tab.dart';
 import 'booking_card.dart';
 
 class BookingScreen extends StatefulWidget {
@@ -30,16 +28,7 @@ class _BookingScreenState extends State<BookingScreen> {
   late ScrollController _scrollController;
 
   bool isTodaySelected = true;
-  bool isTomorrowSelected = false;
-
-  List<BookingDTOStatusEnum> currentBookingStatus = [ BookingDTOStatusEnum.CONFERMATO];
-
   int? index = 0;
-  bool confermato = true;
-  bool daily = true;
-
-  int? dailiyIndexInfininte = 0;
-
   String queryString = '';
 
   @override
@@ -57,9 +46,9 @@ class _BookingScreenState extends State<BookingScreen> {
 
   void _generateDays() {
     _days = List<DateTime>.generate(
-      30,
-      (index) => DateTime.now().subtract(Duration(days: 1))
-          .add(Duration(days: index)),
+      90,
+      (index) =>
+          DateTime.now().subtract(Duration(days: 1)).add(Duration(days: index)),
     );
   }
 
@@ -73,11 +62,6 @@ class _BookingScreenState extends State<BookingScreen> {
       isTodaySelected = day.day == today.day &&
           day.month == today.month &&
           day.year == today.year;
-
-      isTomorrowSelected = day.day == tomorrow.day &&
-          day.month == tomorrow.month &&
-          day.year == tomorrow.year;
-
       _scrollToSelectedDay();
     });
 
@@ -98,12 +82,13 @@ class _BookingScreenState extends State<BookingScreen> {
         _days.indexWhere((day) => day.isAtSameMomentAs(_selectedDate));
     if (selectedIndex != -1) {
       _scrollController.animateTo(
-        selectedIndex * 60.0, // Adjust as needed based on your item width
+        selectedIndex * 80.0, // Adjust as needed based on your item width
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     }
   }
+
   void _scrollToToday(RestaurantStateManager restaurantManager) {
     final todayIndex = _days.indexWhere((day) =>
         day.day == DateTime.now().day &&
@@ -113,7 +98,6 @@ class _BookingScreenState extends State<BookingScreen> {
       setState(() {
         _selectedDate = _days[todayIndex];
         isTodaySelected = true;
-        isTomorrowSelected = false;
         _scrollToSelectedDay();
         _onDaySelected(_selectedDate, restaurantManager);
       });
@@ -130,46 +114,14 @@ class _BookingScreenState extends State<BookingScreen> {
       fontSize: 12.0,
     );
   }
-  void _scrollToTomorrow(RestaurantStateManager restaurantManager) {
-    final tomorrow = DateTime.now().add(const Duration(days: 1));
-    final tomorrowIndex = _days.indexWhere((day) =>
-        day.day == tomorrow.day &&
-        day.month == tomorrow.month &&
-        day.year == tomorrow.year);
-    if (tomorrowIndex != -1) {
-      setState(() {
-        _selectedDate = _days[tomorrowIndex];
-        isTodaySelected = false;
-        isTomorrowSelected = true;
-        _scrollToSelectedDay();
-        _onDaySelected(_selectedDate, restaurantManager);
-      });
-    }
-
-    Fluttertoast.showToast(
-      webShowClose: true,
-      timeInSecForIosWeb: 6,
-      msg: 'Prenotazioni data ' + italianDateFormat.format(_selectedDate),
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
-      fontSize: 12.0,
-    );
-  }
-  String capitalizeFirstLetter(String input) {
-    if (input.isEmpty) {
-      return input;
-    }
-    return input.substring(0, 1).toUpperCase() + input.substring(1);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.grey.shade50,
       child: Consumer<RestaurantStateManager>(
-        builder: (BuildContext context, RestaurantStateManager restaurantManager,
-            Widget? child) {
+        builder: (BuildContext context,
+            RestaurantStateManager restaurantManager, Widget? child) {
           return Stack(
             children: [
               Column(
@@ -178,154 +130,158 @@ class _BookingScreenState extends State<BookingScreen> {
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: 10, right: 10, top: 8, bottom: 3),
+                          left: 10, right: 10, bottom: 0),
                       child: CupertinoTextField(
-                        onChanged: (newQuery){
+                        onChanged: (newQuery) {
                           setState(() {
                             queryString = newQuery;
                           });
                         },
                         clearButtonMode: OverlayVisibilityMode.always,
                         style: TextStyle(fontSize: 16),
-                        placeholder:
-                        'Ricerca per nome o cellulare',
+                        placeholder: '🔎 Ricerca per nome o cellulare',
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const SizedBox(width: 3,),
-
-                          FlutterSwitch(
-                            width: 90.0,
-                            height: 35.0,
-                            valueFontSize: 5.0,
-                            toggleSize: 30.0,
-                            value: confermato,
-                            activeColor: elegantGreen,
-                            activeText: 'CONFERMATE',
-                            inactiveText: 'RIFIUTATE',
-                            activeIcon: Icon(Icons.check_circle, color: elegantGreen),
-                            inactiveIcon: Icon(CupertinoIcons.clear_circled_solid, color: elegantRed),
-                            inactiveColor: elegantRed,
-                            borderRadius: 25.0,
-                            padding: 1.0,
-                            showOnOff: true,
-                            onToggle: (val) {
-                              setState(() {
-                                confermato = !confermato;
-                                if(confermato){
-                                  currentBookingStatus =
-                                      [BookingDTOStatusEnum.CONFERMATO];
-                                  Fluttertoast.showToast(
-                                      msg: 'Prenotazioni in stato ${currentBookingStatus}',
-                                      backgroundColor: elegantGreen,
-                                  );
-                                }else{
-                                  currentBookingStatus = [
-                                      BookingDTOStatusEnum.RIFIUTATO ];
-                                  Fluttertoast.showToast(
-                                      backgroundColor: elegantRed,
-                                      msg:
-                                      'Prenotazioni in stato ${currentBookingStatus}');
-                                }
-                              });
-                            },
-                          ),
-
-                        ],
-                      ),
-
-                      Row(
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              Vibration.vibrate(duration: 1000);
-                              _scrollToToday(restaurantManager);
-                            },
-                            child: Text(
-                              'Oggi',
-                              style: TextStyle(
-                                fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: isTodaySelected
-                                      ? globalGold
-                                      : Colors.grey),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Vibration.vibrate(duration: 1000);
-                              _scrollToTomorrow(restaurantManager);
-                            },
-                            child: Text(
-                              'Domani',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                  color: isTomorrowSelected
-                                      ? globalGold
-                                      : Colors.grey),
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                _selectDate(
-                                    context, _selectedDate, restaurantManager);
-                                // _pickDateRange(context);
-                              },
-                              icon: const Icon(CupertinoIcons.calendar,
-                                  color: Colors.blueGrey)),
-
-                          //IconButton(
-                          //    onPressed: () {
-                          //      _showSortMenu(context);
-                          //    },
-                          //    icon: const Icon(CupertinoIcons.sort_down,
-                          //        color: Colors.blueGrey)),
-                          //IconButton(
-                          //    onPressed: () {
-                          //      setState(() {
-                          //        _searchField = !_searchField;
-                          //      });
-                          //    },
-                          //    icon: const Icon(CupertinoIcons.search)
-                          //),
-                        ],
-                      ),
-                    ],
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 2, top: 2, left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '${italianDateFormat.format(_selectedDate)}'
-                              .toUpperCase(),
-                          style: TextStyle(fontSize: 12, color: globalGoldDark,),
+                        SwitchPro20(
+                          callback: (int i) {
+                            switch(i){
+                              case 0:
+                              Fluttertoast.showToast(
+                                  msg: "Prenotazioni di tutta la giornata",
+                                  backgroundColor: globalGoldDark,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1);
+                              break;
+                              case 1:
+                                Fluttertoast.showToast(
+                                    msg: "Prenotazioni pranzo",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    backgroundColor: globalGold,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1);
+                                break;
+                              case 2:
+                                Fluttertoast.showToast(
+                                    msg: "Prenotazioni cena",
+                                    backgroundColor: elegantBlue,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1);
+                                break;
+                            }
+                          },
+                          tabTexts: [
+                            badges.Badge(
+                                badgeStyle: badges.BadgeStyle(badgeColor: Colors.grey.shade800),
+                                badgeContent: Text(restaurantManager.allBookings!.where((element) => isSameDay(element.bookingDate!, _selectedDate))
+                                    .toList().length.toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeAnimation: badges.BadgeAnimation.rotation(),
+                                child: const Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Icon(CupertinoIcons.infinite, size: 25,)
+                                )),
+                            badges.Badge(
+                                badgeStyle: badges.BadgeStyle(badgeColor: globalGold),
+                                badgeContent: const Text('5', style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeAnimation: badges.BadgeAnimation.rotation(),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(CupertinoIcons.sun_max, size: 25, color: globalGoldDark,)
+                                )),
+                            badges.Badge(
+                                badgeStyle: badges.BadgeStyle(badgeColor: elegantBlue),
+                                badgeContent: const Text('8', style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeAnimation: badges.BadgeAnimation.rotation(),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(CupertinoIcons.moon_stars, color: elegantBlue, size: 25,)
+                                )),
+                          ],
+                          height: 40,
+                          width: 130,
+                          boxDecoration: const BoxDecoration(
+                              color: Colors.white
+                          ),
+                          animatedBoxDecoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                          ),
+                          activeStyle: const TextStyle(
+                            color: Colors.white,
+                          ),
+                          inactiveStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                         Row(
                           children: [
-                            Text(restaurantManager
-                                .retrieveTotalGuestsNumberForDayAndActiveBookings(
-                                _selectedDate), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
                             Text(
-                                ' / ${restaurantManager
-                                    .restaurantConfiguration!.capacity}  ', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
-
+                              restaurantManager
+                                  .retrieveTotalGuestsNumberForDayAndActiveBookings(
+                                  _selectedDate).toString(),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: globalGoldDark),
+                            ),
+                            Text(
+                              '/${restaurantManager.restaurantConfiguration!.capacity}  ',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey.shade900),
+                            ),
                           ],
-                        )
+                        ),
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Vibration.vibrate(duration: 1000);
+                                _scrollToToday(restaurantManager);
+                              },
+                              child: Text(
+                                'OGGI',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: isTodaySelected
+                                        ? globalGoldDark
+                                        : Colors.grey),
+                              ),
+                            ),
+
+                            IconButton(
+                                onPressed: () {
+                                  _selectDate(context, _selectedDate,
+                                      restaurantManager);
+                                  // _pickDateRange(context);
+                                },
+                                icon: const Icon(CupertinoIcons.calendar,
+                                    color: Colors.blueGrey)),
+                            IconButton(
+                                onPressed: () {
+                                  _showSortMenu(context);
+                                },
+                                icon: const Icon(CupertinoIcons.sort_down,
+                                    color: Colors.blueGrey)),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 80,
 
+                  SizedBox(
+                    height: 95,
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (scrollNotification) {
                         if (scrollNotification is ScrollUpdateNotification) {
@@ -359,82 +315,120 @@ class _BookingScreenState extends State<BookingScreen> {
                               _selectedDate.year == day.year;
                           return GestureDetector(
                             onTap: () => _onDaySelected(day, restaurantManager),
-                            child: Container(
-                              width: 110,
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? globalGold
-                                    : Colors.grey[100],
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Material(
+                                    shadowColor: Colors.grey.withOpacity(0.5),
+                                    elevation: isSelected ? 2 : 5,
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Container(
+                                      width: 95,
 
-                                borderRadius: BorderRadius.circular(15)
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    capitalizeFirstLetter(DateFormat.E('it')
-                                            .format(day)
-                                            .substring(0, 3))
-                                        .toUpperCase(),
-                                    style: TextStyle(
-                                        fontSize: 9,
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.black),
+                                      decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? globalGold
+                                              : Colors.grey.shade100,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            DateFormat.E('it')
+                                                .format(day)
+                                                .substring(0, 3)
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: isSelected
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                          ),
+                                          Text(
+                                            '${day.day}',
+                                            style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontSize: 20),
+                                          ),
+                                          Text(
+                                            months[day.month - 1].toUpperCase(),
+                                            style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontSize: 10),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 15, left: 15),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: LinearProgressWidget(restaurantManager, day)
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  Text(
-                                    '${day.day}.${day.month}',
-                                    style: TextStyle(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontSize: 12),
-                                  ),
-                                  _buildCurrentDaySituationWidget(
-                                      restaurantManager.allBookings!
-                                          .where((element) => isSameDay(
-                                              element.bookingDate!, day))
-                                          .toList(),
-                                      isSelected),
-                                ],
-                              ),
+                                ),
+                                _buildCurrentDaySituationWidget(
+                                    restaurantManager.allBookings!
+                                        .where((element) => isSameDay(
+                                            element.bookingDate!, day))
+                                        .toList(),
+                                    isSelected),
+                              ],
                             ),
                           );
                         },
                       ),
                     ),
                   ),
+                  if(_getNumbersBookingByStatus(restaurantManager.allBookings!.where((element) => isSameDay(
+                      element.bookingDate!, _selectedDate)).toList(), BookingDTOStatusEnum.RIFIUTATO) > 0) InkWell(
+                    onTap: () {
 
+                      showCupertinoModalBottomSheet(
+                        expand: true,
+                        elevation: 10,
+                        context: context,
+                        builder: (BuildContext context) {
+                          List<BookingDTO> refusedBookings = restaurantManager.allBookings!.where((element) => isSameDay(
+                              element.bookingDate!, _selectedDate)).toList().where((element) =>
+                          element.status == BookingDTOStatusEnum.RIFIUTATO).toList();
+                          return Text('');
+                        },
+                      );
 
-                  dailiyIndexInfininte == 0 ? Expanded(
-                    flex: 5,
-                    child: RefreshIndicator(
-                    onRefresh: () async {
-                    await restaurantManager.refresh(_selectedDate);
                     },
-                    child: ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 160),
-                    itemCount: restaurantManager.bookingFilteredByCurrentDate(_selectedDate)
-                        .where((bookingDTO) => currentBookingStatus.contains(bookingDTO.status))
-                        .where((element) => element.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase())
-                        || element.customer!.phone!.toLowerCase().contains(queryString.toLowerCase())).length,
-
-          itemBuilder: (context, index) {
-
-          return ReservationCard(
-          booking: restaurantManager.bookingFilteredByCurrentDate(_selectedDate)
-              .where((booking) =>
-          currentBookingStatus.contains(booking.status)).where((element) => element.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase())
-              || element.customer!.phone!.toLowerCase().contains(queryString.toLowerCase()))
-              .toList()[index],
-          formDTOs: restaurantManager.currentBranchForms!,
-          restaurantDTO: restaurantManager.restaurantConfiguration!, shadeColor: globalGoldDark,);
-
-          },
-          ),
-          ),
-          ) : Expanded(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 30, top: 5, bottom: 5),
+                      child: Row(
+                        children: [
+                          badges.Badge(
+                            badgeStyle: badges.BadgeStyle(badgeColor: Colors.redAccent),
+                              badgeContent: Text(
+                                _getNumbersBookingByStatus(restaurantManager.allBookings!.where((element) => isSameDay(
+                                    element.bookingDate!, _selectedDate)).toList(), BookingDTOStatusEnum.RIFIUTATO).toString(),
+                                style: const TextStyle(
+                                    color: CupertinoColors.white, fontSize: 13),
+                              ),
+                              child: const Icon(CupertinoIcons.archivebox)),
+                          const Text(
+                            '   Archivio prenotazioni rifiutate',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
                     flex: 5,
                     child: RefreshIndicator(
                       onRefresh: () async {
@@ -442,24 +436,39 @@ class _BookingScreenState extends State<BookingScreen> {
                       },
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 160),
-                        itemCount: restaurantManager.bookingFilteredByCurrentDate(_selectedDate)
-                            .where((bookingDTO) => currentBookingStatus.contains(bookingDTO.status)
-                            && (isLunchTime(bookingDTO, restaurantManager.restaurantConfiguration!) == daily)).length,
-
+                        itemCount: restaurantManager
+                            .bookingFilteredByCurrentDate(_selectedDate)
+                            .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO)
+                            .where((element) =>
+                                element.customer!.firstName!
+                                    .toLowerCase()
+                                    .contains(queryString.toLowerCase()) ||
+                                element.customer!.phone!
+                                    .toLowerCase()
+                                    .contains(queryString.toLowerCase()))
+                            .length,
                         itemBuilder: (context, index) {
-
                           return ReservationCard(
-                              booking: restaurantManager.bookingFilteredByCurrentDate(_selectedDate)
-                                  .where((booking) =>
-                                  currentBookingStatus.contains(booking.status) && (isLunchTime(booking, restaurantManager.restaurantConfiguration!) == daily) )
-                                  .toList()[index],
-                              formDTOs: restaurantManager.currentBranchForms!,
-                            restaurantDTO: restaurantManager.restaurantConfiguration!, shadeColor: globalGoldDark,);
-
-                          },
+                            booking: restaurantManager
+                                .bookingFilteredByCurrentDate(_selectedDate)
+                                .where((booking) => booking.status == BookingDTOStatusEnum.CONFERMATO)
+                                .where((element) =>
+                                    element.customer!.firstName!
+                                        .toLowerCase()
+                                        .contains(queryString.toLowerCase()) ||
+                                    element.customer!.phone!
+                                        .toLowerCase()
+                                        .contains(queryString.toLowerCase()))
+                                .toList()[index],
+                            formDTOs: restaurantManager.currentBranchForms!,
+                            restaurantDTO:
+                                restaurantManager.restaurantConfiguration!,
+                            shadeColor: globalGoldDark,
+                          );
+                        },
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
               Positioned(
@@ -477,7 +486,6 @@ class _BookingScreenState extends State<BookingScreen> {
                       onPressed: () {
                         showCupertinoModalBottomSheet(
                           expand: true,
-
                           elevation: 10,
                           context: context,
                           builder: (BuildContext context) {
@@ -519,14 +527,14 @@ class _BookingScreenState extends State<BookingScreen> {
               Navigator.pop(context, 'name');
               print("Sorting by name");
             },
-            child: const Text('Ordina per nome'),
+            child: const Text('Ordina per nome cliente (A->Z)'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
               Navigator.pop(context, 'status');
               print("Sorting by status");
             },
-            child: const Text('Ordina per stato prenotazione'),
+            child: const Text('Ordina per numero coperti'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
@@ -576,85 +584,97 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
 
-  _buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
-    int tables = list
-        .where((element) => element.status == BookingDTOStatusEnum.CONFERMATO)
+  _getNumbersBookingByStatus(List<BookingDTO> list, BookingDTOStatusEnum bookingStatus){
+    return list
+        .where((element) => element.status == bookingStatus)
         .length;
-    int currentGuestNumber = (list
-        .where((element) => element.status == BookingDTOStatusEnum.CONFERMATO)
-        .fold(0, (total, booking) => total + (booking.numGuests ?? 0)));
-    int refused = list
-        .where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO)
-        .length;
-
-    if(tables == 0 && refused == 0 && currentGuestNumber == 0){
-      return SizedBox(height: 0,);
-    }
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Row(
-        children: [
-          if(currentGuestNumber> 0) Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: elegantBlue,
-                shape: BoxShape.circle, // Makes the container circular
-              ),
-
-              child: Column(
-                children: [
-                  const Icon(Icons.people_outline, size: 15, color: CupertinoColors.white,),
-                  Text(
-                    currentGuestNumber.toString(),
-                    style: const TextStyle(fontSize: 10, color: CupertinoColors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if(tables > 0) Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: elegantGreen,
-                shape: BoxShape.circle, // Makes the container circular
-              ),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.table_restaurant, size: 15, color: CupertinoColors.white,),
-                  Text(
-                    tables.toString().toString(),
-                    style: const TextStyle(fontSize: 10, color: CupertinoColors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (refused > 0) Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: elegantRed,
-                shape: BoxShape.circle, // Makes the container circular
-              ),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(CupertinoIcons.clear_circled, size: 15, color: CupertinoColors.white,),
-                  Text(
-                    refused.toString(),
-                    style: const TextStyle(fontSize: 10, color: CupertinoColors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
+
+  _buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
+    int bookings = _getNumbersBookingByStatus(list, BookingDTOStatusEnum.CONFERMATO);
+
+    int refused = _getNumbersBookingByStatus(list, BookingDTOStatusEnum.RIFIUTATO);
+
+    if (bookings == 0 && refused == 0) {
+      return SizedBox(
+        height: 0,
+      );
+    }
+    return Positioned(
+        right: 0,
+        child: Column(
+          children: [
+            if (bookings > 0)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.teal,
+                  borderRadius: BorderRadius.circular(
+                      5), // Half of width/height for a circular effect
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Row(
+                    children: [
+                      const Icon(CupertinoIcons.book,
+                          size: 13, // Set the size of the icon
+                          color: Colors.white),
+                      Text(
+                        ' ' +
+                            bookings
+                                .toString(), // Text to display inside the circle
+                        style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            SizedBox(
+              height: 2,
+            ),
+            if(refused > 0) Container(
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(
+                    5), // Half of width/height for a circular effect
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Row(
+                  children: [
+                    const Icon(CupertinoIcons.clear_circled,
+                        size: 13, // Set the size of the icon
+                        color: Colors.white),
+                    Text(
+                      ' $refused', // Text to display inside the circle
+                      style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  LinearProgressWidget(RestaurantStateManager restaurantManager, DateTime day) {
+
+    int pax = restaurantManager
+        .retrieveTotalGuestsNumberForDayAndActiveBookings(
+        day);
+
+    double currentProgressValue = pax
+        / restaurantManager.restaurantConfiguration!.capacity!;
+
+    print('XXX: $currentProgressValue');
+
+    return LinearProgressIndicator(
+      color: currentProgressValue > 1 ? Colors.redAccent : Colors.teal.shade900,
+      value: currentProgressValue,
+    );
+  }
 }

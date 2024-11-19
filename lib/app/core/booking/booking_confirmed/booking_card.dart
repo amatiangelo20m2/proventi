@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,8 +13,10 @@ import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../global/date_methods_utility.dart';
+import '../../../custom_widgets/profile_image.dart';
 
 class ReservationCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
@@ -69,7 +72,7 @@ class ReservationCard extends StatelessWidget {
           color: CupertinoColors.activeGreen,
           icon: CupertinoIcons.check_mark_circled,
         ),
-        child: _buildCardContent(context),
+        child: _buildCardContent(booking, context),
       ),
     );
   }
@@ -104,155 +107,111 @@ class ReservationCard extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Widget _buildCardContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-      child: Container(
-        decoration: BoxDecoration(
-          color: CupertinoColors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: CupertinoColors.systemGrey.withOpacity(0.2),
-              blurRadius: 4.0,
-              spreadRadius: 1.0,
-              offset: const Offset(0, 2), // changes position of shadow
+  Widget _buildCardContent(BookingDTO bookingDTO, BuildContext context) {
+    return ListTile(
+      trailing: Container(
+        width: 30,
+        height: 30,
+        child: Center(
+          child: Text(
+            '${booking.numGuests}',
+            style: const TextStyle(
+              fontSize: 17,
+              color: Colors.white,
             ),
-          ],
+          ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(12), // Half of width/height for a circular effect
+        ),
+      ),
+      title: Column(
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildCustomerInfo(),
-              _buildGuestInfo(),
               Row(
                 children: [
-                  GestureDetector(child: badges.Badge(
-                      showBadge: booking.specialRequests?.isNotEmpty ?? false,
-                      child: const Icon(CupertinoIcons.doc_plaintext)), onTap: () {
-                    if(booking.specialRequests?.isNotEmpty ?? false){
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoAlertDialog(
-                            title: const Text('Note'),
-                            content: Text(booking.specialRequests!),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Chiudi"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
+                  ProfileImage(bookingDTO: bookingDTO,),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey.shade900,
+                        ),
+                      ),
+
+                      Row(
+                        children: [
+                          if(booking.specialRequests!.isEmpty) IconButton(
+                            onPressed: (){
+                              showCupertinoDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CupertinoAlertDialog(
+                                    title: const Text('Note'),
+                                    content: Text(booking.specialRequests!),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text("Chiudi"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
                                 },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
+                              );
+                            },
+                            icon: Stack(
+                              children: [
+                                Icon(CupertinoIcons.doc_plaintext, color: Colors.grey.shade900,),
+                                Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
+                              ],
+                            ),
+                          ),
+                          IconButton(onPressed: (){
+                            showCupertinoModalBottomSheet(
+                              expand: true,
+                              elevation: 10,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
+                              },
+                            );
+                          }, icon: const Icon(CupertinoIcons.settings_solid)),
+                          Consumer<CommunicationStateManager>(
+                            builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
+                              return IconButton(onPressed: () {
+                                showCupertinoModalBottomSheet(
+                                  expand: true,
+                                  elevation: 10,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DashChatCustomized20(bookingDTO: booking,);
+                                  },
+                                );
+
+                              }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),);
+                            },),
+
+
+                        ],
+                      ),
+                    ],
                   ),
-                  IconButton(onPressed: (){
-                    showCupertinoModalBottomSheet(
-                      expand: true,
-                      elevation: 10,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
-                      },
-                    );
-                  }, icon: const Icon(CupertinoIcons.settings_solid)),
-                  Consumer<CommunicationStateManager>(
-                    builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
-                      return IconButton(onPressed: () {
-                        showCupertinoModalBottomSheet(
-                          expand: true,
-                          elevation: 10,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DashChatCustomized20(bookingDTO: booking,);
-                          },
-                        );
-
-                      }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 20,),);
-                    },)
-                ],
-              ),
-
-              Column(
-                children: [
-                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
-                  Text(booking.status!.value!, style: TextStyle(fontSize: 4),)
                 ],
               ),
             ],
           ),
-        ),
+          Divider(height: 1, indent: 75, endIndent: 10, color: Colors.grey.shade200,)
+        ],
       ),
-    );
-  }
-
-  Row _buildCustomerInfo() {
-    return Row(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              booking.customer!.firstName!,
-              style: TextStyle(
-                fontSize: 14,
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ?
-                TextDecoration.lineThrough : TextDecoration.none,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-            Text(
-              booking.customer?.lastName ?? '',
-              style: TextStyle(
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ?
-                TextDecoration.lineThrough : TextDecoration.none,
-                fontSize: 11,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-
-  Row _buildGuestInfo() {
-    return Row(
-      children: [
-        Icon(CupertinoIcons.person_2, color: Colors.blueGrey.shade900),
-        const SizedBox(width: 2),
-        Text(
-          ' ${booking.numGuests ?? 0}',
-          style: const TextStyle(
-            fontSize: 13,
-            color: CupertinoColors.label,
-          ),
-        ),
-        const SizedBox(width: 2),
-        buildTimeBooking(booking),
-        isLunchTime(booking, restaurantDTO) ?
-        Card(
-            color: globalGoldDark,
-            child: const Padding(
-              padding: EdgeInsets.all(2.0),
-              child: Icon(Icons.sunny, color: CupertinoColors.white,),
-            )) :
-        Card(
-            color: elegantBlue,
-            child: const Padding(
-              padding: EdgeInsets.all(2.0),
-              child: Icon(CupertinoIcons.moon_stars, color: CupertinoColors.white),
-            )),
-      ],
     );
   }
 

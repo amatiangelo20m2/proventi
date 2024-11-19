@@ -6,6 +6,21 @@ import 'package:proventi/global/style.dart';
 
 import '../api/restaurant_client/lib/api.dart';
 
+const List<String> months = [
+  'Gennaio',   // January
+  'Febbraio',  // February
+  'Marzo',     // March
+  'Aprile',    // April
+  'Maggio',    // May
+  'Giugno',    // June
+  'Luglio',    // July
+  'Agosto',    // August
+  'Settembre', // September
+  'Ottobre',   // October
+  'Novembre',  // November
+  'Dicembre'   // December
+];
+
 Wrap buildTimeBooking(BookingDTO booking) {
   return Wrap(
     children: [
@@ -110,3 +125,5 @@ List<String> generateTimeSlots(TimeRange timeRange) {
 
   return timeSlots;
 }
+
+

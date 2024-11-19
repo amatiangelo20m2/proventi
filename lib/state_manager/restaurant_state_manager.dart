@@ -71,7 +71,7 @@ class RestaurantStateManager extends ChangeNotifier {
     return (_allBookings!.where((element) =>
     isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO)
         .toList().fold(0, (total, booking) => total
-        + (booking.numGuests ?? 0))).toString();
+        + (booking.numGuests ?? 0)));
   }
 
   Future<void> fetchAllBookings() async {

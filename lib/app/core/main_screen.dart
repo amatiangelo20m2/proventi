@@ -156,12 +156,13 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           appBar: AppBar(
-            iconTheme: const IconThemeData(
-              color: Colors.white,
+            iconTheme: IconThemeData(
+              color: Colors.grey[900],
               size: 30,
             ),
-            surfaceTintColor: Colors.grey[900],
-            backgroundColor: Colors.grey[900],
+
+            surfaceTintColor: CupertinoColors.white,
+            backgroundColor: CupertinoColors.white,
             actions: const [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -200,9 +201,9 @@ class _MainScreenState extends State<MainScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset('assets/images/logo.png', width: 50),
+                Image.asset('assets/images/20whitenb.png', width: 50),
                 Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
-                  style: TextStyle(fontSize: 15, color: Colors.white),),
+                  style: TextStyle(fontSize: 15, color: Colors.grey.shade900),),
               ],
             ),
           ),
