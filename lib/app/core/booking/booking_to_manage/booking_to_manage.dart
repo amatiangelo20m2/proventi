@@ -6,7 +6,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 
 import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
-import '../booking_confirmed/booking_card.dart';
+import '../booking_confirmed/confirmed_booking_card.dart';
 import 'booking_to_manage_card.dart';
 
 class BookingManager extends StatefulWidget {
@@ -134,7 +134,7 @@ class _BookingManagerState extends State<BookingManager> {
                     children: [
                       Text(restaurantStateManager
                           .retrieveTotalGuestsNumberForDayAndActiveBookings(
-                          date), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
+                          date).toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
                       Text(
                         ' / ${restaurantStateManager
                             .restaurantConfiguration!.capacity}  ', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),

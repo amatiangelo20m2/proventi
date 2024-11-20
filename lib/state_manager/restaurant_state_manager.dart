@@ -5,6 +5,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/global/style.dart';
 
 import '../environment_config.dart';
+import '../global/date_methods_utility.dart';
 
 class RestaurantStateManager extends ChangeNotifier {
 
@@ -73,6 +74,21 @@ class RestaurantStateManager extends ChangeNotifier {
         .toList().fold(0, (total, booking) => total
         + (booking.numGuests ?? 0)));
   }
+
+  retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(DateTime day, RestaurantDTO restaurantDTO) {
+    return (_allBookings!.where((element) =>
+    isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO && isLunchTime(element, restaurantDTO))
+        .toList().fold(0, (total, booking) => total
+        + (booking.numGuests ?? 0)));
+  }
+
+  retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(DateTime day, RestaurantDTO restaurantDTO) {
+    return (_allBookings!.where((element) =>
+    isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO && !isLunchTime(element, restaurantDTO))
+        .toList().fold(0, (total, booking) => total
+        + (booking.numGuests ?? 0)));
+  }
+
 
   Future<void> fetchAllBookings() async {
     _allBookings = await _bookingControllerApi

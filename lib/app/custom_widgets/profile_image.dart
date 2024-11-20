@@ -71,9 +71,10 @@ class ProfileImage extends StatelessWidget {
                     ),
                   ),
                 ),
-                errorWidget: (context, url, error) => const CircleAvatar(
+
+                errorWidget: (context, url, error) => CircleAvatar(
                   radius: avatarRadius,
-                  backgroundImage: AssetImage('assets/images/profile.png'),
+                  backgroundImage: const AssetImage('assets/images/profile.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 imageBuilder: (context, imageProvider) => CircleAvatar(
@@ -83,9 +84,9 @@ class ProfileImage extends StatelessWidget {
                 ),
               );
             } else {
-              return const CircleAvatar(
+              return CircleAvatar(
                 radius: avatarRadius,
-                backgroundImage: AssetImage('assets/images/profile.png'),
+                backgroundImage: const AssetImage('assets/images/profile.png'),
                 backgroundColor: Colors.transparent,
               );
             }

@@ -4,16 +4,19 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:proventi/app/core/booking/booking_refused/booking_refused_archive.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/booking/crud_widget/create_booking_confermato.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:vibration/vibration.dart';
+import '../../../../global/bookings_utils.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../custom_widgets/appinio_animated_toggle_tab.dart';
-import 'booking_card.dart';
+import 'confirmed_booking_card.dart';
+import 'filter_daily_type.dart';
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -30,6 +33,8 @@ class _BookingScreenState extends State<BookingScreen> {
   bool isTodaySelected = true;
   int? index = 0;
   String queryString = '';
+
+  FilterDailyType filterDailyType = FilterDailyType.ALL_DAY;
 
   @override
   void initState() {
@@ -51,12 +56,9 @@ class _BookingScreenState extends State<BookingScreen> {
           DateTime.now().subtract(Duration(days: 1)).add(Duration(days: index)),
     );
   }
-
   Future<void> _onDaySelected(
       DateTime day, RestaurantStateManager restaurantStateManager) async {
     final today = DateTime.now();
-    final tomorrow = DateTime.now().add(const Duration(days: 1));
-
     setState(() {
       _selectedDate = day;
       isTodaySelected = day.day == today.day &&
@@ -88,7 +90,6 @@ class _BookingScreenState extends State<BookingScreen> {
       );
     }
   }
-
   void _scrollToToday(RestaurantStateManager restaurantManager) {
     final todayIndex = _days.indexWhere((day) =>
         day.day == DateTime.now().day &&
@@ -129,7 +130,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 children: [
                   Center(
                     child: Padding(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           left: 10, right: 10, bottom: 0),
                       child: CupertinoTextField(
                         onChanged: (newQuery) {
@@ -152,22 +153,33 @@ class _BookingScreenState extends State<BookingScreen> {
                           callback: (int i) {
                             switch(i){
                               case 0:
+                                setState(() {
+                                  filterDailyType = FilterDailyType.ALL_DAY;
+                                });
                               Fluttertoast.showToast(
                                   msg: "Prenotazioni di tutta la giornata",
                                   backgroundColor: globalGoldDark,
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.BOTTOM,
                                   timeInSecForIosWeb: 1);
+
                               break;
                               case 1:
+                                setState(() {
+                                  filterDailyType = FilterDailyType.LUNCH;
+                                });
                                 Fluttertoast.showToast(
                                     msg: "Prenotazioni pranzo",
                                     toastLength: Toast.LENGTH_SHORT,
                                     backgroundColor: globalGold,
                                     gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1);
+
                                 break;
                               case 2:
+                                setState(() {
+                                  filterDailyType = FilterDailyType.DINNER;
+                                });
                                 Fluttertoast.showToast(
                                     msg: "Prenotazioni cena",
                                     backgroundColor: elegantBlue,
@@ -180,16 +192,18 @@ class _BookingScreenState extends State<BookingScreen> {
                           tabTexts: [
                             badges.Badge(
                                 badgeStyle: badges.BadgeStyle(badgeColor: Colors.grey.shade800),
-                                badgeContent: Text(restaurantManager.allBookings!.where((element) => isSameDay(element.bookingDate!, _selectedDate))
-                                    .toList().length.toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
-                                badgeAnimation: badges.BadgeAnimation.rotation(),
+                                badgeContent: Text(restaurantManager
+                                    .retrieveTotalGuestsNumberForDayAndActiveBookings(_selectedDate).toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeAnimation: const badges.BadgeAnimation.rotation(),
                                 child: const Padding(
                                     padding: EdgeInsets.all(4.0),
                                     child: Icon(CupertinoIcons.infinite, size: 25,)
                                 )),
                             badges.Badge(
                                 badgeStyle: badges.BadgeStyle(badgeColor: globalGold),
-                                badgeContent: const Text('5', style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeContent: Text(restaurantManager
+                                    .retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantManager.restaurantConfiguration!).toString(),
+                                  style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
                                 badgeAnimation: badges.BadgeAnimation.rotation(),
                                 child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -197,7 +211,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                 )),
                             badges.Badge(
                                 badgeStyle: badges.BadgeStyle(badgeColor: elegantBlue),
-                                badgeContent: const Text('8', style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeContent: Text(restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(_selectedDate, restaurantManager.restaurantConfiguration!).toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
                                 badgeAnimation: badges.BadgeAnimation.rotation(),
                                 child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -225,23 +239,6 @@ class _BookingScreenState extends State<BookingScreen> {
                           inactiveStyle: const TextStyle(
                             color: Colors.black,
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              restaurantManager
-                                  .retrieveTotalGuestsNumberForDayAndActiveBookings(
-                                  _selectedDate).toString(),
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: globalGoldDark),
-                            ),
-                            Text(
-                              '/${restaurantManager.restaurantConfiguration!.capacity}  ',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade900),
-                            ),
-                          ],
                         ),
                         Row(
                           children: [
@@ -281,7 +278,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   ),
 
                   SizedBox(
-                    height: 95,
+                    height: 98,
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (scrollNotification) {
                         if (scrollNotification is ScrollUpdateNotification) {
@@ -367,7 +364,16 @@ class _BookingScreenState extends State<BookingScreen> {
                                             padding: const EdgeInsets.only(right: 15, left: 15),
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(10),
-                                              child: LinearProgressWidget(restaurantManager, day)
+                                              child: LinearProgressWidget(restaurantManager,
+                                                  day,
+                                                  FilterDailyType.LUNCH)
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 15, left: 15, top: 2, bottom: 2),
+                                            child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(10),
+                                                child: LinearProgressWidget(restaurantManager, day, FilterDailyType.DINNER)
                                             ),
                                           )
                                         ],
@@ -388,86 +394,76 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                     ),
                   ),
-                  if(_getNumbersBookingByStatus(restaurantManager.allBookings!.where((element) => isSameDay(
-                      element.bookingDate!, _selectedDate)).toList(), BookingDTOStatusEnum.RIFIUTATO) > 0) InkWell(
-                    onTap: () {
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10, left: 10),
+                        child: Row(
+                          children: [
 
-                      showCupertinoModalBottomSheet(
-                        expand: true,
-                        elevation: 10,
-                        context: context,
-                        builder: (BuildContext context) {
-                          List<BookingDTO> refusedBookings = restaurantManager.allBookings!.where((element) => isSameDay(
-                              element.bookingDate!, _selectedDate)).toList().where((element) =>
-                          element.status == BookingDTOStatusEnum.RIFIUTATO).toList();
-                          return Text('');
-                        },
-                      );
-
-                    },
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 30, top: 5, bottom: 5),
-                      child: Row(
-                        children: [
-                          badges.Badge(
-                            badgeStyle: badges.BadgeStyle(badgeColor: Colors.redAccent),
-                              badgeContent: Text(
-                                _getNumbersBookingByStatus(restaurantManager.allBookings!.where((element) => isSameDay(
-                                    element.bookingDate!, _selectedDate)).toList(), BookingDTOStatusEnum.RIFIUTATO).toString(),
-                                style: const TextStyle(
-                                    color: CupertinoColors.white, fontSize: 13),
-                              ),
-                              child: const Icon(CupertinoIcons.archivebox)),
-                          const Text(
-                            '   Archivio prenotazioni rifiutate',
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w500),
-                          )
-                        ],
+                            Text(
+                              restaurantManager
+                                  .retrieveTotalGuestsNumberForDayAndActiveBookings(
+                                  _selectedDate).toString(),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: globalGoldDark),
+                            ),
+                            Text(
+                              '/${restaurantManager.restaurantConfiguration!.capacity}  ',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey.shade900),
+                            ),
+                            Icon(CupertinoIcons.person_2_fill, size: 25, color: Colors.grey.shade900,),
+                          ],
+                        ),
                       ),
-                    ),
+                      RefusedBookingArchive(bookingList:
+                      restaurantManager.allBookings!.where((element) => isSameDay(
+                        element.bookingDate!, _selectedDate)).toList(), dateTime: _selectedDate,)
+                    ],
                   ),
-                  Expanded(
-                    flex: 5,
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        await restaurantManager.refresh(_selectedDate);
-                      },
-                      child: ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 160),
-                        itemCount: restaurantManager
-                            .bookingFilteredByCurrentDate(_selectedDate)
-                            .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO)
-                            .where((element) =>
-                                element.customer!.firstName!
-                                    .toLowerCase()
-                                    .contains(queryString.toLowerCase()) ||
-                                element.customer!.phone!
-                                    .toLowerCase()
-                                    .contains(queryString.toLowerCase()))
-                            .length,
-                        itemBuilder: (context, index) {
-                          return ReservationCard(
-                            booking: restaurantManager
-                                .bookingFilteredByCurrentDate(_selectedDate)
-                                .where((booking) => booking.status == BookingDTOStatusEnum.CONFERMATO)
-                                .where((element) =>
-                                    element.customer!.firstName!
-                                        .toLowerCase()
-                                        .contains(queryString.toLowerCase()) ||
-                                    element.customer!.phone!
-                                        .toLowerCase()
-                                        .contains(queryString.toLowerCase()))
-                                .toList()[index],
-                            formDTOs: restaurantManager.currentBranchForms!,
-                            restaurantDTO:
-                                restaurantManager.restaurantConfiguration!,
-                            shadeColor: globalGoldDark,
-                          );
-                        },
-                      ),
-                    ),
+                  Builder(
+                    builder: (context) {
+
+                      List<BookingDTO>? filteredBooking = restaurantManager
+                          .bookingFilteredByCurrentDate(_selectedDate)
+                          .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO)
+                          .where((bookingDTO) => bookingDTO.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase()) || bookingDTO.customer!.phone!.toLowerCase().contains(queryString.toLowerCase()))
+                          .where((bookingDTO) {
+                        if (filterDailyType == FilterDailyType.LUNCH) {
+                          return isLunchTime(bookingDTO, restaurantManager.restaurantConfiguration!);
+                        } else if (filterDailyType == FilterDailyType.DINNER) {
+                          return !isLunchTime(bookingDTO, restaurantManager.restaurantConfiguration!);
+                        } else {
+                          // No filtering if `filterDailyType` is neither LUNCH nor DINNER
+                          return true;
+                        }
+                      }).toList();
+
+                      return Expanded(
+                        flex: 5,
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            await restaurantManager.refresh(_selectedDate);
+                          },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 160),
+                            itemCount: filteredBooking.length,
+                            itemBuilder: (context, index) {
+                              return ReservationCard(
+                                booking: filteredBooking[index],
+                                formDTOs: restaurantManager.currentBranchForms!,
+                                restaurantDTO:
+                                    restaurantManager.restaurantConfiguration!,
+                                shadeColor: globalGoldDark,
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
                   )
                 ],
               ),
@@ -584,17 +580,12 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
 
-  _getNumbersBookingByStatus(List<BookingDTO> list, BookingDTOStatusEnum bookingStatus){
-    return list
-        .where((element) => element.status == bookingStatus)
-        .length;
-  }
 
 
   _buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
-    int bookings = _getNumbersBookingByStatus(list, BookingDTOStatusEnum.CONFERMATO);
+    int bookings = getBookingListFilteredByStatus(list, BookingDTOStatusEnum.CONFERMATO).length;
 
-    int refused = _getNumbersBookingByStatus(list, BookingDTOStatusEnum.RIFIUTATO);
+    int refused = getBookingListFilteredByStatus(list, BookingDTOStatusEnum.RIFIUTATO).length;
 
     if (bookings == 0 && refused == 0) {
       return SizedBox(
@@ -608,7 +599,7 @@ class _BookingScreenState extends State<BookingScreen> {
             if (bookings > 0)
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.teal,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.circular(
                       5), // Half of width/height for a circular effect
                 ),
@@ -661,19 +652,23 @@ class _BookingScreenState extends State<BookingScreen> {
         ));
   }
 
-  LinearProgressWidget(RestaurantStateManager restaurantManager, DateTime day) {
+  LinearProgressWidget(RestaurantStateManager restaurantManager, DateTime day, FilterDailyType filterDailyType) {
 
-    int pax = restaurantManager
-        .retrieveTotalGuestsNumberForDayAndActiveBookings(
-        day);
+    if(restaurantManager.restaurantConfiguration!.capacity! == 0){
+      return SizedBox(height: 0,);
+    }
+    int pax = 0;
+    if(filterDailyType == FilterDailyType.LUNCH){
+      pax = restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(day, restaurantManager.restaurantConfiguration!);
+    }else if(filterDailyType == FilterDailyType.DINNER){
+      pax = restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(day, restaurantManager.restaurantConfiguration!);
+    }
 
     double currentProgressValue = pax
         / restaurantManager.restaurantConfiguration!.capacity!;
 
-    print('XXX: $currentProgressValue');
-
     return LinearProgressIndicator(
-      color: currentProgressValue > 1 ? Colors.redAccent : Colors.teal.shade900,
+      color: currentProgressValue > 1 ? Colors.redAccent : filterDailyType == FilterDailyType.LUNCH ? globalGoldDark : elegantBlue,
       value: currentProgressValue,
     );
   }

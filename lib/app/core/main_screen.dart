@@ -163,38 +163,38 @@ class _MainScreenState extends State<MainScreen> {
 
             surfaceTintColor: CupertinoColors.white,
             backgroundColor: CupertinoColors.white,
-            actions: const [
+            actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   WhatsAppConfWidget(),
-                  //Consumer<NotificationStateManager>(
-            //  builder: (BuildContext context,
-            //           NotificationStateManager value, Widget? child) {
-            //         return IconButton(
-                  ////             onPressed: () async {
-            //        Navigator.pushNamed(
-        //                  context, NotificationsPage.routeName);
-            //                },
-          //            icon: Padding(
-          //                padding: const EdgeInsets.only(right: 10),
-            ////                child: badges.Badge(
-            //                showBadge: value.notifications
-            //                      .where((element) => element.read == '0')
-            //                      .isNotEmpty,
-          //                  badgeContent: Text(
-            //                      value.notifications
-            //                        .where((element) => element.read == '0')
-            //                        .length
-          //                        .toString(),
-            //                      style: const TextStyle(
-          //                        color: Colors.white, fontSize: 11),
-            //                    ),
-            ////                  position: badges.BadgePosition.topEnd(),
-          //                child: const Icon(CupertinoIcons.bell)),
-                  //                ));
-        //            },
-      //      ),
+                  Consumer<NotificationStateManager>(
+                    builder: (BuildContext context,
+                        NotificationStateManager value, Widget? child) {
+                      return IconButton(
+                          onPressed: () async {
+                            Navigator.pushNamed(
+                                context, NotificationsPage.routeName);
+                          },
+                          icon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: badges.Badge(
+                                showBadge: value.notifications
+                                    .where((element) => element.read == '0')
+                                    .isNotEmpty,
+                                badgeContent: Text(
+                                  value.notifications
+                                      .where((element) => element.read == '0')
+                                      .length
+                                      .toString(),
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 11),
+                                ),
+                                position: badges.BadgePosition.topEnd(),
+                                child: const Icon(CupertinoIcons.bell)),
+                          ));
+                    },
+                  ),
                 ],
               ),
             ],
