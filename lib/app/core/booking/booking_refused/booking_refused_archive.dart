@@ -7,7 +7,7 @@ import '../../../../api/restaurant_client/lib/api.dart';
 import '../../../../global/bookings_utils.dart';
 import 'package:badges/badges.dart' as badges;
 
-class RefusedBookingArchive extends StatelessWidget {
+class RefusedBookingArchive extends StatefulWidget {
   const RefusedBookingArchive({super.key,
     required this.bookingList,
     required this.dateTime});
@@ -16,10 +16,15 @@ class RefusedBookingArchive extends StatelessWidget {
   final DateTime dateTime;
 
   @override
+  State<RefusedBookingArchive> createState() => _RefusedBookingArchiveState();
+}
+
+class _RefusedBookingArchiveState extends State<RefusedBookingArchive> {
+  @override
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext builderContext){
 
-      List<BookingDTO> refusedBookings = getBookingListFilteredByStatus(bookingList, BookingDTOStatusEnum.RIFIUTATO);
+      List<BookingDTO> refusedBookings = getBookingListFilteredByStatus(widget.bookingList, BookingDTOStatusEnum.RIFIUTATO);
 
       if(refusedBookings.isNotEmpty) {
         return InkWell(
@@ -32,7 +37,12 @@ class RefusedBookingArchive extends StatelessWidget {
                 return Material(
                   child: Column(
                     children: [
-                      Text('Prenotazioni rifiutate del ${italianDateFormat.format(dateTime)}'),
+                      Row(
+                        children: [
+                          Text('Prenotazioni rifiutate del ${italianDateFormat.format(widget.dateTime)}'),
+                          IconButton(onPressed: (){}, icon: Icon(Icons.clear))
+                        ],
+                      ),
                       Expanded(
                         child: ListView.builder(
                           itemCount: refusedBookings.length,

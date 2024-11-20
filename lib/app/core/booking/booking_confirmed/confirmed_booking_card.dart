@@ -201,7 +201,7 @@ class ReservationCard extends StatelessWidget {
               Divider(height: 1, indent: 75, endIndent: 10, color: Colors.grey.shade300,)
             ],
           ),
-          Text(bookingDTO.timeSlot!.bookingHour!.toString()+':'+ NumberFormat("00").format(bookingDTO.timeSlot!.bookingMinutes!).toString())
+          Text('${bookingDTO.timeSlot!.bookingHour!}:${NumberFormat("00").format(bookingDTO.timeSlot!.bookingMinutes!)}')
         ],
       ),
     );

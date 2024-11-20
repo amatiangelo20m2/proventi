@@ -59,6 +59,7 @@ class _BookingScreenState extends State<BookingScreen> {
   Future<void> _onDaySelected(
       DateTime day, RestaurantStateManager restaurantStateManager) async {
     final today = DateTime.now();
+
     setState(() {
       _selectedDate = day;
       isTodaySelected = day.day == today.day &&
@@ -66,7 +67,7 @@ class _BookingScreenState extends State<BookingScreen> {
           day.year == today.year;
       _scrollToSelectedDay();
     });
-
+    //await restaurantStateManager.refresh(_selectedDate);
     Fluttertoast.showToast(
       webShowClose: true,
       timeInSecForIosWeb: 1,
@@ -259,8 +260,8 @@ class _BookingScreenState extends State<BookingScreen> {
 
                             IconButton(
                                 onPressed: () {
-                                  _selectDate(context, _selectedDate,
-                                      restaurantManager);
+
+                                  _selectDate(context, _selectedDate, restaurantManager);
                                   // _pickDateRange(context);
                                 },
                                 icon: const Icon(CupertinoIcons.calendar,
@@ -401,20 +402,8 @@ class _BookingScreenState extends State<BookingScreen> {
                         padding: const EdgeInsets.only(right: 10, left: 10),
                         child: Row(
                           children: [
-
-                            Text(
-                              restaurantManager
-                                  .retrieveTotalGuestsNumberForDayAndActiveBookings(
-                                  _selectedDate).toString(),
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: globalGoldDark),
-                            ),
-                            Text(
-                              '/${restaurantManager.restaurantConfiguration!.capacity}  ',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade900),
-                            ),
+                            Text(restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookings(_selectedDate).toString(), style: TextStyle(fontSize: 18, color: globalGoldDark),),
+                            Text('/${restaurantManager.restaurantConfiguration!.capacity}  ', style: TextStyle(fontSize: 13, color: Colors.grey.shade900),),
                             Icon(CupertinoIcons.person_2_fill, size: 25, color: Colors.grey.shade900,),
                           ],
                         ),
