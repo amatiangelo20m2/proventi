@@ -220,7 +220,7 @@ class ProcessedBookingCard extends StatelessWidget {
         Icon(CupertinoIcons.clock, color: Colors.blueGrey.shade900),
         const SizedBox(width: 2),
         Text(
-          '${booking.timeSlot!.bookingHour.toString()}:${booking.timeSlot!.bookingHour}',
+          '${booking.timeSlot!.bookingHour.toString()}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes)}',
           style: const TextStyle(
             fontSize: 13,
             color: CupertinoColors.label,

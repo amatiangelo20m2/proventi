@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
 import 'package:proventi/app/core/whatsapp/dash_chat.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
@@ -14,92 +15,22 @@ import 'package:badges/badges.dart' as badges;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../global/date_methods_utility.dart';
+import '../../main_screen.dart';
 
 class RefusedBookingCard extends StatelessWidget {
   final BookingDTO booking;
 
-  const RefusedBookingCard({required this.booking});
+  const RefusedBookingCard({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        switch(booking.status){
-          case BookingDTOStatusEnum.IN_ATTESA:
-            _showBookingActionMenuListaAttesta(context, booking);
-            break;
-
-          case BookingDTOStatusEnum.RIFIUTATO:
-            _showBookingActionMenuRifiutato(context, booking);
-            break;
-        }
+        _showBookingActionMenuRifiutato(context, booking);
 
       },
-      child: Dismissible(
-        key: Key(booking.bookingCode.toString()),
-        confirmDismiss: (direction) async {
-          // Show the confirmation dialog based on the swipe direction
-          if (direction == DismissDirection.endToStart) {
-            // Asking confirmation for cancellation
-            bool? result = await _showConfirmationDialog(context, 'Conferma prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No' );
-
-            if (result == true) {
-              return await _setAsArrivedReservation(context);
-            }
-          } else if (direction == DismissDirection.startToEnd) {
-            // Asking confirmation for confirmation
-            bool? result = await _showConfirmationDialog(context, 'Rifiuta prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No');
-
-            if (result == true) {
-              return await _refuseReservation(context);
-            }
-          }
-          return false;
-        },
-        background: _buildSwipeBackground(
-          alignment: Alignment.centerLeft,
-          color: CupertinoColors.destructiveRed,
-          icon: CupertinoIcons.clear_circled,
-        ),
-        secondaryBackground: _buildSwipeBackground(
-          alignment: Alignment.centerRight,
-          color: CupertinoColors.activeGreen,
-          icon: CupertinoIcons.check_mark_circled,
-        ),
-        child: _buildCardContent(context),
-      ),
+      child: _buildCardContent(context)
     );
-  }
-
-  Future<bool?> _setAsArrivedReservation(BuildContext context) async {
-
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.CONFERMATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
-    return false;
-  }
-
-  Future<bool?> _refuseReservation(BuildContext context) async {
-
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.RIFIUTATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' aggiornata come non arrivata ❌' );
-    return false; // Prevent automatic dismissal
-  }
-
-  void _showSnackbar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget _buildCardContent(BuildContext context) {
@@ -123,8 +54,8 @@ class RefusedBookingCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              ProfileImage(bookingDTO: booking),
               _buildCustomerInfo(),
-              Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: globalGoldDark),),
               _buildGuestInfo(),
               Row(
                 children: [
@@ -152,8 +83,7 @@ class RefusedBookingCard extends StatelessWidget {
                     }
                   },
                   ),
-                  GestureDetector(onTap: () {
-
+                  IconButton(onPressed: () {
                     showCupertinoModalBottomSheet(
                       expand: true,
                       elevation: 10,
@@ -162,8 +92,7 @@ class RefusedBookingCard extends StatelessWidget {
                         return DashChatCustomized20(bookingDTO: booking,);
                       },
                     );
-
-                  }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
+                  }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
                 ],
               ),
               Column(
@@ -178,6 +107,7 @@ class RefusedBookingCard extends StatelessWidget {
       ),
     );
   }
+
 
   Row _buildCustomerInfo() {
     return Row(
@@ -230,105 +160,6 @@ class RefusedBookingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSwipeBackground({required Alignment alignment, required Color color, required IconData icon}) {
-    return Container(
-      alignment: alignment,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Icon(icon, color: color, size: 28),
-    );
-  }
-
-  void _showBookingActionMenuListaAttesta(BuildContext context, BookingDTO booking) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
-                  Text(booking.customer!.phone!),
-                  Text(booking.customer!.email!),
-                  Text('Codice prenotazione:' + booking.bookingCode!, style: TextStyle(fontSize: 7),),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.circle, color: getStatusColor(booking.status!),),
-                      Text(booking.status!.value.replaceAll('_', '')),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: IconButton(onPressed: () async {
-
-
-                Uri urlPhone = Uri(scheme: 'tel', path :booking.customer!.prefix! + booking.customer!.phone!);
-                if (await canLaunchUrl(urlPhone)) {
-                  await launchUrl(urlPhone);  // Open the phone dialer
-                } else {
-                  throw 'Could not open the phone dialer.';
-                }
-              }, icon: Icon(CupertinoIcons.phone)),
-            ),
-          ],
-        ),
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  status: BookingDTOStatusEnum.CONFERMATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: const Text('Conferma prenotazione'),
-          ),
-
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  bookingId: booking.bookingId,
-                  status: BookingDTOStatusEnum.RIFIUTATO
-              ));
-              Navigator.pop(context, null);
-
-            },
-            child: Text('Rifiuta prenotazione'),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  bookingId: booking.bookingId,
-                  status: BookingDTOStatusEnum.ELIMINATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: Text('Elimina'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            // Close without any action
-          },
-          isDefaultAction: true,
-          child: const Text('Indietro'),
-        ),
-      ),
-    );
-  }
-
   void _showBookingActionMenuRifiutato(BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,
@@ -368,7 +199,9 @@ class RefusedBookingCard extends StatelessWidget {
                 toastLength: Toast.LENGTH_LONG,
                 fontSize: 18.0,
               );
-              Navigator.pop(context, null);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
+              );
             },
             child: const Text('Converti in CONFERMATA'),
           ),
@@ -381,31 +214,6 @@ class RefusedBookingCard extends StatelessWidget {
           child: const Text('Indietro'),
         ),
       ),
-    );
-  }
-
-  Future<bool?> _showConfirmationDialog(BuildContext context, String message, String confirmText, String goBackText) async {
-    return await showCupertinoDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(message, style: TextStyle(fontSize: 15),),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(goBackText),
-              onPressed: () {
-                Navigator.of(context).pop(false); // Return false if the user cancels
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(confirmText),
-              onPressed: () {
-                Navigator.of(context).pop(true); // Return true if the user confirms
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

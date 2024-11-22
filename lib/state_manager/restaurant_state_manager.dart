@@ -6,6 +6,7 @@ import 'package:proventi/global/style.dart';
 
 import '../environment_config.dart';
 import '../global/date_methods_utility.dart';
+import 'package:http/http.dart';
 
 class RestaurantStateManager extends ChangeNotifier {
 
@@ -50,6 +51,10 @@ class RestaurantStateManager extends ChangeNotifier {
     _customerControllerApi = CustomerControllerApi(_restaurantClient);
   }
 
+  refreshDate(){
+    setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
+    notifyListeners();
+  }
   Future<void> setDataEmployeeAndRetrieveData(EmployeeDTO employee, DateTime dateTime) async {
     _currentEmployee = employee;
     final prefs = await SharedPreferences.getInstance();
@@ -62,10 +67,8 @@ class RestaurantStateManager extends ChangeNotifier {
   }
 
   updateBooking(BookingDTO bookingDTO) async {
-    // Make the API call to update the booking
-
-    BookingDTO? bookingDTOUpdated = await _bookingControllerApi.updateBooking(bookingDTO);
-    setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
+      await _bookingControllerApi.updateBooking(bookingDTO);
+      setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
   }
 
   retrieveTotalGuestsNumberForDayAndActiveBookings(DateTime day) {

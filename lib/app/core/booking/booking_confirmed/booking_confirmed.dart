@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_refused/booking_refused_archive.dart';
 import 'package:proventi/global/date_methods_utility.dart';
@@ -16,7 +18,9 @@ import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../custom_widgets/appinio_animated_toggle_tab.dart';
 import 'confirmed_booking_card.dart';
-import 'filter_daily_type.dart';
+import 'confirmedcard_extra/filter_booking_type.dart';
+import 'confirmedcard_extra/linear_progressor.dart';
+import 'confirmedcard_extra/filter_daily_type.dart';
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -34,7 +38,9 @@ class _BookingScreenState extends State<BookingScreen> {
   int? index = 0;
   String queryString = '';
 
-  FilterDailyType filterDailyType = FilterDailyType.ALL_DAY;
+  FilterDailyType filterDailyType = FilterDailyType.TUTTO_IL_GIORNO;
+
+  FilterBookingType filterBookingType = FilterBookingType.TIME_SLOT;
 
   @override
   void initState() {
@@ -155,7 +161,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             switch(i){
                               case 0:
                                 setState(() {
-                                  filterDailyType = FilterDailyType.ALL_DAY;
+                                  filterDailyType = FilterDailyType.TUTTO_IL_GIORNO;
                                 });
                               Fluttertoast.showToast(
                                   msg: "Prenotazioni di tutta la giornata",
@@ -167,7 +173,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               break;
                               case 1:
                                 setState(() {
-                                  filterDailyType = FilterDailyType.LUNCH;
+                                  filterDailyType = FilterDailyType.PRANZO;
                                 });
                                 Fluttertoast.showToast(
                                     msg: "Prenotazioni pranzo",
@@ -179,7 +185,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                 break;
                               case 2:
                                 setState(() {
-                                  filterDailyType = FilterDailyType.DINNER;
+                                  filterDailyType = FilterDailyType.CENA;
                                 });
                                 Fluttertoast.showToast(
                                     msg: "Prenotazioni cena",
@@ -367,14 +373,14 @@ class _BookingScreenState extends State<BookingScreen> {
                                               borderRadius: BorderRadius.circular(10),
                                               child: LinearProgressWidget(restaurantManager,
                                                   day,
-                                                  FilterDailyType.LUNCH)
+                                                  FilterDailyType.PRANZO)
                                             ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(right: 15, left: 15, top: 2, bottom: 2),
                                             child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(10),
-                                                child: LinearProgressWidget(restaurantManager, day, FilterDailyType.DINNER)
+                                                child: LinearProgressWidget(restaurantManager, day, FilterDailyType.CENA)
                                             ),
                                           )
                                         ],
@@ -421,9 +427,9 @@ class _BookingScreenState extends State<BookingScreen> {
                           .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO)
                           .where((bookingDTO) => bookingDTO.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase()) || bookingDTO.customer!.phone!.toLowerCase().contains(queryString.toLowerCase()))
                           .where((bookingDTO) {
-                        if (filterDailyType == FilterDailyType.LUNCH) {
+                        if (filterDailyType == FilterDailyType.PRANZO) {
                           return isLunchTime(bookingDTO, restaurantManager.restaurantConfiguration!);
-                        } else if (filterDailyType == FilterDailyType.DINNER) {
+                        } else if (filterDailyType == FilterDailyType.CENA) {
                           return !isLunchTime(bookingDTO, restaurantManager.restaurantConfiguration!);
                         } else {
                           // No filtering if `filterDailyType` is neither LUNCH nor DINNER
@@ -431,24 +437,41 @@ class _BookingScreenState extends State<BookingScreen> {
                         }
                       }).toList();
 
+
                       return Expanded(
                         flex: 5,
                         child: RefreshIndicator(
                           onRefresh: () async {
                             await restaurantManager.refresh(_selectedDate);
                           },
-                          child: ListView.builder(
+                          child: filteredBooking.length > 0 ? ListView.builder(
                             padding: const EdgeInsets.only(bottom: 160),
                             itemCount: filteredBooking.length,
                             itemBuilder: (context, index) {
                               return ReservationCard(
-                                booking: filteredBooking[index],
+                                booking: sortBookings(filteredBooking, filterBookingType)[index],
                                 formDTOs: restaurantManager.currentBranchForms!,
                                 restaurantDTO:
                                     restaurantManager.restaurantConfiguration!,
                                 shadeColor: globalGoldDark,
                               );
                             },
+
+                          ) : SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/10), // Ensure some spacing
+                                child: Column(
+                                  children: [
+                                    Lottie.asset('assets/lotties/nocalendar.json'),
+                                    Text('Non ci sono prenotazioni'
+                                        + (filterDailyType == FilterDailyType.TUTTO_IL_GIORNO ? '' :  ' per ' + filterDailyType.name.toString().toLowerCase())
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       );
@@ -495,31 +518,43 @@ class _BookingScreenState extends State<BookingScreen> {
         actions: [
           CupertinoActionSheetAction(
             onPressed: () {
+              setState(() {
+                filterBookingType = FilterBookingType.TIME_SLOT;
+              });
               Navigator.pop(context, 'arrival_time');
-              print("Sorting by arrival time");
+              _showToast('Prenotazioni ordinate per ora di arrivo');
             },
-            child: const Text('Ordina per ora arrivo'),
+            child: Text('Ordina per ora arrivo', style: TextStyle(color: Colors.grey[900]),),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
+              setState(() {
+                filterBookingType = FilterBookingType.CREATED_AT;
+              });
               Navigator.pop(context, 'booking_date');
-              print("Sorting by booking date");
+              _showToast('Prenotazioni ordinate per data di inserimento');
             },
-            child: const Text('Ordina per data prenotazione'),
+            child: Text('Ordina per data inserimento', style: TextStyle(color: Colors.grey[900])),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
+              setState(() {
+                filterBookingType = FilterBookingType.NAME;
+              });
               Navigator.pop(context, 'name');
-              print("Sorting by name");
+              _showToast('Prenotazioni ordinate per nome cliente');
             },
-            child: const Text('Ordina per nome cliente (A->Z)'),
+            child: Text('Ordina per nome cliente (A->Z)', style: TextStyle(color: Colors.grey[900])),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
-              Navigator.pop(context, 'status');
-              print("Sorting by status");
+              setState(() {
+                filterBookingType = FilterBookingType.GUESTS;
+              });
+              Navigator.pop(context, 'guests');
+              _showToast('Prenotazioni ordinate per numero coperti');
             },
-            child: const Text('Ordina per numero coperti'),
+            child: Text('Ordina per numero coperti', style: TextStyle(color: Colors.grey[900])),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
@@ -527,7 +562,7 @@ class _BookingScreenState extends State<BookingScreen> {
             Navigator.pop(context, null); // Close without any action
           },
           isDefaultAction: true,
-          child: const Text('Cancel'),
+          child: const Text('Indietro'),
         ),
       ),
     );
@@ -600,9 +635,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           size: 13, // Set the size of the icon
                           color: Colors.white),
                       Text(
-                        ' ' +
-                            bookings
-                                .toString(), // Text to display inside the circle
+                        ' $bookings', // Text to display inside the circle
                         style: const TextStyle(
                             fontSize: 13,
                             color: Colors.white),
@@ -611,7 +644,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   ),
                 ),
               ),
-            SizedBox(
+            const SizedBox(
               height: 2,
             ),
             if(refused > 0) Container(
@@ -641,24 +674,58 @@ class _BookingScreenState extends State<BookingScreen> {
         ));
   }
 
-  LinearProgressWidget(RestaurantStateManager restaurantManager, DateTime day, FilterDailyType filterDailyType) {
+  void _showToast(String text) {
 
-    if(restaurantManager.restaurantConfiguration!.capacity! == 0){
-      return SizedBox(height: 0,);
-    }
-    int pax = 0;
-    if(filterDailyType == FilterDailyType.LUNCH){
-      pax = restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(day, restaurantManager.restaurantConfiguration!);
-    }else if(filterDailyType == FilterDailyType.DINNER){
-      pax = restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(day, restaurantManager.restaurantConfiguration!);
-    }
-
-    double currentProgressValue = pax
-        / restaurantManager.restaurantConfiguration!.capacity!;
-
-    return LinearProgressIndicator(
-      color: currentProgressValue > 1 ? Colors.redAccent : filterDailyType == FilterDailyType.LUNCH ? globalGoldDark : elegantBlue,
-      value: currentProgressValue,
+    Fluttertoast.showToast(
+      webShowClose: true,
+      timeInSecForIosWeb: 1,
+      msg: text,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: globalGold,
+      textColor: Colors.white,
+      fontSize: 15.0,
     );
   }
+
+  List<BookingDTO> sortBookings(List<BookingDTO> bookings, FilterBookingType filterBookingType) {
+    // Create a copy of the list to avoid modifying the original list
+    List<BookingDTO> sortedBookings = List.from(bookings);
+
+    sortedBookings.sort((a, b) {
+      switch (filterBookingType) {
+        case FilterBookingType.CREATED_AT:
+        // Sort by createdAt, earliest to latest
+          return a.createdAt!.compareTo(b.createdAt!);
+        case FilterBookingType.GUESTS:
+        // Sort by numGuests
+          return a.numGuests!.compareTo(b.numGuests!);
+        case FilterBookingType.NAME:
+        // Sort by numGuests
+          return a.customer!.firstName!.toLowerCase().compareTo(b.customer!.firstName!.toLowerCase());
+        case FilterBookingType.TIME_SLOT:
+        // Sort by timeSlot (hour and minute)
+          if (a.timeSlot != null && b.timeSlot != null) {
+            int hourComparison = a.timeSlot!.bookingHour!.compareTo(b.timeSlot!.bookingHour!);
+            if (hourComparison != 0) {
+              return hourComparison; // Compare hours
+            }
+            return a.timeSlot!.bookingMinutes!.compareTo(b.timeSlot!.bookingMinutes!); // Compare minutes
+          } else if (a.timeSlot != null) {
+            return -1; // a has timeSlot, b does not
+          } else if (b.timeSlot != null) {
+            return 1; // b has timeSlot, a does not
+          }
+          return 0; // Both have null timeSlot
+        default:
+          print('Invalid sortBy value: $filterBookingType');
+          return 0;
+      }
+    });
+
+    return sortedBookings;
+  }
+
+
+
 }

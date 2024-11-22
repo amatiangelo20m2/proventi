@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+import '../../../../global/date_methods_utility.dart';
+import '../../../../global/flag_picker.dart';
 import '../../../custom_widgets/profile_image.dart';
 
 class ReservationCard extends StatelessWidget {
@@ -57,7 +60,7 @@ class ReservationCard extends StatelessWidget {
           color: CupertinoColors.activeGreen,
           icon: CupertinoIcons.check_mark_circled,
         ),
-        child: _buildCardContent(booking, context),
+        child: _buildCardContent(context),
       ),
     );
   }
@@ -92,12 +95,16 @@ class ReservationCard extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Widget _buildCardContent(BookingDTO bookingDTO, BuildContext context) {
+  Widget _buildCardContent(BuildContext context) {
     return ListTile(
 
       leading: Container(
         width: 30,
         height: 30,
+        decoration: BoxDecoration(
+          color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
+          borderRadius: BorderRadius.circular(12), // Half of width/height for a circular effect
+        ),
         child: Center(
           child: Text(
             '${booking.numGuests}',
@@ -107,101 +114,97 @@ class ReservationCard extends StatelessWidget {
             ),
           ),
         ),
-        decoration: BoxDecoration(
-          color: globalGold,
-          borderRadius: BorderRadius.circular(12), // Half of width/height for a circular effect
-        ),
       ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      title: Column(
         children: [
-          Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
+                  ProfileImage(bookingDTO: booking),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ProfileImage(bookingDTO: bookingDTO,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      Text(
+                        '${booking.customer!.firstName!.toUpperCase()} '
+                            '${booking.customer!.lastName!.toUpperCase()} ' + getFlagByPrefix(booking.customer!.prefix!).toString(),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey.shade900,
+                        ),
+                      ),
+                      Row(
                         children: [
-                          Text(
-                            '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()}',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey.shade900,
-                            ),
-                          ),
-
-                          Row(
-                            children: [
-                              if(booking.specialRequests!.isNotEmpty) IconButton(
-                                onPressed: (){
-                                  showCupertinoDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return CupertinoAlertDialog(
-                                        title: const Text('Note'),
-                                        content: Text(booking.specialRequests!),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: const Text("Chiudi"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                icon: Stack(
-                                  children: [
-                                    Icon(CupertinoIcons.doc_plaintext, color: Colors.grey.shade900,),
-                                    Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
-                                  ],
-                                ),
-                              ),
-                              IconButton(onPressed: (){
+                          IconButton(onPressed: (){
+                            showCupertinoModalBottomSheet(
+                              expand: true,
+                              elevation: 10,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
+                              },
+                            );
+                          }, icon: const Icon(CupertinoIcons.settings_solid)),
+                          Consumer<CommunicationStateManager>(
+                            builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
+                              return IconButton(onPressed: () {
                                 showCupertinoModalBottomSheet(
                                   expand: true,
                                   elevation: 10,
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
+                                    return DashChatCustomized20(bookingDTO: booking,);
                                   },
                                 );
-                              }, icon: const Icon(CupertinoIcons.settings_solid)),
-                              Consumer<CommunicationStateManager>(
-                                builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
-                                  return IconButton(onPressed: () {
-                                    showCupertinoModalBottomSheet(
-                                      expand: true,
-                                      elevation: 10,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return DashChatCustomized20(bookingDTO: booking,);
-                                      },
-                                    );
 
-                                  }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),);
-                                },),
+                              }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),);
+                            },),
 
 
-                            ],
-                          ),
                         ],
                       ),
                     ],
                   ),
                 ],
               ),
-              Divider(height: 1, indent: 75, endIndent: 10, color: Colors.grey.shade300,)
+              Row(
+                children: [
+                  if(booking.specialRequests!.isNotEmpty) IconButton(
+                    onPressed: (){
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title: const Text('Note'),
+                            content: Text(booking.specialRequests!),
+                            actions: [
+                              CupertinoDialogAction(
+                                child: const Text("Chiudi"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    icon: Stack(
+                      children: [
+                        Icon(CupertinoIcons.doc_plaintext, color: Colors.grey.shade900,),
+                        Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
+                      ],
+                    ),
+                  ),
+                  Text('${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}'),
+                ],
+              )
             ],
           ),
-          Text('${bookingDTO.timeSlot!.bookingHour!}:${NumberFormat("00").format(bookingDTO.timeSlot!.bookingMinutes!)}')
+          Divider(indent: MediaQuery.of(context).size.width / 14, color: Colors.grey.shade300,)
         ],
       ),
     );
@@ -216,70 +219,6 @@ class ReservationCard extends StatelessWidget {
     );
   }
 
-  void _showBookingActionMenuListaAttesta(BuildContext context, BookingDTO booking) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
-                  Text(booking.customer!.phone!),
-                  Text(booking.customer!.email!),
-                  Text(booking.formCode!),
-                  Text('Stato:' + booking.status!.value),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: IconButton(onPressed: () {
-              }, icon: Icon(CupertinoIcons.phone)),
-            ),
-          ],
-        ),
-        actions: [
-
-
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  bookingId: booking.bookingId,
-                  status: BookingDTOStatusEnum.RIFIUTATO
-              ));
-              Navigator.pop(context, null);
-
-            },
-            child: Text('Rifiuta prenotazione'),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                bookingId: booking.bookingId,
-                status: BookingDTOStatusEnum.ELIMINATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: Text('Cancella'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            // Close without any action
-          },
-          isDefaultAction: true,
-          child: const Text('Indietro'),
-        ),
-      ),
-    );
-  }
   void _showBookingActionMenuConfermato(BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,
@@ -377,9 +316,5 @@ class ReservationCard extends StatelessWidget {
         );
       },
     );
-  }
-
-  String retrieveFlagByCountryCode(String prefix) {
-    return '';
   }
 }

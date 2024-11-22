@@ -11,7 +11,7 @@ import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:http/http.dart';
 import '../../../../global/date_methods_utility.dart';
 
 class BookingToManageCard extends StatelessWidget {
@@ -75,12 +75,11 @@ class BookingToManageCard extends StatelessWidget {
 
   Future<bool?> _setAsArrivedReservation(BuildContext context) async {
 
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.CONFERMATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
+      Provider.of<RestaurantStateManager>(context, listen: false)
+          .updateBooking(BookingDTO(
+          bookingCode: booking.bookingCode,
+          status: BookingDTOStatusEnum.CONFERMATO
+      ));
     return false;
   }
 
@@ -308,13 +307,28 @@ class BookingToManageCard extends StatelessWidget {
         ),
         actions: [
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                status: BookingDTOStatusEnum.CONFERMATO
-              ));
-              Navigator.pop(context, null);
+            onPressed: () async {
+                Response responseUpdate = await Provider.of<RestaurantStateManager>(context, listen: false)
+                    .bookingControllerApi.updateBookingWithHttpInfo(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    status: BookingDTOStatusEnum.CONFERMATO
+                ));
+                if(responseUpdate.statusCode == 409){
+                  Navigator.pop(context, null);
+                  await Provider.of<RestaurantStateManager>(context, listen: false)
+                      .refreshDate();
+                  _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' è già stata elaborata' );
+
+                } else if(responseUpdate.statusCode == 200){
+                  Navigator.pop(context, null);
+                  await Provider.of<RestaurantStateManager>(context, listen: false)
+                      .refreshDate();
+                  _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
+                }else{
+                  _showSnackbar(context, 'Ho riscontrato un errore generico durante aggiormamento prenotazione di '+ booking.customer!.firstName!+ '. Riprova fra 2 minuti.❌❌' );
+
+                }
+
             },
             child: const Text('Conferma prenotazione'),
           ),

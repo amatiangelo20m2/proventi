@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
@@ -155,46 +156,7 @@ class _BookingEditState extends State<BookingEdit> {
                   children: [
                     const Text('Informazioni cliente', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 
-                    Consumer<CommunicationStateManager>(
-                      builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
-                        if(_currentImageUrl.isNotEmpty){
-                          return CircleAvatar(
-                            radius: 30, // Size of the circle
-                            backgroundImage: NetworkImage(_currentImageUrl), // Load the image from the URL
-                            backgroundColor: Colors.transparent, // Optional: Make the background transparent
-                          );
-                        }else{
-
-                          return FutureBuilder<String?>(
-                            future: communicationStateManager
-                                .whatsAppConfigurationControllerApi
-                                .retrieveUserPhoto(widget.bookingDTO.branchCode!,
-                                widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!),  // The API call
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                // Show a loading spinner while waiting
-                                return const SizedBox(height: 0,);
-                              } else if (snapshot.hasError) {
-                                return const Icon(Icons.error, color: Colors.red);
-                              } else if (snapshot.hasData) {
-                                // Display the image in an avatar
-                                String imageUrl = snapshot.data!;
-
-                                return CircleAvatar(
-                                  radius: 30, // Size of the circle
-                                  backgroundImage: NetworkImage(imageUrl), // Load the image from the URL
-                                  backgroundColor: Colors.transparent, // Optional: Make the background transparent
-                                );
-                              } else {
-                                // Handle the case where no data is returned
-                                return const Icon(Icons.error, color: Colors.red);
-                              }
-                            },
-                          );
-                        }
-
-                      },
-                    ),
+                    ProfileImage(bookingDTO: widget.bookingDTO),
                   ],
                 ),
                 children: [

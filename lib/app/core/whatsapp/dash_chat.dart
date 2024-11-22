@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../../api/communication_client/lib/api.dart';
 import '../../../state_manager/communication_state_manager.dart';
+import '../../custom_widgets/profile_image.dart';
 
 class DashChatCustomized20 extends StatefulWidget {
   const DashChatCustomized20({super.key, required this.bookingDTO});
@@ -106,32 +107,10 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
               style: const TextStyle(fontSize: 15, color: CupertinoColors.white),
             ),
             actions: [
-              FutureBuilder<String?>(
-              future: communicationStateManager.whatsAppConfigurationControllerApi
-                  .retrieveUserPhoto(widget.bookingDTO.branchCode!, widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!),  // The API call
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Show a loading spinner while waiting
-                  return const SizedBox(height: 0,);
-                } else if (snapshot.hasError) {
-                  return const Icon(Icons.error, color: Colors.red);
-                } else if (snapshot.hasData) {
-                  // Display the image in an avatar
-                  String imageUrl = snapshot.data!;
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 20, // Size of the circle
-                      backgroundImage: NetworkImage(imageUrl), // Load the image from the URL
-                      backgroundColor: Colors.transparent, // Optional: Make the background transparent
-                    ),
-                  );
-                } else {
-                  // Handle the case where no data is returned
-                  return const Icon(Icons.error, color: Colors.red);
-                }
-              },
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: ProfileImage(bookingDTO: widget.bookingDTO),
+              ),
             ],
           ),
           body: isLoading

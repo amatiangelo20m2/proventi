@@ -38,9 +38,12 @@ class _RefusedBookingArchiveState extends State<RefusedBookingArchive> {
                   child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Prenotazioni rifiutate del ${italianDateFormat.format(widget.dateTime)}'),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.clear))
+                          Text('  Prenotazioni rifiutate del ${italianDateFormat.format(widget.dateTime)}'),
+                          IconButton(onPressed: (){
+                            Navigator.of(context).pop();
+                          }, icon: Icon(Icons.clear))
                         ],
                       ),
                       Expanded(

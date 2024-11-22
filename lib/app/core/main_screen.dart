@@ -14,7 +14,7 @@ import 'package:proventi/app/core/customer/customer_screen.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import '../../api/communication_client/lib/api.dart';
-import 'booking/booking_confirmed/booking.dart';
+import 'booking/booking_confirmed/booking_confirmed.dart';
 import 'booking/booking_processed/booking_processed.dart';
 import 'booking/booking_to_manage/booking_to_manage.dart';
 import 'booking/edited_by_customer/edited_by_customer.dart';
