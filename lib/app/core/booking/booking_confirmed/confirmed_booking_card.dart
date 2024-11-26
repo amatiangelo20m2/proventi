@@ -97,24 +97,6 @@ class ReservationCard extends StatelessWidget {
 
   Widget _buildCardContent(BuildContext context) {
     return ListTile(
-
-      leading: Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
-          borderRadius: BorderRadius.circular(12), // Half of width/height for a circular effect
-        ),
-        child: Center(
-          child: Text(
-            '${booking.numGuests}',
-            style: const TextStyle(
-              fontSize: 17,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
       title: Column(
         children: [
           Row(
@@ -122,51 +104,49 @@ class ReservationCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  ProfileImage(bookingDTO: booking),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${booking.customer!.firstName!.toUpperCase()} '
-                            '${booking.customer!.lastName!.toUpperCase()} ' + getFlagByPrefix(booking.customer!.prefix!).toString(),
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueGrey.shade900,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 2),
+                    child: Container(
+                      width: 50,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '👥${booking.numGuests}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          IconButton(onPressed: (){
-                            showCupertinoModalBottomSheet(
-                              expand: true,
-                              elevation: 10,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
-                              },
-                            );
-                          }, icon: const Icon(CupertinoIcons.settings_solid)),
-                          Consumer<CommunicationStateManager>(
-                            builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
-                              return IconButton(onPressed: () {
-                                showCupertinoModalBottomSheet(
-                                  expand: true,
-                                  elevation: 10,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return DashChatCustomized20(bookingDTO: booking,);
-                                  },
-                                );
+                    ),
+                  ),
+                  ProfileImage(prefix: booking.customer!.prefix!,
+                    phone: booking.customer!.phone!,
+                    branchCode: booking.branchCode!,
+                  ),
 
-                              }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),);
-                            },),
-
-
-                        ],
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueGrey.shade900,
+                          ),
+                        ),
+                        Text('🕖 ${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                          style: TextStyle(color: Colors.grey[900]),),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -199,12 +179,36 @@ class ReservationCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text('${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}'),
+
+                  Consumer<CommunicationStateManager>(
+                    builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
+                      return IconButton(onPressed: () {
+                        showCupertinoModalBottomSheet(
+                          expand: true,
+                          elevation: 10,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DashChatCustomized20(bookingDTO: booking,);
+                          },
+                        );
+
+                      }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),);
+                    },),
+                  IconButton(onPressed: (){
+                    showCupertinoModalBottomSheet(
+                      expand: true,
+                      elevation: 10,
+                      context: context,
+                      builder: (BuildContext context) {
+                        return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
+                      },
+                    );
+                  }, icon: const Icon(CupertinoIcons.settings_solid)),
                 ],
-              )
+              ),
             ],
           ),
-          Divider(indent: MediaQuery.of(context).size.width / 14, color: Colors.grey.shade300,)
+          Divider(indent: MediaQuery.of(context).size.width / 6, color: Colors.grey.shade300, height: 2,)
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 
@@ -63,6 +64,19 @@ class _BookingManagerState extends State<BookingManager> {
                   ),
                 ),
               ),
+              groupedBookings.isEmpty ?
+        SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3,),
+            child: Column(
+              children: [
+                Lottie.asset('assets/lotties/nocalendar.json'),
+                Text('Non ci sono prenotazioni in attesa')
+              ],
+            ),
+          ),
+        ):
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.only(bottom: 160),

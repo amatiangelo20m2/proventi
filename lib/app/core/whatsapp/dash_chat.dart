@@ -109,7 +109,10 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
             actions: [
               Padding(
                 padding: const EdgeInsets.only(top: 8),
-                child: ProfileImage(bookingDTO: widget.bookingDTO),
+                child: ProfileImage(prefix: widget.bookingDTO.customer!.prefix!,
+                  phone: widget.bookingDTO.customer!.phone!,
+                  branchCode: widget.bookingDTO.branchCode!,
+                ),
               ),
             ],
           ),

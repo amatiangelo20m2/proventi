@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-class StandardMessage {
-  /// Returns a new [StandardMessage] instance.
-  StandardMessage({
+class BeforeBookingScheduledMessage {
+  /// Returns a new [BeforeBookingScheduledMessage] instance.
+  BeforeBookingScheduledMessage({
     this.messageCode,
     this.type,
     this.description,
@@ -24,6 +24,7 @@ class StandardMessage {
     this.contentEmail,
     this.createdAt,
     this.updatedAt,
+    this.timeToSendMessageInHours,
     this.whatsAppEnabled,
     this.smsEnabled,
     this.emailEnabled,
@@ -37,7 +38,7 @@ class StandardMessage {
   ///
   String? messageCode;
 
-  StandardMessageTypeEnum? type;
+  BeforeBookingScheduledMessageTypeEnum? type;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -117,6 +118,14 @@ class StandardMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  int? timeToSendMessageInHours;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   bool? whatsAppEnabled;
 
   ///
@@ -136,7 +145,7 @@ class StandardMessage {
   bool? emailEnabled;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is StandardMessage &&
+  bool operator ==(Object other) => identical(this, other) || other is BeforeBookingScheduledMessage &&
     other.messageCode == messageCode &&
     other.type == type &&
     other.description == description &&
@@ -148,6 +157,7 @@ class StandardMessage {
     other.contentEmail == contentEmail &&
     other.createdAt == createdAt &&
     other.updatedAt == updatedAt &&
+    other.timeToSendMessageInHours == timeToSendMessageInHours &&
     other.whatsAppEnabled == whatsAppEnabled &&
     other.smsEnabled == smsEnabled &&
     other.emailEnabled == emailEnabled;
@@ -166,12 +176,13 @@ class StandardMessage {
     (contentEmail == null ? 0 : contentEmail!.hashCode) +
     (createdAt == null ? 0 : createdAt!.hashCode) +
     (updatedAt == null ? 0 : updatedAt!.hashCode) +
+    (timeToSendMessageInHours == null ? 0 : timeToSendMessageInHours!.hashCode) +
     (whatsAppEnabled == null ? 0 : whatsAppEnabled!.hashCode) +
     (smsEnabled == null ? 0 : smsEnabled!.hashCode) +
     (emailEnabled == null ? 0 : emailEnabled!.hashCode);
 
   @override
-  String toString() => 'StandardMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
+  String toString() => 'BeforeBookingScheduledMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, timeToSendMessageInHours=$timeToSendMessageInHours, whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -230,6 +241,11 @@ class StandardMessage {
     } else {
       json[r'updatedAt'] = null;
     }
+    if (this.timeToSendMessageInHours != null) {
+      json[r'timeToSendMessageInHours'] = this.timeToSendMessageInHours;
+    } else {
+      json[r'timeToSendMessageInHours'] = null;
+    }
     if (this.whatsAppEnabled != null) {
       json[r'whatsAppEnabled'] = this.whatsAppEnabled;
     } else {
@@ -248,10 +264,10 @@ class StandardMessage {
     return json;
   }
 
-  /// Returns a new [StandardMessage] instance and imports its values from
+  /// Returns a new [BeforeBookingScheduledMessage] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static StandardMessage? fromJson(dynamic value) {
+  static BeforeBookingScheduledMessage? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -260,15 +276,15 @@ class StandardMessage {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "StandardMessage[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "StandardMessage[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "BeforeBookingScheduledMessage[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "BeforeBookingScheduledMessage[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return StandardMessage(
+      return BeforeBookingScheduledMessage(
         messageCode: mapValueOfType<String>(json, r'messageCode'),
-        type: StandardMessageTypeEnum.fromJson(json[r'type']),
+        type: BeforeBookingScheduledMessageTypeEnum.fromJson(json[r'type']),
         description: mapValueOfType<String>(json, r'description'),
         active: mapValueOfType<bool>(json, r'active'),
         deletable: mapValueOfType<bool>(json, r'deletable'),
@@ -278,6 +294,7 @@ class StandardMessage {
         contentEmail: mapValueOfType<String>(json, r'contentEmail'),
         createdAt: mapDateTime(json, r'createdAt', r''),
         updatedAt: mapDateTime(json, r'updatedAt', r''),
+        timeToSendMessageInHours: mapValueOfType<int>(json, r'timeToSendMessageInHours'),
         whatsAppEnabled: mapValueOfType<bool>(json, r'whatsAppEnabled'),
         smsEnabled: mapValueOfType<bool>(json, r'smsEnabled'),
         emailEnabled: mapValueOfType<bool>(json, r'emailEnabled'),
@@ -286,11 +303,11 @@ class StandardMessage {
     return null;
   }
 
-  static List<StandardMessage> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <StandardMessage>[];
+  static List<BeforeBookingScheduledMessage> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <BeforeBookingScheduledMessage>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = StandardMessage.fromJson(row);
+        final value = BeforeBookingScheduledMessage.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -299,12 +316,12 @@ class StandardMessage {
     return result.toList(growable: growable);
   }
 
-  static Map<String, StandardMessage> mapFromJson(dynamic json) {
-    final map = <String, StandardMessage>{};
+  static Map<String, BeforeBookingScheduledMessage> mapFromJson(dynamic json) {
+    final map = <String, BeforeBookingScheduledMessage>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = StandardMessage.fromJson(entry.value);
+        final value = BeforeBookingScheduledMessage.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -313,14 +330,14 @@ class StandardMessage {
     return map;
   }
 
-  // maps a json object with a list of StandardMessage-objects as value to a dart map
-  static Map<String, List<StandardMessage>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<StandardMessage>>{};
+  // maps a json object with a list of BeforeBookingScheduledMessage-objects as value to a dart map
+  static Map<String, List<BeforeBookingScheduledMessage>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<BeforeBookingScheduledMessage>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = StandardMessage.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = BeforeBookingScheduledMessage.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -332,9 +349,9 @@ class StandardMessage {
 }
 
 
-class StandardMessageTypeEnum {
+class BeforeBookingScheduledMessageTypeEnum {
   /// Instantiate a new enum with the provided [value].
-  const StandardMessageTypeEnum._(this.value);
+  const BeforeBookingScheduledMessageTypeEnum._(this.value);
 
   /// The underlying value of this enum member.
   final String value;
@@ -344,38 +361,26 @@ class StandardMessageTypeEnum {
 
   String toJson() => value;
 
-  static const ATT = StandardMessageTypeEnum._(r'ATT');
-  static const ARR = StandardMessageTypeEnum._(r'ARR');
-  static const CONF = StandardMessageTypeEnum._(r'CONF');
-  static const REF = StandardMessageTypeEnum._(r'REF');
-  static const DEL = StandardMessageTypeEnum._(r'DEL');
-  static const fQ1 = StandardMessageTypeEnum._(r'FQ1');
-  static const fQ2 = StandardMessageTypeEnum._(r'FQ2');
-  static const EDTU = StandardMessageTypeEnum._(r'EDTU');
-  static const EDTC = StandardMessageTypeEnum._(r'EDTC');
-  static const EDTR = StandardMessageTypeEnum._(r'EDTR');
+  static const RPR = BeforeBookingScheduledMessageTypeEnum._(r'RPR');
+  static const aNS1 = BeforeBookingScheduledMessageTypeEnum._(r'ANS1');
+  static const aNS2 = BeforeBookingScheduledMessageTypeEnum._(r'ANS2');
+  static const aNS3 = BeforeBookingScheduledMessageTypeEnum._(r'ANS3');
 
-  /// List of all possible values in this [enum][StandardMessageTypeEnum].
-  static const values = <StandardMessageTypeEnum>[
-    ATT,
-    ARR,
-    CONF,
-    REF,
-    DEL,
-    fQ1,
-    fQ2,
-    EDTU,
-    EDTC,
-    EDTR,
+  /// List of all possible values in this [enum][BeforeBookingScheduledMessageTypeEnum].
+  static const values = <BeforeBookingScheduledMessageTypeEnum>[
+    RPR,
+    aNS1,
+    aNS2,
+    aNS3,
   ];
 
-  static StandardMessageTypeEnum? fromJson(dynamic value) => StandardMessageTypeEnumTypeTransformer().decode(value);
+  static BeforeBookingScheduledMessageTypeEnum? fromJson(dynamic value) => BeforeBookingScheduledMessageTypeEnumTypeTransformer().decode(value);
 
-  static List<StandardMessageTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <StandardMessageTypeEnum>[];
+  static List<BeforeBookingScheduledMessageTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <BeforeBookingScheduledMessageTypeEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = StandardMessageTypeEnum.fromJson(row);
+        final value = BeforeBookingScheduledMessageTypeEnum.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -385,16 +390,16 @@ class StandardMessageTypeEnum {
   }
 }
 
-/// Transformation class that can [encode] an instance of [StandardMessageTypeEnum] to String,
-/// and [decode] dynamic data back to [StandardMessageTypeEnum].
-class StandardMessageTypeEnumTypeTransformer {
-  factory StandardMessageTypeEnumTypeTransformer() => _instance ??= const StandardMessageTypeEnumTypeTransformer._();
+/// Transformation class that can [encode] an instance of [BeforeBookingScheduledMessageTypeEnum] to String,
+/// and [decode] dynamic data back to [BeforeBookingScheduledMessageTypeEnum].
+class BeforeBookingScheduledMessageTypeEnumTypeTransformer {
+  factory BeforeBookingScheduledMessageTypeEnumTypeTransformer() => _instance ??= const BeforeBookingScheduledMessageTypeEnumTypeTransformer._();
 
-  const StandardMessageTypeEnumTypeTransformer._();
+  const BeforeBookingScheduledMessageTypeEnumTypeTransformer._();
 
-  String encode(StandardMessageTypeEnum data) => data.value;
+  String encode(BeforeBookingScheduledMessageTypeEnum data) => data.value;
 
-  /// Decodes a [dynamic value][data] to a StandardMessageTypeEnum.
+  /// Decodes a [dynamic value][data] to a BeforeBookingScheduledMessageTypeEnum.
   ///
   /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
   /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
@@ -402,19 +407,13 @@ class StandardMessageTypeEnumTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  StandardMessageTypeEnum? decode(dynamic data, {bool allowNull = true}) {
+  BeforeBookingScheduledMessageTypeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'ATT': return StandardMessageTypeEnum.ATT;
-        case r'ARR': return StandardMessageTypeEnum.ARR;
-        case r'CONF': return StandardMessageTypeEnum.CONF;
-        case r'REF': return StandardMessageTypeEnum.REF;
-        case r'DEL': return StandardMessageTypeEnum.DEL;
-        case r'FQ1': return StandardMessageTypeEnum.fQ1;
-        case r'FQ2': return StandardMessageTypeEnum.fQ2;
-        case r'EDTU': return StandardMessageTypeEnum.EDTU;
-        case r'EDTC': return StandardMessageTypeEnum.EDTC;
-        case r'EDTR': return StandardMessageTypeEnum.EDTR;
+        case r'RPR': return BeforeBookingScheduledMessageTypeEnum.RPR;
+        case r'ANS1': return BeforeBookingScheduledMessageTypeEnum.aNS1;
+        case r'ANS2': return BeforeBookingScheduledMessageTypeEnum.aNS2;
+        case r'ANS3': return BeforeBookingScheduledMessageTypeEnum.aNS3;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -424,8 +423,8 @@ class StandardMessageTypeEnumTypeTransformer {
     return null;
   }
 
-  /// Singleton [StandardMessageTypeEnumTypeTransformer] instance.
-  static StandardMessageTypeEnumTypeTransformer? _instance;
+  /// Singleton [BeforeBookingScheduledMessageTypeEnumTypeTransformer] instance.
+  static BeforeBookingScheduledMessageTypeEnumTypeTransformer? _instance;
 }
 
 

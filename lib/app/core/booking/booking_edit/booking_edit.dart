@@ -156,7 +156,10 @@ class _BookingEditState extends State<BookingEdit> {
                   children: [
                     const Text('Informazioni cliente', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
 
-                    ProfileImage(bookingDTO: widget.bookingDTO),
+                    ProfileImage(prefix: widget.bookingDTO.customer!.prefix!,
+                      phone: widget.bookingDTO.customer!.phone!,
+                      branchCode: widget.bookingDTO.branchCode!,
+                    ),
                   ],
                 ),
                 children: [

@@ -54,7 +54,10 @@ class RefusedBookingCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ProfileImage(bookingDTO: booking),
+              ProfileImage(prefix: booking.customer!.prefix!,
+                phone: booking.customer!.phone!,
+                branchCode: booking.branchCode!,
+              ),
               _buildCustomerInfo(),
               _buildGuestInfo(),
               Row(

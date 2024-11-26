@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://192.168.1.4:41393/restaurantservice', this.authentication,});
+  ApiClient({this.basePath = 'http://192.168.1.4:2155/restaurantservice', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -182,10 +182,18 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AfterBookingSchedulerMessage':
+          return AfterBookingSchedulerMessage.fromJson(value);
+        case 'BeforeBookingScheduledMessage':
+          return BeforeBookingScheduledMessage.fromJson(value);
         case 'BookingDTO':
           return BookingDTO.fromJson(value);
+        case 'CentralinoMessage':
+          return CentralinoMessage.fromJson(value);
         case 'CustomerDTO':
           return CustomerDTO.fromJson(value);
+        case 'CustomerHistory':
+          return CustomerHistory.fromJson(value);
         case 'EmployeeDTO':
           return EmployeeDTO.fromJson(value);
         case 'EmployeePresenceReportDTO':
@@ -194,6 +202,8 @@ class ApiClient {
           return EmployeeReportSummaryDTO.fromJson(value);
         case 'FormDTO':
           return FormDTO.fromJson(value);
+        case 'GeneralMessage':
+          return GeneralMessage.fromJson(value);
         case 'HolidaysDTO':
           return HolidaysDTO.fromJson(value);
         case 'MobileDeviceDetails':

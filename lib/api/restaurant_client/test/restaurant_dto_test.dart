@@ -46,6 +46,21 @@ void main() {
       // TODO
     });
 
+    // List<AfterBookingSchedulerMessage> afterBookingSchedulerMessages (default value: const [])
+    test('to test the property `afterBookingSchedulerMessages`', () async {
+      // TODO
+    });
+
+    // List<BeforeBookingScheduledMessage> beforeBookingScheduledMessages (default value: const [])
+    test('to test the property `beforeBookingScheduledMessages`', () async {
+      // TODO
+    });
+
+    // List<CentralinoMessage> centralinoMessages (default value: const [])
+    test('to test the property `centralinoMessages`', () async {
+      // TODO
+    });
+
     // String restaurantName
     test('to test the property `restaurantName`', () async {
       // TODO

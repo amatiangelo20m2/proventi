@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
     )..repeat(reverse: true);
 
     // Define scaling and rotation animations
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 1.1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
               },
               child: Image.asset(
                 'assets/images/logo.png',
-                width: MediaQuery.of(context).size.width / 2,
+                width: MediaQuery.of(context).size.width / 3,
               ),
             ),
             const SizedBox(height: 20),

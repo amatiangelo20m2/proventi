@@ -20,9 +20,9 @@ class EmployeePresenceReportDTO {
     this.workedHours,
     this.note,
     this.presentAtLunch,
+    this.holiday,
     this.presentAtDinner,
     this.illness,
-    this.holiday,
     this.rest,
   });
 
@@ -88,6 +88,14 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  bool? holiday;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   bool? presentAtDinner;
 
   ///
@@ -97,14 +105,6 @@ class EmployeePresenceReportDTO {
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
   bool? illness;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? holiday;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -123,9 +123,9 @@ class EmployeePresenceReportDTO {
     other.workedHours == workedHours &&
     other.note == note &&
     other.presentAtLunch == presentAtLunch &&
+    other.holiday == holiday &&
     other.presentAtDinner == presentAtDinner &&
     other.illness == illness &&
-    other.holiday == holiday &&
     other.rest == rest;
 
   @override
@@ -138,13 +138,13 @@ class EmployeePresenceReportDTO {
     (workedHours == null ? 0 : workedHours!.hashCode) +
     (note == null ? 0 : note!.hashCode) +
     (presentAtLunch == null ? 0 : presentAtLunch!.hashCode) +
+    (holiday == null ? 0 : holiday!.hashCode) +
     (presentAtDinner == null ? 0 : presentAtDinner!.hashCode) +
     (illness == null ? 0 : illness!.hashCode) +
-    (holiday == null ? 0 : holiday!.hashCode) +
     (rest == null ? 0 : rest!.hashCode);
 
   @override
-  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, presentAtLunch=$presentAtLunch, presentAtDinner=$presentAtDinner, illness=$illness, holiday=$holiday, rest=$rest]';
+  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, presentAtLunch=$presentAtLunch, holiday=$holiday, presentAtDinner=$presentAtDinner, illness=$illness, rest=$rest]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -183,6 +183,11 @@ class EmployeePresenceReportDTO {
     } else {
       json[r'presentAtLunch'] = null;
     }
+    if (this.holiday != null) {
+      json[r'holiday'] = this.holiday;
+    } else {
+      json[r'holiday'] = null;
+    }
     if (this.presentAtDinner != null) {
       json[r'presentAtDinner'] = this.presentAtDinner;
     } else {
@@ -192,11 +197,6 @@ class EmployeePresenceReportDTO {
       json[r'illness'] = this.illness;
     } else {
       json[r'illness'] = null;
-    }
-    if (this.holiday != null) {
-      json[r'holiday'] = this.holiday;
-    } else {
-      json[r'holiday'] = null;
     }
     if (this.rest != null) {
       json[r'rest'] = this.rest;
@@ -232,9 +232,9 @@ class EmployeePresenceReportDTO {
         workedHours: mapValueOfType<int>(json, r'workedHours'),
         note: mapValueOfType<String>(json, r'note'),
         presentAtLunch: mapValueOfType<bool>(json, r'presentAtLunch'),
+        holiday: mapValueOfType<bool>(json, r'holiday'),
         presentAtDinner: mapValueOfType<bool>(json, r'presentAtDinner'),
         illness: mapValueOfType<bool>(json, r'illness'),
-        holiday: mapValueOfType<bool>(json, r'holiday'),
         rest: mapValueOfType<bool>(json, r'rest'),
       );
     }

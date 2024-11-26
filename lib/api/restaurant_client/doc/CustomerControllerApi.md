@@ -5,11 +5,12 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:41393/restaurantservice*
+All URIs are relative to *http://192.168.1.4:2155/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**findcustomerByPhoneAndPrefix**](CustomerControllerApi.md#findcustomerbyphoneandprefix) | **GET** /api/customer/retrieve/{prefix}/{phoneNumber} | 
+[**retrieveCustomerHistoryByBranchCode**](CustomerControllerApi.md#retrievecustomerhistorybybranchcode) | **GET** /api/customer/retrievecustomerhistory/{branchCode} | 
 [**save**](CustomerControllerApi.md#save) | **POST** /api/customer/save | 
 [**updateCustomer**](CustomerControllerApi.md#updatecustomer) | **PUT** /api/customer/updatecustomer | 
 
@@ -45,6 +46,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CustomerDTO**](CustomerDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **retrieveCustomerHistoryByBranchCode**
+> List<CustomerHistory> retrieveCustomerHistoryByBranchCode(branchCode)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = CustomerControllerApi();
+final branchCode = branchCode_example; // String | 
+
+try {
+    final result = api_instance.retrieveCustomerHistoryByBranchCode(branchCode);
+    print(result);
+} catch (e) {
+    print('Exception when calling CustomerControllerApi->retrieveCustomerHistoryByBranchCode: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+
+### Return type
+
+[**List<CustomerHistory>**](CustomerHistory.md)
 
 ### Authorization
 

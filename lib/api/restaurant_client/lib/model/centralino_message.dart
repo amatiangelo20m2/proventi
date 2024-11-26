@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
-class StandardMessage {
-  /// Returns a new [StandardMessage] instance.
-  StandardMessage({
+class CentralinoMessage {
+  /// Returns a new [CentralinoMessage] instance.
+  CentralinoMessage({
     this.messageCode,
     this.type,
     this.description,
@@ -37,7 +37,7 @@ class StandardMessage {
   ///
   String? messageCode;
 
-  StandardMessageTypeEnum? type;
+  CentralinoMessageTypeEnum? type;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -136,7 +136,7 @@ class StandardMessage {
   bool? emailEnabled;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is StandardMessage &&
+  bool operator ==(Object other) => identical(this, other) || other is CentralinoMessage &&
     other.messageCode == messageCode &&
     other.type == type &&
     other.description == description &&
@@ -171,7 +171,7 @@ class StandardMessage {
     (emailEnabled == null ? 0 : emailEnabled!.hashCode);
 
   @override
-  String toString() => 'StandardMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
+  String toString() => 'CentralinoMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -248,10 +248,10 @@ class StandardMessage {
     return json;
   }
 
-  /// Returns a new [StandardMessage] instance and imports its values from
+  /// Returns a new [CentralinoMessage] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static StandardMessage? fromJson(dynamic value) {
+  static CentralinoMessage? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -260,15 +260,15 @@ class StandardMessage {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "StandardMessage[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "StandardMessage[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "CentralinoMessage[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "CentralinoMessage[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return StandardMessage(
+      return CentralinoMessage(
         messageCode: mapValueOfType<String>(json, r'messageCode'),
-        type: StandardMessageTypeEnum.fromJson(json[r'type']),
+        type: CentralinoMessageTypeEnum.fromJson(json[r'type']),
         description: mapValueOfType<String>(json, r'description'),
         active: mapValueOfType<bool>(json, r'active'),
         deletable: mapValueOfType<bool>(json, r'deletable'),
@@ -286,11 +286,11 @@ class StandardMessage {
     return null;
   }
 
-  static List<StandardMessage> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <StandardMessage>[];
+  static List<CentralinoMessage> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <CentralinoMessage>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = StandardMessage.fromJson(row);
+        final value = CentralinoMessage.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -299,12 +299,12 @@ class StandardMessage {
     return result.toList(growable: growable);
   }
 
-  static Map<String, StandardMessage> mapFromJson(dynamic json) {
-    final map = <String, StandardMessage>{};
+  static Map<String, CentralinoMessage> mapFromJson(dynamic json) {
+    final map = <String, CentralinoMessage>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = StandardMessage.fromJson(entry.value);
+        final value = CentralinoMessage.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -313,14 +313,14 @@ class StandardMessage {
     return map;
   }
 
-  // maps a json object with a list of StandardMessage-objects as value to a dart map
-  static Map<String, List<StandardMessage>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<StandardMessage>>{};
+  // maps a json object with a list of CentralinoMessage-objects as value to a dart map
+  static Map<String, List<CentralinoMessage>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<CentralinoMessage>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = StandardMessage.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = CentralinoMessage.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -332,9 +332,9 @@ class StandardMessage {
 }
 
 
-class StandardMessageTypeEnum {
+class CentralinoMessageTypeEnum {
   /// Instantiate a new enum with the provided [value].
-  const StandardMessageTypeEnum._(this.value);
+  const CentralinoMessageTypeEnum._(this.value);
 
   /// The underlying value of this enum member.
   final String value;
@@ -344,38 +344,38 @@ class StandardMessageTypeEnum {
 
   String toJson() => value;
 
-  static const ATT = StandardMessageTypeEnum._(r'ATT');
-  static const ARR = StandardMessageTypeEnum._(r'ARR');
-  static const CONF = StandardMessageTypeEnum._(r'CONF');
-  static const REF = StandardMessageTypeEnum._(r'REF');
-  static const DEL = StandardMessageTypeEnum._(r'DEL');
-  static const fQ1 = StandardMessageTypeEnum._(r'FQ1');
-  static const fQ2 = StandardMessageTypeEnum._(r'FQ2');
-  static const EDTU = StandardMessageTypeEnum._(r'EDTU');
-  static const EDTC = StandardMessageTypeEnum._(r'EDTC');
-  static const EDTR = StandardMessageTypeEnum._(r'EDTR');
+  static const n0 = CentralinoMessageTypeEnum._(r'TASTO_0');
+  static const n1 = CentralinoMessageTypeEnum._(r'TASTO_1');
+  static const n2 = CentralinoMessageTypeEnum._(r'TASTO_2');
+  static const n3 = CentralinoMessageTypeEnum._(r'TASTO_3');
+  static const n4 = CentralinoMessageTypeEnum._(r'TASTO_4');
+  static const n5 = CentralinoMessageTypeEnum._(r'TASTO_5');
+  static const n6 = CentralinoMessageTypeEnum._(r'TASTO_6');
+  static const n7 = CentralinoMessageTypeEnum._(r'TASTO_7');
+  static const n8 = CentralinoMessageTypeEnum._(r'TASTO_8');
+  static const n9 = CentralinoMessageTypeEnum._(r'TASTO_9');
 
-  /// List of all possible values in this [enum][StandardMessageTypeEnum].
-  static const values = <StandardMessageTypeEnum>[
-    ATT,
-    ARR,
-    CONF,
-    REF,
-    DEL,
-    fQ1,
-    fQ2,
-    EDTU,
-    EDTC,
-    EDTR,
+  /// List of all possible values in this [enum][CentralinoMessageTypeEnum].
+  static const values = <CentralinoMessageTypeEnum>[
+    n0,
+    n1,
+    n2,
+    n3,
+    n4,
+    n5,
+    n6,
+    n7,
+    n8,
+    n9,
   ];
 
-  static StandardMessageTypeEnum? fromJson(dynamic value) => StandardMessageTypeEnumTypeTransformer().decode(value);
+  static CentralinoMessageTypeEnum? fromJson(dynamic value) => CentralinoMessageTypeEnumTypeTransformer().decode(value);
 
-  static List<StandardMessageTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <StandardMessageTypeEnum>[];
+  static List<CentralinoMessageTypeEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <CentralinoMessageTypeEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = StandardMessageTypeEnum.fromJson(row);
+        final value = CentralinoMessageTypeEnum.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -385,16 +385,16 @@ class StandardMessageTypeEnum {
   }
 }
 
-/// Transformation class that can [encode] an instance of [StandardMessageTypeEnum] to String,
-/// and [decode] dynamic data back to [StandardMessageTypeEnum].
-class StandardMessageTypeEnumTypeTransformer {
-  factory StandardMessageTypeEnumTypeTransformer() => _instance ??= const StandardMessageTypeEnumTypeTransformer._();
+/// Transformation class that can [encode] an instance of [CentralinoMessageTypeEnum] to String,
+/// and [decode] dynamic data back to [CentralinoMessageTypeEnum].
+class CentralinoMessageTypeEnumTypeTransformer {
+  factory CentralinoMessageTypeEnumTypeTransformer() => _instance ??= const CentralinoMessageTypeEnumTypeTransformer._();
 
-  const StandardMessageTypeEnumTypeTransformer._();
+  const CentralinoMessageTypeEnumTypeTransformer._();
 
-  String encode(StandardMessageTypeEnum data) => data.value;
+  String encode(CentralinoMessageTypeEnum data) => data.value;
 
-  /// Decodes a [dynamic value][data] to a StandardMessageTypeEnum.
+  /// Decodes a [dynamic value][data] to a CentralinoMessageTypeEnum.
   ///
   /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
   /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
@@ -402,19 +402,19 @@ class StandardMessageTypeEnumTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  StandardMessageTypeEnum? decode(dynamic data, {bool allowNull = true}) {
+  CentralinoMessageTypeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'ATT': return StandardMessageTypeEnum.ATT;
-        case r'ARR': return StandardMessageTypeEnum.ARR;
-        case r'CONF': return StandardMessageTypeEnum.CONF;
-        case r'REF': return StandardMessageTypeEnum.REF;
-        case r'DEL': return StandardMessageTypeEnum.DEL;
-        case r'FQ1': return StandardMessageTypeEnum.fQ1;
-        case r'FQ2': return StandardMessageTypeEnum.fQ2;
-        case r'EDTU': return StandardMessageTypeEnum.EDTU;
-        case r'EDTC': return StandardMessageTypeEnum.EDTC;
-        case r'EDTR': return StandardMessageTypeEnum.EDTR;
+        case r'TASTO_0': return CentralinoMessageTypeEnum.n0;
+        case r'TASTO_1': return CentralinoMessageTypeEnum.n1;
+        case r'TASTO_2': return CentralinoMessageTypeEnum.n2;
+        case r'TASTO_3': return CentralinoMessageTypeEnum.n3;
+        case r'TASTO_4': return CentralinoMessageTypeEnum.n4;
+        case r'TASTO_5': return CentralinoMessageTypeEnum.n5;
+        case r'TASTO_6': return CentralinoMessageTypeEnum.n6;
+        case r'TASTO_7': return CentralinoMessageTypeEnum.n7;
+        case r'TASTO_8': return CentralinoMessageTypeEnum.n8;
+        case r'TASTO_9': return CentralinoMessageTypeEnum.n9;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -424,8 +424,8 @@ class StandardMessageTypeEnumTypeTransformer {
     return null;
   }
 
-  /// Singleton [StandardMessageTypeEnumTypeTransformer] instance.
-  static StandardMessageTypeEnumTypeTransformer? _instance;
+  /// Singleton [CentralinoMessageTypeEnumTypeTransformer] instance.
+  static CentralinoMessageTypeEnumTypeTransformer? _instance;
 }
 
 

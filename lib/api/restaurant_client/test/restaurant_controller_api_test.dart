@@ -82,13 +82,38 @@ void main() {
       // TODO
     });
 
+    //Future<RestaurantDTO> resetBranchMessagesByType(String branchCode, String messageTypeForUpdating) async
+    test('test resetBranchMessagesByType', () async {
+      // TODO
+    });
+
     //Future<RestaurantDTO> retrieveConfiguration(String branchCode, String restaurantName) async
     test('test retrieveConfiguration', () async {
       // TODO
     });
 
+    //Future<GeneralMessage> retrieveMessageByBranchCode(String branchCode, String messageType) async
+    test('test retrieveMessageByBranchCode', () async {
+      // TODO
+    });
+
     //Future<List<EmployeeReportSummaryDTO>> retrieveReports(String branchCode, DateTime initialRangeDate, DateTime endRangeDate) async
     test('test retrieveReports', () async {
+      // TODO
+    });
+
+    //Future<RestaurantDTO> updateAfterBookingMessage(String branchCode, AfterBookingSchedulerMessage afterBookingSchedulerMessage) async
+    test('test updateAfterBookingMessage', () async {
+      // TODO
+    });
+
+    //Future<RestaurantDTO> updateBeforeBookingMessage(String branchCode, BeforeBookingScheduledMessage beforeBookingScheduledMessage) async
+    test('test updateBeforeBookingMessage', () async {
+      // TODO
+    });
+
+    //Future<RestaurantDTO> updateCentralinoMessage(String branchCode, CentralinoMessage centralinoMessage) async
+    test('test updateCentralinoMessage', () async {
       // TODO
     });
 

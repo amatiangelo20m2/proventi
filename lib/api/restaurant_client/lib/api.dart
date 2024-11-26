@@ -33,12 +33,17 @@ part 'api/customer_controller_api.dart';
 part 'api/form_controller_api.dart';
 part 'api/restaurant_controller_api.dart';
 
+part 'model/after_booking_scheduler_message.dart';
+part 'model/before_booking_scheduled_message.dart';
 part 'model/booking_dto.dart';
+part 'model/centralino_message.dart';
 part 'model/customer_dto.dart';
+part 'model/customer_history.dart';
 part 'model/employee_dto.dart';
 part 'model/employee_presence_report_dto.dart';
 part 'model/employee_report_summary_dto.dart';
 part 'model/form_dto.dart';
+part 'model/general_message.dart';
 part 'model/holidays_dto.dart';
 part 'model/mobile_device_details.dart';
 part 'model/opening_hours_dto.dart';

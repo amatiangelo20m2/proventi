@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:proventi/app/core/whatconf/whatsappconfwidget.dart';
+import 'package:proventi/app/login/login_screen.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
@@ -14,6 +15,7 @@ import 'package:proventi/app/core/customer/customer_screen.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import '../../api/communication_client/lib/api.dart';
+import '../../landing/landing_page.dart';
 import 'booking/booking_confirmed/booking_confirmed.dart';
 import 'booking/booking_processed/booking_processed.dart';
 import 'booking/booking_to_manage/booking_to_manage.dart';
@@ -51,16 +53,14 @@ class _MainScreenState extends State<MainScreen> {
 
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _pageIndex,
-            selectedItemColor: Colors.blueGrey,
+            selectedItemColor: Colors.black,
             backgroundColor: Colors.red,
             useLegacyColorScheme: true,
             unselectedItemColor: Colors.grey,
-            selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+            selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
             unselectedLabelStyle: const TextStyle(fontSize: 8),
             showSelectedLabels: true,
             showUnselectedLabels: true,
-            selectedIconTheme: const IconThemeData(color: Colors.blueGrey),
-            unselectedIconTheme: const IconThemeData(color: Colors.grey),
             unselectedFontSize: 7,
             onTap: (index) {
               restaurantStateManager.refresh(DateTime.now());
@@ -75,6 +75,7 @@ class _MainScreenState extends State<MainScreen> {
                     .where((element) =>
                         element.status == BookingDTOStatusEnum.CONFERMATO)
                     .length,
+                isSelected: _pageIndex == 0,
               ),
               _buildBottomNavigationBarItem(
                 svgPath: 'assets/svg/hourglass.svg',
@@ -84,6 +85,7 @@ class _MainScreenState extends State<MainScreen> {
                     .where((element) =>
                         element.status == BookingDTOStatusEnum.IN_ATTESA)
                     .length,
+                isSelected: _pageIndex == 1,
               ),
               _buildBottomNavigationBarItem(
                 svgPath: 'assets/svg/fast_queue.svg',
@@ -93,6 +95,7 @@ class _MainScreenState extends State<MainScreen> {
                     .where((element) =>
                         element.status == BookingDTOStatusEnum.LISTA_ATTESA)
                     .length,
+                isSelected: _pageIndex == 2,
               ),
               _buildBottomNavigationBarItem(
                 svgPath: 'assets/svg/booking_edited.svg',
@@ -103,12 +106,14 @@ class _MainScreenState extends State<MainScreen> {
                         element.status ==
                         BookingDTOStatusEnum.MODIFICATO_DA_UTENTE)
                     .length,
+                isSelected: _pageIndex == 3,
               ),
               _buildBottomNavigationBarItem(
                 svgPath: 'assets/svg/check.svg',
                 label: 'PROCESSATE',
                 badgeColor: Colors.black,
                 badgeCount: 0,
+                isSelected: _pageIndex == 4,
               ),
             ],
           ),
@@ -120,13 +125,9 @@ class _MainScreenState extends State<MainScreen> {
                   height: 50,
                 ),
                 Image.asset('assets/images/logo.png', width: 190),
-                ListTile(
+                const ListTile(
                   title: Text(
                     'Proventi',
-                    style: TextStyle(color: CupertinoColors.white),
-                  ),
-                  subtitle: Text(
-                    '---',
                     style: TextStyle(color: CupertinoColors.white),
                   ),
                   leading: Icon(
@@ -139,16 +140,27 @@ class _MainScreenState extends State<MainScreen> {
                     Navigator.pushNamed(context, CustomerScreen.routeName);
                   },
                   title: const Text(
-                    'I tuoi clienti',
-                    style: TextStyle(color: CupertinoColors.white),
-                  ),
-                  subtitle: const Text(
-                    '---',
+                    'Lista clienti',
                     style: TextStyle(color: CupertinoColors.white),
                   ),
                   leading: const Icon(
                     CupertinoIcons.person_2,
                     color: CupertinoColors.white,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const SplashScreen()),
+                    );
+                  },
+                  title: const Text(
+                    'Log out',
+                    style: TextStyle(color: CupertinoColors.destructiveRed),
+                  ),
+                  leading: Icon(
+                    Icons.logout,
+                    color: CupertinoColors.destructiveRed,
                   ),
                 ),
               ],
@@ -235,6 +247,7 @@ class _MainScreenState extends State<MainScreen> {
     required String label,
     required Color badgeColor,
     required int badgeCount,
+    required bool isSelected,
   }) {
     return BottomNavigationBarItem(
       icon: badges.Badge(
@@ -245,7 +258,7 @@ class _MainScreenState extends State<MainScreen> {
           style: const TextStyle(color: Colors.white, fontSize: 8),
         ),
         child: SvgPicture.asset(
-          color: Colors.blueGrey,
+          color: isSelected ? Colors.black : Colors.grey,
           svgPath,
           height: 23,
         ),

@@ -171,7 +171,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                                     if(typingNumber.length > 4){
                                       for (var element in customerStateManager.currentCustomersList!) {
                                         if(element.phone!.contains(typingNumber)){
-                                          currentCustomerDTOList.add(element);
+                                          //currentCustomerDTOList.add(element);
                                         }
                                       }
                                     }

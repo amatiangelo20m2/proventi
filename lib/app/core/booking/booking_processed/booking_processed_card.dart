@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
 import 'package:proventi/app/core/whatsapp/dash_chat.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
@@ -41,11 +42,16 @@ class ProcessedBookingCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              ProfileImage(prefix: booking.customer!.prefix!,
+                phone: booking.customer!.phone!,
+                branchCode: booking.branchCode!,
+              ),
               _buildCustomerInfo(),
               Text(getFormEmoji(formDTOs, booking)),
               _buildGuestInfo(),
               Row(
                 children: [
+
                   GestureDetector(child: badges.Badge(
                       showBadge: booking.specialRequests?.isNotEmpty ?? false,
                       child: const Icon(CupertinoIcons.doc_plaintext)), onTap: () {

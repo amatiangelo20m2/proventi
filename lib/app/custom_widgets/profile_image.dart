@@ -9,9 +9,11 @@ import '../../global/flag_picker.dart';
 import '../../state_manager/communication_state_manager.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.bookingDTO});
+  const ProfileImage({super.key, required this.prefix, required this.phone, required this.branchCode});
 
-  final BookingDTO bookingDTO;
+  final String prefix;
+  final String phone;
+  final String branchCode;
 
 
   // Singleton cache for storing image URLs
@@ -22,7 +24,7 @@ class ProfileImage extends StatelessWidget {
     return Consumer<CommunicationStateManager>(
       builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
         // Generate the key for this customer
-        final String cacheKey = bookingDTO.customer!.prefix! + bookingDTO.customer!.phone!;
+        final String cacheKey = prefix + phone;
 
         // Check if the image URL is already cached
         if (_photoCache.containsKey(cacheKey)) {
@@ -40,7 +42,7 @@ class ProfileImage extends StatelessWidget {
         return FutureBuilder<String?>(
           future: communicationStateManager.whatsAppConfigurationControllerApi
               .retrieveUserPhoto(
-            bookingDTO.branchCode!,
+            branchCode,
             cacheKey,
           ),
           builder: (context, snapshot) {

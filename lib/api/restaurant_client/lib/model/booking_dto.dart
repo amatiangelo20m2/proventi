@@ -425,6 +425,7 @@ class BookingDTOStatusEnum {
 
   static const IN_ATTESA = BookingDTOStatusEnum._(r'IN_ATTESA');
   static const MODIFICATO_DA_UTENTE = BookingDTOStatusEnum._(r'MODIFICATO_DA_UTENTE');
+  static const PRE_CONFERMA_PAGAMENTO = BookingDTOStatusEnum._(r'PRE_CONFERMA_PAGAMENTO');
   static const CONFERMATO = BookingDTOStatusEnum._(r'CONFERMATO');
   static const ARRIVATO = BookingDTOStatusEnum._(r'ARRIVATO');
   static const NON_ARRIVATO = BookingDTOStatusEnum._(r'NON_ARRIVATO');
@@ -437,6 +438,7 @@ class BookingDTOStatusEnum {
   static const values = <BookingDTOStatusEnum>[
     IN_ATTESA,
     MODIFICATO_DA_UTENTE,
+    PRE_CONFERMA_PAGAMENTO,
     CONFERMATO,
     ARRIVATO,
     NON_ARRIVATO,
@@ -484,6 +486,7 @@ class BookingDTOStatusEnumTypeTransformer {
       switch (data) {
         case r'IN_ATTESA': return BookingDTOStatusEnum.IN_ATTESA;
         case r'MODIFICATO_DA_UTENTE': return BookingDTOStatusEnum.MODIFICATO_DA_UTENTE;
+        case r'PRE_CONFERMA_PAGAMENTO': return BookingDTOStatusEnum.PRE_CONFERMA_PAGAMENTO;
         case r'CONFERMATO': return BookingDTOStatusEnum.CONFERMATO;
         case r'ARRIVATO': return BookingDTOStatusEnum.ARRIVATO;
         case r'NON_ARRIVATO': return BookingDTOStatusEnum.NON_ARRIVATO;

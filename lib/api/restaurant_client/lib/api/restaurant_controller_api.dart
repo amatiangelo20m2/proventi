@@ -640,6 +640,60 @@ class RestaurantControllerApi {
     return null;
   }
 
+  /// Performs an HTTP 'PUT /api/restaurant/resetmessages/{branchCode}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] messageTypeForUpdating (required):
+  Future<Response> resetBranchMessagesByTypeWithHttpInfo(String branchCode, String messageTypeForUpdating,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/restaurant/resetmessages/{branchCode}'
+      .replaceAll('{branchCode}', branchCode);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'messageTypeForUpdating', messageTypeForUpdating));
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] messageTypeForUpdating (required):
+  Future<RestaurantDTO?> resetBranchMessagesByType(String branchCode, String messageTypeForUpdating,) async {
+    final response = await resetBranchMessagesByTypeWithHttpInfo(branchCode, messageTypeForUpdating,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RestaurantDTO',) as RestaurantDTO;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /api/restaurant/restaurant/retrieveconfiguration/{branchCode}/{restaurantName}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -688,6 +742,59 @@ class RestaurantControllerApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RestaurantDTO',) as RestaurantDTO;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /api/restaurant/retrievemessage/{branchCode}/{messageType}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] messageType (required):
+  Future<Response> retrieveMessageByBranchCodeWithHttpInfo(String branchCode, String messageType,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/restaurant/retrievemessage/{branchCode}/{messageType}'
+      .replaceAll('{branchCode}', branchCode)
+      .replaceAll('{messageType}', messageType);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] messageType (required):
+  Future<GeneralMessage?> retrieveMessageByBranchCode(String branchCode, String messageType,) async {
+    final response = await retrieveMessageByBranchCodeWithHttpInfo(branchCode, messageType,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'GeneralMessage',) as GeneralMessage;
     
     }
     return null;
@@ -751,6 +858,162 @@ class RestaurantControllerApi {
         .cast<EmployeeReportSummaryDTO>()
         .toList(growable: false);
 
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'PUT /api/restaurant/update/afterbookingmessage/{branchCode}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [AfterBookingSchedulerMessage] afterBookingSchedulerMessage (required):
+  Future<Response> updateAfterBookingMessageWithHttpInfo(String branchCode, AfterBookingSchedulerMessage afterBookingSchedulerMessage,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/restaurant/update/afterbookingmessage/{branchCode}'
+      .replaceAll('{branchCode}', branchCode);
+
+    // ignore: prefer_final_locals
+    Object? postBody = afterBookingSchedulerMessage;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [AfterBookingSchedulerMessage] afterBookingSchedulerMessage (required):
+  Future<RestaurantDTO?> updateAfterBookingMessage(String branchCode, AfterBookingSchedulerMessage afterBookingSchedulerMessage,) async {
+    final response = await updateAfterBookingMessageWithHttpInfo(branchCode, afterBookingSchedulerMessage,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RestaurantDTO',) as RestaurantDTO;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'PUT /api/restaurant/update/beforebookingmessage/{branchCode}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [BeforeBookingScheduledMessage] beforeBookingScheduledMessage (required):
+  Future<Response> updateBeforeBookingMessageWithHttpInfo(String branchCode, BeforeBookingScheduledMessage beforeBookingScheduledMessage,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/restaurant/update/beforebookingmessage/{branchCode}'
+      .replaceAll('{branchCode}', branchCode);
+
+    // ignore: prefer_final_locals
+    Object? postBody = beforeBookingScheduledMessage;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [BeforeBookingScheduledMessage] beforeBookingScheduledMessage (required):
+  Future<RestaurantDTO?> updateBeforeBookingMessage(String branchCode, BeforeBookingScheduledMessage beforeBookingScheduledMessage,) async {
+    final response = await updateBeforeBookingMessageWithHttpInfo(branchCode, beforeBookingScheduledMessage,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RestaurantDTO',) as RestaurantDTO;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'PUT /api/restaurant/update/centralinomessage/{branchCode}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [CentralinoMessage] centralinoMessage (required):
+  Future<Response> updateCentralinoMessageWithHttpInfo(String branchCode, CentralinoMessage centralinoMessage,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/restaurant/update/centralinomessage/{branchCode}'
+      .replaceAll('{branchCode}', branchCode);
+
+    // ignore: prefer_final_locals
+    Object? postBody = centralinoMessage;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [CentralinoMessage] centralinoMessage (required):
+  Future<RestaurantDTO?> updateCentralinoMessage(String branchCode, CentralinoMessage centralinoMessage,) async {
+    final response = await updateCentralinoMessageWithHttpInfo(branchCode, centralinoMessage,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RestaurantDTO',) as RestaurantDTO;
+    
     }
     return null;
   }

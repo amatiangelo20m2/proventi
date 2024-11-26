@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:41393/restaurantservice*
+All URIs are relative to *http://192.168.1.4:2155/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -22,8 +22,13 @@ Method | HTTP request | Description
 [**getReportsByBranchCodeAndDate**](RestaurantControllerApi.md#getreportsbybranchcodeanddate) | **GET** /api/restaurant/retrievereport/{branchCode} | 
 [**hideEmployee**](RestaurantControllerApi.md#hideemployee) | **PUT** /api/restaurant/hideemployee/{employeeId} | 
 [**loginFromMobileDevice**](RestaurantControllerApi.md#loginfrommobiledevice) | **POST** /api/restaurant/employee/mobiledevice/login/{branchCode} | 
+[**resetBranchMessagesByType**](RestaurantControllerApi.md#resetbranchmessagesbytype) | **PUT** /api/restaurant/resetmessages/{branchCode} | 
 [**retrieveConfiguration**](RestaurantControllerApi.md#retrieveconfiguration) | **POST** /api/restaurant/restaurant/retrieveconfiguration/{branchCode}/{restaurantName} | 
+[**retrieveMessageByBranchCode**](RestaurantControllerApi.md#retrievemessagebybranchcode) | **GET** /api/restaurant/retrievemessage/{branchCode}/{messageType} | 
 [**retrieveReports**](RestaurantControllerApi.md#retrievereports) | **GET** /api/restaurant/retrievereports/{branchCode} | 
+[**updateAfterBookingMessage**](RestaurantControllerApi.md#updateafterbookingmessage) | **PUT** /api/restaurant/update/afterbookingmessage/{branchCode} | 
+[**updateBeforeBookingMessage**](RestaurantControllerApi.md#updatebeforebookingmessage) | **PUT** /api/restaurant/update/beforebookingmessage/{branchCode} | 
+[**updateCentralinoMessage**](RestaurantControllerApi.md#updatecentralinomessage) | **PUT** /api/restaurant/update/centralinomessage/{branchCode} | 
 [**updateConfiguration**](RestaurantControllerApi.md#updateconfiguration) | **PUT** /api/restaurant/restaurant/updateconfiguration | 
 [**updateEmployee**](RestaurantControllerApi.md#updateemployee) | **PUT** /api/restaurant/employee/update/{branchCode} | 
 [**updateStandardMessage**](RestaurantControllerApi.md#updatestandardmessage) | **PUT** /api/restaurant/update/standardmessage/{branchCode} | 
@@ -564,6 +569,49 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **resetBranchMessagesByType**
+> RestaurantDTO resetBranchMessagesByType(branchCode, messageTypeForUpdating)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final messageTypeForUpdating = messageTypeForUpdating_example; // String | 
+
+try {
+    final result = api_instance.resetBranchMessagesByType(branchCode, messageTypeForUpdating);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->resetBranchMessagesByType: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **messageTypeForUpdating** | **String**|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **retrieveConfiguration**
 > RestaurantDTO retrieveConfiguration(branchCode, restaurantName)
 
@@ -595,6 +643,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **retrieveMessageByBranchCode**
+> GeneralMessage retrieveMessageByBranchCode(branchCode, messageType)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final messageType = messageType_example; // String | 
+
+try {
+    final result = api_instance.retrieveMessageByBranchCode(branchCode, messageType);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->retrieveMessageByBranchCode: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **messageType** | **String**|  | 
+
+### Return type
+
+[**GeneralMessage**](GeneralMessage.md)
 
 ### Authorization
 
@@ -648,6 +739,135 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateAfterBookingMessage**
+> RestaurantDTO updateAfterBookingMessage(branchCode, afterBookingSchedulerMessage)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final afterBookingSchedulerMessage = AfterBookingSchedulerMessage(); // AfterBookingSchedulerMessage | 
+
+try {
+    final result = api_instance.updateAfterBookingMessage(branchCode, afterBookingSchedulerMessage);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->updateAfterBookingMessage: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **afterBookingSchedulerMessage** | [**AfterBookingSchedulerMessage**](AfterBookingSchedulerMessage.md)|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateBeforeBookingMessage**
+> RestaurantDTO updateBeforeBookingMessage(branchCode, beforeBookingScheduledMessage)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final beforeBookingScheduledMessage = BeforeBookingScheduledMessage(); // BeforeBookingScheduledMessage | 
+
+try {
+    final result = api_instance.updateBeforeBookingMessage(branchCode, beforeBookingScheduledMessage);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->updateBeforeBookingMessage: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **beforeBookingScheduledMessage** | [**BeforeBookingScheduledMessage**](BeforeBookingScheduledMessage.md)|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateCentralinoMessage**
+> RestaurantDTO updateCentralinoMessage(branchCode, centralinoMessage)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final centralinoMessage = CentralinoMessage(); // CentralinoMessage | 
+
+try {
+    final result = api_instance.updateCentralinoMessage(branchCode, centralinoMessage);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->updateCentralinoMessage: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **centralinoMessage** | [**CentralinoMessage**](CentralinoMessage.md)|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

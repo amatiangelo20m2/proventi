@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
 import 'package:proventi/app/core/whatsapp/dash_chat.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
@@ -124,6 +125,10 @@ class BookingToManageCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              ProfileImage(prefix: booking.customer!.prefix!,
+                phone: booking.customer!.phone!,
+                branchCode: booking.branchCode!,
+              ),
               _buildCustomerInfo(),
               Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: globalGoldDark),),
               _buildGuestInfo(),
@@ -178,12 +183,6 @@ class BookingToManageCard extends StatelessWidget {
                 ],
               ),
               Text(getFormEmoji(formDTOs, booking)),
-              Column(
-                children: [
-                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
-                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
-                ],
-              ),
             ],
           ),
         ),

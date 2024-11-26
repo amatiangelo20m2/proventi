@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:41393/restaurantservice*
+All URIs are relative to *http://192.168.1.4:2155/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**findBookingByCustomerPrefixAndPhone**](BookingControllerApi.md#findbookingbycustomerprefixandphone) | **GET** /api/booking/retrievebyphone/{prefix}/{phone} | 
 [**findBookingByFormCode**](BookingControllerApi.md#findbookingbyformcode) | **GET** /api/booking/retrievebyformcode/{formCode} | 
 [**retrieveBookingByBranchCodeAndDate**](BookingControllerApi.md#retrievebookingbybranchcodeanddate) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{date} | 
+[**retrieveBookingByCode**](BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 
 [**retrieveBookingByStatusAndBranchCode**](BookingControllerApi.md#retrievebookingbystatusandbranchcode) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{fromDate}/{toDate} | 
 [**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](BookingControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/booking/retrievehistoricalcustomers/bybookingson/{branchCode} | 
 [**updateBooking**](BookingControllerApi.md#updatebooking) | **PUT** /api/booking/updatebooking | 
@@ -257,6 +258,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**List<BookingDTO>**](BookingDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **retrieveBookingByCode**
+> BookingDTO retrieveBookingByCode(bookingCode)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = BookingControllerApi();
+final bookingCode = bookingCode_example; // String | 
+
+try {
+    final result = api_instance.retrieveBookingByCode(bookingCode);
+    print(result);
+} catch (e) {
+    print('Exception when calling BookingControllerApi->retrieveBookingByCode: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **bookingCode** | **String**|  | 
+
+### Return type
+
+[**BookingDTO**](BookingDTO.md)
 
 ### Authorization
 

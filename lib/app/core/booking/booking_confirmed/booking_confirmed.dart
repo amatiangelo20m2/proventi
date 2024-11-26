@@ -200,7 +200,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             badges.Badge(
                                 badgeStyle: badges.BadgeStyle(badgeColor: Colors.grey.shade800),
                                 badgeContent: Text(restaurantManager
-                                    .retrieveTotalGuestsNumberForDayAndActiveBookings(_selectedDate).toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                    .retrieveTotalTableNumberForDayAndActiveBookings(_selectedDate).toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
                                 badgeAnimation: const badges.BadgeAnimation.rotation(),
                                 child: const Padding(
                                     padding: EdgeInsets.all(4.0),
@@ -216,9 +216,10 @@ class _BookingScreenState extends State<BookingScreen> {
                                     padding: const EdgeInsets.all(4.0),
                                     child: Icon(CupertinoIcons.sun_max, size: 25, color: globalGoldDark,)
                                 )),
+
                             badges.Badge(
                                 badgeStyle: badges.BadgeStyle(badgeColor: elegantBlue),
-                                badgeContent: Text(restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(_selectedDate, restaurantManager.restaurantConfiguration!).toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
+                                badgeContent: Text(restaurantManager.retrieveTotalTablesNumberForDayAndActiveBookingsDinnerTime(_selectedDate, restaurantManager.restaurantConfiguration!).toString(), style: TextStyle(fontSize: 10, color: CupertinoColors.white),),
                                 badgeAnimation: badges.BadgeAnimation.rotation(),
                                 child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -405,18 +406,34 @@ class _BookingScreenState extends State<BookingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 10, left: 10),
+                        padding: const EdgeInsets.only(right: 20, left: 10),
                         child: Row(
                           children: [
-                            Text(restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookings(_selectedDate).toString(), style: TextStyle(fontSize: 18, color: globalGoldDark),),
-                            Text('/${restaurantManager.restaurantConfiguration!.capacity}  ', style: TextStyle(fontSize: 13, color: Colors.grey.shade900),),
-                            Icon(CupertinoIcons.person_2_fill, size: 25, color: Colors.grey.shade900,),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Center(
+                                child: Text(
+                                  // Apply conditional logic to the content inside the Text widget
+                                  filterDailyType == FilterDailyType.TUTTO_IL_GIORNO
+                                      ? restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookings(_selectedDate).toString()
+                                      : filterDailyType == FilterDailyType.PRANZO
+                                      ? restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(
+                                      _selectedDate, restaurantManager.restaurantConfiguration!).toString()
+                                      : restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(
+                                      _selectedDate, restaurantManager.restaurantConfiguration!).toString(),
+                                  style: TextStyle(fontSize: 15, color: globalGoldDark),  // Apply the globally defined style
+                                ),
+                              ),
+                            ),
+
+                            Text('/${restaurantManager.restaurantConfiguration!.capacity}  ', style: TextStyle(fontSize: 13, color: Colors.grey[900]),),
                           ],
                         ),
                       ),
                       RefusedBookingArchive(bookingList:
                       restaurantManager.allBookings!.where((element) => isSameDay(
-                        element.bookingDate!, _selectedDate)).toList(), dateTime: _selectedDate,)
+                          element.bookingDate!, _selectedDate)).toList(), dateTime: _selectedDate,),
+
                     ],
                   ),
                   Builder(

@@ -78,6 +78,12 @@ class RestaurantStateManager extends ChangeNotifier {
         + (booking.numGuests ?? 0)));
   }
 
+  retrieveTotalTableNumberForDayAndActiveBookings(DateTime day) {
+    return (_allBookings!.where((element) =>
+    isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO)
+        .toList().length);
+  }
+
   retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(DateTime day, RestaurantDTO restaurantDTO) {
     return (_allBookings!.where((element) =>
     isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO && isLunchTime(element, restaurantDTO))
@@ -85,11 +91,22 @@ class RestaurantStateManager extends ChangeNotifier {
         + (booking.numGuests ?? 0)));
   }
 
+  retrieveTotalTablesNumberForDayAndActiveBookingsLunchTime(DateTime day, RestaurantDTO restaurantDTO) {
+    return (_allBookings!.where((element) => isSameDay(element.bookingDate!, day) && element.status
+        == BookingDTOStatusEnum.CONFERMATO && isLunchTime(element, restaurantDTO)).toList().length);
+  }
+
+
   retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(DateTime day, RestaurantDTO restaurantDTO) {
     return (_allBookings!.where((element) =>
     isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO && !isLunchTime(element, restaurantDTO))
         .toList().fold(0, (total, booking) => total
         + (booking.numGuests ?? 0)));
+  }
+
+  retrieveTotalTablesNumberForDayAndActiveBookingsDinnerTime(DateTime day, RestaurantDTO restaurantDTO) {
+    return (_allBookings!.where((element) => isSameDay(element.bookingDate!, day) && element.status
+        == BookingDTOStatusEnum.CONFERMATO && !isLunchTime(element, restaurantDTO)).toList().length);
   }
 
 

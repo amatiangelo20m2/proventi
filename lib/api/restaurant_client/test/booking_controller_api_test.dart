@@ -47,6 +47,11 @@ void main() {
       // TODO
     });
 
+    //Future<BookingDTO> retrieveBookingByCode(String bookingCode) async
+    test('test retrieveBookingByCode', () async {
+      // TODO
+    });
+
     //Future<List<BookingDTO>> retrieveBookingByStatusAndBranchCode(String branchCode, String fromDate, String toDate) async
     test('test retrieveBookingByStatusAndBranchCode', () async {
       // TODO
