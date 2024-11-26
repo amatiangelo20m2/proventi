@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
-import 'package:proventi/app/core/whatsapp/dash_chat.dart';
+import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
 import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
