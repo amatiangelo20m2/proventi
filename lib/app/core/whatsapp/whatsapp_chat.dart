@@ -74,11 +74,13 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
               ),
 
               backgroundColor: Colors.black,
-              title: Text('${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: TextStyle(color: Colors.white, fontSize: 15),),
+              title: Text('${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: const TextStyle(color: Colors.white, fontSize: 15),),
+
             ),
             body: stateManager.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : DashChat(
+
               messageOptions: const MessageOptions(
                 currentUserContainerColor: Color(0xFF005246),
                 containerColor: Color(0XFF363638),
