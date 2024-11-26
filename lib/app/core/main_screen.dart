@@ -20,6 +20,7 @@ import 'booking/booking_confirmed/booking_confirmed.dart';
 import 'booking/booking_processed/booking_processed.dart';
 import 'booking/booking_to_manage/booking_to_manage.dart';
 import 'booking/edited_by_customer/edited_by_customer.dart';
+import 'floor/floor.dart';
 import 'notification/notification_screen.dart';
 import 'notification/state_manager/notification_state_manager.dart';
 
@@ -145,6 +146,19 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   leading: const Icon(
                     CupertinoIcons.person_2,
+                    color: CupertinoColors.white,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(context, Floor.routeName);
+                  },
+                  title: const Text(
+                    'Floor',
+                    style: TextStyle(color: CupertinoColors.white),
+                  ),
+                  leading: const Icon(
+                    CupertinoIcons.square,
                     color: CupertinoColors.white,
                   ),
                 ),

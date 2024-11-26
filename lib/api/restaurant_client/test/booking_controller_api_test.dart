@@ -32,7 +32,7 @@ void main() {
       // TODO
     });
 
-    //Future<List<BookingDTO>> findBookingByCustomerPrefixAndPhone(String prefix, String phone) async
+    //Future<List<BookingDTO>> findBookingByCustomerPrefixAndPhone(String prefix, String phone, String branchCode) async
     test('test findBookingByCustomerPrefixAndPhone', () async {
       // TODO
     });

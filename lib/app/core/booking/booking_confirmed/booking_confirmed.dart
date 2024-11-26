@@ -461,13 +461,12 @@ class _BookingScreenState extends State<BookingScreen> {
                           onRefresh: () async {
                             await restaurantManager.refresh(_selectedDate);
                           },
-                          child: filteredBooking.length > 0 ? ListView.builder(
+                          child: filteredBooking.isNotEmpty ? ListView.builder(
                             padding: const EdgeInsets.only(bottom: 160),
                             itemCount: filteredBooking.length,
                             itemBuilder: (context, index) {
-                              return ReservationCard(
+                              return BookingConfirmedCard(
                                 booking: sortBookings(filteredBooking, filterBookingType)[index],
-                                formDTOs: restaurantManager.currentBranchForms!,
                                 restaurantDTO:
                                     restaurantManager.restaurantConfiguration!,
                                 shadeColor: globalGoldDark,

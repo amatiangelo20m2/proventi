@@ -118,8 +118,8 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
-                  Text(booking.status!.value!, style: TextStyle(fontSize: 4),)
+                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 4),),
+                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
                 ],
               ),
             ],

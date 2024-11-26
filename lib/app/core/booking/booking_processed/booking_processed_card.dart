@@ -45,6 +45,7 @@ class ProcessedBookingCard extends StatelessWidget {
               ProfileImage(prefix: booking.customer!.prefix!,
                 phone: booking.customer!.phone!,
                 branchCode: booking.branchCode!,
+                avatarRadious: 30,
               ),
               _buildCustomerInfo(),
               Text(getFormEmoji(formDTOs, booking)),
@@ -107,7 +108,7 @@ class ProcessedBookingCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
+                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 14),),
                   Text(booking.status!.value, style: TextStyle(fontSize: 4),),
                   Text(booking.bookingId.toString(), style: TextStyle(fontSize: 8),)
                 ],

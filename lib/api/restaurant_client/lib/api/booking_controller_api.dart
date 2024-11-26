@@ -154,17 +154,20 @@ class BookingControllerApi {
     return null;
   }
 
-  /// Performs an HTTP 'GET /api/booking/retrievebyphone/{prefix}/{phone}' operation and returns the [Response].
+  /// Performs an HTTP 'GET /api/booking/retrievebyphone/{prefix}/{phone}/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] prefix (required):
   ///
   /// * [String] phone (required):
-  Future<Response> findBookingByCustomerPrefixAndPhoneWithHttpInfo(String prefix, String phone,) async {
+  ///
+  /// * [String] branchCode (required):
+  Future<Response> findBookingByCustomerPrefixAndPhoneWithHttpInfo(String prefix, String phone, String branchCode,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/booking/retrievebyphone/{prefix}/{phone}'
+    final path = r'/api/booking/retrievebyphone/{prefix}/{phone}/{branchCode}'
       .replaceAll('{prefix}', prefix)
-      .replaceAll('{phone}', phone);
+      .replaceAll('{phone}', phone)
+      .replaceAll('{branchCode}', branchCode);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -192,8 +195,10 @@ class BookingControllerApi {
   /// * [String] prefix (required):
   ///
   /// * [String] phone (required):
-  Future<List<BookingDTO>?> findBookingByCustomerPrefixAndPhone(String prefix, String phone,) async {
-    final response = await findBookingByCustomerPrefixAndPhoneWithHttpInfo(prefix, phone,);
+  ///
+  /// * [String] branchCode (required):
+  Future<List<BookingDTO>?> findBookingByCustomerPrefixAndPhone(String prefix, String phone, String branchCode,) async {
+    final response = await findBookingByCustomerPrefixAndPhoneWithHttpInfo(prefix, phone, branchCode,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

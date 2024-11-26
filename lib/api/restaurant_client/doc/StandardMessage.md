@@ -20,8 +20,8 @@ Name | Type | Description | Notes
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **whatsAppEnabled** | **bool** |  | [optional] 
-**smsEnabled** | **bool** |  | [optional] 
 **emailEnabled** | **bool** |  | [optional] 
+**smsEnabled** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

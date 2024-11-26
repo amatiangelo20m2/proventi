@@ -5,14 +5,14 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:2155/restaurantservice*
+All URIs are relative to *http://192.168.1.4:8314/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create**](BookingControllerApi.md#create) | **POST** /api/booking/create | 
 [**deleteBooking**](BookingControllerApi.md#deletebooking) | **DELETE** /api/booking/delete/{bookingCode} | 
 [**findBookingByCustomerEmail**](BookingControllerApi.md#findbookingbycustomeremail) | **GET** /api/booking/retrievebycustomeremail/{email} | 
-[**findBookingByCustomerPrefixAndPhone**](BookingControllerApi.md#findbookingbycustomerprefixandphone) | **GET** /api/booking/retrievebyphone/{prefix}/{phone} | 
+[**findBookingByCustomerPrefixAndPhone**](BookingControllerApi.md#findbookingbycustomerprefixandphone) | **GET** /api/booking/retrievebyphone/{prefix}/{phone}/{branchCode} | 
 [**findBookingByFormCode**](BookingControllerApi.md#findbookingbyformcode) | **GET** /api/booking/retrievebyformcode/{formCode} | 
 [**retrieveBookingByBranchCodeAndDate**](BookingControllerApi.md#retrievebookingbybranchcodeanddate) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{date} | 
 [**retrieveBookingByCode**](BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 
@@ -144,7 +144,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **findBookingByCustomerPrefixAndPhone**
-> List<BookingDTO> findBookingByCustomerPrefixAndPhone(prefix, phone)
+> List<BookingDTO> findBookingByCustomerPrefixAndPhone(prefix, phone, branchCode)
 
 
 
@@ -155,9 +155,10 @@ import 'package:ventimetri_api_restaurant/api.dart';
 final api_instance = BookingControllerApi();
 final prefix = prefix_example; // String | 
 final phone = phone_example; // String | 
+final branchCode = branchCode_example; // String | 
 
 try {
-    final result = api_instance.findBookingByCustomerPrefixAndPhone(prefix, phone);
+    final result = api_instance.findBookingByCustomerPrefixAndPhone(prefix, phone, branchCode);
     print(result);
 } catch (e) {
     print('Exception when calling BookingControllerApi->findBookingByCustomerPrefixAndPhone: $e\n');
@@ -170,6 +171,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **prefix** | **String**|  | 
  **phone** | **String**|  | 
+ **branchCode** | **String**|  | 
 
 ### Return type
 

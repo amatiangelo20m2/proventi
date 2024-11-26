@@ -68,26 +68,27 @@ Color getStatusColor(BookingDTOStatusEnum statusEnum) {
   }
 }
 
-IconData getIconByStatus(BookingDTOStatusEnum statusEnum) {
+String getIconByStatus(BookingDTOStatusEnum statusEnum) {
+
   switch (statusEnum) {
     case BookingDTOStatusEnum.CONFERMATO:
-      return CupertinoIcons.check_mark_circled;
+      return '🆗';
     case BookingDTOStatusEnum.IN_ATTESA:
-      return CupertinoIcons.question_circle;
+      return '⏳';
     case BookingDTOStatusEnum.RIFIUTATO:
-      return CupertinoIcons.clear_circled;
+      return '❌';
     case BookingDTOStatusEnum.ARRIVATO:
-      return CupertinoIcons.arrow_down_square_fill;
+      return '✅';
     case BookingDTOStatusEnum.NON_ARRIVATO:
-      return CupertinoIcons.nosign;
+      return '⚠️';
     case BookingDTOStatusEnum.LISTA_ATTESA:
-      return CupertinoIcons.person_3;
+      return '👥';
     case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
-      return CupertinoIcons.pen;
+      return '🖋️';
     case BookingDTOStatusEnum.ELIMINATO:
-      return CupertinoIcons.trash;
+      return '🗑';
     default:
-      return CupertinoIcons.ant_circle;
+      return '';
   }
 }
 

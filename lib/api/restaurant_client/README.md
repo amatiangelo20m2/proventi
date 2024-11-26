@@ -54,14 +54,14 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:2155/restaurantservice*
+All URIs are relative to *http://192.168.1.4:8314/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *BookingControllerApi* | [**create**](doc//BookingControllerApi.md#create) | **POST** /api/booking/create | 
 *BookingControllerApi* | [**deleteBooking**](doc//BookingControllerApi.md#deletebooking) | **DELETE** /api/booking/delete/{bookingCode} | 
 *BookingControllerApi* | [**findBookingByCustomerEmail**](doc//BookingControllerApi.md#findbookingbycustomeremail) | **GET** /api/booking/retrievebycustomeremail/{email} | 
-*BookingControllerApi* | [**findBookingByCustomerPrefixAndPhone**](doc//BookingControllerApi.md#findbookingbycustomerprefixandphone) | **GET** /api/booking/retrievebyphone/{prefix}/{phone} | 
+*BookingControllerApi* | [**findBookingByCustomerPrefixAndPhone**](doc//BookingControllerApi.md#findbookingbycustomerprefixandphone) | **GET** /api/booking/retrievebyphone/{prefix}/{phone}/{branchCode} | 
 *BookingControllerApi* | [**findBookingByFormCode**](doc//BookingControllerApi.md#findbookingbyformcode) | **GET** /api/booking/retrievebyformcode/{formCode} | 
 *BookingControllerApi* | [**retrieveBookingByBranchCodeAndDate**](doc//BookingControllerApi.md#retrievebookingbybranchcodeanddate) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{date} | 
 *BookingControllerApi* | [**retrieveBookingByCode**](doc//BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 

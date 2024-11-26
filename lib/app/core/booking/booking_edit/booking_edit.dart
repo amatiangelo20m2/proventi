@@ -159,6 +159,7 @@ class _BookingEditState extends State<BookingEdit> {
                     ProfileImage(prefix: widget.bookingDTO.customer!.prefix!,
                       phone: widget.bookingDTO.customer!.phone!,
                       branchCode: widget.bookingDTO.branchCode!,
+                      avatarRadious: 30,
                     ),
                   ],
                 ),

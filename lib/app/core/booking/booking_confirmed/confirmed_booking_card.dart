@@ -16,14 +16,12 @@ import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../custom_widgets/profile_image.dart';
 
-class ReservationCard extends StatelessWidget {
+class BookingConfirmedCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
-  final List<FormDTO> formDTOs;
   final Color shadeColor;
 
-  const ReservationCard({super.key, required this.booking,
-    required this.formDTOs, required this.restaurantDTO, required this.shadeColor});
+  const BookingConfirmedCard({super.key, required this.booking, required this.restaurantDTO, required this.shadeColor});
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +125,7 @@ class ReservationCard extends StatelessWidget {
                   ProfileImage(prefix: booking.customer!.prefix!,
                     phone: booking.customer!.phone!,
                     branchCode: booking.branchCode!,
+                    avatarRadious: 30,
                   ),
 
                   Padding(
@@ -222,7 +221,6 @@ class ReservationCard extends StatelessWidget {
       child: Icon(icon, color: color, size: 28),
     );
   }
-
   void _showBookingActionMenuConfermato(BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,
@@ -296,7 +294,6 @@ class ReservationCard extends StatelessWidget {
       ),
     );
   }
-
   Future<bool?> _showConfirmationDialog(BuildContext context, String message, String confirmText, String goBackText) async {
     return await showCupertinoDialog<bool>(
       context: context,

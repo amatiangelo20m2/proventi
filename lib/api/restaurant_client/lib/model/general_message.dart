@@ -14,8 +14,8 @@ class GeneralMessage {
   /// Returns a new [GeneralMessage] instance.
   GeneralMessage({
     this.whatsAppEnabled,
-    this.smsEnabled,
     this.emailEnabled,
+    this.smsEnabled,
   });
 
   ///
@@ -32,7 +32,7 @@ class GeneralMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? smsEnabled;
+  bool? emailEnabled;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -40,23 +40,23 @@ class GeneralMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? emailEnabled;
+  bool? smsEnabled;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is GeneralMessage &&
     other.whatsAppEnabled == whatsAppEnabled &&
-    other.smsEnabled == smsEnabled &&
-    other.emailEnabled == emailEnabled;
+    other.emailEnabled == emailEnabled &&
+    other.smsEnabled == smsEnabled;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (whatsAppEnabled == null ? 0 : whatsAppEnabled!.hashCode) +
-    (smsEnabled == null ? 0 : smsEnabled!.hashCode) +
-    (emailEnabled == null ? 0 : emailEnabled!.hashCode);
+    (emailEnabled == null ? 0 : emailEnabled!.hashCode) +
+    (smsEnabled == null ? 0 : smsEnabled!.hashCode);
 
   @override
-  String toString() => 'GeneralMessage[whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
+  String toString() => 'GeneralMessage[whatsAppEnabled=$whatsAppEnabled, emailEnabled=$emailEnabled, smsEnabled=$smsEnabled]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -65,15 +65,15 @@ class GeneralMessage {
     } else {
       json[r'whatsAppEnabled'] = null;
     }
-    if (this.smsEnabled != null) {
-      json[r'smsEnabled'] = this.smsEnabled;
-    } else {
-      json[r'smsEnabled'] = null;
-    }
     if (this.emailEnabled != null) {
       json[r'emailEnabled'] = this.emailEnabled;
     } else {
       json[r'emailEnabled'] = null;
+    }
+    if (this.smsEnabled != null) {
+      json[r'smsEnabled'] = this.smsEnabled;
+    } else {
+      json[r'smsEnabled'] = null;
     }
     return json;
   }
@@ -98,8 +98,8 @@ class GeneralMessage {
 
       return GeneralMessage(
         whatsAppEnabled: mapValueOfType<bool>(json, r'whatsAppEnabled'),
-        smsEnabled: mapValueOfType<bool>(json, r'smsEnabled'),
         emailEnabled: mapValueOfType<bool>(json, r'emailEnabled'),
+        smsEnabled: mapValueOfType<bool>(json, r'smsEnabled'),
       );
     }
     return null;

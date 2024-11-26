@@ -222,8 +222,8 @@ class _FastQueueCardState extends State<FastQueueCard> {
               ),
               Column(
                 children: [
-                  Icon(getIconByStatus(widget.booking.status!), color: getStatusColor(widget.booking.status!),),
-                  Text(widget.booking.status!.value!, style: TextStyle(fontSize: 4),)
+                  Text(getIconByStatus(widget.booking.status!), style: TextStyle(fontSize: 4),),
+                  Text(widget.booking.status!.value, style: TextStyle(fontSize: 4),)
                 ],
               ),
             ],

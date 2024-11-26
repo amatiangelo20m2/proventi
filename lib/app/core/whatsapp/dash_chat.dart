@@ -112,6 +112,7 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
                 child: ProfileImage(prefix: widget.bookingDTO.customer!.prefix!,
                   phone: widget.bookingDTO.customer!.phone!,
                   branchCode: widget.bookingDTO.branchCode!,
+                  avatarRadious: 30,
                 ),
               ),
             ],

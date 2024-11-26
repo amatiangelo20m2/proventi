@@ -57,6 +57,7 @@ class RefusedBookingCard extends StatelessWidget {
               ProfileImage(prefix: booking.customer!.prefix!,
                 phone: booking.customer!.phone!,
                 branchCode: booking.branchCode!,
+                avatarRadious: 30,
               ),
               _buildCustomerInfo(),
               _buildGuestInfo(),
@@ -100,7 +101,8 @@ class RefusedBookingCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Icon(getIconByStatus(booking.status!), color: getStatusColor(booking.status!),),
+
+                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 14),),
                   Text(booking.status!.value, style: TextStyle(fontSize: 4),)
                 ],
               ),

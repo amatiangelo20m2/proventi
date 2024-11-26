@@ -3,17 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../api/restaurant_client/lib/api.dart';
-import '../../global/flag_picker.dart';
 import '../../state_manager/communication_state_manager.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.prefix, required this.phone, required this.branchCode});
+  const ProfileImage({super.key, required this.prefix, required this.phone, required this.branchCode, required this.avatarRadious});
 
   final String prefix;
   final String phone;
   final String branchCode;
+  final double avatarRadious;
 
 
   // Singleton cache for storing image URLs
@@ -46,8 +44,6 @@ class ProfileImage extends StatelessWidget {
             cacheKey,
           ),
           builder: (context, snapshot) {
-            const double avatarRadius = 30.0;
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Circular shimmer placeholder
               return _buildShimmerAvatar();
@@ -70,9 +66,9 @@ class ProfileImage extends StatelessWidget {
 
   // Helper to build the fallback avatar
   Widget _buildFallbackAvatar() {
-    const double avatarRadius = 30.0;
+
     return CircleAvatar(
-      radius: avatarRadius,
+      radius: avatarRadious,
       backgroundImage: const AssetImage('assets/images/profile.png'),
       backgroundColor: Colors.transparent,
     );
@@ -80,9 +76,9 @@ class ProfileImage extends StatelessWidget {
 
   // Helper to build shimmer avatar (loading placeholder)
   Widget _buildShimmerAvatar() {
-    const double avatarRadius = 30.0;
+
     return CircleAvatar(
-      radius: avatarRadius,
+      radius: avatarRadious,
       backgroundColor: Colors.transparent,
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300]!,
@@ -99,13 +95,12 @@ class ProfileImage extends StatelessWidget {
 
   // Helper to build the network image avatar
   Widget _buildCachedNetworkImage(String imageUrl) {
-    const double avatarRadius = 30.0;
     return CachedNetworkImage(
       imageUrl: imageUrl,
       placeholder: (context, url) => _buildShimmerAvatar(),
       errorWidget: (context, url, error) => _buildFallbackAvatar(),
       imageBuilder: (context, imageProvider) => CircleAvatar(
-        radius: avatarRadius,
+        radius: avatarRadious,
         backgroundImage: imageProvider,
         backgroundColor: Colors.transparent,
       ),

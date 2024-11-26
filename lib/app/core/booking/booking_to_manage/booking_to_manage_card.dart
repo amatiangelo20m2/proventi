@@ -128,6 +128,7 @@ class BookingToManageCard extends StatelessWidget {
               ProfileImage(prefix: booking.customer!.prefix!,
                 phone: booking.customer!.phone!,
                 branchCode: booking.branchCode!,
+                avatarRadious: 30,
               ),
               _buildCustomerInfo(),
               Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: globalGoldDark),),
