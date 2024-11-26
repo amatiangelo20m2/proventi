@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+import '../../../../api/communication_client/lib/api.dart';
 import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../custom_widgets/profile_image.dart';
@@ -180,7 +181,7 @@ class BookingConfirmedCard extends StatelessWidget {
                   ),
 
                   Consumer<CommunicationStateManager>(
-                    builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
+                    builder: (BuildContext context, CommunicationStateManager communication, Widget? child) {
                       return IconButton(onPressed: () {
                         showCupertinoModalBottomSheet(
                           expand: true,
@@ -191,7 +192,12 @@ class BookingConfirmedCard extends StatelessWidget {
                           },
                         );
 
-                      }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),);
+                      }, icon: Stack(children: [
+
+                        const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),
+                        if(checkIfChatsContainCurrentNumberWithUnreadChats(communication, booking.customer!)) Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
+                        ]),
+                      );
                     },),
                   IconButton(onPressed: (){
                     showCupertinoModalBottomSheet(
@@ -317,5 +323,18 @@ class BookingConfirmedCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  checkIfChatsContainCurrentNumberWithUnreadChats(CommunicationStateManager communication, CustomerDTO customer) {
+
+
+    if(communication.chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty){
+      AllChatListDataDTO chatListDataDTO = communication.chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').first;
+      if(chatListDataDTO.unreadCount! > 0) {
+        return true;
+      }
+    }
+    return false;
+
   }
 }

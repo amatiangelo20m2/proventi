@@ -40,24 +40,32 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:ventimetri_api_communication/api.dart';
 
 
-final api_instance = WhatsAppConfigurationControllerApi();
-final branchCode = branchCode_example; // String | 
+final api_instance = CentralinoApiControllerApi();
+final key = key_example; // String | 
+final callerid = callerid_example; // String | 
+final calledid = calledid_example; // String | 
+final uniqueid = uniqueid_example; // String | 
+final remark = remark_example; // String | 
+final remark2 = remark2_example; // String | 
+final remark3 = remark3_example; // String | 
 
 try {
-    final result = api_instance.createConfWaApi(branchCode);
-    print(result);
+    api_instance.manageCentralinoCall(key, callerid, calledid, uniqueid, remark, remark2, remark3);
 } catch (e) {
-    print('Exception when calling WhatsAppConfigurationControllerApi->createConfWaApi: $e\n');
+    print('Exception when calling CentralinoApiControllerApi->manageCentralinoCall: $e\n');
 }
 
 ```
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:22569/communicationservice*
+All URIs are relative to *http://192.168.1.4:35005/communicationservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*CentralinoApiControllerApi* | [**manageCentralinoCall**](doc//CentralinoApiControllerApi.md#managecentralinocall) | **GET** /api/pro20 | 
+*PushNotificationControllerApi* | [**sendMessage1**](doc//PushNotificationControllerApi.md#sendmessage1) | **POST** /api/pushnotification/sendmessage | 
+*WhatsAppConfigurationControllerApi* | [**checkWaApiStatusAndNotifyUsers**](doc//WhatsAppConfigurationControllerApi.md#checkwaapistatusandnotifyusers) | **POST** /api/wsapicontroller/checkwaapistatusandnotifyusers/{branchCode}/{branchName} | 
 *WhatsAppConfigurationControllerApi* | [**createConfWaApi**](doc//WhatsAppConfigurationControllerApi.md#createconfwaapi) | **GET** /api/wsapicontroller/createconf/{branchCode} | 
 *WhatsAppConfigurationControllerApi* | [**deleteConfWaApi**](doc//WhatsAppConfigurationControllerApi.md#deleteconfwaapi) | **DELETE** /api/wsapicontroller/deleteConf/{branchCode} | 
 *WhatsAppConfigurationControllerApi* | [**fetchAllMessages**](doc//WhatsAppConfigurationControllerApi.md#fetchallmessages) | **GET** /api/wsapicontroller/fetchallmessages/{branchCode}/{chatNum} | 

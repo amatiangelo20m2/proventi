@@ -17,6 +17,11 @@ void main() {
   // final instance = WhatsAppConfigurationControllerApi();
 
   group('tests for WhatsAppConfigurationControllerApi', () {
+    //Future checkWaApiStatusAndNotifyUsers(String branchCode, String branchName, List<String> fcmTokens) async
+    test('test checkWaApiStatusAndNotifyUsers', () async {
+      // TODO
+    });
+
     //Future<WhatsAppConfigurationDTO> createConfWaApi(String branchCode) async
     test('test createConfWaApi', () async {
       // TODO
@@ -27,7 +32,7 @@ void main() {
       // TODO
     });
 
-    //Future<Set<AllChatListDataDTO>> fetchAllMessages(String branchCode, int chatNum) async
+    //Future<List<AllChatListDataDTO>> fetchAllMessages(String branchCode, int chatNum) async
     test('test fetchAllMessages', () async {
       // TODO
     });

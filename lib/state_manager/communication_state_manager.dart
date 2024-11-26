@@ -46,25 +46,29 @@ class CommunicationStateManager extends ChangeNotifier {
     if(currentWhatsAppConfigurationDTO != null){
 
       //TODO: active the chat whatsapp retrieve when is ready
-      //retrieveChatData();
+      retrieveChatData();
     }
     return currentWhatsAppConfigurationDTO;
   }
 
-  Set<AllChatListDataDTO>? chatDataSet = HashSet();
+  List<AllChatListDataDTO>? chatList = [];
+
 
   Future<void> retrieveChatData() async {
-    try{
-      print('chat data set${chatDataSet!.length.toString()}');
+    try {
+
+      print('chat data set${chatList!.length.toString()}');
       final prefs = await SharedPreferences.getInstance();
-      print('chat data set${chatDataSet!.length.toString()}');
+      print('chat data set${chatList!.length.toString()}');
       String branchCode = prefs.getString('branchCode').toString();
-      print('chat data set${chatDataSet!.length.toString()}');
-      chatDataSet = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 10);
-      print('chat data set${chatDataSet!.length.toString()}');
+      print('chat data set${chatList!.length.toString()}');
+      chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 30);
+
+      print('chat data set ${chatList!.length.toString()}');
+      print('chat data set ${chatList!.toList().toString()}');
 
     }catch(e){
-      print('chat data set${chatDataSet!.length.toString()}');
+      print('chat data set${chatList!.length.toString()}');
       print('Error: ' + e.toString());
     }
 

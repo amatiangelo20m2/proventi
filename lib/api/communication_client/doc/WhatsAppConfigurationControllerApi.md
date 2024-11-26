@@ -5,10 +5,11 @@
 import 'package:ventimetri_api_communication/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:22569/communicationservice*
+All URIs are relative to *http://192.168.1.4:35005/communicationservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**checkWaApiStatusAndNotifyUsers**](WhatsAppConfigurationControllerApi.md#checkwaapistatusandnotifyusers) | **POST** /api/wsapicontroller/checkwaapistatusandnotifyusers/{branchCode}/{branchName} | 
 [**createConfWaApi**](WhatsAppConfigurationControllerApi.md#createconfwaapi) | **GET** /api/wsapicontroller/createconf/{branchCode} | 
 [**deleteConfWaApi**](WhatsAppConfigurationControllerApi.md#deleteconfwaapi) | **DELETE** /api/wsapicontroller/deleteConf/{branchCode} | 
 [**fetchAllMessages**](WhatsAppConfigurationControllerApi.md#fetchallmessages) | **GET** /api/wsapicontroller/fetchallmessages/{branchCode}/{chatNum} | 
@@ -18,6 +19,50 @@ Method | HTTP request | Description
 [**retrieveWaApiConfStatus**](WhatsAppConfigurationControllerApi.md#retrievewaapiconfstatus) | **GET** /api/wsapicontroller/retrieve/waconfstatus/{branchCode} | 
 [**sendMessage**](WhatsAppConfigurationControllerApi.md#sendmessage) | **POST** /api/wsapicontroller/sendmessage/{branchCode} | 
 
+
+# **checkWaApiStatusAndNotifyUsers**
+> checkWaApiStatusAndNotifyUsers(branchCode, branchName, fcmTokens)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_communication/api.dart';
+
+final api_instance = WhatsAppConfigurationControllerApi();
+final branchCode = branchCode_example; // String | 
+final branchName = branchName_example; // String | 
+final fcmTokens = []; // List<String> | 
+
+try {
+    api_instance.checkWaApiStatusAndNotifyUsers(branchCode, branchName, fcmTokens);
+} catch (e) {
+    print('Exception when calling WhatsAppConfigurationControllerApi->checkWaApiStatusAndNotifyUsers: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **branchName** | **String**|  | 
+ **fcmTokens** | [**List<String>**](String.md)|  | [default to const []]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createConfWaApi**
 > WhatsAppConfigurationDTO createConfWaApi(branchCode)
@@ -102,7 +147,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **fetchAllMessages**
-> Set<AllChatListDataDTO> fetchAllMessages(branchCode, chatNum)
+> List<AllChatListDataDTO> fetchAllMessages(branchCode, chatNum)
 
 
 
@@ -131,7 +176,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Set<AllChatListDataDTO>**](AllChatListDataDTO.md)
+[**List<AllChatListDataDTO>**](AllChatListDataDTO.md)
 
 ### Authorization
 

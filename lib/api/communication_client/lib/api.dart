@@ -28,6 +28,8 @@ part 'auth/oauth.dart';
 part 'auth/http_basic_auth.dart';
 part 'auth/http_bearer_auth.dart';
 
+part 'api/centralino_api_controller_api.dart';
+part 'api/push_notification_controller_api.dart';
 part 'api/whats_app_configuration_controller_api.dart';
 
 part 'model/all_chat_list_data_dto.dart';
