@@ -3,13 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../api/restaurant_client/lib/api.dart';
 import '../../state_manager/communication_state_manager.dart';
+import '../core/customer/single_customer_history.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key, required this.prefix, required this.phone, required this.branchCode, required this.avatarRadious});
+  const ProfileImage({super.key,required this.branchCode, required this.avatarRadious, required this.customer});
 
-  final String prefix;
-  final String phone;
+  final CustomerDTO customer;
   final String branchCode;
   final double avatarRadious;
 
@@ -19,54 +20,76 @@ class ProfileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CommunicationStateManager>(
-      builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
-        // Generate the key for this customer
-        final String cacheKey = prefix + phone;
-
-        // Check if the image URL is already cached
-        if (_photoCache.containsKey(cacheKey)) {
-          final cachedImageUrl = _photoCache[cacheKey];
-          if (cachedImageUrl == null) {
-            // Error case, show fallback image
-            return _buildFallbackAvatar();
-          } else {
-            // Cached image URL exists, display the image
-            return _buildCachedNetworkImage(cachedImageUrl);
-          }
-        }
-
-        // If not cached, fetch from the API
-        return FutureBuilder<String?>(
-          future: communicationStateManager.whatsAppConfigurationControllerApi
-              .retrieveUserPhoto(
-            branchCode,
-            cacheKey,
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SingleCustomerHistory(
+              customerDTO: CustomerDTO(
+                  firstName: customer.firstName ?? '',
+                  lastName: customer.lastName ?? '',
+                  customerId: customer.customerId,
+                  prefix: customer.prefix! ?? '',
+                  phone: customer.phone! ?? '',
+                  email: customer.email! ?? '---'
+              ), branchCode: branchCode ?? '',
+            ),
           ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // Circular shimmer placeholder
-              return _buildShimmerAvatar();
-            } else if (snapshot.hasError) {
-              // On error, don't cache the key and show fallback
-              return _buildFallbackAvatar();
-            } else if (snapshot.hasData) {
-              // Cache the successful result
-              _photoCache[cacheKey] = snapshot.data;
-              return _buildCachedNetworkImage(snapshot.data!);
-            } else {
-              // If no data, show fallback avatar
-              return _buildFallbackAvatar();
-            }
-          },
         );
       },
+      child: Hero(
+        
+        tag: customer.prefix! + customer.phone!,
+        child: Consumer<CommunicationStateManager>(
+          builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
+            // Generate the key for this customer
+            final String cacheKey = customer.prefix! + customer.phone!;
+        
+            // Check if the image URL is already cached
+            if (_photoCache.containsKey(cacheKey)) {
+              final cachedImageUrl = _photoCache[cacheKey];
+              if (cachedImageUrl == null) {
+                // Error case, show fallback image
+                return _buildFallbackAvatar();
+              } else {
+                // Cached image URL exists, display the image
+                return _buildCachedNetworkImage(cachedImageUrl);
+              }
+            }
+        
+            // If not cached, fetch from the API
+            return FutureBuilder<String?>(
+              future: communicationStateManager.whatsAppConfigurationControllerApi
+                  .retrieveUserPhoto(
+                branchCode,
+                cacheKey,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Circular shimmer placeholder
+                  return _buildShimmerAvatar();
+                } else if (snapshot.hasError) {
+                  // On error, don't cache the key and show fallback
+                  return _buildFallbackAvatar();
+                } else if (snapshot.hasData) {
+                  // Cache the successful result
+                  _photoCache[cacheKey] = snapshot.data;
+                  return _buildCachedNetworkImage(snapshot.data!);
+                } else {
+                  // If no data, show fallback avatar
+                  return _buildFallbackAvatar();
+                }
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 
   // Helper to build the fallback avatar
   Widget _buildFallbackAvatar() {
-
     return CircleAvatar(
       radius: avatarRadious,
       backgroundImage: const AssetImage('assets/images/profile.png'),

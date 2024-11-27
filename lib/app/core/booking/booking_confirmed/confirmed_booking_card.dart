@@ -96,63 +96,52 @@ class BookingConfirmedCard extends StatelessWidget {
 
   Widget _buildCardContent(BuildContext context) {
     return ListTile(
+      leading: ProfileImage(
+        customer: booking.customer!,
+        branchCode: booking.branchCode!,
+        avatarRadious: 30,
+      ),
       title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueGrey.shade900,
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2),
-                    child: Container(
-                      width: 50,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '👥${booking.numGuests}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
+                  Container(
+                    width: 45,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '👥${booking.numGuests}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
-                  ProfileImage(prefix: booking.customer!.prefix!,
-                    phone: booking.customer!.phone!,
-                    branchCode: booking.branchCode!,
-                    avatarRadious: 30,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueGrey.shade900,
-                          ),
-                        ),
-                        Text('🕖 ${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                          style: TextStyle(color: Colors.grey[900]),),
-                      ],
-                    ),
-                  ),
+                  Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                    style: TextStyle(color: Colors.grey[900]),),
                 ],
               ),
               Row(
                 children: [
-                  if(booking.specialRequests!.isNotEmpty) IconButton(
+                  if((booking.specialRequests?.isNotEmpty ?? false)) IconButton(
                     onPressed: (){
                       showCupertinoDialog(
                         context: context,
@@ -179,9 +168,10 @@ class BookingConfirmedCard extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Consumer<CommunicationStateManager>(
-                    builder: (BuildContext context, CommunicationStateManager communication, Widget? child) {
+                    builder: (BuildContext context,
+                        CommunicationStateManager communication,
+                        Widget? child) {
                       return IconButton(onPressed: () {
                         showCupertinoModalBottomSheet(
                           expand: true,
@@ -191,12 +181,10 @@ class BookingConfirmedCard extends StatelessWidget {
                             return DashChatCustomized20(bookingDTO: booking,);
                           },
                         );
-
                       }, icon: Stack(children: [
-
                         const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),
-                        if(checkIfChatsContainCurrentNumberWithUnreadChats(communication, booking.customer!)) Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
-                        ]),
+                        if(communication.checkIfChatsContainCurrentNumberWithUnreadChats(booking)) const Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
+                      ]),
                       );
                     },),
                   IconButton(onPressed: (){
@@ -209,13 +197,13 @@ class BookingConfirmedCard extends StatelessWidget {
                       },
                     );
                   }, icon: const Icon(CupertinoIcons.settings_solid)),
+
                 ],
               ),
             ],
           ),
-          Divider(indent: MediaQuery.of(context).size.width / 6, color: Colors.grey.shade300, height: 2,)
         ],
-      ),
+      )
     );
   }
 
@@ -323,18 +311,5 @@ class BookingConfirmedCard extends StatelessWidget {
         );
       },
     );
-  }
-
-  checkIfChatsContainCurrentNumberWithUnreadChats(CommunicationStateManager communication, CustomerDTO customer) {
-
-
-    if(communication.chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty){
-      AllChatListDataDTO chatListDataDTO = communication.chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').first;
-      if(chatListDataDTO.unreadCount! > 0) {
-        return true;
-      }
-    }
-    return false;
-
   }
 }

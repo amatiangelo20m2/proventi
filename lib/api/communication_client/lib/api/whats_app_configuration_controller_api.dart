@@ -16,6 +16,57 @@ class WhatsAppConfigurationControllerApi {
 
   final ApiClient apiClient;
 
+  /// Performs an HTTP 'POST /api/wsapicontroller/checkwaapistatusandnotifyusers/{branchCode}/{branchName}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] branchName (required):
+  ///
+  /// * [List<String>] fcmTokens (required):
+  Future<Response> checkWaApiStatusAndNotifyUsersWithHttpInfo(String branchCode, String branchName, List<String> fcmTokens,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/wsapicontroller/checkwaapistatusandnotifyusers/{branchCode}/{branchName}'
+      .replaceAll('{branchCode}', branchCode)
+      .replaceAll('{branchName}', branchName);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('multi', 'fcmTokens', fcmTokens));
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] branchName (required):
+  ///
+  /// * [List<String>] fcmTokens (required):
+  Future<void> checkWaApiStatusAndNotifyUsers(String branchCode, String branchName, List<String> fcmTokens,) async {
+    final response = await checkWaApiStatusAndNotifyUsersWithHttpInfo(branchCode, branchName, fcmTokens,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
+
   /// Performs an HTTP 'GET /api/wsapicontroller/createconf/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -150,19 +201,22 @@ class WhatsAppConfigurationControllerApi {
   /// * [String] branchCode (required):
   ///
   /// * [int] chatNum (required):
-  Future<Set<AllChatListDataDTO>?> fetchAllMessages(String branchCode, int chatNum,) async {
+  Future<List<AllChatListDataDTO>?> fetchAllMessages(String branchCode, int chatNum,) async {
     final response = await fetchAllMessagesWithHttpInfo(branchCode, chatNum,);
     if (response.statusCode >= HttpStatus.badRequest) {
+      print('Trimone');
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      print('Trimone2');
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'Set<AllChatListDataDTO>') as List)
+      print('Trimone4');
+      return (await apiClient.deserializeAsync(responseBody, 'List<AllChatListDataDTO>') as List)
         .cast<AllChatListDataDTO>()
-        .toSet();
+        .toList(growable: false);
 
     }
     return null;

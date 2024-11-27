@@ -42,8 +42,8 @@ class ProcessedBookingCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ProfileImage(prefix: booking.customer!.prefix!,
-                phone: booking.customer!.phone!,
+              ProfileImage(
+                customer: booking.customer!,
                 branchCode: booking.branchCode!,
                 avatarRadious: 30,
               ),

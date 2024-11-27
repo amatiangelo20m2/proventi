@@ -4,7 +4,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_refused/refused_booking_card.dart';
 import 'package:proventi/global/style.dart';
 import '../../../../api/restaurant_client/lib/api.dart';
-import '../../../../global/bookings_utils.dart';
+import '../bookings_utils.dart';
 import 'package:badges/badges.dart' as badges;
 
 class RefusedBookingArchive extends StatefulWidget {

@@ -54,8 +54,8 @@ class RefusedBookingCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ProfileImage(prefix: booking.customer!.prefix!,
-                phone: booking.customer!.phone!,
+              ProfileImage(
+                customer: booking.customer!,
                 branchCode: booking.branchCode!,
                 avatarRadious: 30,
               ),
@@ -160,7 +160,14 @@ class RefusedBookingCard extends StatelessWidget {
         ),
 
         const SizedBox(width: 12),
-        buildTimeBooking(booking),
+        Text(
+          ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
+          style: TextStyle(
+            fontSize: 13,
+
+            color: Colors.blueGrey.shade900,
+          ),
+        ),
       ],
     );
   }

@@ -27,72 +27,10 @@ class BookingToManageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        switch(booking.status){
-          case BookingDTOStatusEnum.IN_ATTESA:
-            _showBookingActionMenuListaAttesta(context, booking);
-            break;
-
-          case BookingDTOStatusEnum.RIFIUTATO:
-            _showBookingActionMenuRifiutato(context, booking);
-            break;
-        }
-
+        _showBookingActionMenuListaAttesta(context, booking);
       },
-      child: Dismissible(
-        key: Key(booking.bookingCode.toString()),
-        confirmDismiss: (direction) async {
-          // Show the confirmation dialog based on the swipe direction
-          if (direction == DismissDirection.endToStart) {
-            // Asking confirmation for cancellation
-            bool? result = await _showConfirmationDialog(context, 'Conferma prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No' );
-
-            if (result == true) {
-              return await _setAsArrivedReservation(context);
-            }
-          } else if (direction == DismissDirection.startToEnd) {
-            // Asking confirmation for confirmation
-            bool? result = await _showConfirmationDialog(context, 'Rifiuta prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No');
-
-            if (result == true) {
-              return await _refuseReservation(context);
-            }
-          }
-          return false;
-        },
-        background: _buildSwipeBackground(
-          alignment: Alignment.centerLeft,
-          color: CupertinoColors.destructiveRed,
-          icon: CupertinoIcons.clear_circled,
-        ),
-        secondaryBackground: _buildSwipeBackground(
-          alignment: Alignment.centerRight,
-          color: CupertinoColors.activeGreen,
-          icon: CupertinoIcons.check_mark_circled,
-        ),
-        child: _buildCardContent(context),
-      ),
+      child:  _buildCardContent(context),
     );
-  }
-
-  Future<bool?> _setAsArrivedReservation(BuildContext context) async {
-
-      Provider.of<RestaurantStateManager>(context, listen: false)
-          .updateBooking(BookingDTO(
-          bookingCode: booking.bookingCode,
-          status: BookingDTOStatusEnum.CONFERMATO
-      ));
-    return false;
-  }
-
-  Future<bool?> _refuseReservation(BuildContext context) async {
-
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.RIFIUTATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' aggiornata come non arrivata ❌' );
-    return false; // Prevent automatic dismissal
   }
 
   void _showSnackbar(BuildContext context, String message) {
@@ -105,36 +43,68 @@ class BookingToManageCard extends StatelessWidget {
   }
 
   Widget _buildCardContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-      child: Container(
-        decoration: BoxDecoration(
-          color: CupertinoColors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: CupertinoColors.systemGrey.withOpacity(0.2),
-              blurRadius: 4.0,
-              spreadRadius: 1.0,
-              offset: Offset(0, 2), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ProfileImage(prefix: booking.customer!.prefix!,
-                phone: booking.customer!.phone!,
+    return ListTile(
+      trailing: Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: Colors.deepOrange),),
+      title: Row(
+        children: [
+          Stack(
+            children: [Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ProfileImage(
+                customer: booking.customer!,
                 branchCode: booking.branchCode!,
                 avatarRadious: 30,
               ),
-              _buildCustomerInfo(),
-              Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: globalGoldDark),),
-              _buildGuestInfo(),
+            ),
+              Positioned(right: 0, child: getTimeRangeWidget(booking, restaurantDTO))
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${booking.customer?.firstName!} ${booking.customer?.lastName!}',
+                style: TextStyle(
+                  fontSize: 14,
+                  decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                  color: Colors.blueGrey.shade900,
+                ),
+              ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '👥${booking.numGuests}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
+                        style: TextStyle(
+                          fontSize: 15,
+
+                          color: Colors.blueGrey.shade900,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Text(getFormEmoji(formDTOs, booking)),
                   GestureDetector(child: badges.Badge(
                       showBadge: booking.specialRequests?.isNotEmpty ?? false,
                       child: const Icon(CupertinoIcons.doc_plaintext)), onTap: () {
@@ -183,84 +153,10 @@ class BookingToManageCard extends StatelessWidget {
                   }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
                 ],
               ),
-              Text(getFormEmoji(formDTOs, booking)),
             ],
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Row _buildCustomerInfo() {
-    return Row(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              booking.customer?.firstName ?? '',
-              style: TextStyle(
-                fontSize: 14,
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-            Text(
-              booking.customer?.lastName ?? '',
-
-              style: TextStyle(
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-
-                fontSize: 11,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-
-  Row _buildGuestInfo() {
-    return Row(
-      children: [
-        Icon(CupertinoIcons.person_2, color: Colors.blueGrey.shade900),
-        const SizedBox(width: 2),
-        Text(
-          ' ${booking.numGuests ?? 0}',
-          style: const TextStyle(
-            fontSize: 13,
-            color: CupertinoColors.label,
-          ),
-        ),
-
-        const SizedBox(width: 12),
-        buildTimeBooking(booking),
-        isLunchTime(booking, restaurantDTO) ?
-        Card(
-            color: globalGoldDark,
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Icon(Icons.sunny, color: CupertinoColors.white,),
-            )) :
-        Card(
-            color: elegantBlue,
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Icon(CupertinoIcons.moon_stars, color: CupertinoColors.white),
-            )),
-      ],
-    );
-  }
-
-  Widget _buildSwipeBackground({required Alignment alignment, required Color color, required IconData icon}) {
-    return Container(
-      alignment: alignment,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Icon(icon, color: color, size: 28),
     );
   }
 
@@ -370,76 +266,17 @@ class BookingToManageCard extends StatelessWidget {
     );
   }
 
-  void _showBookingActionMenuRifiutato(BuildContext context, BookingDTO booking) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
-                  Text(booking.customer!.phone!),
-                  Text(booking.customer!.email!),
-                  Text(booking.formCode!),
-                  Text('Stato:' + booking.status!.value),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: IconButton(onPressed: () {
-              }, icon: Icon(CupertinoIcons.phone)),
-            ),
-          ],
-        ),
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  status: BookingDTOStatusEnum.ARRIVATO
-              ));
-              Navigator.pop(context, null);
-            },
-            child: const Text('Conferma Arrivo'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          isDefaultAction: true,
-          child: const Text('Indietro'),
-        ),
-      ),
-    );
-  }
-  Future<bool?> _showConfirmationDialog(BuildContext context, String message, String confirmText, String goBackText) async {
-    return await showCupertinoDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(message, style: TextStyle(fontSize: 15),),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(goBackText),
-              onPressed: () {
-                Navigator.of(context).pop(false); // Return false if the user cancels
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(confirmText),
-              onPressed: () {
-                Navigator.of(context).pop(true); // Return true if the user confirms
-              },
-            ),
-          ],
-        );
-      },
-    );
+  getTimeRangeWidget(BookingDTO booking, RestaurantDTO restaurantDTO) {
+    return isLunchTime(booking, restaurantDTO) ? Card(
+        color: globalGoldDark,
+        child: const Padding(
+          padding: EdgeInsets.all(2.0),
+          child: Icon(Icons.sunny, color: CupertinoColors.white,),
+        )) : Card(
+        color: elegantBlue,
+        child: const Padding(
+          padding: EdgeInsets.all(2.0),
+          child: Icon(CupertinoIcons.moon_stars, color: CupertinoColors.white),
+        ));
   }
 }

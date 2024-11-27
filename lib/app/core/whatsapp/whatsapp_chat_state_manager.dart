@@ -39,6 +39,7 @@ class ChatStateManager extends ChangeNotifier {
 
       final newMessages = await fetchMessages();
 
+      chatMessages.clear();
       // Use a combination of user.id, createdAt, and text to identify unique messages
       final existingMessages = chatMessages.map((m) => '${m.user.id}:${m.createdAt}:${m.text}').toSet();
       final messagesToAdd = newMessages.where((m) => !existingMessages.contains('${m.user.id}:${m.createdAt}:${m.text}')).toList();

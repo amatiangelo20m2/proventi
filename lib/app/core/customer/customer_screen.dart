@@ -54,24 +54,15 @@ class _CustomerScreenState extends State<CustomerScreen> {
             customerRows.add(
               DataRow(
                 cells: [
-                  DataCell(GestureDetector(
-
-                    onTap: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SingleCustomerHistory(
-                            customerHistory: customer,
-                          ),
-                        ),
-                      );
-                    },
-                    child: ProfileImage(
-                      prefix: customer.prefix!,
-                      phone: customer.phone!,
-                      branchCode: customer.branchCode!,
-                      avatarRadious: 30,
+                  DataCell(ProfileImage(
+                    customer: CustomerDTO(
+                      customerId: customer.customerId,
+                      email: customer.email,
+                      phone: customer.phone,
+                      prefix: customer.prefix,
                     ),
+                    branchCode: customer.branchCode!,
+                    avatarRadious: 30,
                   )),
 
                   DataCell(Column(
@@ -80,10 +71,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     children: [
                       Text('${customer.firstName} ${customer.lastName}', style: testStyle),
                       Text('+ ${customer.prefix ?? ""} ${customer.phone ?? ""}', style: const TextStyle(fontSize: 10)),
-
                     ],
                   )),
                   DataCell(Text(customer.email ?? "", style: testStyle)),
+                  DataCell(Text(customer.nonArrivatoCount! > 0 ? '⚠️' : '', style: testStyle)),
                 ],
               ),
             );
@@ -126,6 +117,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         DataColumn(label: Text('', style: testStyle)),
                         DataColumn(label: Text('Nome', style: testStyle)),
                         DataColumn(label: Text('Email', style: testStyle)),
+                        DataColumn(label: Text('', style: testStyle)),
                       ],
                       rows: customerRows,
                     ),

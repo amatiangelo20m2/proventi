@@ -13,7 +13,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/booking/crud_widget/create_booking_confermato.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:vibration/vibration.dart';
-import '../../../../global/bookings_utils.dart';
+import '../bookings_utils.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../custom_widgets/appinio_animated_toggle_tab.dart';
@@ -21,6 +21,7 @@ import 'confirmed_booking_card.dart';
 import 'confirmedcard_extra/filter_booking_type.dart';
 import 'confirmedcard_extra/linear_progressor.dart';
 import 'confirmedcard_extra/filter_daily_type.dart';
+import 'confirmedlist_extra/widgett.dart';
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -57,7 +58,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
   void _generateDays() {
     _days = List<DateTime>.generate(
-      90,
+      50,
       (index) =>
           DateTime.now().subtract(Duration(days: 1)).add(Duration(days: index)),
     );
@@ -91,8 +92,8 @@ class _BookingScreenState extends State<BookingScreen> {
         _days.indexWhere((day) => day.isAtSameMomentAs(_selectedDate));
     if (selectedIndex != -1) {
       _scrollController.animateTo(
-        selectedIndex * 80.0, // Adjust as needed based on your item width
-        duration: const Duration(milliseconds: 500),
+        selectedIndex * 100.0, // Adjust as needed based on your item width
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
       );
     }
@@ -389,7 +390,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     ),
                                   ),
                                 ),
-                                _buildCurrentDaySituationWidget(
+                                buildCurrentDaySituationWidget(
                                     restaurantManager.allBookings!
                                         .where((element) => isSameDay(
                                             element.bookingDate!, day))
@@ -467,22 +468,20 @@ class _BookingScreenState extends State<BookingScreen> {
                             itemBuilder: (context, index) {
                               return BookingConfirmedCard(
                                 booking: sortBookings(filteredBooking, filterBookingType)[index],
-                                restaurantDTO:
-                                    restaurantManager.restaurantConfiguration!,
+                                restaurantDTO: restaurantManager.restaurantConfiguration!,
                                 shadeColor: globalGoldDark,
                               );
                             },
 
                           ) : SingleChildScrollView(
-                            physics: AlwaysScrollableScrollPhysics(),
+                            physics: const AlwaysScrollableScrollPhysics(),
                             child: Center(
                               child: Padding(
                                 padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/10), // Ensure some spacing
                                 child: Column(
                                   children: [
                                     Lottie.asset('assets/lotties/nocalendar.json'),
-                                    Text('Non ci sono prenotazioni'
-                                        + (filterDailyType == FilterDailyType.TUTTO_IL_GIORNO ? '' :  ' per ' + filterDailyType.name.toString().toLowerCase())
+                                    Text('Non ci sono prenotazioni ${filterDailyType == FilterDailyType.TUTTO_IL_GIORNO ? '' :  ' per ${filterDailyType.name.toString().toLowerCase()}'}'
                                     )
                                   ],
                                 ),
@@ -620,76 +619,6 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
 
-
-
-  _buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
-    int bookings = getBookingListFilteredByStatus(list, BookingDTOStatusEnum.CONFERMATO).length;
-
-    int refused = getBookingListFilteredByStatus(list, BookingDTOStatusEnum.RIFIUTATO).length;
-
-    if (bookings == 0 && refused == 0) {
-      return SizedBox(
-        height: 0,
-      );
-    }
-    return Positioned(
-        right: 0,
-        child: Column(
-          children: [
-            if (bookings > 0)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(
-                      5), // Half of width/height for a circular effect
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Row(
-                    children: [
-                      const Icon(CupertinoIcons.book,
-                          size: 13, // Set the size of the icon
-                          color: Colors.white),
-                      Text(
-                        ' $bookings', // Text to display inside the circle
-                        style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            const SizedBox(
-              height: 2,
-            ),
-            if(refused > 0) Container(
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-                borderRadius: BorderRadius.circular(
-                    5), // Half of width/height for a circular effect
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Row(
-                  children: [
-                    const Icon(CupertinoIcons.clear_circled,
-                        size: 13, // Set the size of the icon
-                        color: Colors.white),
-                    Text(
-                      ' $refused', // Text to display inside the circle
-                      style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ));
-  }
-
   void _showToast(String text) {
 
     Fluttertoast.showToast(
@@ -703,7 +632,6 @@ class _BookingScreenState extends State<BookingScreen> {
       fontSize: 15.0,
     );
   }
-
   List<BookingDTO> sortBookings(List<BookingDTO> bookings, FilterBookingType filterBookingType) {
     // Create a copy of the list to avoid modifying the original list
     List<BookingDTO> sortedBookings = List.from(bookings);
