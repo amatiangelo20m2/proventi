@@ -8,11 +8,12 @@ import '../../state_manager/communication_state_manager.dart';
 import '../core/customer/single_customer_history.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key,required this.branchCode, required this.avatarRadious, required this.customer});
+  const ProfileImage({super.key,required this.branchCode, required this.avatarRadious, required this.customer, required this.allowNavigation});
 
   final CustomerDTO customer;
   final String branchCode;
   final double avatarRadious;
+  final bool allowNavigation;
 
 
   // Singleton cache for storing image URLs
@@ -22,21 +23,23 @@ class ProfileImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SingleCustomerHistory(
-              customerDTO: CustomerDTO(
-                  firstName: customer.firstName ?? '',
-                  lastName: customer.lastName ?? '',
-                  customerId: customer.customerId,
-                  prefix: customer.prefix! ?? '',
-                  phone: customer.phone! ?? '',
-                  email: customer.email! ?? '---'
-              ), branchCode: branchCode ?? '',
+        if(allowNavigation){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SingleCustomerHistory(
+                customerDTO: CustomerDTO(
+                    firstName: customer.firstName ?? '',
+                    lastName: customer.lastName ?? '',
+                    customerId: customer.customerId,
+                    prefix: customer.prefix! ?? '',
+                    phone: customer.phone! ?? '',
+                    email: customer.email! ?? '---'
+                ), branchCode: branchCode ?? '',
+              ),
             ),
-          ),
-        );
+          );
+        }
       },
       child: Hero(
         

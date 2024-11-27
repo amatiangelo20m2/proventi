@@ -146,9 +146,9 @@ class _BookingManagerState extends State<BookingManager> {
                   ),
                   Row(
                     children: [
-                      Text(restaurantStateManager
+                      Text('👥${restaurantStateManager
                           .retrieveTotalGuestsNumberForDayAndActiveBookings(
-                          date).toString(), style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
+                          date)}', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: globalGoldDark),),
                       Text(
                         ' / ${restaurantStateManager
                             .restaurantConfiguration!.capacity}  ', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),

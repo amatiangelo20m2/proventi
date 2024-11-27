@@ -55,6 +55,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
               DataRow(
                 cells: [
                   DataCell(ProfileImage(
+                    allowNavigation: true,
                     customer: CustomerDTO(
                       customerId: customer.customerId,
                       email: customer.email,

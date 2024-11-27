@@ -6,23 +6,29 @@ import 'package:intl/intl.dart';
 import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:proventi/global/style.dart';
-import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../api/restaurant_client/lib/api.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
 
-class BookingEdit extends StatefulWidget {
-  final BookingDTO bookingDTO;
-  final RestaurantDTO restaurantDTO;
+class BookingCustomerEdit extends StatefulWidget {
 
-  BookingEdit({required this.bookingDTO, required this.restaurantDTO});
+  final RestaurantDTO restaurantDTO;
+  final BookingDTO bookingDTO;
+  final bool isAlsoBookingEditing;
+  final String branchCode;
+
+  BookingCustomerEdit({
+    required this.bookingDTO,
+    required this.restaurantDTO,
+    required this.isAlsoBookingEditing,
+    required this.branchCode});
 
   @override
-  _BookingEditState createState() => _BookingEditState();
+  _BookingCustomerEditState createState() => _BookingCustomerEditState();
 }
 
-class _BookingEditState extends State<BookingEdit> {
+class _BookingCustomerEditState extends State<BookingCustomerEdit> {
+
   late TextEditingController _timeSlotController;
   late TextEditingController _numGuestsController;
   late TextEditingController _specialRequestsController;
@@ -30,12 +36,12 @@ class _BookingEditState extends State<BookingEdit> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _emailCustomerController;
+
   late TextEditingController _prefixController;
   late TextEditingController _phoneController;
   late TextEditingController _capController;
 
   final Country _currentSelectedCountry = Country.parse('IT');
-
 
   String? selectedTime;
   int? selectedHour;
@@ -43,18 +49,9 @@ class _BookingEditState extends State<BookingEdit> {
 
   DateTime _selectedNewDate = DateTime.now();
 
-  String _currentImageUrl = '';
-
-
   @override
   void initState() {
     super.initState();
-
-    selectedTime = widget.bookingDTO.timeSlot!.bookingHour!.toString()
-        +':' + NumberFormat("00").format(widget.bookingDTO.timeSlot!.bookingMinutes!).toString();
-
-    selectedHour = widget.bookingDTO.timeSlot!.bookingHour!;
-    selectedMinute = widget.bookingDTO.timeSlot!.bookingMinutes!;
 
     _firstNameController = TextEditingController(text: widget.bookingDTO.customer!.firstName!);
     _lastNameController = TextEditingController(text: widget.bookingDTO.customer!.lastName!);
@@ -64,43 +61,52 @@ class _BookingEditState extends State<BookingEdit> {
     _phoneController = TextEditingController(text: widget.bookingDTO.customer!.phone ?? '');
     _capController = TextEditingController(text: widget.bookingDTO.customer!.postalCode ?? '');
 
-    _timeSlotController = TextEditingController(text: '${widget.bookingDTO.timeSlot!.bookingHour!}:${widget.bookingDTO.timeSlot!.bookingMinutes!}');
+    if(widget.isAlsoBookingEditing){
+      selectedTime = '${widget.bookingDTO.timeSlot!.bookingHour!}:${NumberFormat("00").format(widget.bookingDTO.timeSlot!.bookingMinutes!)}';
+      selectedHour = widget.bookingDTO.timeSlot!.bookingHour!;
+      selectedMinute = widget.bookingDTO.timeSlot!.bookingMinutes!;
 
-    _numGuestsController = TextEditingController(text: widget.bookingDTO.numGuests?.toString());
-    _specialRequestsController = TextEditingController(text: widget.bookingDTO.specialRequests);
-    _selectedNewDate = DateTime(widget.bookingDTO.bookingDate!.year, widget.bookingDTO.bookingDate!.month, widget.bookingDTO.bookingDate!.day, 2);
+      _timeSlotController = TextEditingController(text: '${widget.bookingDTO.timeSlot!.bookingHour!}:${widget.bookingDTO.timeSlot!.bookingMinutes!}');
+      _numGuestsController = TextEditingController(text: widget.bookingDTO.numGuests?.toString());
+      _specialRequestsController = TextEditingController(text: widget.bookingDTO.specialRequests);
+      _selectedNewDate = DateTime(widget.bookingDTO.bookingDate!.year, widget.bookingDTO.bookingDate!.month, widget.bookingDTO.bookingDate!.day, 2);
+    }
+
   }
 
   @override
   void dispose() {
-    // Dispose the controllers
+
     _timeSlotController.dispose();
     _numGuestsController.dispose();
     _specialRequestsController.dispose();
+
     super.dispose();
   }
 
-  Future<void> _saveBooking() async {
+  Future<void> _update() async {
+
     try{
+      if(widget.isAlsoBookingEditing){
+        await Provider.of<RestaurantStateManager>(context, listen: false).updateBooking(
+            BookingDTO(
+                bookingId: widget.bookingDTO.bookingId,
+                bookingCode: widget.bookingDTO.bookingCode,
+                numGuests: int.parse(_numGuestsController.text),
+                bookingDate: _selectedNewDate,
+                specialRequests: _specialRequestsController.text,
+                status: widget.bookingDTO.status,
 
+                timeSlot: TimeSlot(
+                  timeRangeCode: widget.bookingDTO.timeSlot!.timeRangeCode,
+                  bookingHour: selectedHour,
+                  bookingMinutes: selectedMinute,
+                ),
 
-      await Provider.of<RestaurantStateManager>(context, listen: false).updateBooking(
-          BookingDTO(
-              bookingId: widget.bookingDTO.bookingId,
-              bookingCode: widget.bookingDTO.bookingCode,
-              numGuests: int.parse(_numGuestsController.text),
-              bookingDate: _selectedNewDate,
-              specialRequests: _specialRequestsController.text,
-              status: widget.bookingDTO.status,
-              timeSlot: TimeSlot(
-                timeRangeCode: widget.bookingDTO.timeSlot!.timeRangeCode,
-                bookingHour: selectedHour,
-                bookingMinutes: selectedMinute,
-              ),
-              noShow: false
-          )
-      );
-
+                noShow: false
+            )
+        );
+      }
       await Provider.of<RestaurantStateManager>(context, listen: false)
           .customerControllerApi
           .updateCustomer(CustomerDTO(
@@ -141,8 +147,8 @@ class _BookingEditState extends State<BookingEdit> {
         navigationBar: CupertinoNavigationBar(
           trailing: CupertinoButton(
             padding: EdgeInsets.zero,
-            child: const Text('Aggiorna prenotazione', style: TextStyle(fontWeight: FontWeight.normal)),
-            onPressed: _saveBooking,
+            onPressed: _update,
+            child: const Text('Aggiorna', style: TextStyle(fontWeight: FontWeight.normal)),
           ),
         ),
         child: SafeArea(
@@ -154,10 +160,15 @@ class _BookingEditState extends State<BookingEdit> {
                 header: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Informazioni cliente', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-
-                    ProfileImage(customer: widget.bookingDTO.customer!,
-                      branchCode: widget.bookingDTO.branchCode!,
+                    const Text('Informazioni cliente',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                    ),
+                    ProfileImage(
+                      allowNavigation: false,
+                      customer: widget.bookingDTO.customer!,
+                      branchCode: widget.branchCode,
                       avatarRadious: 30,
                     ),
                   ],
@@ -183,7 +194,7 @@ class _BookingEditState extends State<BookingEdit> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Prefisso', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),),
+                        const Text('Prefisso', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14),),
                         CupertinoButton(onPressed: (){
                           showCountryPicker(
                             context: context,
@@ -240,78 +251,83 @@ class _BookingEditState extends State<BookingEdit> {
                 ],
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              if(widget.isAlsoBookingEditing)
+                Column(
                   children: [
-                    Text('Data prenotazione'),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Data prenotazione'),
+                          Row(
+                            children: [
+                              Text(italianDateFormat.format(_selectedNewDate!), style: TextStyle(fontSize: 14),),
+                              IconButton(onPressed: (){
+
+                                _selectDate(context, widget.bookingDTO.bookingDate!);
+
+                              }, icon: Icon(CupertinoIcons.calendar_today)),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                     Row(
                       children: [
-                        Text(italianDateFormat.format(_selectedNewDate!), style: TextStyle(fontSize: 14),),
-                        IconButton(onPressed: (){
-
-                          _selectDate(context, widget.bookingDTO.bookingDate!);
-
-                        }, icon: Icon(CupertinoIcons.calendar_today)),
+                        Text('Ora arrivo'),
                       ],
-                    )
+                    ),
+                    Wrap(
+                      children: generateTimeSlots(widget.restaurantDTO.daylyTimeWorkingRange!).map((time) {
+                        final isSelected = time == selectedTime;
+                        return GestureDetector(
+                          onTap: () => _onChipTap(time),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Chip(
+                              label: Text(time),
+                              backgroundColor: isSelected ? globalGold : Colors.orangeAccent.withOpacity(0.1),
+                              labelStyle: TextStyle(
+                                color: isSelected ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    Wrap(
+                      children: generateTimeSlots(widget.restaurantDTO.nightTimeWorkingRange!).map((time) {
+                        final isSelected = time == selectedTime;
+                        return GestureDetector(
+                          onTap: () => _onChipTap(time),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: Chip(
+                              label: Text(time),
+                              backgroundColor: isSelected ? globalGold : elegantBlue.withOpacity(0.1),
+                              labelStyle: TextStyle(
+                                color: isSelected ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    CustomFormRow(
+                      label: 'Prenotati',
+                      controller: _numGuestsController,
+                      placeholder: 'Enter number of guests',
+                      keyboardType: TextInputType.number,
+                    ),
+                    CustomFormRow(
+                      label: 'Note',
+                      controller: _specialRequestsController,
+                      placeholder: 'Enter special requests or notes',
+                    ),
                   ],
-                ),
-              ),
+                )
 
-              Row(
-                children: [
-                  Text('Ora arrivo'),
-                ],
-              ),
-              Wrap(
-                children: generateTimeSlots(widget.restaurantDTO.daylyTimeWorkingRange!).map((time) {
-                  final isSelected = time == selectedTime;
-                  return GestureDetector(
-                    onTap: () => _onChipTap(time),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Chip(
-                        label: Text(time),
-                        backgroundColor: isSelected ? globalGold : Colors.orangeAccent.withOpacity(0.1),
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              Wrap(
-                children: generateTimeSlots(widget.restaurantDTO.nightTimeWorkingRange!).map((time) {
-                  final isSelected = time == selectedTime;
-                  return GestureDetector(
-                    onTap: () => _onChipTap(time),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Chip(
-                        label: Text(time),
-                        backgroundColor: isSelected ? globalGold : elegantBlue.withOpacity(0.1),
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              CustomFormRow(
-                label: 'Prenotati',
-                controller: _numGuestsController,
-                placeholder: 'Enter number of guests',
-                keyboardType: TextInputType.number,
-              ),
-              CustomFormRow(
-                label: 'Note',
-                controller: _specialRequestsController,
-                placeholder: 'Enter special requests or notes',
-              ),
             ],
           ),
         ),

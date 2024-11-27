@@ -14,7 +14,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 
 import '../../notification/model/notification_entity.dart';
 import '../../notification/state_manager/notification_state_manager.dart';
-import '../booking_edit/booking_edit.dart';
+import '../booking_edit/booking_customer_edit.dart';
 
 class FastQueueCard extends StatefulWidget {
   final BookingDTO booking;
@@ -208,7 +208,11 @@ class _FastQueueCardState extends State<FastQueueCard> {
                       elevation: 10,
                       context: context,
                       builder: (BuildContext context) {
-                        return BookingEdit(bookingDTO: widget.booking, restaurantDTO: value.restaurantConfiguration!,);
+                        return BookingCustomerEdit(
+                          bookingDTO: widget.booking,
+                          restaurantDTO: value.restaurantConfiguration!,
+                          isAlsoBookingEditing: true,
+                          branchCode: widget.booking.branchCode!,);
                       },
                     );
                   },);
@@ -222,7 +226,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
               ),
               Column(
                 children: [
-                  Text(getIconByStatus(widget.booking.status!), style: TextStyle(fontSize: 4),),
+                  Text(getIconByStatus(widget.booking.status!), style: TextStyle(fontSize: 14),),
                   Text(widget.booking.status!.value, style: TextStyle(fontSize: 4),)
                 ],
               ),

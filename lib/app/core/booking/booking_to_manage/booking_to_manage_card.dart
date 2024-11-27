@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
+import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
+import 'package:proventi/app/core/customer/customer_state_manager.dart';
 import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
 import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,7 @@ import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:super_tooltip/super_tooltip.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
 import '../../../../global/date_methods_utility.dart';
@@ -19,6 +22,7 @@ class BookingToManageCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
+
 
   const BookingToManageCard({required this.booking,
     required this.formDTOs, required this.restaurantDTO});
@@ -43,120 +47,177 @@ class BookingToManageCard extends StatelessWidget {
   }
 
   Widget _buildCardContent(BuildContext context) {
-    return ListTile(
-      trailing: Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: Colors.deepOrange),),
-      title: Row(
-        children: [
-          Stack(
-            children: [Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ProfileImage(
-                customer: booking.customer!,
-                branchCode: booking.branchCode!,
-                avatarRadious: 30,
-              ),
-            ),
-              Positioned(right: 0, child: getTimeRangeWidget(booking, restaurantDTO))
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${booking.customer?.firstName!} ${booking.customer?.lastName!}',
-                style: TextStyle(
-                  fontSize: 14,
-                  decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                  color: Colors.blueGrey.shade900,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '👥${booking.numGuests}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
-                        style: TextStyle(
-                          fontSize: 15,
 
-                          color: Colors.blueGrey.shade900,
-                        ),
+    final _controller = SuperTooltipController();
+
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            color: Colors.white,
+            surfaceTintColor: Colors.white,
+            child: ListTile(
+              trailing: Text(formatDuration(DateTime.now().difference(booking.createdAt!)), style: TextStyle(color: Colors.deepOrange),),
+              title: Row(
+                children: [
+                  Stack(
+                    children: [
+                      Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ProfileImage(
+                        allowNavigation: true,
+                        customer: booking.customer!,
+                        branchCode: booking.branchCode!,
+                        avatarRadious: 30,
+                      ),
+                    ),
+                      Consumer<CustomerStateManager>(
+                        builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+                          if(customerStateManager.currentCustomersList!.where((element) => element.customerId == booking.customer!.customerId).isNotEmpty){
+                            CustomerHistory customerHistory = customerStateManager.currentCustomersList!.where((element)
+                            => element.customerId == booking.customer!.customerId).first;
+                            if(customerHistory.nonArrivatoCount! > 0){
+                              return Positioned(
+                                right: -10,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await _controller.showTooltip();
+                                  },
+                                  child: SuperTooltip(
+                                    showBarrier: true,
+                                    controller: _controller,
+
+                                    content: Text(
+                                      'Il cliente non si è presentato ${customerHistory.nonArrivatoCount!} volte',
+                                      softWrap: true,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    child: Lottie.asset('assets/lotties/danger.json', height: 50),
+                                  ),
+                                ),
+                              );
+                            }else{
+                              return const Text('');
+                            }
+                          }else{
+                            return const Text('');
+                          }
+
+                        },
                       ),
                     ],
                   ),
-
-                  Text(getFormEmoji(formDTOs, booking)),
-                  GestureDetector(child: badges.Badge(
-                      showBadge: booking.specialRequests?.isNotEmpty ?? false,
-                      child: const Icon(CupertinoIcons.doc_plaintext)), onTap: () {
-                    if(booking.specialRequests?.isNotEmpty ?? false){
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoAlertDialog(
-                            title: const Text('Note'),
-                            content: Text(booking.specialRequests!),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Chiudi"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${booking.customer?.firstName!} ${booking.customer?.lastName!}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                          color: Colors.blueGrey.shade900,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '👥${booking.numGuests}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
+                                style: TextStyle(
+                                  fontSize: 15,
+            
+                                  color: Colors.blueGrey.shade900,
+                                ),
                               ),
                             ],
-                          );
-                        },
-                      );
-                    }
-                  },
+                          ),
+            
+                          Text(getFormEmoji(formDTOs, booking)),
+                          GestureDetector(child: badges.Badge(
+                              showBadge: booking.specialRequests?.isNotEmpty ?? false,
+                              child: const Icon(CupertinoIcons.doc_plaintext)), onTap: () {
+                            if(booking.specialRequests?.isNotEmpty ?? false){
+                              showCupertinoDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CupertinoAlertDialog(
+                                    title: const Text('Note'),
+                                    content: Text(booking.specialRequests!),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text("Chiudi"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          ),
+                          IconButton(onPressed: (){
+                            showCupertinoModalBottomSheet(
+                              expand: true,
+                              elevation: 10,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BookingCustomerEdit(
+                                  bookingDTO: booking,
+                                  restaurantDTO: restaurantDTO,
+                                  isAlsoBookingEditing: true,
+                                  branchCode: booking.branchCode!,);
+                              },
+                            );
+                          }, icon: const Icon(CupertinoIcons.settings_solid)),
+                          GestureDetector(onTap: () {
+            
+                            showCupertinoModalBottomSheet(
+                              expand: true,
+                              elevation: 10,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return DashChatCustomized20(bookingDTO: booking,);
+                              },
+                            );
+            
+                          }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
+                        ],
+                      ),
+                    ],
                   ),
-                  IconButton(onPressed: (){
-                    showCupertinoModalBottomSheet(
-                      expand: true,
-                      elevation: 10,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return BookingEdit(bookingDTO: booking, restaurantDTO: restaurantDTO,);
-                      },
-                    );
-                  }, icon: const Icon(CupertinoIcons.settings_solid)),
-                  GestureDetector(onTap: () {
-
-                    showCupertinoModalBottomSheet(
-                      expand: true,
-                      elevation: 10,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return DashChatCustomized20(bookingDTO: booking,);
-                      },
-                    );
-
-                  }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
                 ],
               ),
-            ],
+            ),
           ),
-        ],
-      ),
+        ),
+        Positioned(right: 0, child: getTimeRangeWidget(booking, restaurantDTO))
+
+      ],
     );
   }
 

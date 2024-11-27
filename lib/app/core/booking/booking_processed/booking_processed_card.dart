@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:proventi/app/core/booking/booking_edit/booking_edit.dart';
+import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
 import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
 import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +43,7 @@ class ProcessedBookingCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ProfileImage(
+                allowNavigation: true,
                 customer: booking.customer!,
                 branchCode: booking.branchCode!,
                 avatarRadious: 30,
@@ -88,7 +89,11 @@ class ProcessedBookingCard extends StatelessWidget {
                             elevation: 10,
                             context: context,
                             builder: (BuildContext context) {
-                              return BookingEdit(bookingDTO: booking, restaurantDTO: value.restaurantConfiguration!,);
+                              return BookingCustomerEdit(
+                                bookingDTO: booking,
+                                restaurantDTO: value.restaurantConfiguration!,
+                                isAlsoBookingEditing: true,
+                                branchCode: booking.branchCode!,);
                             },
                           );
                         },);

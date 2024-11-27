@@ -481,7 +481,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                 child: Column(
                                   children: [
                                     Lottie.asset('assets/lotties/nocalendar.json'),
-                                    Text('Non ci sono prenotazioni ${filterDailyType == FilterDailyType.TUTTO_IL_GIORNO ? '' :  ' per ${filterDailyType.name.toString().toLowerCase()}'}'
+                                    Text('Non ci sono prenotazioni ${filterDailyType == FilterDailyType.TUTTO_IL_GIORNO ? '' : 'per ${filterDailyType.name.toString().toLowerCase()}'}'
                                     )
                                   ],
                                 ),
