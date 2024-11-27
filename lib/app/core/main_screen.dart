@@ -138,6 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 ListTile(
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.pushNamed(context, CustomerScreen.routeName);
                   },
                   title: const Text(
@@ -151,6 +152,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 ListTile(
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.pushNamed(context, Floor.routeName);
                   },
                   title: const Text(
@@ -164,6 +166,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 ListTile(
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => const SplashScreen()),
                     );

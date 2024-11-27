@@ -66,7 +66,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     avatarRadious: 30,
                   )),
 
-                  DataCell(Column(
+                  DataCell(
+                      Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -107,22 +108,17 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   },
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: DataTable(
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
 
-                      columns: const [
-                        DataColumn(label: Text('', style: testStyle)),
-                        DataColumn(label: Text('Nome', style: testStyle)),
-                        DataColumn(label: Text('Email', style: testStyle)),
-                        DataColumn(label: Text('', style: testStyle)),
-                      ],
-                      rows: customerRows,
-                    ),
-                  ),
+                  columns: const [
+                    DataColumn(label: Text('', style: testStyle)),
+                    DataColumn(label: Text('Nome', style: testStyle)),
+                    DataColumn(label: Text('Email', style: testStyle)),
+                    DataColumn(label: Text('', style: testStyle)),
+                  ],
+                  rows: customerRows,
                 ),
               ),
             ],

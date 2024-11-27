@@ -111,53 +111,56 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: DataTable(
-                    columns: [
-                      DataColumn(
-                        label: Text(
-                          'ARRIVATO ${getIconByStatus(BookingDTOStatusEnum.ARRIVATO)}',
-                          style: globalStyle,
+                  padding: const EdgeInsets.all(1.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: [
+                        DataColumn(
+                          label: Text(
+                            'ARRIVATO ${getIconByStatus(BookingDTOStatusEnum.ARRIVATO)}',
+                            style: globalStyle,
+                          ),
                         ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'NO SHOW ${getIconByStatus(BookingDTOStatusEnum.NON_ARRIVATO)}',
-                          style: globalStyle,
+                        DataColumn(
+                          label: Text(
+                            'NO SHOW ${getIconByStatus(BookingDTOStatusEnum.NON_ARRIVATO)}',
+                            style: globalStyle,
+                          ),
                         ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'RIFIUTATO ${getIconByStatus(BookingDTOStatusEnum.RIFIUTATO)}',
-                          style: globalStyle,
+                        DataColumn(
+                          label: Text(
+                            'RIFIUTATO ${getIconByStatus(BookingDTOStatusEnum.RIFIUTATO)}',
+                            style: globalStyle,
+                          ),
                         ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'ELIMINATO ${getIconByStatus(BookingDTOStatusEnum.ELIMINATO)}',
-                          style: globalStyle,
+                        DataColumn(
+                          label: Text(
+                            'ELIMINATO ${getIconByStatus(BookingDTOStatusEnum.ELIMINATO)}',
+                            style: globalStyle,
+                          ),
                         ),
-                      ),
-                    ],
-                    rows: [
-                      DataRow(
-                        cells: [
-                          DataCell(Text('${customerHistory.arrivatoCount ?? 0}', style: globalStyle)),
-                          DataCell(
-                            Text(
-                              '${customerHistory.nonArrivatoCount ?? 0}',
-                              style: globalStyle.copyWith(
-                                color: customerHistory.nonArrivatoCount! > 0
-                                    ? Colors.red
-                                    : Colors.black,
+                      ],
+                      rows: [
+                        DataRow(
+                          cells: [
+                            DataCell(Text('${customerHistory.arrivatoCount ?? 0}', style: globalStyle)),
+                            DataCell(
+                              Text(
+                                '${customerHistory.nonArrivatoCount ?? 0}',
+                                style: globalStyle.copyWith(
+                                  color: customerHistory.nonArrivatoCount! > 0
+                                      ? Colors.red
+                                      : Colors.black,
+                                ),
                               ),
                             ),
-                          ),
-                          DataCell(Text('${customerHistory.rifiutatoCount ?? 0}', style: globalStyle)),
-                          DataCell(Text('${customerHistory.eliminatoCount ?? 0}', style: globalStyle)),
-                        ],
-                      ),
-                    ],
+                            DataCell(Text('${customerHistory.rifiutatoCount ?? 0}', style: globalStyle)),
+                            DataCell(Text('${customerHistory.eliminatoCount ?? 0}', style: globalStyle)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
