@@ -15,8 +15,6 @@ class ProfileImage extends StatelessWidget {
   final double avatarRadious;
   final bool allowNavigation;
 
-
-  // Singleton cache for storing image URLs
   static final Map<String, String?> _photoCache = {};
 
   @override

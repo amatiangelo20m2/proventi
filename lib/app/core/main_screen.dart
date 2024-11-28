@@ -175,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
                     'Log out',
                     style: TextStyle(color: CupertinoColors.destructiveRed),
                   ),
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.logout,
                     color: CupertinoColors.destructiveRed,
                   ),

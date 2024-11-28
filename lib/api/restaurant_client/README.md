@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:8314/restaurantservice*
+All URIs are relative to *http://192.168.1.4:20320/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -66,10 +66,10 @@ Class | Method | HTTP request | Description
 *BookingControllerApi* | [**retrieveBookingByBranchCodeAndDate**](doc//BookingControllerApi.md#retrievebookingbybranchcodeanddate) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{date} | 
 *BookingControllerApi* | [**retrieveBookingByCode**](doc//BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 
 *BookingControllerApi* | [**retrieveBookingByStatusAndBranchCode**](doc//BookingControllerApi.md#retrievebookingbystatusandbranchcode) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{fromDate}/{toDate} | 
-*BookingControllerApi* | [**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](doc//BookingControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/booking/retrievehistoricalcustomers/bybookingson/{branchCode} | 
 *BookingControllerApi* | [**updateBooking**](doc//BookingControllerApi.md#updatebooking) | **PUT** /api/booking/updatebooking | 
 *CustomerControllerApi* | [**findcustomerByPhoneAndPrefix**](doc//CustomerControllerApi.md#findcustomerbyphoneandprefix) | **GET** /api/customer/retrieve/{prefix}/{phoneNumber} | 
 *CustomerControllerApi* | [**retrieveCustomerHistoryByBranchCode**](doc//CustomerControllerApi.md#retrievecustomerhistorybybranchcode) | **GET** /api/customer/retrievecustomerhistory/{branchCode} | 
+*CustomerControllerApi* | [**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](doc//CustomerControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/customer/retrievehistoricalcustomers/{branchCode} | 
 *CustomerControllerApi* | [**save**](doc//CustomerControllerApi.md#save) | **POST** /api/customer/save | 
 *CustomerControllerApi* | [**updateCustomer**](doc//CustomerControllerApi.md#updatecustomer) | **PUT** /api/customer/updatecustomer | 
 *FormControllerApi* | [**addDefaultTimeRangeForAllDays**](doc//FormControllerApi.md#adddefaulttimerangeforalldays) | **PUT** /api/form/create/defaulttimerange/{formCode} | 

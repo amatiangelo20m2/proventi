@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:8314/restaurantservice*
+All URIs are relative to *http://192.168.1.4:20320/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -17,7 +17,6 @@ Method | HTTP request | Description
 [**retrieveBookingByBranchCodeAndDate**](BookingControllerApi.md#retrievebookingbybranchcodeanddate) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{date} | 
 [**retrieveBookingByCode**](BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 
 [**retrieveBookingByStatusAndBranchCode**](BookingControllerApi.md#retrievebookingbystatusandbranchcode) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{fromDate}/{toDate} | 
-[**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](BookingControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/booking/retrievehistoricalcustomers/bybookingson/{branchCode} | 
 [**updateBooking**](BookingControllerApi.md#updatebooking) | **PUT** /api/booking/updatebooking | 
 
 
@@ -346,47 +345,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**List<BookingDTO>**](BookingDTO.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **retrieveHistoricalCustomersBasedOnReservationsByBranchCode**
-> List<CustomerDTO> retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode)
-
-
-
-### Example
-```dart
-import 'package:ventimetri_api_restaurant/api.dart';
-
-final api_instance = BookingControllerApi();
-final branchCode = branchCode_example; // String | 
-
-try {
-    final result = api_instance.retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode);
-    print(result);
-} catch (e) {
-    print('Exception when calling BookingControllerApi->retrieveHistoricalCustomersBasedOnReservationsByBranchCode: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **branchCode** | **String**|  | 
-
-### Return type
-
-[**List<CustomerDTO>**](CustomerDTO.md)
 
 ### Authorization
 

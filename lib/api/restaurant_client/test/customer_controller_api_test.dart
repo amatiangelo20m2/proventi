@@ -27,6 +27,11 @@ void main() {
       // TODO
     });
 
+    //Future<List<CustomerDTO>> retrieveHistoricalCustomersBasedOnReservationsByBranchCode(String branchCode) async
+    test('test retrieveHistoricalCustomersBasedOnReservationsByBranchCode', () async {
+      // TODO
+    });
+
     //Future<CustomerDTO> save(CustomerDTO customerDTO) async
     test('test save', () async {
       // TODO

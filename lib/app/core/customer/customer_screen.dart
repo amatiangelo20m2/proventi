@@ -1,19 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:proventi/app/core/customer/single_customer_history.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:proventi/app/core/customer/customer_state_manager.dart';
 
-import '../../../global/style.dart'; // Assuming you have a global file for styles
-
-// Define a global text style
 const TextStyle testStyle = TextStyle(
   fontSize: 12,
-  color: Colors.black, // Default color for text
+  color: Colors.black,
 );
 
 class CustomerScreen extends StatefulWidget {
@@ -32,9 +26,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     return Consumer<CustomerStateManager>(
       builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
-        final List<CustomerHistory> customers = customerStateManager.currentCustomersList!;
+        final List<CustomerDTO> customers = customerStateManager.currentCustomerDTOList!;
 
-        Map<String, List<CustomerHistory>> groupedCustomers = {};
+        // Grouping and filtering customers
+        Map<String, List<CustomerDTO>> groupedCustomers = {};
         for (var customer in customers) {
           if (customer.lastName != null &&
               (customer.lastName!.toLowerCase().contains(searchQuery.toLowerCase()) ||
@@ -46,37 +41,35 @@ class _CustomerScreenState extends State<CustomerScreen> {
 
         List<String> sortedKeys = groupedCustomers.keys.toList()..sort();
 
+        // Preparing DataRow entries
         List<DataRow> customerRows = [];
         for (var key in sortedKeys) {
-          List<CustomerHistory> customersGroup
-          = groupedCustomers[key]!..sort((a, b) => a.lastName!.compareTo(b.lastName!));
+          List<CustomerDTO> customersGroup =
+          groupedCustomers[key]!..sort((a, b) => a.lastName!.compareTo(b.lastName!));
           for (var customer in customersGroup) {
             customerRows.add(
               DataRow(
                 cells: [
                   DataCell(ProfileImage(
                     allowNavigation: true,
-                    customer: CustomerDTO(
-                      customerId: customer.customerId,
-                      email: customer.email,
-                      phone: customer.phone,
-                      prefix: customer.prefix,
-                    ),
-                    branchCode: customer.branchCode!,
+                    customer: customer,
+                    branchCode: customerStateManager.branchCode,
                     avatarRadious: 30,
                   )),
-
                   DataCell(
-                      Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${customer.firstName} ${customer.lastName}', style: testStyle),
-                      Text('+ ${customer.prefix ?? ""} ${customer.phone ?? ""}', style: const TextStyle(fontSize: 10)),
-                    ],
-                  )),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${customer.firstName} ${customer.lastName}', style: testStyle),
+                        Text(
+                          '+ ${customer.prefix ?? ""} ${customer.phone ?? ""}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  ),
                   DataCell(Text(customer.email ?? "", style: testStyle)),
-                  DataCell(Text(customer.nonArrivatoCount! > 0 ? '⚠️' : '', style: testStyle)),
                 ],
               ),
             );
@@ -88,10 +81,11 @@ class _CustomerScreenState extends State<CustomerScreen> {
             title: Text('I miei clienti', style: TextStyle(color: Colors.grey[900], fontSize: 15)),
             actions: [
               IconButton(
-                  onPressed: () async {
-                    await customerStateManager.refreshHistory();
-                  },
-                  icon: const Icon(Icons.refresh)),
+                onPressed: () async {
+                  await customerStateManager.refreshHistory();
+                },
+                icon: const Icon(Icons.refresh),
+              ),
             ],
           ),
           body: Column(
@@ -108,17 +102,30 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   },
                 ),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Calculate the width for the table
+                    double tableWidth = constraints.maxWidth;
 
-                  columns: const [
-                    DataColumn(label: Text('', style: testStyle)),
-                    DataColumn(label: Text('Nome', style: testStyle)),
-                    DataColumn(label: Text('Email', style: testStyle)),
-                    DataColumn(label: Text('', style: testStyle)),
-                  ],
-                  rows: customerRows,
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minWidth: tableWidth),
+                          child: DataTable(
+                            columns: const [
+                              DataColumn(label: Text('', style: testStyle)),
+                              DataColumn(label: Text('Nome', style: testStyle)),
+                              DataColumn(label: Text('Email', style: testStyle)),
+                            ],
+                            rows: customerRows,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

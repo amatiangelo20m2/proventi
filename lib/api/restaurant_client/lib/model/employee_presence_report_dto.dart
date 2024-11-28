@@ -19,9 +19,9 @@ class EmployeePresenceReportDTO {
     this.date,
     this.workedHours,
     this.note,
-    this.presentAtDinner,
-    this.illness,
     this.holiday,
+    this.illness,
+    this.presentAtDinner,
     this.presentAtLunch,
     this.rest,
   });
@@ -80,7 +80,7 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? presentAtDinner;
+  bool? holiday;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -96,7 +96,7 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? holiday;
+  bool? presentAtDinner;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -122,9 +122,9 @@ class EmployeePresenceReportDTO {
     other.date == date &&
     other.workedHours == workedHours &&
     other.note == note &&
-    other.presentAtDinner == presentAtDinner &&
-    other.illness == illness &&
     other.holiday == holiday &&
+    other.illness == illness &&
+    other.presentAtDinner == presentAtDinner &&
     other.presentAtLunch == presentAtLunch &&
     other.rest == rest;
 
@@ -137,14 +137,14 @@ class EmployeePresenceReportDTO {
     (date == null ? 0 : date!.hashCode) +
     (workedHours == null ? 0 : workedHours!.hashCode) +
     (note == null ? 0 : note!.hashCode) +
-    (presentAtDinner == null ? 0 : presentAtDinner!.hashCode) +
-    (illness == null ? 0 : illness!.hashCode) +
     (holiday == null ? 0 : holiday!.hashCode) +
+    (illness == null ? 0 : illness!.hashCode) +
+    (presentAtDinner == null ? 0 : presentAtDinner!.hashCode) +
     (presentAtLunch == null ? 0 : presentAtLunch!.hashCode) +
     (rest == null ? 0 : rest!.hashCode);
 
   @override
-  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, presentAtDinner=$presentAtDinner, illness=$illness, holiday=$holiday, presentAtLunch=$presentAtLunch, rest=$rest]';
+  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, holiday=$holiday, illness=$illness, presentAtDinner=$presentAtDinner, presentAtLunch=$presentAtLunch, rest=$rest]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -178,20 +178,20 @@ class EmployeePresenceReportDTO {
     } else {
       json[r'note'] = null;
     }
-    if (this.presentAtDinner != null) {
-      json[r'presentAtDinner'] = this.presentAtDinner;
+    if (this.holiday != null) {
+      json[r'holiday'] = this.holiday;
     } else {
-      json[r'presentAtDinner'] = null;
+      json[r'holiday'] = null;
     }
     if (this.illness != null) {
       json[r'illness'] = this.illness;
     } else {
       json[r'illness'] = null;
     }
-    if (this.holiday != null) {
-      json[r'holiday'] = this.holiday;
+    if (this.presentAtDinner != null) {
+      json[r'presentAtDinner'] = this.presentAtDinner;
     } else {
-      json[r'holiday'] = null;
+      json[r'presentAtDinner'] = null;
     }
     if (this.presentAtLunch != null) {
       json[r'presentAtLunch'] = this.presentAtLunch;
@@ -231,9 +231,9 @@ class EmployeePresenceReportDTO {
         date: mapDateTime(json, r'date', r''),
         workedHours: mapValueOfType<int>(json, r'workedHours'),
         note: mapValueOfType<String>(json, r'note'),
-        presentAtDinner: mapValueOfType<bool>(json, r'presentAtDinner'),
-        illness: mapValueOfType<bool>(json, r'illness'),
         holiday: mapValueOfType<bool>(json, r'holiday'),
+        illness: mapValueOfType<bool>(json, r'illness'),
+        presentAtDinner: mapValueOfType<bool>(json, r'presentAtDinner'),
         presentAtLunch: mapValueOfType<bool>(json, r'presentAtLunch'),
         rest: mapValueOfType<bool>(json, r'rest'),
       );

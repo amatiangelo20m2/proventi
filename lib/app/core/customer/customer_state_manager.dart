@@ -8,13 +8,15 @@ class CustomerStateManager extends ChangeNotifier {
 
   late ApiClient _restaurantClient;
 
-  late BookingControllerApi _bookingControllerApi;
   late CustomerControllerApi _customerControllerApi;
 
   List<CustomerHistory>? _currentCustomersList = [];
-
-
   List<CustomerHistory>? get currentCustomersList => _currentCustomersList;
+
+  List<CustomerDTO>? _currentCutomerDTOList = [];
+  List<CustomerDTO>? get currentCustomerDTOList => _currentCutomerDTOList;
+
+  late String branchCode = '';
 
   CustomerStateManager() {
     _initializeClient();
@@ -22,19 +24,11 @@ class CustomerStateManager extends ChangeNotifier {
 
   Future<void> _initializeClient() async {
     print('Initialize client with $customBasePathRestaurant. Each call will be redirect to this url.');
-
     final prefs = await SharedPreferences.getInstance();
-
-    // Save a String value
-    String? branchCode = prefs.getString('branchCode');
-
+    branchCode = prefs.getString('branchCode')!;
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
-    _bookingControllerApi = BookingControllerApi(_restaurantClient);
     _customerControllerApi = CustomerControllerApi(_restaurantClient);
-
-    await retrieveCustomersListByBranchCode(branchCode!, true);
-
-
+    await retrieveCustomersListByBranchCode(branchCode, true);
   }
 
   retrieveCustomersListByBranchCode(String branchCode, bool refresh) async {
@@ -42,15 +36,16 @@ class CustomerStateManager extends ChangeNotifier {
     if(refresh){
       _currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode);
     }
-
+    _currentCutomerDTOList = await _customerControllerApi
+        .retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode);
     notifyListeners();
   }
 
   Future<void> refreshHistory() async {
-
     final prefs = await SharedPreferences.getInstance();
-    String? branchCode = prefs.getString('branchCode');
+    branchCode = prefs.getString('branchCode')!;
     _currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode!);
+    _currentCutomerDTOList = await _customerControllerApi.retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode!);
     notifyListeners();
   }
 
