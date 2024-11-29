@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../global/date_methods_utility.dart';
 import '../../main_screen.dart';
+import '../bookings_utils.dart';
 
 class RefusedBookingCard extends StatelessWidget {
   final BookingDTO booking;
@@ -54,59 +55,58 @@ class RefusedBookingCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ProfileImage(
-                allowNavigation: true,
-                customer: booking.customer!,
-                branchCode: booking.branchCode!,
-                avatarRadious: 30,
-              ),
-              _buildCustomerInfo(),
-              _buildGuestInfo(),
               Row(
                 children: [
-                  GestureDetector(child: badges.Badge(
-                      showBadge: booking.specialRequests?.isNotEmpty ?? false,
-                      child: const Icon(CupertinoIcons.doc_plaintext)), onTap: () {
-                    if(booking.specialRequests?.isNotEmpty ?? false){
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoAlertDialog(
-                            title: const Text('Note'),
-                            content: Text(booking.specialRequests!),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Chiudi"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
+                  ProfileImage(
+                    allowNavigation: true,
+                    customer: booking.customer!,
+                    branchCode: booking.branchCode!,
+                    avatarRadious: 30,
                   ),
-                  IconButton(onPressed: () {
-                    showCupertinoModalBottomSheet(
-                      expand: true,
-                      elevation: 10,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return DashChatCustomized20(bookingDTO: booking,);
-                      },
-                    );
-                  }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${booking.customer!.firstName!} ${booking.customer!.lastName!}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                            color: Colors.blueGrey.shade900,
+                          ),
+                        ),
+                        _buildGuestInfo(),
+                        if((booking.specialRequests?.isNotEmpty ?? false)) Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Stack(children: [
+                                Text('💬', style: TextStyle(fontSize: 14),),
+                                Positioned(right: -1, child: Icon(Icons.circle, size: 10, color: Colors.redAccent,))
+                              ]),
+                            ),
+                            Text(booking.specialRequests!, style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              Column(
-                children: [
 
-                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 14),),
-                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
-                ],
-              ),
+
+              IconButton(onPressed: () {
+                showCupertinoModalBottomSheet(
+                  expand: true,
+                  elevation: 10,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DashChatCustomized20(bookingDTO: booking,);
+                  },
+                );
+              }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
             ],
           ),
         ),
@@ -114,51 +114,10 @@ class RefusedBookingCard extends StatelessWidget {
     );
   }
 
-
-  Row _buildCustomerInfo() {
-    return Row(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              booking.customer?.firstName ?? '',
-              style: TextStyle(
-                fontSize: 14,
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-            Text(
-              booking.customer?.lastName ?? '',
-
-              style: TextStyle(
-                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-
-                fontSize: 11,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-
   Row _buildGuestInfo() {
     return Row(
       children: [
-        Icon(CupertinoIcons.person_2, color: Colors.blueGrey.shade900),
-        const SizedBox(width: 2),
-        Text(
-          ' ${booking.numGuests ?? 0}',
-          style: const TextStyle(
-            fontSize: 13,
-            color: CupertinoColors.label,
-          ),
-        ),
+        buildComponentGuest(booking.numGuests.toString()),
 
         const SizedBox(width: 12),
         Text(

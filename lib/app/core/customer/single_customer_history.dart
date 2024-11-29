@@ -128,7 +128,7 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No bookings found.'));
+                      return const Center(child: Text('Nessuna prenotazione trovata'));
                     } else {
                       List<BookingDTO> bookings = snapshot.data!
                           .where((element) => filteredStatus.contains(element.status))

@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:super_tooltip/super_tooltip.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
@@ -40,7 +39,7 @@ class BookingToManageCard extends StatelessWidget {
   void _showSnackbar(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       behavior: SnackBarBehavior.floating,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -186,7 +185,7 @@ class BookingToManageCard extends StatelessWidget {
                       ],
                     ),
                     if(booking.specialRequests?.isNotEmpty ?? false)
-                      Text('💬' + booking.specialRequests!, style: TextStyle(fontSize: 10),)
+                      Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
 
                   ],
                 ),
@@ -213,8 +212,8 @@ class BookingToManageCard extends StatelessWidget {
                   Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
-                  Text('Codice prenotazione:' + booking.bookingCode!, style: TextStyle(fontSize: 7),),
-                  Text('Codice form:' + booking.formCode! + getFormEmoji(formDTOs, booking), style: TextStyle(fontSize: 7),),
+                  Text('Codice prenotazione:' + booking.bookingCode!, style: const TextStyle(fontSize: 7),),
+                  Text('Codice form:' + booking.formCode! + getFormEmoji(formDTOs, booking), style: const TextStyle(fontSize: 7),),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -237,73 +236,110 @@ class BookingToManageCard extends StatelessWidget {
                 } else {
                   throw 'Could not open the phone dialer.';
                 }
-              }, icon: Icon(CupertinoIcons.phone)),
+              }, icon: const Icon(CupertinoIcons.phone)),
             ),
           ],
         ),
         actions: [
           CupertinoActionSheetAction(
             onPressed: () async {
+
+
+              bool confirmed = await _showConfirmationDialog(context, 'Coneferma prenotazione di ${booking.customer!.firstName!}?' , '');
+              if(confirmed){
                 Response responseUpdate = await Provider.of<RestaurantStateManager>(context, listen: false)
                     .bookingControllerApi.updateBookingWithHttpInfo(BookingDTO(
                     bookingCode: booking.bookingCode,
                     status: BookingDTOStatusEnum.CONFERMATO
                 ));
                 if(responseUpdate.statusCode == 409){
-                  Navigator.pop(context, null);
+
                   await Provider.of<RestaurantStateManager>(context, listen: false)
                       .refreshDate();
                   _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' è già stata elaborata' );
 
                 } else if(responseUpdate.statusCode == 200){
-                  Navigator.pop(context, null);
+
                   await Provider.of<RestaurantStateManager>(context, listen: false)
                       .refreshDate();
                   _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
                 }else{
                   _showSnackbar(context, 'Ho riscontrato un errore generico durante aggiormamento prenotazione di '+ booking.customer!.firstName!+ '. Riprova fra 2 minuti.❌❌' );
-
                 }
+              }
 
+              Navigator.pop(context, null);
             },
             child: const Text('Conferma prenotazione'),
           ),
 
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  bookingId: booking.bookingId,
-                  status: BookingDTOStatusEnum.RIFIUTATO
-              ));
-              Navigator.pop(context, null);
-
+            onPressed: () async {
+              bool confirmed = await _showConfirmationDialog(context, 'Rifiuta prenotazione di ${booking.customer!.firstName}?', '');
+              if(confirmed){
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    bookingId: booking.bookingId,
+                    status: BookingDTOStatusEnum.RIFIUTATO
+                ));
+                Navigator.pop(context, null);
+              }
             },
-            child: Text('Rifiuta prenotazione'),
+            child: const Text('Rifiuta prenotazione'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                bookingId: booking.bookingId,
-                status: BookingDTOStatusEnum.ELIMINATO
-              ));
-              Navigator.pop(context, null);
+            onPressed: () async {
+
+                bool confirmed = await _showConfirmationDialog(context, 'Elimina prenotazione di ${booking.customer!.firstName}?', '');
+                if(confirmed) {
+                  Provider.of<RestaurantStateManager>(context, listen: false)
+                      .updateBooking(BookingDTO(
+                      bookingCode: booking.bookingCode,
+                      bookingId: booking.bookingId,
+                      status: BookingDTOStatusEnum.ELIMINATO
+                  ));
+                  Navigator.pop(context, null);
+                }
             },
-            child: Text('Elimina'),
+            child: const Text('Elimina'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
           onPressed: () {
-            // Close without any action
+            Navigator.pop(context, null);
           },
           isDefaultAction: true,
           child: const Text('Indietro'),
         ),
       ),
     );
+  }
+
+  Future<bool> _showConfirmationDialog(BuildContext context, String title, String content) {
+    return showCupertinoDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            CupertinoDialogAction(
+              child: const Text('Si'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) => value ?? false);
   }
 
   getTimeRangeWidget(BookingDTO booking, RestaurantDTO restaurantDTO) {

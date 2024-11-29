@@ -105,7 +105,7 @@ class _MainScreenState extends State<MainScreen> {
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
                         element.status ==
-                        BookingDTOStatusEnum.MODIFICATO_DA_UTENTE)
+                        BookingDTOStatusEnum.MODIFICATO_DA_UTENTE || element.status == BookingDTOStatusEnum.ELIMINATO_DA_UTENTE)
                     .length,
                 isSelected: _pageIndex == 3,
               ),

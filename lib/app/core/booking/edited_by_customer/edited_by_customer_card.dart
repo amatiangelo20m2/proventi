@@ -18,53 +18,10 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _showSortMenu(context, booking);
+        showActionMenu(context, booking);
       },
-      child: Dismissible(
-        key: Key(booking.bookingCode.toString()),
-        direction: DismissDirection.horizontal,
-        confirmDismiss: (direction) async {
-          if (direction == DismissDirection.endToStart) {
-            return await _confirmReservation(context);
-          } else if (direction == DismissDirection.startToEnd) {
-            return await _cancelReservation(context);
-          }
-          return false;
-        },
-        background: _buildSwipeBackground(
-          alignment: Alignment.centerLeft,
-          color: CupertinoColors.destructiveRed,
-          icon: CupertinoIcons.delete,
-        ),
-        secondaryBackground: _buildSwipeBackground(
-          alignment: Alignment.centerRight,
-          color: CupertinoColors.activeGreen,
-          icon: CupertinoIcons.check_mark_circled,
-        ),
-        child: _buildCardContent(context),
-      ),
+      child: _buildCardContent(context),
     );
-  }
-
-  Future<bool?> _confirmReservation(BuildContext context) async {
-    booking.status = BookingDTOStatusEnum.CONFERMATO;
-    _showSnackbar(context, 'Reservation confirmed.');
-    return false; // Prevent automatic dismissal
-  }
-
-  Future<bool?> _cancelReservation(BuildContext context) async {
-    booking.status = BookingDTOStatusEnum.ELIMINATO;
-    _showSnackbar(context, 'Reservation cancelled.');
-    return false; // Prevent automatic dismissal
-  }
-
-  void _showSnackbar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget _buildCardContent(BuildContext context) {
@@ -118,7 +75,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 4),),
+                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 20),),
                   Text(booking.status!.value, style: TextStyle(fontSize: 4),)
                 ],
               ),
@@ -128,7 +85,6 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
       ),
     );
   }
-
   Row _buildCustomerInfo() {
     return Row(
       children: [
@@ -155,7 +111,6 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
       ],
     );
   }
-
   Row _buildTimeBooking(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -198,7 +153,6 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
       ],
     );
   }
-
   Row _buildGuestInfo() {
     return Row(
       children: [
@@ -235,19 +189,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSwipeBackground(
-      {required Alignment alignment,
-      required Color color,
-      required IconData icon}) {
-    return Container(
-      alignment: alignment,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Icon(icon, color: color, size: 28),
-    );
-  }
-
-  void _showSortMenu(BuildContext context, BookingDTO booking) {
+  void showActionMenu(BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -268,25 +210,25 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
             Positioned(
               right: 0,
               child: IconButton(
-                  onPressed: () {}, icon: Icon(CupertinoIcons.phone)),
+                  onPressed: () {}, icon: const Icon(CupertinoIcons.phone)),
             ),
           ],
         ),
         actions: [
-          CupertinoActionSheetAction(
+          if(booking.status == BookingDTOStatusEnum.MODIFICATO_DA_UTENTE) CupertinoActionSheetAction(
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
                       bookingCode: booking.bookingCode,
                       numGuests: booking.numGuestsAfterUpdate,
                       timeSlot: booking.timeSlotAfterUpdate,
-                      bookingDate: booking.bookingDateAfterUpdate!.add(Duration(hours: 12)),
+                      bookingDate: booking.bookingDateAfterUpdate!.add(const Duration(hours: 12)),
                       status: BookingDTOStatusEnum.CONFERMATO));
               Navigator.pop(context, null);
             },
             child: const Text('Conferma modifica'),
           ),
-          CupertinoActionSheetAction(
+          if(booking.status == BookingDTOStatusEnum.MODIFICATO_DA_UTENTE) CupertinoActionSheetAction(
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
@@ -295,7 +237,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                       status: BookingDTOStatusEnum.RIFIUTATO));
               Navigator.pop(context, null);
             },
-            child: Text('Rifiuta modifica'),
+            child: const Text('Rifiuta modifica'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
@@ -323,10 +265,10 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
   _buildDateWidget() {
     return !isSameDay(booking.bookingDate!, booking.bookingDateAfterUpdate!) ? Row(
       children: [
-        Text(booking.bookingDate!.day.toString()+'/'+booking.bookingDate!.month!.toString(), style: TextStyle( decoration: TextDecoration.lineThrough,color: Colors.red),),
-        Icon(Icons.arrow_forward),
-        Text(booking.bookingDateAfterUpdate!.day.toString()+'/'+booking.bookingDateAfterUpdate!.month!.toString(), style: TextStyle(color: Colors.green.shade700),),
+        Text('${booking.bookingDate!.day}/${booking.bookingDate!.month!}', style: const TextStyle( decoration: TextDecoration.lineThrough,color: Colors.red),),
+        const Icon(Icons.arrow_forward),
+        Text('${booking.bookingDateAfterUpdate!.day}/${booking.bookingDateAfterUpdate!.month!}', style: TextStyle(color: Colors.green.shade700),),
       ],
-    ) : Text(booking.bookingDate!.day.toString()+'/'+booking.bookingDate!.month!.toString());
+    ) : Text('${booking.bookingDate!.day}/${booking.bookingDate!.month!}');
   }
 }

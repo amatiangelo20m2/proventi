@@ -85,6 +85,8 @@ String getIconByStatus(BookingDTOStatusEnum statusEnum) {
       return '👥';
     case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
       return '🖋️';
+    case BookingDTOStatusEnum.ELIMINATO_DA_UTENTE:
+      return '❌';
     case BookingDTOStatusEnum.ELIMINATO:
       return '🗑';
     default:

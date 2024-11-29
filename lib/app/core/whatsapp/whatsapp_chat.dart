@@ -1,6 +1,7 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:proventi/app/core/whatsapp/whatsapp_chat_state_manager.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/restaurant_client/lib/api.dart';
@@ -75,7 +76,16 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
 
               backgroundColor: Colors.black,
               title: Text('${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: const TextStyle(color: Colors.white, fontSize: 15),),
-
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ProfileImage(
+                      branchCode: widget.bookingDTO.branchCode!,
+                      avatarRadious: 20,
+                      customer: widget.bookingDTO.customer!,
+                      allowNavigation: false),
+                )
+              ],
             ),
             body: stateManager.isLoading
                 ? const Center(child: CircularProgressIndicator())

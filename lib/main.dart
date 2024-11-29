@@ -19,17 +19,16 @@ import 'routes.dart';
 import 'state_manager/restaurant_state_manager.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Handle background messages if needed
+  // Initialize Firebase in background handler if needed
+  await Firebase.initializeApp();
+
+  // Print the message to the console
   print('Handling a background message: ${message.messageId}');
-
-  print('CIAONEENEENNEEN');
-
-  BuildContext context = navigatorKey.currentContext!;
-
-  Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 1,)),
-  );
-
+  print('Message Data: ${message.data}');
+  if (message.notification != null) {
+    print('Notification Title: ${message.notification!.title}');
+    print('Notification Body: ${message.notification!.body}');
+  }
 }
 
 Future<void> main() async {
@@ -37,14 +36,13 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await initializeDateFormatting('it', null);
   await _setupFirebaseMessaging();
-
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const Pro20());
 }
 
 Future<void> _setupFirebaseMessaging() async {
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
 
   // Request permission for notifications
   NotificationSettings settings = await messaging.requestPermission(
@@ -67,7 +65,6 @@ Future<void> _setupFirebaseMessaging() async {
 
 
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
 
   // Handle messages when the app is in the foreground
@@ -88,8 +85,10 @@ Future<void> _setupFirebaseMessaging() async {
 
       BuildContext context = navigatorKey.currentContext!;
       NotificationStateManager notificationProvider = Provider.of<NotificationStateManager>(context, listen: false);
+
       RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
       print('Notification with open app: ${notification.toMap()}');
+
       await notificationProvider.addNotification(notification);
       await restaurantStateManager.refresh(DateTime.now());
 
@@ -104,10 +103,26 @@ Future<void> _setupFirebaseMessaging() async {
 
 void showDialogPushNotification(BuildContext context, RemoteMessage message) {
 
+  String bookingId = message.data['id_booking'];
+  String navigationPage = message.data['page'];
+  int pageIndex = 0;
+  DialogType dialogType = DialogType.success;
+  switch(navigationPage){
+    case 'BOOKING':
+      pageIndex = 1;
+      dialogType = DialogType.success;
+      break;
+    case 'BOOKING_UPDATE_BY_CUSTOMER':
+      pageIndex = 3;
+      dialogType = DialogType.warning;
+      break;
+
+  }
+
   AwesomeDialog(
     dialogBackgroundColor: Colors.grey[900],
     context: context,
-    dialogType: DialogType.success,
+    dialogType: dialogType,
     borderSide: BorderSide(
       color: globalGold,
       width: 2,
@@ -123,13 +138,10 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
         color: globalGold,
         borderRadius: BorderRadius.circular(8),
         onPressed: () {
-          String bookingId = message.data['id_booking'];
 
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 1,)),
+            MaterialPageRoute(builder: (context) => MainScreen(pageIndex: pageIndex,)),
           );
-
-
         }, child: const Text('Gestisci la prenotazione', style: TextStyle(color: CupertinoColors.white),),
       ),
     ),
@@ -146,9 +158,14 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
 
 }
 
-class Pro20 extends StatelessWidget {
+class Pro20 extends StatefulWidget {
   const Pro20({super.key});
 
+  @override
+  State<Pro20> createState() => _Pro20State();
+}
+
+class _Pro20State extends State<Pro20> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -188,5 +205,4 @@ class Pro20 extends StatelessWidget {
   }
 }
 
-// Define a global navigator key for context retrieval
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

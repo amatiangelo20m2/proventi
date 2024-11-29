@@ -1,6 +1,8 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart' as RESTAURANT_CLIENT;
+import 'package:proventi/state_manager/restaurant_state_manager.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/communication_client/lib/api.dart';
 import '../environment_config.dart';
@@ -38,7 +40,7 @@ class CommunicationStateManager extends ChangeNotifier {
 
     // Check if 60 seconds have passed since the last API call
     if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds < _apiCallIntervalSeconds) {
-      print('Skipping API call, last call was less than ${_apiCallIntervalSeconds}seconds ago.');
+      print('Skipping API call, last call was less than ${_apiCallIntervalSeconds} seconds ago.');
       return currentWhatsAppConfigurationDTO;
     }
 
@@ -52,6 +54,7 @@ class CommunicationStateManager extends ChangeNotifier {
     if(currentWhatsAppConfigurationDTO != null){
 
       //TODO: active the chat whatsapp retrieve when is ready
+
       retrieveChatData();
     }
     return currentWhatsAppConfigurationDTO;
@@ -60,18 +63,19 @@ class CommunicationStateManager extends ChangeNotifier {
   List<AllChatListDataDTO>? chatList = [];
 
 
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   Future<void> retrieveChatData() async {
     try {
+      BuildContext context = navigatorKey.currentContext!;
+      RestaurantStateManager restaurantStateManager =
+      Provider.of<RestaurantStateManager>(context, listen: false);
+      if(restaurantStateManager.allBookings!.isNotEmpty && restaurantStateManager.allBookings!.where((element) => element.status == RESTAURANT_CLIENT.BookingDTOStatusEnum.CONFERMATO).isNotEmpty){
+        String branchCode = prefs.getString('branchCode').toString();
+        chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 30);
 
-      print('chat data set${chatList!.length.toString()}');
-      //final prefs = await SharedPreferences.getInstance();
-      print('chat data set${chatList!.length.toString()}');
-      String branchCode = prefs.getString('branchCode').toString();
-      print('chat data set${chatList!.length.toString()}');
-      chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 30);
-
-      print('chat data set ${chatList!.length.toString()}');
-      print('chat data set ${chatList!.toList().toString()}');
+      }else{
+        print('No booking found, useless to retrieve chat data');
+      }
 
     }catch(e){
       print('chat data set${chatList!.length.toString()}');
@@ -84,7 +88,6 @@ class CommunicationStateManager extends ChangeNotifier {
 
 
   Future<void> sendWhatsAppMessage(String phone, ChatMessage chatMessage) async {
-    //final prefs = await SharedPreferences.getInstance();
     String branchCode = prefs.getString('branchCode').toString();
     await whatsAppConfigurationControllerApi.sendMessage(branchCode, chatMessage.text, phone);
 

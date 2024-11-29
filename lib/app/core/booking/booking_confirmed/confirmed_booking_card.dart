@@ -16,6 +16,7 @@ import '../../../../api/communication_client/lib/api.dart';
 import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../custom_widgets/profile_image.dart';
+import '../bookings_utils.dart';
 
 class BookingConfirmedCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
@@ -117,58 +118,35 @@ class BookingConfirmedCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 45,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
-                      borderRadius: BorderRadius.circular(11),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '👥${booking.numGuests}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                  Row(
+                    children: [
+                      buildComponentGuest(booking.numGuests.toString()),
+                      Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                        style: TextStyle(color: Colors.grey[900]),),
+
+                    ],
                   ),
-                  Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                    style: TextStyle(color: Colors.grey[900]),),
+                  if((booking.specialRequests?.isNotEmpty ?? false)) Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Stack(children: [
+                          Text('💬', style: TextStyle(fontSize: 14),),
+                          Positioned(right: -1, child: Icon(Icons.circle, size: 10, color: Colors.redAccent,))
+                        ]),
+                      ),
+                      Text(booking.specialRequests!, style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
+
+                    ],
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  if((booking.specialRequests?.isNotEmpty ?? false)) IconButton(
-                    onPressed: (){
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CupertinoAlertDialog(
-                            title: const Text('Note'),
-                            content: Text(booking.specialRequests!),
-                            actions: [
-                              CupertinoDialogAction(
-                                child: const Text("Chiudi"),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    icon: Stack(
-                      children: [
-                        Icon(CupertinoIcons.doc_plaintext, color: Colors.grey.shade900,),
-                        Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
-                      ],
-                    ),
-                  ),
                   Consumer<CommunicationStateManager>(
                     builder: (BuildContext context,
                         CommunicationStateManager communication,
@@ -207,6 +185,7 @@ class BookingConfirmedCard extends StatelessWidget {
               ),
             ],
           ),
+          Divider(height: 1, color: Colors.grey.shade300,)
         ],
       )
     );
@@ -303,13 +282,13 @@ class BookingConfirmedCard extends StatelessWidget {
             CupertinoDialogAction(
               child: Text(goBackText),
               onPressed: () {
-                Navigator.of(context).pop(false); // Return false if the user cancels
+                Navigator.of(context).pop(false);
               },
             ),
             CupertinoDialogAction(
               child: Text(confirmText),
               onPressed: () {
-                Navigator.of(context).pop(true); // Return true if the user confirms
+                Navigator.of(context).pop(true);
               },
             ),
           ],

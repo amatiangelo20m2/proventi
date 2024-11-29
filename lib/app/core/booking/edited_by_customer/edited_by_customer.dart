@@ -27,10 +27,10 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
         // Filter and group bookings by date
         final Map<DateTime, List<BookingDTO>> groupedBookings = _groupBookingsByDate(
           restaurantStateManager.allBookings!
-              .where((booking) => booking.status == BookingDTOStatusEnum.MODIFICATO_DA_UTENTE)
+              .where((booking) => booking.status == BookingDTOStatusEnum.MODIFICATO_DA_UTENTE
+              || booking.status == BookingDTOStatusEnum.ELIMINATO_DA_UTENTE)
               .toList(),
         );
-
         return RefreshIndicator(
           onRefresh: () async {
             await restaurantStateManager.refresh(DateTime.now());
@@ -110,7 +110,10 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
             ),
           ),
           ...bookings.where((element) => element.customer!.firstName!
-              .toLowerCase().contains(queryString.toLowerCase()) || element.customer!.phone!.toLowerCase().contains(queryString.toLowerCase())).map((booking) {
+              .toLowerCase().contains(queryString.toLowerCase())
+              || element.customer!.phone!.toLowerCase().contains(
+                  queryString.toLowerCase())).map((booking) {
+
             return ReservationEditedByCustomerCard(
               booking: booking,
               formDTOs: restaurantStateManager.currentBranchForms!,

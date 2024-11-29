@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import '../../global/style.dart';
 import '../../state_manager/restaurant_state_manager.dart';
 
@@ -115,8 +114,10 @@ class _LoginPageState extends State<LoginPage> {
       mdd.platform = Platform.operatingSystem;
       mdd.machine = iosInfo.utsname.machine;
       mdd.release = iosInfo.utsname.release;
-      mdd.uniquePhoneIdentifier = await PlatformDeviceId.getDeviceId ?? 'Unknown ID';
-      mdd.systemVersion = iosInfo.identifierForVendor;
+      mdd.uniquePhoneIdentifier = iosInfo.identifierForVendor;
+      print('identifier: ' + mdd.uniquePhoneIdentifier.toString());
+      mdd.systemVersion = iosInfo.utsname.nodename;
+      print('nodename: ' + mdd.systemVersion.toString());
     }
   }
 

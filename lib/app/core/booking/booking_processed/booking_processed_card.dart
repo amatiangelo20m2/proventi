@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../../state_manager/communication_state_manager.dart';
+import '../bookings_utils.dart';
 
 class ProcessedBookingCard extends StatelessWidget {
   final BookingDTO booking;
@@ -62,23 +63,7 @@ class ProcessedBookingCard extends StatelessWidget {
 
                       Row(
                         children: [
-                          Container(
-                            width: 45,
-                            height: 25,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[900],
-                              borderRadius: BorderRadius.circular(11),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '👥${booking.numGuests}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
+                          buildComponentGuest(booking.numGuests.toString()),
                           Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
                             style: TextStyle(color: Colors.grey[900]),),
                         ],
