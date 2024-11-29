@@ -24,7 +24,7 @@ class _RefusedBookingArchiveState extends State<RefusedBookingArchive> {
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext builderContext){
 
-      List<BookingDTO> refusedBookings = getBookingListFilteredByStatus(widget.bookingList, BookingDTOStatusEnum.RIFIUTATO);
+      List<BookingDTO> refusedBookings = getBookingListFilteredByStatus(widget.bookingList, [BookingDTOStatusEnum.RIFIUTATO, BookingDTOStatusEnum.MODIFICA_RIFIUTATA]);
 
       if(refusedBookings.isNotEmpty) {
         return InkWell(

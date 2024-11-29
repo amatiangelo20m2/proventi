@@ -48,7 +48,7 @@ getItalianMonthAbbreviation(monthNumber) {
 Color getStatusColor(BookingDTOStatusEnum statusEnum) {
   switch (statusEnum) {
     case BookingDTOStatusEnum.CONFERMATO:
-      return elegantGreen;
+      return Colors.blueAccent;
     case BookingDTOStatusEnum.IN_ATTESA:
       return globalGold;
     case BookingDTOStatusEnum.RIFIUTATO:
@@ -60,7 +60,7 @@ Color getStatusColor(BookingDTOStatusEnum statusEnum) {
     case BookingDTOStatusEnum.LISTA_ATTESA:
       return Colors.teal.shade300;
     case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
-      return Colors.purple;
+      return Colors.deepOrange;
     case BookingDTOStatusEnum.ELIMINATO:
       return elegantRed;
     default:

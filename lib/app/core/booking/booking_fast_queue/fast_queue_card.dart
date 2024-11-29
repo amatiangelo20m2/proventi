@@ -15,6 +15,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../notification/model/notification_entity.dart';
 import '../../notification/state_manager/notification_state_manager.dart';
 import '../booking_edit/booking_customer_edit.dart';
+import '../bookings_utils.dart';
 
 class FastQueueCard extends StatefulWidget {
   final BookingDTO booking;
@@ -197,7 +198,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
                   return _buildWidgetByElapsedTime(notificationManager);
                 },
               ),
-              _buildGuestInfo(),
+              buildComponentGuest(widget.booking.numGuests.toString()),
               _buildTimeBooking(context),
               Consumer<RestaurantStateManager>(
                 builder: (BuildContext context, RestaurantStateManager value, Widget? child) {
@@ -270,22 +271,6 @@ class _FastQueueCardState extends State<FastQueueCard> {
           style: TextStyle(
             fontSize: 13,
             color: Colors.blueGrey.shade900,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row _buildGuestInfo() {
-    return Row(
-      children: [
-        Icon(CupertinoIcons.person_2, color: Colors.blueGrey.shade900),
-        const SizedBox(width: 5),
-        Text(
-          ' ${widget.booking.numGuests ?? 0}',
-          style: const TextStyle(
-            fontSize: 13,
-            color: CupertinoColors.label,
           ),
         ),
       ],

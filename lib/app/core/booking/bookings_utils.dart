@@ -1,14 +1,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../api/restaurant_client/lib/api.dart';
-import '../../../global/date_methods_utility.dart';
-import '../../../global/style.dart';
 
-List<BookingDTO> getBookingListFilteredByStatus(List<BookingDTO> list, BookingDTOStatusEnum bookingStatus){
+
+List<BookingDTO> getBookingListFilteredByStatus(List<BookingDTO> list, List<BookingDTOStatusEnum> bookingStatus){
   return list
-      .where((element) => element.status == bookingStatus).toList();
+      .where((element) => bookingStatus.contains(element.status)).toList();
 }
 
 buildComponentGuest(String numGuests){

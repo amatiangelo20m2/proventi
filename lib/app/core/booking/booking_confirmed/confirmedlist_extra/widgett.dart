@@ -5,9 +5,9 @@ import '../../../../../api/restaurant_client/lib/api.dart';
 import '../../bookings_utils.dart';
 
 buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
-  int bookings = getBookingListFilteredByStatus(list, BookingDTOStatusEnum.CONFERMATO).length;
+  int bookings = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.CONFERMATO, BookingDTOStatusEnum.MODIFICA_CONFERMATA]).length;
 
-  int refused = getBookingListFilteredByStatus(list, BookingDTOStatusEnum.RIFIUTATO).length;
+  int refused = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.RIFIUTATO, BookingDTOStatusEnum.MODIFICA_RIFIUTATA]).length;
 
   if (bookings == 0 && refused == 0) {
     return SizedBox(

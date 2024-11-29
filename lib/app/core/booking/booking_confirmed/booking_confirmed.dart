@@ -363,7 +363,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     builder: (context) {
                       List<BookingDTO>? filteredBooking = restaurantManager
                           .bookingFilteredByCurrentDate(_selectedDate)
-                          .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO)
+                          .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO || bookingDTO.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
                           .where((bookingDTO) => bookingDTO.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase()) || bookingDTO.customer!.phone!.toLowerCase().contains(queryString.toLowerCase()))
                           .where((bookingDTO) {
                         if (filterDailyType == FilterDailyType.PRANZO) {

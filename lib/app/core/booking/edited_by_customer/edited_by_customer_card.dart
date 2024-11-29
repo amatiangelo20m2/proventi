@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+
+import '../../whatsapp/whatsapp_chat.dart';
 
 class ReservationEditedByCustomerCard extends StatelessWidget {
   final BookingDTO booking;
@@ -27,97 +32,98 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
   Widget _buildCardContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-      child: Container(
-        decoration: BoxDecoration(
-          color: CupertinoColors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: CupertinoColors.systemGrey.withOpacity(0.2),
-              blurRadius: 4.0,
-              spreadRadius: 1.0,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+      child: Card(
+        surfaceTintColor: Colors.white,
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildCustomerInfo(),
-              _buildDateWidget(),
-              Text(getFormEmoji(formDTOs, booking)),
-              _buildGuestInfo(),
-              _buildTimeBooking(context),
-
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      CupertinoIcons.settings_solid,
-                      color: Colors.blueGrey,
-                    ),
+                  ProfileImage(branchCode: booking.branchCode!,
+                      avatarRadious: 30,
+                      customer: booking.customer!,
+                      allowNavigation: true),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${booking.customer!.firstName!} ${booking.customer!.lastName!}' ,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blueGrey.shade900,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              CupertinoIcons.settings_solid,
+                              color: Colors.grey[900],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              showCupertinoModalBottomSheet(
+                                expand: true,
+                                elevation: 10,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DashChatCustomized20(bookingDTO: booking,);
+                                },
+                              );
+                            },
+                            icon: const Icon(
+                              FontAwesomeIcons.whatsapp,
+                              color: Colors.green,
+                            ),
+                          ),
+                          Text(getFormEmoji(formDTOs, booking)),
+                        ],
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(CupertinoIcons.doc_plaintext),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      FontAwesomeIcons.whatsapp,
-                      color: Colors.green,
-                    ),
-                  )
                 ],
               ),
-              Column(
-                children: [
-                  Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 20),),
-                  Text(booking.status!.value, style: TextStyle(fontSize: 4),)
-                ],
+              Expanded(
+                flex: 3,
+                child: Card(
+                  elevation: 5,
+                  surfaceTintColor: Colors.white,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildDateWidget(),
+                        _buildGuestInfo(),
+                        _buildTimeBooking(),
+                        Text(booking.specialRequests!, style: TextStyle(fontSize: 10),)
+                      ],
+                    ),
+                  ),
+                ),
               ),
+              Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 20),),
+
             ],
           ),
         ),
       ),
     );
   }
-  Row _buildCustomerInfo() {
-    return Row(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              booking.customer?.firstName ?? '',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-            Text(
-              booking.customer?.lastName ?? '',
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.blueGrey.shade900,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-  Row _buildTimeBooking(BuildContext context) {
+  Row _buildTimeBooking() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Icon(
-          CupertinoIcons.clock,
-          color: Colors.blueGrey,
+          CupertinoIcons.clock, color: Colors.black,
         ),
         booking.timeSlot?.bookingHour ==
                     booking.timeSlotAfterUpdate?.bookingHour &&
@@ -155,8 +161,9 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
   }
   Row _buildGuestInfo() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Icon(CupertinoIcons.person_2, color: Colors.blueGrey.shade900),
+        Icon(CupertinoIcons.person_2, color: Colors.black,),
         const SizedBox(width: 5),
         booking.numGuests != booking.numGuestsAfterUpdate ? Row(
           children: [
@@ -223,7 +230,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                       numGuests: booking.numGuestsAfterUpdate,
                       timeSlot: booking.timeSlotAfterUpdate,
                       bookingDate: booking.bookingDateAfterUpdate!.add(const Duration(hours: 12)),
-                      status: BookingDTOStatusEnum.CONFERMATO));
+                      status: BookingDTOStatusEnum.MODIFICA_CONFERMATA));
               Navigator.pop(context, null);
             },
             child: const Text('Conferma modifica'),
@@ -234,7 +241,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                   .updateBooking(BookingDTO(
                       bookingCode: booking.bookingCode,
                       bookingId: booking.bookingId,
-                      status: BookingDTOStatusEnum.RIFIUTATO));
+                      status: BookingDTOStatusEnum.MODIFICA_RIFIUTATA));
               Navigator.pop(context, null);
             },
             child: const Text('Rifiuta modifica'),
@@ -264,11 +271,13 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
 
   _buildDateWidget() {
     return !isSameDay(booking.bookingDate!, booking.bookingDateAfterUpdate!) ? Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('${booking.bookingDate!.day}/${booking.bookingDate!.month!}', style: const TextStyle( decoration: TextDecoration.lineThrough,color: Colors.red),),
-        const Icon(Icons.arrow_forward),
-        Text('${booking.bookingDateAfterUpdate!.day}/${booking.bookingDateAfterUpdate!.month!}', style: TextStyle(color: Colors.green.shade700),),
+        const Icon(CupertinoIcons.calendar_today),
+        Text('${booking.bookingDate!.day}/${booking.bookingDate!.month}', style: const TextStyle( decoration: TextDecoration.lineThrough,color: Colors.red),),
+        const Icon(CupertinoIcons.arrow_right_circle, color: Colors.grey,),
+        Text('${booking.bookingDateAfterUpdate!.day}/${booking.bookingDateAfterUpdate!.month}', style: TextStyle(color: Colors.green.shade700),),
       ],
-    ) : Text('${booking.bookingDate!.day}/${booking.bookingDate!.month!}');
+    ) : Text('${booking.bookingDate!.day}/${booking.bookingDate!.month}');
   }
 }

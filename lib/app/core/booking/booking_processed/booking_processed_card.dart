@@ -29,61 +29,63 @@ class ProcessedBookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
-      child: Stack(
-        children: [Card(
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          elevation: 1,
-          child:  Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ProfileImage(
-                  allowNavigation: true,
-                  customer: booking.customer!,
-                  branchCode: booking.branchCode!,
-                  avatarRadious: 30,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueGrey.shade900,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Row(
-                        children: [
-                          buildComponentGuest(booking.numGuests.toString()),
-                          Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                            style: TextStyle(color: Colors.grey[900]),),
-                        ],
-                      ),
-
-
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Positioned(child: Column(
+      child: Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.white,
+        elevation: 1,
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(getIconByStatus(booking.status!), style: const TextStyle(fontSize: 30)),
-            Text(booking.status!.value.replaceAll('_', ' '), style: TextStyle(fontSize: 4),),
-            Text(booking.bookingId.toString(), style: const TextStyle(fontSize: 7)),
+            Row(
+
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ProfileImage(
+                    allowNavigation: true,
+                    customer: booking.customer!,
+                    branchCode: booking.branchCode!,
+                    avatarRadious: 30,
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueGrey.shade900,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        Row(
+                          children: [
+                            buildComponentGuest(booking.numGuests.toString()),
+                            Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                              style: TextStyle(color: Colors.grey[900]),),
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(getIconByStatus(booking.status!), style: const TextStyle(fontSize: 20)),
+            ),
           ],
-        ), right: 0, top: -5,),]
+        ),
       ),
     );
   }

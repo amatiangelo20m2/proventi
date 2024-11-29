@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
                 badgeColor: getStatusColor(BookingDTOStatusEnum.CONFERMATO),
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
-                        element.status == BookingDTOStatusEnum.CONFERMATO)
+                        element.status == BookingDTOStatusEnum.CONFERMATO || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
                     .length,
                 isSelected: _pageIndex == 0,
               ),
@@ -101,7 +101,7 @@ class _MainScreenState extends State<MainScreen> {
               _buildBottomNavigationBarItem(
                 svgPath: 'assets/svg/booking_edited.svg',
                 label: BookingDTOStatusEnum.MODIFICATO_DA_UTENTE.value.replaceAll('_', ' '),
-                badgeColor: Colors.purple,
+                badgeColor: Colors.deepOrange,
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
                         element.status ==

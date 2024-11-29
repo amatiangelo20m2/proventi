@@ -16,6 +16,7 @@ import 'package:super_tooltip/super_tooltip.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
 import '../../../../global/date_methods_utility.dart';
+import '../bookings_utils.dart';
 
 class BookingToManageCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
@@ -128,23 +129,7 @@ class BookingToManageCard extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Container(
-                              width: 50,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: isLunchTime(booking, restaurantDTO) ? globalGoldDark : elegantBlue,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '👥${booking.numGuests}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            buildComponentGuest(booking.numGuests.toString()),
                             Text(
                               ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
                               style: TextStyle(
