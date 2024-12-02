@@ -15,6 +15,7 @@ import 'package:vibration/vibration.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../custom_widgets/appinio_animated_toggle_tab.dart';
+import '../../floor/floor.dart';
 import 'confirmed_booking_card.dart';
 import 'confirmedcard_extra/filter_booking_type.dart';
 import 'confirmedcard_extra/linear_progressor.dart';
@@ -78,7 +79,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
   void _generateDays() {
     _days = List<DateTime>.generate(
-      100,
+      90,
       (index) =>
           DateTime.now().subtract(const Duration(days: 1)).add(Duration(days: index)),
     );
@@ -194,7 +195,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                         : Colors.grey),
                               ),
                             ),
-
                             IconButton(
                                 onPressed: () {
 
@@ -222,12 +222,12 @@ class _BookingScreenState extends State<BookingScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildSwitch(restaurantManager),
                             Text(
                               '🗓️${italianDateFormat.format(_selectedDate).toUpperCase()}',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white, fontSize: 10),
                             ),
                             buildCurrentGuestSituation(restaurantManager),
+
                           ],
                         ),
                       ),
@@ -353,7 +353,15 @@ class _BookingScreenState extends State<BookingScreen> {
                   if(!_isScrolledDown)Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      buildCurrentGuestSituation(restaurantManager),
+                      Row(
+                        children: [
+                          buildCurrentGuestSituation(restaurantManager),
+                          IconButton(onPressed: (){
+                            Navigator.pushNamed(context, Floor.routeName);
+                          }, icon: Icon(CupertinoIcons.circle_grid_hex, color: Colors.grey[900],)),
+                        ],
+                      ),
+
                       RefusedBookingArchive(bookingList:
                       restaurantManager.allBookings!.where((element) => isSameDay(
                           element.bookingDate!, _selectedDate)).toList(), dateTime: _selectedDate,),
@@ -423,10 +431,12 @@ class _BookingScreenState extends State<BookingScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: FloatingActionButton(
+                      mini: true,
+
                       backgroundColor: globalGold,
                       child: const Icon(
                         CupertinoIcons.add,
-                        size: 30,
+                        size: 25,
                         color: Colors.white,
                       ),
                       onPressed: () {
@@ -473,7 +483,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                 style: TextStyle(fontSize: 16, color: globalGoldDark),  // Apply the globally defined style
                               ),
                               Text('/${restaurantManager.restaurantConfiguration!.capacity}  ', style: TextStyle(fontSize: 13, color: Colors.white),),
-
                             ],
                           ),
                         ),

@@ -193,10 +193,12 @@ class _MainScreenState extends State<MainScreen> {
             surfaceTintColor: CupertinoColors.white,
             backgroundColor: CupertinoColors.white,
             actions: [
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  WhatsAppConfWidget(),
+
+                  const WhatsAppConfWidget(),
                   Consumer<NotificationStateManager>(
                     builder: (BuildContext context,
                         NotificationStateManager value, Widget? child) {
@@ -230,7 +232,8 @@ class _MainScreenState extends State<MainScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset('assets/images/20whitenb.png', width: 50),
+
+                Image.asset('assets/images/20whitenb.png', width: MediaQuery.of(context).size.height*0.05),
                 Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
                   style: TextStyle(fontSize: 15, color: Colors.grey.shade900),),
               ],

@@ -204,16 +204,13 @@ class WhatsAppConfigurationControllerApi {
   Future<List<AllChatListDataDTO>?> fetchAllMessages(String branchCode, int chatNum,) async {
     final response = await fetchAllMessagesWithHttpInfo(branchCode, chatNum,);
     if (response.statusCode >= HttpStatus.badRequest) {
-      print('Trimone');
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      print('Trimone2');
       final responseBody = await _decodeBodyBytes(response);
-      print('Trimone4');
       return (await apiClient.deserializeAsync(responseBody, 'List<AllChatListDataDTO>') as List)
         .cast<AllChatListDataDTO>()
         .toList(growable: false);

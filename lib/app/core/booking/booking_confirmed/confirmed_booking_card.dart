@@ -96,98 +96,89 @@ class BookingConfirmedCard extends StatelessWidget {
   }
 
   Widget _buildCardContent(BuildContext context) {
-    return ListTile(
-      leading: ProfileImage(
-        allowNavigation: true,
-        customer: booking.customer!,
-        branchCode: booking.branchCode!,
-        avatarRadious: 30,
-      ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Colors.blueGrey.shade900,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProfileImage(
+          allowNavigation: true,
+          customer: booking.customer!,
+          branchCode: booking.branchCode!,
+          avatarRadious: 30,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey.shade900,
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      buildComponentGuest(booking.numGuests.toString()),
-                      Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                        style: TextStyle(color: Colors.grey[900]),),
-
-                    ],
-                  ),
-                  if((booking.specialRequests?.isNotEmpty ?? false)) Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Stack(children: [
-                          Text('💬', style: TextStyle(fontSize: 14),),
-                          Positioned(right: -1, child: Icon(Icons.circle, size: 10, color: Colors.redAccent,))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildComponentGuest(booking.numGuests.toString()),
+                Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                  style: TextStyle(color: Colors.grey[900]),),
+                Row(
+                  children: [
+                    Consumer<CommunicationStateManager>(
+                      builder: (BuildContext context,
+                          CommunicationStateManager communication,
+                          Widget? child) {
+                        return IconButton(onPressed: () {
+                          showCupertinoModalBottomSheet(
+                            expand: true,
+                            elevation: 10,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DashChatCustomized20(bookingDTO: booking,);
+                            },
+                          );
+                        }, icon: Stack(children: [
+                          const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),
+                          if(communication.checkIfChatsContainCurrentNumberWithUnreadChats(booking)) const Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
                         ]),
-                      ),
-                      Text(booking.specialRequests!, style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
-
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Consumer<CommunicationStateManager>(
-                    builder: (BuildContext context,
-                        CommunicationStateManager communication,
-                        Widget? child) {
-                      return IconButton(onPressed: () {
-                        showCupertinoModalBottomSheet(
-                          expand: true,
-                          elevation: 10,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DashChatCustomized20(bookingDTO: booking,);
-                          },
                         );
-                      }, icon: Stack(children: [
-                        const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),
-                        if(communication.checkIfChatsContainCurrentNumberWithUnreadChats(booking)) const Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
-                      ]),
+                      },),
+                    IconButton(onPressed: (){
+                      showCupertinoModalBottomSheet(
+                        expand: true,
+                        elevation: 10,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return BookingCustomerEdit(
+                            bookingDTO: booking,
+                            restaurantDTO: restaurantDTO,
+                            isAlsoBookingEditing: true,
+                            branchCode: booking.branchCode!, );
+                        },
                       );
-                    },),
-                  IconButton(onPressed: (){
-                    showCupertinoModalBottomSheet(
-                      expand: true,
-                      elevation: 10,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return BookingCustomerEdit(
-                          bookingDTO: booking,
-                          restaurantDTO: restaurantDTO,
-                          isAlsoBookingEditing: true,
-                          branchCode: booking.branchCode!, );
-                      },
-                    );
-                  }, icon: const Icon(CupertinoIcons.settings_solid)),
+                    }, icon: const Icon(CupertinoIcons.settings_solid)),
 
-                ],
-              ),
-            ],
-          ),
-          Divider(height: 1, color: Colors.grey.shade300,)
-        ],
-      )
+                  ],
+                ),
+              ],
+            ),
+            if((booking.specialRequests?.isNotEmpty ?? false)) Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: Stack(children: [
+                    Text('💬', style: TextStyle(fontSize: 14),),
+                    Positioned(right: -1, child: Icon(Icons.circle, size: 10, color: Colors.redAccent,))
+                  ]),
+                ),
+                Text(booking.specialRequests!, style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
+
+              ],
+            ),
+            Divider(height: 4, color: Colors.black,),
+          ],
+        ),
+      ],
     );
   }
 

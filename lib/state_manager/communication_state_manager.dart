@@ -32,14 +32,15 @@ class CommunicationStateManager extends ChangeNotifier {
   }
 
   DateTime? _lastApiCallTime;
-  static const int _apiCallIntervalSeconds = 20;
+  static const int _apiCallIntervalSeconds = 60;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
 
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
     final currentTime = DateTime.now();
 
     // Check if 60 seconds have passed since the last API call
-    if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds < _apiCallIntervalSeconds) {
+    if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds
+        < _apiCallIntervalSeconds) {
       print('Skipping API call, last call was less than ${_apiCallIntervalSeconds} seconds ago.');
       return currentWhatsAppConfigurationDTO;
     }
@@ -47,7 +48,7 @@ class CommunicationStateManager extends ChangeNotifier {
     // Update the last call time
     _lastApiCallTime = currentTime;
 
-    //final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     String branchCode = prefs.getString('branchCode').toString();
     // Make the API call
     currentWhatsAppConfigurationDTO = await whatsAppConfigurationControllerApi.retrieveWaApiConfStatus(branchCode);

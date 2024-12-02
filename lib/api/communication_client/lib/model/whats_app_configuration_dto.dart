@@ -276,17 +276,19 @@ class WhatsAppConfigurationDTOWaApiStateEnum {
 
   String toJson() => value;
 
-  static const NEW = WhatsAppConfigurationDTOWaApiStateEnum._(r'NEW');
-  static const INSTANCE_CREATED = WhatsAppConfigurationDTOWaApiStateEnum._(r'INSTANCE_CREATED');
-  static const READY = WhatsAppConfigurationDTOWaApiStateEnum._(r'READY');
-  static const NOT_READY = WhatsAppConfigurationDTOWaApiStateEnum._(r'NOT_READY');
+  static const NUOVA_ISTANZA = WhatsAppConfigurationDTOWaApiStateEnum._(r'NUOVA_ISTANZA');
+  static const ISTANZA_CREATA = WhatsAppConfigurationDTOWaApiStateEnum._(r'ISTANZA_CREATA');
+  static const QR = WhatsAppConfigurationDTOWaApiStateEnum._(r'QR');
+  static const PRONTA = WhatsAppConfigurationDTOWaApiStateEnum._(r'PRONTA');
+  static const NON_PRONTA = WhatsAppConfigurationDTOWaApiStateEnum._(r'NON_PRONTA');
 
   /// List of all possible values in this [enum][WhatsAppConfigurationDTOWaApiStateEnum].
   static const values = <WhatsAppConfigurationDTOWaApiStateEnum>[
-    NEW,
-    INSTANCE_CREATED,
-    READY,
-    NOT_READY,
+    NUOVA_ISTANZA,
+    ISTANZA_CREATA,
+    QR,
+    PRONTA,
+    NON_PRONTA,
   ];
 
   static WhatsAppConfigurationDTOWaApiStateEnum? fromJson(dynamic value) => WhatsAppConfigurationDTOWaApiStateEnumTypeTransformer().decode(value);
@@ -325,10 +327,11 @@ class WhatsAppConfigurationDTOWaApiStateEnumTypeTransformer {
   WhatsAppConfigurationDTOWaApiStateEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'NEW': return WhatsAppConfigurationDTOWaApiStateEnum.NEW;
-        case r'INSTANCE_CREATED': return WhatsAppConfigurationDTOWaApiStateEnum.INSTANCE_CREATED;
-        case r'READY': return WhatsAppConfigurationDTOWaApiStateEnum.READY;
-        case r'NOT_READY': return WhatsAppConfigurationDTOWaApiStateEnum.NOT_READY;
+        case r'NUOVA_ISTANZA': return WhatsAppConfigurationDTOWaApiStateEnum.NUOVA_ISTANZA;
+        case r'ISTANZA_CREATA': return WhatsAppConfigurationDTOWaApiStateEnum.ISTANZA_CREATA;
+        case r'QR': return WhatsAppConfigurationDTOWaApiStateEnum.QR;
+        case r'PRONTA': return WhatsAppConfigurationDTOWaApiStateEnum.PRONTA;
+        case r'NON_PRONTA': return WhatsAppConfigurationDTOWaApiStateEnum.NON_PRONTA;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
