@@ -9,8 +9,8 @@ import 'package:ventimetri_api_restaurant/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **whatsAppEnabled** | **bool** |  | [optional] 
-**emailEnabled** | **bool** |  | [optional] 
 **smsEnabled** | **bool** |  | [optional] 
+**emailEnabled** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

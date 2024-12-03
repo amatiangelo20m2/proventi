@@ -59,7 +59,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:61360/communicationservice*
+All URIs are relative to *http://192.168.1.4:46909/communicationservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -70,6 +70,7 @@ Class | Method | HTTP request | Description
 *WhatsAppConfigurationControllerApi* | [**deleteConfWaApi**](doc//WhatsAppConfigurationControllerApi.md#deleteconfwaapi) | **DELETE** /api/wsapicontroller/deleteConf/{branchCode} | 
 *WhatsAppConfigurationControllerApi* | [**fetchAllMessages**](doc//WhatsAppConfigurationControllerApi.md#fetchallmessages) | **GET** /api/wsapicontroller/fetchallmessages/{branchCode}/{chatNum} | 
 *WhatsAppConfigurationControllerApi* | [**fetchMessages**](doc//WhatsAppConfigurationControllerApi.md#fetchmessages) | **GET** /api/wsapicontroller/fetchmessages/{branchCode}/{userPhone}/{messageNum}/{fetchMedia} | 
+*WhatsAppConfigurationControllerApi* | [**retrievePairingCodeWaApi**](doc//WhatsAppConfigurationControllerApi.md#retrievepairingcodewaapi) | **GET** /api/wsapicontroller/requestpairingcode/{branchCode}/{prefix}/{number} | 
 *WhatsAppConfigurationControllerApi* | [**retrieveQr**](doc//WhatsAppConfigurationControllerApi.md#retrieveqr) | **GET** /api/wsapicontroller/retrieveqr/{branchCode} | 
 *WhatsAppConfigurationControllerApi* | [**retrieveUserPhoto**](doc//WhatsAppConfigurationControllerApi.md#retrieveuserphoto) | **GET** /api/wsapicontroller/retrieveuserphoto/{branchCode}/{userPhone} | 
 *WhatsAppConfigurationControllerApi* | [**retrieveWaApiConfStatus**](doc//WhatsAppConfigurationControllerApi.md#retrievewaapiconfstatus) | **GET** /api/wsapicontroller/retrieve/waconfstatus/{branchCode} | 

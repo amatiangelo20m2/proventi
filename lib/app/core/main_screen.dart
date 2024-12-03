@@ -198,7 +198,7 @@ class _MainScreenState extends State<MainScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
-                  const WhatsAppConfWidget(),
+                  const AnimatedBorderContainer(),
                   Consumer<NotificationStateManager>(
                     builder: (BuildContext context,
                         NotificationStateManager value, Widget? child) {

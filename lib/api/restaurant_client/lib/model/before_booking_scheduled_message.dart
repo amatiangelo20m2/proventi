@@ -27,8 +27,8 @@ class BeforeBookingScheduledMessage {
     this.updatedAt,
     this.timeToSendMessageInHours,
     this.whatsAppEnabled,
-    this.emailEnabled,
     this.smsEnabled,
+    this.emailEnabled,
   });
 
   ///
@@ -143,7 +143,7 @@ class BeforeBookingScheduledMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? emailEnabled;
+  bool? smsEnabled;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -151,7 +151,7 @@ class BeforeBookingScheduledMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? smsEnabled;
+  bool? emailEnabled;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is BeforeBookingScheduledMessage &&
@@ -169,8 +169,8 @@ class BeforeBookingScheduledMessage {
     other.updatedAt == updatedAt &&
     other.timeToSendMessageInHours == timeToSendMessageInHours &&
     other.whatsAppEnabled == whatsAppEnabled &&
-    other.emailEnabled == emailEnabled &&
-    other.smsEnabled == smsEnabled;
+    other.smsEnabled == smsEnabled &&
+    other.emailEnabled == emailEnabled;
 
   @override
   int get hashCode =>
@@ -189,11 +189,11 @@ class BeforeBookingScheduledMessage {
     (updatedAt == null ? 0 : updatedAt!.hashCode) +
     (timeToSendMessageInHours == null ? 0 : timeToSendMessageInHours!.hashCode) +
     (whatsAppEnabled == null ? 0 : whatsAppEnabled!.hashCode) +
-    (emailEnabled == null ? 0 : emailEnabled!.hashCode) +
-    (smsEnabled == null ? 0 : smsEnabled!.hashCode);
+    (smsEnabled == null ? 0 : smsEnabled!.hashCode) +
+    (emailEnabled == null ? 0 : emailEnabled!.hashCode);
 
   @override
-  String toString() => 'BeforeBookingScheduledMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentWhatsappEnglish=$contentWhatsappEnglish, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, timeToSendMessageInHours=$timeToSendMessageInHours, whatsAppEnabled=$whatsAppEnabled, emailEnabled=$emailEnabled, smsEnabled=$smsEnabled]';
+  String toString() => 'BeforeBookingScheduledMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentWhatsappEnglish=$contentWhatsappEnglish, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, timeToSendMessageInHours=$timeToSendMessageInHours, whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -267,15 +267,15 @@ class BeforeBookingScheduledMessage {
     } else {
       json[r'whatsAppEnabled'] = null;
     }
-    if (this.emailEnabled != null) {
-      json[r'emailEnabled'] = this.emailEnabled;
-    } else {
-      json[r'emailEnabled'] = null;
-    }
     if (this.smsEnabled != null) {
       json[r'smsEnabled'] = this.smsEnabled;
     } else {
       json[r'smsEnabled'] = null;
+    }
+    if (this.emailEnabled != null) {
+      json[r'emailEnabled'] = this.emailEnabled;
+    } else {
+      json[r'emailEnabled'] = null;
     }
     return json;
   }
@@ -313,8 +313,8 @@ class BeforeBookingScheduledMessage {
         updatedAt: mapDateTime(json, r'updatedAt', r''),
         timeToSendMessageInHours: mapValueOfType<int>(json, r'timeToSendMessageInHours'),
         whatsAppEnabled: mapValueOfType<bool>(json, r'whatsAppEnabled'),
-        emailEnabled: mapValueOfType<bool>(json, r'emailEnabled'),
         smsEnabled: mapValueOfType<bool>(json, r'smsEnabled'),
+        emailEnabled: mapValueOfType<bool>(json, r'emailEnabled'),
       );
     }
     return null;

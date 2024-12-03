@@ -21,13 +21,13 @@ void main() {
       // TODO
     });
 
-    // bool emailEnabled
-    test('to test the property `emailEnabled`', () async {
+    // bool smsEnabled
+    test('to test the property `smsEnabled`', () async {
       // TODO
     });
 
-    // bool smsEnabled
-    test('to test the property `smsEnabled`', () async {
+    // bool emailEnabled
+    test('to test the property `emailEnabled`', () async {
       // TODO
     });
 

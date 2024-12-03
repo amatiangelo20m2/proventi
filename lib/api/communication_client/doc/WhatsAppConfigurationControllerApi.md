@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_communication/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:61360/communicationservice*
+All URIs are relative to *http://192.168.1.4:46909/communicationservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**deleteConfWaApi**](WhatsAppConfigurationControllerApi.md#deleteconfwaapi) | **DELETE** /api/wsapicontroller/deleteConf/{branchCode} | 
 [**fetchAllMessages**](WhatsAppConfigurationControllerApi.md#fetchallmessages) | **GET** /api/wsapicontroller/fetchallmessages/{branchCode}/{chatNum} | 
 [**fetchMessages**](WhatsAppConfigurationControllerApi.md#fetchmessages) | **GET** /api/wsapicontroller/fetchmessages/{branchCode}/{userPhone}/{messageNum}/{fetchMedia} | 
+[**retrievePairingCodeWaApi**](WhatsAppConfigurationControllerApi.md#retrievepairingcodewaapi) | **GET** /api/wsapicontroller/requestpairingcode/{branchCode}/{prefix}/{number} | 
 [**retrieveQr**](WhatsAppConfigurationControllerApi.md#retrieveqr) | **GET** /api/wsapicontroller/retrieveqr/{branchCode} | 
 [**retrieveUserPhoto**](WhatsAppConfigurationControllerApi.md#retrieveuserphoto) | **GET** /api/wsapicontroller/retrieveuserphoto/{branchCode}/{userPhone} | 
 [**retrieveWaApiConfStatus**](WhatsAppConfigurationControllerApi.md#retrievewaapiconfstatus) | **GET** /api/wsapicontroller/retrieve/waconfstatus/{branchCode} | 
@@ -224,6 +225,51 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ChatMessagesResponseDTO**](ChatMessagesResponseDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **retrievePairingCodeWaApi**
+> WhatsAppConfigurationDTO retrievePairingCodeWaApi(branchCode, prefix, number)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_communication/api.dart';
+
+final api_instance = WhatsAppConfigurationControllerApi();
+final branchCode = branchCode_example; // String | 
+final prefix = prefix_example; // String | 
+final number = number_example; // String | 
+
+try {
+    final result = api_instance.retrievePairingCodeWaApi(branchCode, prefix, number);
+    print(result);
+} catch (e) {
+    print('Exception when calling WhatsAppConfigurationControllerApi->retrievePairingCodeWaApi: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **prefix** | **String**|  | 
+ **number** | **String**|  | 
+
+### Return type
+
+[**WhatsAppConfigurationDTO**](WhatsAppConfigurationDTO.md)
 
 ### Authorization
 

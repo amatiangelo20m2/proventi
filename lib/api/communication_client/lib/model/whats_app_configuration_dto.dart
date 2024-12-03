@@ -21,6 +21,7 @@ class WhatsAppConfigurationDTO {
     this.lastError,
     this.creationDate,
     this.qrCode,
+    this.pairingCode,
     this.photoUrl,
     this.displayName,
   });
@@ -89,6 +90,14 @@ class WhatsAppConfigurationDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  String? pairingCode;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   String? photoUrl;
 
   ///
@@ -109,6 +118,7 @@ class WhatsAppConfigurationDTO {
     other.lastError == lastError &&
     other.creationDate == creationDate &&
     other.qrCode == qrCode &&
+    other.pairingCode == pairingCode &&
     other.photoUrl == photoUrl &&
     other.displayName == displayName;
 
@@ -123,11 +133,12 @@ class WhatsAppConfigurationDTO {
     (lastError == null ? 0 : lastError!.hashCode) +
     (creationDate == null ? 0 : creationDate!.hashCode) +
     (qrCode == null ? 0 : qrCode!.hashCode) +
+    (pairingCode == null ? 0 : pairingCode!.hashCode) +
     (photoUrl == null ? 0 : photoUrl!.hashCode) +
     (displayName == null ? 0 : displayName!.hashCode);
 
   @override
-  String toString() => 'WhatsAppConfigurationDTO[id=$id, branchCode=$branchCode, phone=$phone, waApiInstanceId=$waApiInstanceId, waApiState=$waApiState, lastError=$lastError, creationDate=$creationDate, qrCode=$qrCode, photoUrl=$photoUrl, displayName=$displayName]';
+  String toString() => 'WhatsAppConfigurationDTO[id=$id, branchCode=$branchCode, phone=$phone, waApiInstanceId=$waApiInstanceId, waApiState=$waApiState, lastError=$lastError, creationDate=$creationDate, qrCode=$qrCode, pairingCode=$pairingCode, photoUrl=$photoUrl, displayName=$displayName]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -171,6 +182,11 @@ class WhatsAppConfigurationDTO {
     } else {
       json[r'qrCode'] = null;
     }
+    if (this.pairingCode != null) {
+      json[r'pairingCode'] = this.pairingCode;
+    } else {
+      json[r'pairingCode'] = null;
+    }
     if (this.photoUrl != null) {
       json[r'photoUrl'] = this.photoUrl;
     } else {
@@ -211,6 +227,7 @@ class WhatsAppConfigurationDTO {
         lastError: mapValueOfType<String>(json, r'lastError'),
         creationDate: mapDateTime(json, r'creationDate', r''),
         qrCode: mapValueOfType<String>(json, r'qrCode'),
+        pairingCode: mapValueOfType<String>(json, r'pairingCode'),
         photoUrl: mapValueOfType<String>(json, r'photoUrl'),
         displayName: mapValueOfType<String>(json, r'displayName'),
       );
@@ -276,7 +293,6 @@ class WhatsAppConfigurationDTOWaApiStateEnum {
 
   String toJson() => value;
 
-  static const NUOVA_ISTANZA = WhatsAppConfigurationDTOWaApiStateEnum._(r'NUOVA_ISTANZA');
   static const ISTANZA_CREATA = WhatsAppConfigurationDTOWaApiStateEnum._(r'ISTANZA_CREATA');
   static const QR = WhatsAppConfigurationDTOWaApiStateEnum._(r'QR');
   static const PRONTA = WhatsAppConfigurationDTOWaApiStateEnum._(r'PRONTA');
@@ -284,7 +300,6 @@ class WhatsAppConfigurationDTOWaApiStateEnum {
 
   /// List of all possible values in this [enum][WhatsAppConfigurationDTOWaApiStateEnum].
   static const values = <WhatsAppConfigurationDTOWaApiStateEnum>[
-    NUOVA_ISTANZA,
     ISTANZA_CREATA,
     QR,
     PRONTA,
@@ -327,7 +342,6 @@ class WhatsAppConfigurationDTOWaApiStateEnumTypeTransformer {
   WhatsAppConfigurationDTOWaApiStateEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'NUOVA_ISTANZA': return WhatsAppConfigurationDTOWaApiStateEnum.NUOVA_ISTANZA;
         case r'ISTANZA_CREATA': return WhatsAppConfigurationDTOWaApiStateEnum.ISTANZA_CREATA;
         case r'QR': return WhatsAppConfigurationDTOWaApiStateEnum.QR;
         case r'PRONTA': return WhatsAppConfigurationDTOWaApiStateEnum.PRONTA;

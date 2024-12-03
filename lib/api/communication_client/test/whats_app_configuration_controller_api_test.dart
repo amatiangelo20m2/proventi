@@ -42,6 +42,11 @@ void main() {
       // TODO
     });
 
+    //Future<WhatsAppConfigurationDTO> retrievePairingCodeWaApi(String branchCode, String prefix, String number) async
+    test('test retrievePairingCodeWaApi', () async {
+      // TODO
+    });
+
     //Future<WhatsAppConfigurationDTO> retrieveQr(String branchCode) async
     test('test retrieveQr', () async {
       // TODO

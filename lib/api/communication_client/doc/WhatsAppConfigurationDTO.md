@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **lastError** | **String** |  | [optional] 
 **creationDate** | [**DateTime**](DateTime.md) |  | [optional] 
 **qrCode** | **String** |  | [optional] 
+**pairingCode** | **String** |  | [optional] 
 **photoUrl** | **String** |  | [optional] 
 **displayName** | **String** |  | [optional] 
 

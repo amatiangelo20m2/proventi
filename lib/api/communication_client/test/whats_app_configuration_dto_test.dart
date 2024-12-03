@@ -56,6 +56,11 @@ void main() {
       // TODO
     });
 
+    // String pairingCode
+    test('to test the property `pairingCode`', () async {
+      // TODO
+    });
+
     // String photoUrl
     test('to test the property `photoUrl`', () async {
       // TODO

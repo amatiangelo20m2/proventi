@@ -28,16 +28,16 @@ class CommunicationStateManager extends ChangeNotifier {
     print('Initialize client with $customBasePathCommunication. Each call will be redirect to this url.');
     _communicationClient = ApiClient(basePath: customBasePathCommunication);
     whatsAppConfigurationControllerApi = WhatsAppConfigurationControllerApi(_communicationClient);
-
+    retrieveWaApiConfStatus();
   }
 
   DateTime? _lastApiCallTime;
-  static const int _apiCallIntervalSeconds = 60;
+  static const int _apiCallIntervalSeconds = 10;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
 
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
+    print('Refresh conf and in case retrieve chat daat');
     final currentTime = DateTime.now();
-
     // Check if 60 seconds have passed since the last API call
     if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds
         < _apiCallIntervalSeconds) {
@@ -53,16 +53,12 @@ class CommunicationStateManager extends ChangeNotifier {
     // Make the API call
     currentWhatsAppConfigurationDTO = await whatsAppConfigurationControllerApi.retrieveWaApiConfStatus(branchCode);
     if(currentWhatsAppConfigurationDTO != null){
-
-      //TODO: active the chat whatsapp retrieve when is ready
-
       retrieveChatData();
     }
     return currentWhatsAppConfigurationDTO;
   }
 
   List<AllChatListDataDTO>? chatList = [];
-
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   Future<void> retrieveChatData() async {
@@ -79,7 +75,7 @@ class CommunicationStateManager extends ChangeNotifier {
       }
 
     }catch(e){
-      print('chat data set${chatList!.length.toString()}');
+      print('chat data set size : ${chatList!.length.toString()}');
       print('Error: ' + e.toString());
     }
 

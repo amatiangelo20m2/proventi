@@ -22,8 +22,8 @@ Name | Type | Description | Notes
 **updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **timeToSendMessageInHours** | **int** |  | [optional] 
 **whatsAppEnabled** | **bool** |  | [optional] 
-**emailEnabled** | **bool** |  | [optional] 
 **smsEnabled** | **bool** |  | [optional] 
+**emailEnabled** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

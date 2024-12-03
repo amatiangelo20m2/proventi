@@ -77,7 +77,9 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
   @override
   void dispose() {
 
-    _timeSlotController.dispose();
+    if(_timeSlotController != null){
+      _timeSlotController.dispose();
+    }
     _numGuestsController.dispose();
     _specialRequestsController.dispose();
 

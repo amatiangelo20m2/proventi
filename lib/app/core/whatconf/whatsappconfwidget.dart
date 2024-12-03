@@ -1,220 +1,171 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+import 'package:proventi/api/communication_client/lib/api.dart';
+import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 
-import '../../../api/communication_client/lib/api.dart';
-import '../../../state_manager/communication_state_manager.dart';
-import 'image_from_base64/image_from_base64.dart';
+class AnimatedBorderContainer extends StatefulWidget {
+  final double borderRadius;
+  final double borderWidth;
+  final Color borderColor;
 
-class WhatsAppConfWidget extends StatelessWidget {
-  const WhatsAppConfWidget({super.key});
+  const AnimatedBorderContainer({
+    Key? key,
+    this.borderRadius = 14.0,
+    this.borderWidth = 2.0,
+    this.borderColor = Colors.blueGrey,
+  }) : super(key: key);
 
+  @override
+  _AnimatedBorderContainerState createState() => _AnimatedBorderContainerState();
+}
 
-  Widget _buildConfigItem(String label, String? value) {
-    return value != null && value.isNotEmpty
-        ? Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Flexible(
-            child: Text(value, overflow: TextOverflow.ellipsis),
-          ),
-        ],
-      ),
-    )
-        : const SizedBox.shrink();
+class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  Timer? _timer;
+  bool _isLoading = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
+    );
+
+    _startApiCall();
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _startApiCall();
+    });
+  }
+
+  void _startApiCall() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _controller.repeat();
+    await _performApiCall();
+    _controller.stop();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _performApiCall() async {
+    await Provider.of<CommunicationStateManager>(context, listen: false).retrieveWaApiConfStatus();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CommunicationStateManager>(
-      builder: (BuildContext context,
-          CommunicationStateManager communicationStateManager, Widget? child) {
-        return FutureBuilder<WhatsAppConfigurationDTO?>(
-          future: communicationStateManager
-              .retrieveWaApiConfStatus(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState ==
-                ConnectionState.waiting) {
-              return const SizedBox(
-                height: 0,
-              );
-            } else if (snapshot.hasError) {
-              print(snapshot.error);
-              return FloatingActionButton(
-                mini: true,
-                heroTag: "btn1",
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        title: const Text(
-                          "Stato What's App WaApi",
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        content: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Errore durante il recupero della configurazione",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                "Errore: ${snapshot.error}",
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () =>
-                                Navigator.of(context).pop(),
-                            child: const Text("Close"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                backgroundColor: Colors.red,
-                child: const Icon(
-                  FontAwesomeIcons.whatsapp,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              );
-            } else if (snapshot.hasData) {
-              // Display the image in an avatar
-              WhatsAppConfigurationDTO config = snapshot.data!;
-              return FloatingActionButton(
-                mini: true,
-                heroTag: "btn1",
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.white,
-                        surfaceTintColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
+    return CustomPaint(
+      painter: BorderPainter(
+        animation: _animation,
+        borderRadius: widget.borderRadius,
+        borderWidth: widget.borderWidth,
+        borderColor: _isLoading ? widget.borderColor : Colors.transparent,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+        ),
+        child: Consumer<CommunicationStateManager>(
+          builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
 
-                        content: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              // Display profile image if photoUrl is available
-                              if (config.photoUrl != null)
-                                if( config.waApiState!
-                                    == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                                Center(
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        config.photoUrl!),
-                                    radius: 40,
-                                  ),
-                                ),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem("Nome su istanza collegata",
-                                  config.displayName),
-                              const SizedBox(height: 10),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem(
-                                  "Codice Attività: ", config.branchCode),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem(
-                                  "Cellulare collegato", config.phone),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem("WaApi Id Istanza",
-                                  config.waApiInstanceId),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem(
-                                  "STATO", config.waApiState!.value),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem(
-                                  "Last Error", config.lastError),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA)
-                              _buildConfigItem(
-                                  "Creation Date",
-                                  config.creationDate != null
-                                      ? DateFormat(
-                                      'dd MMM yyyy, HH:mm')
-                                      .format(
-                                      config.creationDate!)
-                                      : null),
-                              if( config.waApiState!
-                                  == WhatsAppConfigurationDTOWaApiStateEnum.QR)
-                                buildImageFromBase64(config.qrCode)
+            if(value.currentWhatsAppConfigurationDTO?.waApiState
+                == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA){
+              return IconButton(onPressed: (){
 
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () =>
-                                Navigator.of(context).pop(),
-                            child: const Text("Chiudi"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                backgroundColor: Colors.green,
-                child: Icon(
-                  config.waApiState == WhatsAppConfigurationDTOWaApiStateEnum.QR
-                      ? CupertinoIcons.qrcode : FontAwesomeIcons.whatsapp,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              );
-            } else {
-              // Handle the case where no data is returned
-              return FloatingActionButton(
-                mini: true,
-                heroTag: "btn1",
-                onPressed: () {},
-                backgroundColor: Colors.red,
-                child: const Icon(
-                  FontAwesomeIcons.whatsapp,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              );
+              }, icon: const Icon(FontAwesomeIcons.whatsapp,
+                  color: Colors.green));
+            }else if (value.currentWhatsAppConfigurationDTO?.waApiState
+                == WhatsAppConfigurationDTOWaApiStateEnum.QR){
+              Fluttertoast.showToast(
+                  msg: "️⚠️Il numero whatsapp non è pronto. Scansiona il codice qr per collegare il numero",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2);
+              return Stack(
+                children: [ IconButton(onPressed: (){
+                    
+                }, icon: const Icon(CupertinoIcons.qrcode,
+                    color: Colors.black, size: 25,)),
+                  Positioned(right:0, child: Lottie.asset('assets/lotties/danger.json', height: 30))
+              ]);
+            }else{
+              Fluttertoast.showToast(
+                  msg: "⚠️⚠️⚠️ATTENZIONE! Numero what's app risulta non collegato⚠️⚠️⚠️",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2);
+              return IconButton(onPressed: (){
+
+              }, icon: const Icon(FontAwesomeIcons.whatsapp,
+                  color: Colors.red));
             }
           },
-        );
-      },
+
+        ),
+      ),
     );
   }
+}
+
+class BorderPainter extends CustomPainter {
+  final Animation<double> animation;
+  final double borderRadius;
+  final double borderWidth;
+  final Color borderColor;
+
+  BorderPainter({
+    required this.animation,
+    required this.borderRadius,
+    required this.borderWidth,
+    required this.borderColor,
+  }) : super(repaint: animation);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = borderColor
+      ..strokeWidth = borderWidth
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        Radius.circular(borderRadius),
+      ));
+
+    final pathMetrics = path.computeMetrics().toList();
+    final totalLength = pathMetrics.fold(0.0, (sum, metric) => sum + metric.length);
+    final currentLength = totalLength * animation.value;
+
+    for (final metric in pathMetrics) {
+      if (currentLength <= metric.length) {
+        final extractPath = metric.extractPath(0, currentLength);
+        canvas.drawPath(extractPath, paint);
+        break;
+      } else {
+        canvas.drawPath(metric.extractPath(0, metric.length), paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

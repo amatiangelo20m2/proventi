@@ -84,8 +84,9 @@ Future<void> _setupFirebaseMessaging() async {
     try{
 
       BuildContext context = navigatorKey.currentContext!;
-      NotificationStateManager notificationProvider = Provider.of<NotificationStateManager>(context, listen: false);
+      showDialogPushNotification(context, message);
 
+      NotificationStateManager notificationProvider = Provider.of<NotificationStateManager>(context, listen: false);
       RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
       print('Notification with open app: ${notification.toMap()}');
 
@@ -93,7 +94,7 @@ Future<void> _setupFirebaseMessaging() async {
       await restaurantStateManager.refresh(DateTime.now());
 
       print('Show dialog notification');
-      showDialogPushNotification(context, message);
+
 
     }catch(e){
       print('Exception' + e.toString());

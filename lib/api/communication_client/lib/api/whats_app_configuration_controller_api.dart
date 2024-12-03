@@ -282,6 +282,64 @@ class WhatsAppConfigurationControllerApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/wsapicontroller/requestpairingcode/{branchCode}/{prefix}/{number}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] prefix (required):
+  ///
+  /// * [String] number (required):
+  Future<Response> retrievePairingCodeWaApiWithHttpInfo(String branchCode, String prefix, String number,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/wsapicontroller/requestpairingcode/{branchCode}/{prefix}/{number}'
+      .replaceAll('{branchCode}', branchCode)
+      .replaceAll('{prefix}', prefix)
+      .replaceAll('{number}', number);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [String] prefix (required):
+  ///
+  /// * [String] number (required):
+  Future<WhatsAppConfigurationDTO?> retrievePairingCodeWaApi(String branchCode, String prefix, String number,) async {
+    final response = await retrievePairingCodeWaApiWithHttpInfo(branchCode, prefix, number,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'WhatsAppConfigurationDTO',) as WhatsAppConfigurationDTO;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/wsapicontroller/retrieveqr/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///
