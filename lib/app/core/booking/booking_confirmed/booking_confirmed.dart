@@ -154,6 +154,7 @@ class _BookingScreenState extends State<BookingScreen> {
             RestaurantStateManager restaurantManager, Widget? child) {
           return Stack(
             children: [
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -431,8 +432,6 @@ class _BookingScreenState extends State<BookingScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: FloatingActionButton(
-                      mini: true,
-
                       backgroundColor: globalGold,
                       child: const Icon(
                         CupertinoIcons.add,

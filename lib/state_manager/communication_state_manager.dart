@@ -139,4 +139,9 @@ class CommunicationStateManager extends ChangeNotifier {
       }
       return false;
   }
+
+  setNewWhatsAppConfigurationDTO(WhatsAppConfigurationDTO updatedWhatsAppConfigurationDTO) {
+    currentWhatsAppConfigurationDTO = updatedWhatsAppConfigurationDTO;
+    notifyListeners();
+  }
 }

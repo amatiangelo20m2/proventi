@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proventi/api/communication_client/lib/api.dart';
+import 'package:proventi/app/core/whatconf/link_whatsapp_component.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,31 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
   late final Animation<double> _animation;
   Timer? _timer;
   bool _isLoading = false;
-  
+
+  void _showQrModal() {
+    showDialog(
+      barrierColor: Colors.black,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shadowColor: Colors.black,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          content: LinkWhatsAppComponent(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Chiudi', style: TextStyle(color: Colors.black)),
+            ),
+          ],
+
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -101,10 +126,14 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
                   timeInSecForIosWeb: 2);
               return Stack(
                 children: [ IconButton(onPressed: (){
-                    
+                  _showQrModal();
                 }, icon: const Icon(CupertinoIcons.qrcode,
-                    color: Colors.black, size: 25,)),
-                  Positioned(right:0, child: Lottie.asset('assets/lotties/danger.json', height: 30))
+                    color: Colors.black, size: 30,)),
+                  Positioned(right:0, child: GestureDetector(
+                      onTap: (){
+                        _showQrModal();
+                      },
+                      child: Lottie.asset('assets/lotties/danger.json', height: 25)))
               ]);
             }else{
               Fluttertoast.showToast(
