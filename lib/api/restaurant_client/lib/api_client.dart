@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://192.168.1.4:32172/restaurantservice', this.authentication,});
+  ApiClient({this.basePath = 'http://192.168.1.4:14918/restaurantservice', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -192,8 +192,6 @@ class ApiClient {
           return CentralinoMessage.fromJson(value);
         case 'CustomerDTO':
           return CustomerDTO.fromJson(value);
-        case 'CustomerHistory':
-          return CustomerHistory.fromJson(value);
         case 'EmployeeDTO':
           return EmployeeDTO.fromJson(value);
         case 'EmployeePresenceReportDTO':
@@ -202,8 +200,6 @@ class ApiClient {
           return EmployeeReportSummaryDTO.fromJson(value);
         case 'FormDTO':
           return FormDTO.fromJson(value);
-        case 'GeneralMessage':
-          return GeneralMessage.fromJson(value);
         case 'HolidaysDTO':
           return HolidaysDTO.fromJson(value);
         case 'MobileDeviceDetails':

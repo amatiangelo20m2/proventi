@@ -77,8 +77,7 @@ class _EmployeeImporterFromExcelState extends State<EmployeeImporterFromExcel> {
                 selectedEmployee.forEach((employee) async {
 
                   employee.branchCode = branchCode;
-                  await Provider.of<EmployeeStateManager>(context, listen: false).restaurantControllerApi
-                      .createEmployee(branchCode, employee);
+                  await Provider.of<EmployeeStateManager>(context, listen: false).restaurantControllerApi!.createEmployee(branchCode, false, employee);
                 });
 
                 Fluttertoast.showToast(

@@ -5,12 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:proventi/app/core/employee/reports/state_manager/employee_state_manager.dart';
 import 'package:proventi/global/style.dart';
 import '../../../../api/restaurant_client/lib/api.dart';
+import '../../main_screen.dart';
 import 'employee_create_update/employee_screen.dart';
 import 'excel/excel_report_exporter.dart';
 
 class ReportEmployeePresence extends StatefulWidget {
   const ReportEmployeePresence({super.key});
 
+  static const String routeName = 'report_employee';
   @override
   State<ReportEmployeePresence> createState() => _ReportEmployeePresenceState();
 }
@@ -22,7 +24,6 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
   DateTimeRange? selectedDateRange;
   @override
   void initState() {
-
     final now = DateTime.now();
     selectedDateRange = DateTimeRange(
       start: DateTime(now.year, now.month, 1),
@@ -35,53 +36,6 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _pickDateRange(BuildContext context, EmployeeStateManager employeeStateManager) async {
-    final picked = await showDateRangePicker(
-      confirmText: 'Scarica Report',
-      saveText: 'Scarica Report',
-      context: context,
-      initialDateRange: selectedDateRange,
-      firstDate: DateTime(2024),
-      lastDate: DateTime(2101),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            primaryColor: Colors.green,
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null && picked != selectedDateRange) {
-      setState(() {
-        selectedDateRange = picked;
-      });
-    }
-
-    print('Download report for ' + selectedDateRange!.start.toString() + ' - ' + selectedDateRange!.end.toString());
-
-
-
-
-    List<EmployeeReportSummaryDTO>? listReports = await employeeStateManager
-        .restaurantControllerApi
-        .retrieveReports(
-      employeeStateManager.branchCode!,
-      DateTime.utc(selectedDateRange!.start.subtract(Duration(days: 1))!.year,
-          selectedDateRange!.start.subtract(Duration(days: 1))!.month,
-          selectedDateRange!.start.subtract(Duration(days: 1)).day),
-      DateTime.utc(selectedDateRange!.end.add(Duration(days: 1)).year,
-          selectedDateRange!.end.add(Duration(days: 1))!.month,
-          selectedDateRange!.end.add(Duration(days: 1))!.day),
-    );
-
-    print('Report list: ' + listReports.toString());
-
-    await ExcelReportExporter.exportToExcel(listReports, employeeStateManager.branchName!, selectedDateRange!);
-
   }
 
   List<EmployeePresenceReportDTO>? employeeReportList = List.from([], growable: true);
@@ -122,20 +76,22 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
         return Scaffold(
 
           appBar: AppBar(
+            leading: IconButton(onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
+              );
+            }, icon: Icon(CupertinoIcons.back, color: Colors.black,)),
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
-            automaticallyImplyLeading: false,
-            leading: IconButton(icon: Icon(CupertinoIcons.nosign, color: Colors.green,), onPressed: () {
-              _pickDateRange(context, employeeStateManager);
-            },),
+
             actions: [
               IconButton(onPressed: () {
                 Navigator.of(context).pushNamed(EmployeeScreen.routeName);
-              }, icon: Icon(CupertinoIcons.person_2, color: Colors.blueGrey,),),
+              }, icon: const Icon(CupertinoIcons.person_2, color: Colors.blueGrey,),),
               IconButton(onPressed: (){
                 _selectDate(context, _selectedDate);
                 // _pickDateRange(context);
-              }, icon: Icon(CupertinoIcons.calendar, color:  Colors.blueGrey)),
+              }, icon: const Icon(CupertinoIcons.calendar, color:  Colors.blueGrey)),
             ],
           ),
           backgroundColor: Colors.white,
@@ -154,28 +110,28 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                   children: [
                     IconButton(onPressed: (){
                       setState(() {
-                        _selectedDate = _selectedDate.subtract(Duration(days: 1));
+                        _selectedDate = _selectedDate.subtract(const Duration(days: 1));
                       });
 
-                    }, icon: Icon(Icons.arrow_back, size: 25)),
+                    }, icon: const Icon(CupertinoIcons.arrow_left_square_fill, size: 30)),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        _selectedDate.toIso8601String(),
+                        italianDateFormat.format(_selectedDate).toUpperCase(),
                         style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1/43),
                       ),
                     ),
                     IconButton(onPressed: (){
                       setState(() {
-                        _selectedDate = _selectedDate.add(Duration(days: 1));
+                        _selectedDate = _selectedDate.add(const Duration(days: 1));
                       });
-                    }, icon: Icon(Icons.arrow_forward, size: 25,)),
+                    }, icon: const Icon(CupertinoIcons.arrow_right_square_fill, size: 30,)),
                   ],
                 ),
 
                 FutureBuilder<List<EmployeePresenceReportDTO>?>(
 
-                  future: employeeStateManager.restaurantControllerApi.getReportsByBranchCodeAndDate(employeeStateManager.branchCode, _selectedDate),
+                  future: employeeStateManager.restaurantControllerApi!.getReportsByBranchCodeAndDate(employeeStateManager.branchCode, _selectedDate),
 
                   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if(snapshot.connectionState == ConnectionState.waiting){
@@ -200,7 +156,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                             }
                           }else{
                             if(employee.startDateInduction!.isBefore(_selectedDate)
-                                && employee.endDateInduction!.isAfter(_selectedDate.subtract(Duration(days: 1)))){
+                                && employee.endDateInduction!.isAfter(_selectedDate.subtract(const Duration(days: 1)))){
                               currentEmployeeList.add(employee);
                             }
                           }
@@ -212,7 +168,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
 
                       return Expanded(
                         child: ListView.builder(
-                          padding: EdgeInsets.only(bottom: 150),
+                          padding: const EdgeInsets.only(bottom: 150),
                           itemCount: currentEmployeeList.length,
                           itemBuilder: (BuildContext context, int index) {
 
@@ -243,7 +199,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                         ),
                       );
                     }else{
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
                   },
                 ),
@@ -263,7 +219,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
         return Theme(
           data: ThemeData.light().copyWith(// Header background color
             hintColor:  Colors.blueGrey, // Header text color
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary:  Colors.blueGrey, // selection color
               onSurface: Colors.black, // body text color
             ),
@@ -274,7 +230,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
       },
       context: context,
       initialDate: currentDate,
-      firstDate: DateTime.now().subtract(Duration(days: 200)),
+      firstDate: DateTime.now().subtract(const Duration(days: 200)),
       lastDate: DateTime(2100),
       locale: const Locale('it', 'IT'),
     );
@@ -334,11 +290,11 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                     children: [
                       Row(
                         children: [
-                          Text(widget.currentEmployeeDTO.lastName! + ' ' + widget.currentEmployeeDTO.firstName!, style: TextStyle(fontSize: 15),),
-                          Text('(' + widget.currentEmployeeDTO.employeeId!.toString() + ')', style: TextStyle(fontSize: 6),),
+                          Text('${widget.currentEmployeeDTO.lastName!} ${widget.currentEmployeeDTO.firstName!}', style: const TextStyle(fontSize: 15),),
+                          Text('(${widget.currentEmployeeDTO.employeeId!})', style: const TextStyle(fontSize: 6),),
                         ],
                       ),
-                      Text(widget.currentEmployeeDTO.jobDescription!.value!.replaceAll('_', ' '), style: TextStyle(fontSize: 9),),
+                      Text(widget.currentEmployeeDTO.jobDescription!.value!.replaceAll('_', ' '), style: const TextStyle(fontSize: 9),),
                       Text('Assunto dal: ${italianDateFormat.format(widget.currentEmployeeDTO.startDateInduction!)}',
                         style: TextStyle(fontSize: 9, color: Colors.grey.shade500),),
                       if(widget.currentEmployeeDTO.endDateInduction != null) Text('Assunto fino al: ${italianDateFormat.format(widget.currentEmployeeDTO.endDateInduction!)}',
@@ -349,7 +305,7 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
 
                   if(widget.employeePresence!.note != null && widget.employeePresence!.note!.isNotEmpty) Row(
                     children: [
-                      Text(widget.employeePresence!.note!, style: TextStyle(fontSize: 8, color: Colors.red, fontWeight: FontWeight.bold),),
+                      Text(widget.employeePresence!.note!, style: const TextStyle(fontSize: 8, color: Colors.red, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ],
@@ -357,10 +313,13 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
 
               widget.currentEmployeeDTO.remunerationType! != EmployeeDTORemunerationTypeEnum.ORARIA ? Row(
                 children: [
-                  GestureDetector(
-                    onTap:() async {
-                      if(widget.employeePresence!.illness! || widget.employeePresence!.holiday! || widget.employeePresence!.rest!){
-
+                  EmployeePresenceCard(
+                    label: 'PRANZO',
+                    isActive: widget.employeePresence!.presentAtLunch!,
+                    activeColor: Colors.green,
+                    inactiveColor: Colors.white,
+                    onTap: () async {
+                      if (widget.employeePresence!.illness! || widget.employeePresence!.holiday! || widget.employeePresence!.rest!) {
                         Fluttertoast.showToast(
                           webShowClose: true,
                           timeInSecForIosWeb: 6,
@@ -371,47 +330,22 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           textColor: Colors.white,
                           fontSize: 12.0,
                         );
-                      }else{
+                      } else {
                         setState(() {
                           widget.employeePresence!.presentAtLunch = !widget.employeePresence!.presentAtLunch!;
                           widget.employeePresence!.branchCode = employeeStateManager.branchCode;
                         });
-                        await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence!]);
+                        await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
-
                     },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 1/14,
-                      width: MediaQuery.of(context).size.height * 1/14,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        borderOnForeground: true,
-                        surfaceTintColor: widget.employeePresence!.presentAtLunch! ? Colors.green : Colors.white,
-                        color: widget.employeePresence!.presentAtLunch! ? Colors.green.shade200 : Colors.white,
-                        elevation: widget.employeePresence!.presentAtLunch! ? 1 : 10,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('PRANZO', style: TextStyle(fontSize: widget.employeePresence!.presentAtLunch! ? 9 : 7, color: widget.employeePresence!.presentAtLunch! ? Colors.white :  Colors.blueGrey)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
-                  GestureDetector(
+                  EmployeePresenceCard(
+                    label: 'CENA',
+                    isActive: widget.employeePresence!.presentAtDinner!,
+                    activeColor: Colors.blue,
+                    inactiveColor: Colors.white,
                     onTap: () async {
-                      if(widget.employeePresence!.illness! || widget.employeePresence!.holiday!){
-
+                      if (widget.employeePresence!.illness! || widget.employeePresence!.holiday!) {
                         Fluttertoast.showToast(
                           webShowClose: true,
                           timeInSecForIosWeb: 6,
@@ -422,51 +356,22 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           textColor: Colors.white,
                           fontSize: 12.0,
                         );
-                      }else{
+                      } else {
                         setState(() {
                           widget.employeePresence!.presentAtDinner = !widget.employeePresence!.presentAtDinner!;
                           widget.employeePresence!.branchCode = employeeStateManager.branchCode;
                         });
-
-                        await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence!]);
+                        await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
-
                     },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 1/14,
-                      width: MediaQuery.of(context).size.height * 1/14,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        borderOnForeground: true,
-                        surfaceTintColor: widget.employeePresence!.presentAtDinner! ? Colors.blue : Colors.white,
-                        color: widget.employeePresence!.presentAtDinner! ? Colors.blue.shade200 : Colors.white,
-                        elevation: widget.employeePresence!.presentAtDinner! ? 1 : 10,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('CENA', style: TextStyle(fontSize: widget.employeePresence!.presentAtDinner! ? 9 : 7, color: widget.employeePresence!.presentAtDinner! ? Colors.white :  Colors.blueGrey)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
-                  GestureDetector(
-                    onTap:() async {
-                      if(widget.employeePresence!.presentAtDinner!
-                          || widget.employeePresence!.presentAtLunch!
-                          || widget.employeePresence!.illness!
-                          || widget.employeePresence!.rest!){
-
+                  EmployeePresenceCard(
+                    label: 'FERIE',
+                    isActive: widget.employeePresence!.holiday!,
+                    activeColor: Colors.orangeAccent,
+                    inactiveColor: Colors.white,
+                    onTap: () async {
+                      if (widget.employeePresence!.presentAtDinner! || widget.employeePresence!.presentAtLunch! || widget.employeePresence!.illness! || widget.employeePresence!.rest!) {
                         Fluttertoast.showToast(
                           webShowClose: true,
                           timeInSecForIosWeb: 6,
@@ -477,50 +382,22 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           textColor: Colors.white,
                           fontSize: 12.0,
                         );
-                      }else{
+                      } else {
                         setState(() {
                           widget.employeePresence!.holiday = !widget.employeePresence!.holiday!;
                           widget.employeePresence!.branchCode = employeeStateManager.branchCode;
                         });
-                        await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence!]);
+                        await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
-
                     },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 1/14,
-                      width: MediaQuery.of(context).size.height * 1/14,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        borderOnForeground: true,
-                        surfaceTintColor: widget.employeePresence!.holiday! ? Colors.orangeAccent.shade200 : Colors.white,
-                        color: widget.employeePresence!.holiday! ? Colors.orangeAccent.shade200 : Colors.white,
-                        elevation: widget.employeePresence!.holiday! ? 1 : 10,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('FERIE', style: TextStyle(fontSize: widget.employeePresence!.holiday! ? 9 : 7, color: widget.employeePresence!.holiday! ? Colors.white :  Colors.blueGrey)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
-                  GestureDetector(
-                    onTap:() async {
-                      if(widget.employeePresence!.presentAtDinner!
-                          || widget.employeePresence!.presentAtLunch!
-                          || widget.employeePresence!.holiday!
-                          || widget.employeePresence!.rest!){
-
+                  EmployeePresenceCard(
+                    label: 'MALATTIA',
+                    isActive: widget.employeePresence!.illness!,
+                    activeColor: Colors.redAccent,
+                    inactiveColor: Colors.white,
+                    onTap: () async {
+                      if (widget.employeePresence!.presentAtDinner! || widget.employeePresence!.presentAtLunch! || widget.employeePresence!.holiday! || widget.employeePresence!.rest!) {
                         Fluttertoast.showToast(
                           webShowClose: true,
                           timeInSecForIosWeb: 6,
@@ -531,46 +408,22 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           textColor: Colors.white,
                           fontSize: 12.0,
                         );
-                      }else{
+                      } else {
                         setState(() {
                           widget.employeePresence!.illness = !widget.employeePresence!.illness!;
                           widget.employeePresence!.branchCode = employeeStateManager.branchCode;
                         });
-                        await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence!]);
+                        await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
                     },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 1/14,
-                      width: MediaQuery.of(context).size.height * 1/14,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        borderOnForeground: true,
-                        surfaceTintColor: widget.employeePresence!.illness! ? Colors.redAccent : Colors.white,
-                        color: widget.employeePresence!.illness! ? Colors.redAccent.shade200 : Colors.white,
-                        elevation: widget.employeePresence!.illness! ? 1 : 10,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('MALATTIA', style: TextStyle(fontSize: 7, color: widget.employeePresence!.illness! ? Colors.white :  Colors.blueGrey)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
-                  GestureDetector(
-                    onTap:() async {
-                      if(widget.employeePresence!.presentAtDinner! || widget.employeePresence!.presentAtLunch! || widget.employeePresence!.holiday!){
-
+                  EmployeePresenceCard(
+                    label: 'LIBERO',
+                    isActive: widget.employeePresence!.rest!,
+                    activeColor: Colors.purpleAccent,
+                    inactiveColor: Colors.white,
+                    onTap: () async {
+                      if (widget.employeePresence!.presentAtDinner! || widget.employeePresence!.presentAtLunch! || widget.employeePresence!.holiday!) {
                         Fluttertoast.showToast(
                           webShowClose: true,
                           timeInSecForIosWeb: 6,
@@ -581,41 +434,14 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           textColor: Colors.white,
                           fontSize: 12.0,
                         );
-                      }else{
+                      } else {
                         setState(() {
                           widget.employeePresence!.rest = !widget.employeePresence!.rest!;
                           widget.employeePresence!.branchCode = employeeStateManager.branchCode;
                         });
-                        await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence!]);
+                        await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
                     },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 1/14,
-                      width: MediaQuery.of(context).size.height * 1/14,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        borderOnForeground: true,
-                        surfaceTintColor: widget.employeePresence!.rest! ? Colors.purpleAccent : Colors.white,
-                        color: widget.employeePresence!.rest! ? Colors.purpleAccent.shade200 : Colors.white,
-                        elevation: widget.employeePresence!.rest! ? 1 : 10,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('LIBERO', style: TextStyle(fontSize: 7, color: widget.employeePresence!.rest! ? Colors.white :  Colors.blueGrey)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
                   GestureDetector(
                     onTap:() {
@@ -640,7 +466,7 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                         surfaceTintColor: Colors.white,
                         color: Colors.white,
                         elevation: 5,
-                        child: Row(
+                        child: const Row(
                           children: [
                             Expanded(
                               flex: 2,
@@ -750,15 +576,15 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
             children: [
               Text(
                 'Ore Lavorate: $_counter',
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Decrement button
                   IconButton(
-                    icon: Icon(Icons.remove),
+                    icon: const Icon(Icons.remove),
                     onPressed: _counter > 0
                         ? () {
                       setState(() {
@@ -775,7 +601,7 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
                   ),
                   // Increment button
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: () {
                       setState(() {
                         _counter++;
@@ -784,7 +610,7 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   setState(() {
@@ -795,7 +621,7 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
 
                   print(widget.employeePresence);
 
-                  await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence]);
+                  await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence]);
                   Navigator.of(context).pop();
                   widget.refresh();
                 },
@@ -803,7 +629,7 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue.shade200),
                 ),
-                child: Text(
+                child: const Text(
                   'SALVA',
                 ),
               ),
@@ -862,13 +688,13 @@ class _NoteDialogState extends State<NoteDialog> {
               // Text Field for notes input
               TextField(
                 controller: _noteController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Inserisci Nota',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 4,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   // Update the employee presence with the input note
@@ -881,14 +707,14 @@ class _NoteDialogState extends State<NoteDialog> {
                   print(widget.employeePresence);
 
                   // Save the updated employee presence
-                  await employeeStateManager.restaurantControllerApi.createReports([widget.employeePresence]);
+                  await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence]);
                   Navigator.of(context).pop();
                   widget.refresh();
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue.shade200),
                 ),
-                child: Text(
+                child: const Text(
                   'SALVA',
                 ),
               ),
@@ -896,6 +722,63 @@ class _NoteDialogState extends State<NoteDialog> {
           ),
         );
       },
+    );
+  }
+}
+
+class EmployeePresenceCard extends StatelessWidget {
+  final String label;
+  final bool isActive;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Function onTap;
+
+  const EmployeePresenceCard({
+    required this.label,
+    required this.isActive,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 1 / 14,
+        width: MediaQuery.of(context).size.height * 1 / 4,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          borderOnForeground: true,
+          surfaceTintColor: isActive ? activeColor : Colors.white,
+          color: isActive ? activeColor : Colors.white,
+          elevation: isActive ? 1 : 10,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: isActive ? 9 : 7,
+                        color: isActive ? Colors.white : Colors.blueGrey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

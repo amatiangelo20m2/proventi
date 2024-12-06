@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **retribution** | **double** |  | [optional] 
 **contractType** | **String** |  | [optional] 
 **email** | **String** |  | [optional] 
+**prefix** | **String** |  | [optional] 
 **phone** | **String** |  | [optional] 
 **branchCode** | **String** |  | [optional] 
 **remunerationType** | **String** |  | [optional] 

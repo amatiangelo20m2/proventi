@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:32172/restaurantservice*
+All URIs are relative to *http://192.168.1.4:14918/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -102,7 +102,7 @@ Class | Method | HTTP request | Description
 *RestaurantControllerApi* | [**loginFromMobileDevice**](doc//RestaurantControllerApi.md#loginfrommobiledevice) | **POST** /api/restaurant/employee/mobiledevice/login/{branchCode} | 
 *RestaurantControllerApi* | [**resetBranchMessagesByType**](doc//RestaurantControllerApi.md#resetbranchmessagesbytype) | **PUT** /api/restaurant/resetmessages/{branchCode} | 
 *RestaurantControllerApi* | [**retrieveConfiguration**](doc//RestaurantControllerApi.md#retrieveconfiguration) | **POST** /api/restaurant/restaurant/retrieveconfiguration/{branchCode}/{restaurantName} | 
-*RestaurantControllerApi* | [**retrieveMessageByBranchCode**](doc//RestaurantControllerApi.md#retrievemessagebybranchcode) | **GET** /api/restaurant/retrievemessage/{branchCode}/{messageType} | 
+*RestaurantControllerApi* | [**retrieveMessageByBranchCode**](doc//RestaurantControllerApi.md#retrievemessagebybranchcode) | **POST** /api/restaurant/retrievemessage | 
 *RestaurantControllerApi* | [**retrieveReports**](doc//RestaurantControllerApi.md#retrievereports) | **GET** /api/restaurant/retrievereports/{branchCode} | 
 *RestaurantControllerApi* | [**updateAfterBookingMessage**](doc//RestaurantControllerApi.md#updateafterbookingmessage) | **PUT** /api/restaurant/update/afterbookingmessage/{branchCode} | 
 *RestaurantControllerApi* | [**updateBeforeBookingMessage**](doc//RestaurantControllerApi.md#updatebeforebookingmessage) | **PUT** /api/restaurant/update/beforebookingmessage/{branchCode} | 
@@ -119,12 +119,10 @@ Class | Method | HTTP request | Description
  - [BookingDTO](doc//BookingDTO.md)
  - [CentralinoMessage](doc//CentralinoMessage.md)
  - [CustomerDTO](doc//CustomerDTO.md)
- - [CustomerHistory](doc//CustomerHistory.md)
  - [EmployeeDTO](doc//EmployeeDTO.md)
  - [EmployeePresenceReportDTO](doc//EmployeePresenceReportDTO.md)
  - [EmployeeReportSummaryDTO](doc//EmployeeReportSummaryDTO.md)
  - [FormDTO](doc//FormDTO.md)
- - [GeneralMessage](doc//GeneralMessage.md)
  - [HolidaysDTO](doc//HolidaysDTO.md)
  - [MobileDeviceDetails](doc//MobileDeviceDetails.md)
  - [OpeningHoursDTO](doc//OpeningHoursDTO.md)

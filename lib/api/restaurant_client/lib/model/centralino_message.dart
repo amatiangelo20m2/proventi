@@ -26,8 +26,8 @@ class CentralinoMessage {
     this.createdAt,
     this.updatedAt,
     this.whatsAppEnabled,
-    this.smsEnabled,
     this.emailEnabled,
+    this.smsEnabled,
   });
 
   ///
@@ -134,7 +134,7 @@ class CentralinoMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? smsEnabled;
+  bool? emailEnabled;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -142,7 +142,7 @@ class CentralinoMessage {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? emailEnabled;
+  bool? smsEnabled;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is CentralinoMessage &&
@@ -159,8 +159,8 @@ class CentralinoMessage {
     other.createdAt == createdAt &&
     other.updatedAt == updatedAt &&
     other.whatsAppEnabled == whatsAppEnabled &&
-    other.smsEnabled == smsEnabled &&
-    other.emailEnabled == emailEnabled;
+    other.emailEnabled == emailEnabled &&
+    other.smsEnabled == smsEnabled;
 
   @override
   int get hashCode =>
@@ -178,11 +178,11 @@ class CentralinoMessage {
     (createdAt == null ? 0 : createdAt!.hashCode) +
     (updatedAt == null ? 0 : updatedAt!.hashCode) +
     (whatsAppEnabled == null ? 0 : whatsAppEnabled!.hashCode) +
-    (smsEnabled == null ? 0 : smsEnabled!.hashCode) +
-    (emailEnabled == null ? 0 : emailEnabled!.hashCode);
+    (emailEnabled == null ? 0 : emailEnabled!.hashCode) +
+    (smsEnabled == null ? 0 : smsEnabled!.hashCode);
 
   @override
-  String toString() => 'CentralinoMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentWhatsappEnglish=$contentWhatsappEnglish, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, whatsAppEnabled=$whatsAppEnabled, smsEnabled=$smsEnabled, emailEnabled=$emailEnabled]';
+  String toString() => 'CentralinoMessage[messageCode=$messageCode, type=$type, description=$description, active=$active, deletable=$deletable, contentSms=$contentSms, contentWhatsapp=$contentWhatsapp, contentWhatsappEnglish=$contentWhatsappEnglish, contentEmailTitle=$contentEmailTitle, contentEmail=$contentEmail, createdAt=$createdAt, updatedAt=$updatedAt, whatsAppEnabled=$whatsAppEnabled, emailEnabled=$emailEnabled, smsEnabled=$smsEnabled]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -251,15 +251,15 @@ class CentralinoMessage {
     } else {
       json[r'whatsAppEnabled'] = null;
     }
-    if (this.smsEnabled != null) {
-      json[r'smsEnabled'] = this.smsEnabled;
-    } else {
-      json[r'smsEnabled'] = null;
-    }
     if (this.emailEnabled != null) {
       json[r'emailEnabled'] = this.emailEnabled;
     } else {
       json[r'emailEnabled'] = null;
+    }
+    if (this.smsEnabled != null) {
+      json[r'smsEnabled'] = this.smsEnabled;
+    } else {
+      json[r'smsEnabled'] = null;
     }
     return json;
   }
@@ -296,8 +296,8 @@ class CentralinoMessage {
         createdAt: mapDateTime(json, r'createdAt', r''),
         updatedAt: mapDateTime(json, r'updatedAt', r''),
         whatsAppEnabled: mapValueOfType<bool>(json, r'whatsAppEnabled'),
-        smsEnabled: mapValueOfType<bool>(json, r'smsEnabled'),
         emailEnabled: mapValueOfType<bool>(json, r'emailEnabled'),
+        smsEnabled: mapValueOfType<bool>(json, r'smsEnabled'),
       );
     }
     return null;
@@ -361,29 +361,15 @@ class CentralinoMessageTypeEnum {
 
   String toJson() => value;
 
-  static const n0 = CentralinoMessageTypeEnum._(r'TASTO_0');
-  static const n1 = CentralinoMessageTypeEnum._(r'TASTO_1');
-  static const n2 = CentralinoMessageTypeEnum._(r'TASTO_2');
-  static const n3 = CentralinoMessageTypeEnum._(r'TASTO_3');
-  static const n4 = CentralinoMessageTypeEnum._(r'TASTO_4');
-  static const n5 = CentralinoMessageTypeEnum._(r'TASTO_5');
-  static const n6 = CentralinoMessageTypeEnum._(r'TASTO_6');
-  static const n7 = CentralinoMessageTypeEnum._(r'TASTO_7');
-  static const n8 = CentralinoMessageTypeEnum._(r'TASTO_8');
-  static const n9 = CentralinoMessageTypeEnum._(r'TASTO_9');
+  static const n1 = CentralinoMessageTypeEnum._(r'CENTRALINO_FUNZIONE_1');
+  static const n2 = CentralinoMessageTypeEnum._(r'CENTRALINO_FUNZIONE_2');
+  static const n3 = CentralinoMessageTypeEnum._(r'CENTRALINO_FUNZIONE_3');
 
   /// List of all possible values in this [enum][CentralinoMessageTypeEnum].
   static const values = <CentralinoMessageTypeEnum>[
-    n0,
     n1,
     n2,
     n3,
-    n4,
-    n5,
-    n6,
-    n7,
-    n8,
-    n9,
   ];
 
   static CentralinoMessageTypeEnum? fromJson(dynamic value) => CentralinoMessageTypeEnumTypeTransformer().decode(value);
@@ -422,16 +408,9 @@ class CentralinoMessageTypeEnumTypeTransformer {
   CentralinoMessageTypeEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'TASTO_0': return CentralinoMessageTypeEnum.n0;
-        case r'TASTO_1': return CentralinoMessageTypeEnum.n1;
-        case r'TASTO_2': return CentralinoMessageTypeEnum.n2;
-        case r'TASTO_3': return CentralinoMessageTypeEnum.n3;
-        case r'TASTO_4': return CentralinoMessageTypeEnum.n4;
-        case r'TASTO_5': return CentralinoMessageTypeEnum.n5;
-        case r'TASTO_6': return CentralinoMessageTypeEnum.n6;
-        case r'TASTO_7': return CentralinoMessageTypeEnum.n7;
-        case r'TASTO_8': return CentralinoMessageTypeEnum.n8;
-        case r'TASTO_9': return CentralinoMessageTypeEnum.n9;
+        case r'CENTRALINO_FUNZIONE_1': return CentralinoMessageTypeEnum.n1;
+        case r'CENTRALINO_FUNZIONE_2': return CentralinoMessageTypeEnum.n2;
+        case r'CENTRALINO_FUNZIONE_3': return CentralinoMessageTypeEnum.n3;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

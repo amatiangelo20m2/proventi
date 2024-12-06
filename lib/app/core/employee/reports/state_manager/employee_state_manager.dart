@@ -7,7 +7,7 @@ import '../../../../../api/restaurant_client/lib/api.dart';
 class EmployeeStateManager with ChangeNotifier {
 
   late ApiClient _restaurantClient;
-  late RestaurantControllerApi _restaurantControllerApi;
+  late RestaurantControllerApi? _restaurantControllerApi;
   late String userCode;
   late String branchCode;
   late String branchName;
@@ -15,8 +15,7 @@ class EmployeeStateManager with ChangeNotifier {
 
   DateTime now = DateTime.now();
 
-  RestaurantControllerApi get restaurantControllerApi =>
-      _restaurantControllerApi;
+  RestaurantControllerApi? get restaurantControllerApi => _restaurantControllerApi;
 
   List<EmployeeDTO>? currentEmployeeList = [];
 
@@ -26,11 +25,16 @@ class EmployeeStateManager with ChangeNotifier {
 
   Future<void> _initializeClient() async {
 
-    print('Initialize client with ' + customBasePathRestaurant + '. Each call will be redirect to this url.');
+    print('Initialize restaurant client inside employee state manager client with $customBasePathRestaurant. Each call will be redirect to this url.');
+
+    final prefs = await SharedPreferences.getInstance();
+    branchCode = prefs.getString('branchCode').toString();
+
 
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
     _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
 
+    print('_restaurantControllerApi: $_restaurantControllerApi');
     retrieveCurrentEmployee();
     // retrievePresenteEmployeeForCurrentBranchAndCurrentDate(branchCode, now);
   }
@@ -39,31 +43,32 @@ class EmployeeStateManager with ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    print('Current branch code (for restaurant configuration purposes): ' + prefs.getString('branch_code').toString());
-    print('User code (for notification purposes): ' + prefs.getString('user_code').toString());
+    print('Current branch code (for restaurant configuration purposes): $branchCode');
+    //print('User code (for notification purposes): ' + prefs.getString('user_code').toString());
 
     branchCode = prefs.getString('branchCode').toString();
-    userCode = prefs.getString('user_code').toString();
-    branchName = prefs.getString('branch_name').toString();
+    //userCode = prefs.getString('user_code').toString();
+    branchName = prefs.getString('branchName').toString();
+    _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
+    _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
+    RestaurantDTO? restaurantDTO = await _restaurantControllerApi!.retrieveConfiguration(branchCode,'XXX');
 
-    RestaurantDTO? restaurantDTO = await _restaurantControllerApi.retrieveConfiguration(branchCode,'XXX');
-
-    print('Restaurant conf found: ' + restaurantDTO.toString());
+    print('Restaurant conf found: $restaurantDTO');
     currentEmployeeList = [];
-    currentEmployeeList = await _restaurantControllerApi.getEmployeeListByBranchCode(branchCode);
-    print('Employee list for branch with code (' + branchCode + ') ->' +  currentEmployeeList.toString());
+    currentEmployeeList = await _restaurantControllerApi!.getEmployeeListByBranchCode(branchCode);
+    print('Employee list for branch with code ($branchCode) ->$currentEmployeeList');
     notifyListeners();
   }
 
   turnIsVisibleValueToEmployee(EmployeeDTO employeeDTO) async {
 
     try{
-      await _restaurantControllerApi.hideEmployee(employeeDTO.employeeId!);
+      await _restaurantControllerApi!.hideEmployee(employeeDTO.employeeId!);
 
       EmployeeDTO employee = currentEmployeeList!.where((element) => element.employeeId == employeeDTO.employeeId).first;
       employee.visible = !employee.visible!;
     }catch(e){
-      print('Error: ' + e.toString());
+      print('Error: $e');
     }
     notifyListeners();
   }

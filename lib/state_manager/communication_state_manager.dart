@@ -32,7 +32,7 @@ class CommunicationStateManager extends ChangeNotifier {
   }
 
   DateTime? _lastApiCallTime;
-  static const int _apiCallIntervalSeconds = 10;
+  static const int _apiCallIntervalSeconds = 75;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
 
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {

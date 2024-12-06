@@ -9,6 +9,9 @@ import 'package:proventi/app/core/whatconf/link_whatsapp_component.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 
+import 'critical_conf_whatsapp_widget.dart';
+import 'instance_details_pronta.dart';
+
 class AnimatedBorderContainer extends StatefulWidget {
   final double borderRadius;
   final double borderWidth;
@@ -30,30 +33,6 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
   late final Animation<double> _animation;
   Timer? _timer;
   bool _isLoading = false;
-
-  void _showQrModal() {
-    showDialog(
-      barrierColor: Colors.black,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shadowColor: Colors.black,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          content: LinkWhatsAppComponent(),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Chiudi', style: TextStyle(color: Colors.black)),
-            ),
-          ],
-
-        );
-      },
-    );
-  }
 
   @override
   void initState() {
@@ -113,7 +92,10 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
 
             if(value.currentWhatsAppConfigurationDTO?.waApiState
                 == WhatsAppConfigurationDTOWaApiStateEnum.PRONTA){
-              return IconButton(onPressed: (){
+              return IconButton(
+
+                  onPressed: (){
+                    _showProntaInstance();
 
               }, icon: const Icon(FontAwesomeIcons.whatsapp,
                   color: Colors.green));
@@ -126,12 +108,12 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
                   timeInSecForIosWeb: 2);
               return Stack(
                 children: [ IconButton(onPressed: (){
-                  _showQrModal();
+                  Navigator.of(context).pushNamed(LinkWhatsAppComponent.routeName);
                 }, icon: const Icon(CupertinoIcons.qrcode,
                     color: Colors.black, size: 30,)),
                   Positioned(right:0, child: GestureDetector(
                       onTap: (){
-                        _showQrModal();
+                        Navigator.of(context).pushNamed(LinkWhatsAppComponent.routeName);
                       },
                       child: Lottie.asset('assets/lotties/danger.json', height: 25)))
               ]);
@@ -142,7 +124,7 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 2);
               return IconButton(onPressed: (){
-
+                _openCriticalWhatsAppProblemManager();
               }, icon: const Icon(FontAwesomeIcons.whatsapp,
                   color: Colors.red));
             }
@@ -150,6 +132,52 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
 
         ),
       ),
+    );
+  }
+
+  void _showProntaInstance() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shadowColor: Colors.white,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          content: const InstanceDetailsWhenPronta(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Chiudi', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+
+        );
+      },
+    );
+  }
+
+  void _openCriticalWhatsAppProblemManager() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shadowColor: Colors.white,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          content: const CriticalWhatsAppConfigurationWidget(),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Chiudi', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+
+        );
+      },
     );
   }
 }

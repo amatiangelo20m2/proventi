@@ -15,6 +15,8 @@ var elegantBlue = const Color(0xFF011f4b);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 
+DateFormat italianDateFormatWithTime = DateFormat('EEEE d MMMM y HH:mm', 'it_IT');
+
 bool isSameDay(DateTime date1, DateTime date2) {
   return date1.year == date2.year &&
       date1.month == date2.month &&

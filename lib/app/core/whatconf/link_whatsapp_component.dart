@@ -8,6 +8,11 @@ import 'link_whatsapp_widget/paired_code_whatsapp.dart';
 import 'link_whatsapp_widget/qr_code_scanner_whatsapp.dart';
 
 class LinkWhatsAppComponent extends StatefulWidget {
+
+  static const String routeName = '/link-whatsapp';
+
+  const LinkWhatsAppComponent({super.key});
+
   @override
   _LinkWhatsAppComponentState createState() => _LinkWhatsAppComponentState();
 }
@@ -20,7 +25,7 @@ class _LinkWhatsAppComponentState extends State<LinkWhatsAppComponent> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.qr_code_scanner),
-          Text('Collega con QR'),
+          Text('Scan QR'),
         ],
       ),
     ),
@@ -30,7 +35,7 @@ class _LinkWhatsAppComponentState extends State<LinkWhatsAppComponent> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.key),
-          Text('Collega tramite codice'),
+          Text('Usa codice'),
         ],
       ),
     ),
@@ -43,37 +48,40 @@ class _LinkWhatsAppComponentState extends State<LinkWhatsAppComponent> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return Container(
-      width: screenWidth - 10,
-      height: screenHeight - 10,
-      color: Colors.white, // Example color
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CupertinoSegmentedControl<int>(
-            borderColor: globalGold,
-            selectedColor: Colors.black,
-            children: _segments,
-            onValueChanged: (int value) {
-              setState(() {
-                _selectedSegment = value;
-              });
-            },
-            groupValue: _selectedSegment,
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
+        width: screenWidth,
+        height: screenHeight,
+        color: Colors.white, // Example color
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CupertinoSegmentedControl<int>(
+              borderColor: globalGold,
+              selectedColor: Colors.black,
+              children: _segments,
+              onValueChanged: (int value) {
+                setState(() {
+                  _selectedSegment = value;
+                });
+              },
+              groupValue: _selectedSegment,
 
-          ),
-          Consumer<CommunicationStateManager>(
-            builder: (BuildContext context,
-                CommunicationStateManager communicationStateManager,
-                Widget? child) {
-              return _selectedSegment == 0
-                  ? QrCodeWidgetScannerWhatsApp(base64ImageString: communicationStateManager.currentWhatsAppConfigurationDTO?.qrCode!)
-                  : const PairedCodeWhatsApp();
-            },
-          ),
-          const Text('',
-              style: TextStyle(fontSize: 7)),
-        ],
+            ),
+            Consumer<CommunicationStateManager>(
+              builder: (BuildContext context,
+                  CommunicationStateManager communicationStateManager,
+                  Widget? child) {
+                return _selectedSegment == 0
+                    ? QrCodeWidgetScannerWhatsApp(base64ImageString: communicationStateManager.currentWhatsAppConfigurationDTO?.qrCode!)
+                    : const PairedCodeWhatsApp();
+              },
+            ),
+            const Text('',
+                style: TextStyle(fontSize: 7)),
+          ],
+        ),
       ),
     );
   }

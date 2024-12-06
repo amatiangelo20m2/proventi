@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:country_picker/country_picker.dart';
-import 'package:easy_loading_button/easy_loading_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proventi/global/style.dart';
@@ -27,7 +26,7 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
   final TextEditingController _prefixController = TextEditingController(text: '39');
   final TextEditingController _phoneController = TextEditingController();
 
-  WhatsAppConfigurationDTO? whatsAppConfigurationDTO;
+  String? pairingCode = '';
   Timer? _pollingTimer;
 
   @override
@@ -42,112 +41,94 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
       builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
         return Column(
           children: [
-            if(whatsAppConfigurationDTO == null)Row(
-              children: [
-                CupertinoButton(onPressed: (){
-                  showCountryPicker(
-                    context: context,
-                    //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                    exclude: <String>['KN', 'MF'],
-                    favorite: <String>['IT'],
-                    showPhoneCode: true,
-                    onSelect: (Country country) {
-                      setState(() {
-                        _currentSelectedCountry = country;
-                        _prefixController.text = _currentSelectedCountry.countryCode;
-                      });
-                    },
-                    moveAlongWithKeyboard: false,
-                    countryListTheme: CountryListThemeData(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(40.0),
-                        topRight: Radius.circular(40.0),
-                      ),
-                      inputDecoration: InputDecoration(
-                        labelText: 'Ricerca nazione',
+            if(pairingCode == '')
+              Column(
+                children: [
+                  Row(
+                  children: [
+                    CupertinoButton(onPressed: (){
+                      showCountryPicker(
+                        context: context,
+                        //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                        exclude: <String>['KN', 'MF'],
+                        favorite: <String>['IT'],
+                        showPhoneCode: true,
+                        onSelect: (Country country) {
+                          setState(() {
+                            _currentSelectedCountry = country;
+                            _prefixController.text = _currentSelectedCountry.countryCode;
+                          });
+                        },
+                        moveAlongWithKeyboard: false,
+                        countryListTheme: CountryListThemeData(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(40.0),
+                            topRight: Radius.circular(40.0),
+                          ),
+                          inputDecoration: InputDecoration(
+                            labelText: 'Ricerca nazione',
 
-                        prefixIcon: const Icon(CupertinoIcons.search),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: const Color(0xFF8C98A8).withOpacity(0.2),
+                            prefixIcon: const Icon(CupertinoIcons.search),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: const Color(0xFF8C98A8).withOpacity(0.2),
+                              ),
+                            ),
+                          ),
+                          searchTextStyle: const TextStyle(
+                            color: Colors.blue,
+                            fontSize: 15,
                           ),
                         ),
-                      ),
-                      searchTextStyle: const TextStyle(
-                        color: Colors.blue,
-                        fontSize: 15,
-                      ),
-                    ),
-                  );
-                }, child: Text('${_currentSelectedCountry.flagEmoji} '
-                    '+${_currentSelectedCountry.phoneCode}',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
-                Expanded(
-                  child: CupertinoTextField(
-                    keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-                    controller: _phoneController,
-                    placeholder: "Cellulare",
-                    clearButtonMode: OverlayVisibilityMode.always,
-                    style: const TextStyle(fontSize: 13),
-                    padding: const EdgeInsets.all(8),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: EasyButton(
-                    type: EasyButtonType.elevated,
-                    idleStateWidget: const Text(
-                      'Dammi il codice',
-                      style: TextStyle(
-                        color: Colors.white,
+                      );
+                    }, child: Text('${_currentSelectedCountry.flagEmoji} '
+                        '+${_currentSelectedCountry.phoneCode}',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
+                    Expanded(
+                      child: CupertinoTextField(
+                        keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+                        controller: _phoneController,
+                        placeholder: "Cellulare",
+                        clearButtonMode: OverlayVisibilityMode.always,
+                        style: const TextStyle(fontSize: 13),
+                        padding: const EdgeInsets.all(8),
                       ),
                     ),
-                    loadingStateWidget: const CircularProgressIndicator(
-                      strokeWidth: 3.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white,
-                      ),
-                    ),
-                    useWidthAnimation: true,
-                    useEqualLoadingStateWidgetDimension: true,
-                    width: 150.0,
-                    height: 40.0,
-                    borderRadius: 12.0,
-                    elevation: 1.0,
-                    contentGap: 6.0,
-                    buttonColor: globalGold,
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      final prefs = await SharedPreferences.getInstance();
-                      String branchCode = prefs.getString('branchCode').toString();
-                      if(_phoneController.text == ''){
-                        Fluttertoast.showToast(
-                          msg: "Inserisci un numero di telefono valido",
-                          toastLength: Toast.LENGTH_LONG,
-                          backgroundColor: Colors.red,
-                          fontSize: 18.0,
-                        );
-                      }else{
-                        print('Retrieve pairing code$branchCode${_prefixController.text}${_phoneController.text}');
-                        whatsAppConfigurationDTO = await communicationStateManager
-                            .whatsAppConfigurationControllerApi
-                            .retrievePairingCodeWaApi(branchCode,
-                            _prefixController.text,
-                            _phoneController.text);
+                  ],
+                 ),
+                  ElevatedButton(onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    final prefs = await SharedPreferences.getInstance();
+                    String branchCode = prefs.getString('branchCode').toString();
+                    if(_phoneController.text == ''){
+                      Fluttertoast.showToast(
+                        msg: "Inserisci un numero di telefono valido",
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.red,
+                        fontSize: 18.0,
+                      );
+                    }else{
+                      print('Retrieve pairing code$branchCode${_prefixController.text}${_phoneController.text}');
+                      WhatsAppConfigurationDTO? whatsAppConfigurationDTO = await communicationStateManager
+                          .whatsAppConfigurationControllerApi
+                          .retrievePairingCodeWaApi(branchCode,
+                          _prefixController.text,
+                          _phoneController.text);
 
-                        if (whatsAppConfigurationDTO != null) {
-                          startPolling(communicationStateManager, branchCode);
-                        }
-
+                      setState(() {
+                        pairingCode = whatsAppConfigurationDTO!.pairingCode!;
+                      });
+                      if (pairingCode != null) {
+                        startPolling(communicationStateManager, branchCode);
                       }
+                    }
+                  }, child: Text('Richiedi il codice'))
+                ],
+              ),
+            if(pairingCode != '')
+              buildRowWithContainers(pairingCode!),
 
-                    },
-                  ),
-                ),
-              ],
-            ),
-            if(whatsAppConfigurationDTO != null && whatsAppConfigurationDTO!.pairingCode != '')
-              buildRowWithContainers(whatsAppConfigurationDTO!.pairingCode!),
+
           ],
         );
       },
@@ -192,7 +173,7 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
       children: [
         Lottie.asset('assets/lotties/whatsapp.json', height: 100),
         Text('+${_prefixController.text} ${_phoneController.text}', style: const TextStyle(fontSize: 30),),
-        const Text('Usa questo codice per collegare il tuo numero what\'app a PRO20:'),
+        Center(child: const Text('Usa questo codice per collegare il tuo numero what\'app a PRO20:', textAlign: TextAlign.center,)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(9, (index) {
@@ -207,10 +188,10 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
             } else {
               int charIndex = index > 4 ? index - 1 : index;
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(2.0),
                 child: Container(
-                  height: 50,
-                  width: 50,
+                  height: 30,
+                  width: 30,
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(8),
@@ -234,8 +215,16 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
             }
           }),
         ),
-        TextButton(onPressed: (){}, child: const Text('Copia Codice📑')),
-        LinearProgressIndicator(color: globalGold,)
+        TextButton(onPressed: (){
+          Clipboard.setData(ClipboardData(text: pairingCode!));
+          Fluttertoast.showToast(
+            msg: "Codice copiato negli appunti",
+            toastLength: Toast.LENGTH_SHORT,
+            backgroundColor: Colors.grey.shade900,
+            fontSize: 16.0,
+          );
+        }, child: const Text('Copia il codice')),
+        LinearProgressIndicator(color: globalGold,),
       ],
     );
   }

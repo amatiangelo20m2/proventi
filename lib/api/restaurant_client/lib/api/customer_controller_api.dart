@@ -102,7 +102,7 @@ class CustomerControllerApi {
   /// Parameters:
   ///
   /// * [String] branchCode (required):
-  Future<List<CustomerHistory>?> retrieveCustomerHistoryByBranchCode(String branchCode,) async {
+  Future<List<Object>?> retrieveCustomerHistoryByBranchCode(String branchCode,) async {
     final response = await retrieveCustomerHistoryByBranchCodeWithHttpInfo(branchCode,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -112,8 +112,8 @@ class CustomerControllerApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<CustomerHistory>') as List)
-        .cast<CustomerHistory>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<Object>') as List)
+        .cast<Object>()
         .toList(growable: false);
 
     }

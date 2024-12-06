@@ -475,50 +475,26 @@ class EmployeeReportSummaryDTOJobDescriptionEnum {
   String toJson() => value;
 
   static const AMMINISTRATORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AMMINISTRATORE');
-  static const ADDETTA_AL_MARKETING = EmployeeReportSummaryDTOJobDescriptionEnum._(r'ADDETTA_AL_MARKETING');
-  static const ADDETTO_ALL_ACCOGLIENZA_CLIENTI = EmployeeReportSummaryDTOJobDescriptionEnum._(r'ADDETTO_ALL_ACCOGLIENZA_CLIENTI');
-  static const AIUTO_BARMAN = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AIUTO_BARMAN');
-  static const AIUTO_CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
-  static const ADD_ALLA_CUCINA = EmployeeReportSummaryDTOJobDescriptionEnum._(r'ADD_ALLA_CUCINA');
-  static const AIUTO_CAMERIERE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AIUTO_CAMERIERE');
+  static const ACCOGLIENZA = EmployeeReportSummaryDTOJobDescriptionEnum._(r'ACCOGLIENZA');
   static const BARMAN = EmployeeReportSummaryDTOJobDescriptionEnum._(r'BARMAN');
-  static const CAMERIERE_DI_BAR = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CAMERIERE_DI_BAR');
   static const CAMERIERE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CAMERIERE');
   static const CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CUOCO');
-  static const CUOCO_DI_RISTORANTE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CUOCO_DI_RISTORANTE');
-  static const COORDINATRICE_DI_SALA = EmployeeReportSummaryDTOJobDescriptionEnum._(r'COORDINATRICE_DI_SALA');
-  static const COMMIS_DI_CUCINA = EmployeeReportSummaryDTOJobDescriptionEnum._(r'COMMIS_DI_CUCINA');
-  static const DIRETTORE_SALA_DEHORS = EmployeeReportSummaryDTOJobDescriptionEnum._(r'DIRETTORE_SALA_DEHORS');
-  static const FOOD_AND_BEVERAGE_MANAGER = EmployeeReportSummaryDTOJobDescriptionEnum._(r'FOOD_AND_BEVERAGE_MANAGER');
+  static const DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'DIRETTORE');
+  static const VICE_DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
   static const LAVAPIATTI = EmployeeReportSummaryDTOJobDescriptionEnum._(r'LAVAPIATTI');
-  static const PASTICCIERE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'PASTICCIERE');
   static const PIZZAIOLO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'PIZZAIOLO');
-  static const RESPONSABILE_DI_SALA = EmployeeReportSummaryDTOJobDescriptionEnum._(r'RESPONSABILE_DI_SALA');
-  static const TECNICI_WEB = EmployeeReportSummaryDTOJobDescriptionEnum._(r'TECNICI_WEB');
 
   /// List of all possible values in this [enum][EmployeeReportSummaryDTOJobDescriptionEnum].
   static const values = <EmployeeReportSummaryDTOJobDescriptionEnum>[
     AMMINISTRATORE,
-    ADDETTA_AL_MARKETING,
-    ADDETTO_ALL_ACCOGLIENZA_CLIENTI,
-    AIUTO_BARMAN,
-    AIUTO_CUOCO,
-    ADD_ALLA_CUCINA,
-    AIUTO_CAMERIERE,
+    ACCOGLIENZA,
     BARMAN,
-    CAMERIERE_DI_BAR,
     CAMERIERE,
     CUOCO,
-    CUOCO_DI_RISTORANTE,
-    COORDINATRICE_DI_SALA,
-    COMMIS_DI_CUCINA,
-    DIRETTORE_SALA_DEHORS,
-    FOOD_AND_BEVERAGE_MANAGER,
+    DIRETTORE,
+    VICE_DIRETTORE,
     LAVAPIATTI,
-    PASTICCIERE,
     PIZZAIOLO,
-    RESPONSABILE_DI_SALA,
-    TECNICI_WEB,
   ];
 
   static EmployeeReportSummaryDTOJobDescriptionEnum? fromJson(dynamic value) => EmployeeReportSummaryDTOJobDescriptionEnumTypeTransformer().decode(value);
@@ -558,26 +534,14 @@ class EmployeeReportSummaryDTOJobDescriptionEnumTypeTransformer {
     if (data != null) {
       switch (data) {
         case r'AMMINISTRATORE': return EmployeeReportSummaryDTOJobDescriptionEnum.AMMINISTRATORE;
-        case r'ADDETTA_AL_MARKETING': return EmployeeReportSummaryDTOJobDescriptionEnum.ADDETTA_AL_MARKETING;
-        case r'ADDETTO_ALL_ACCOGLIENZA_CLIENTI': return EmployeeReportSummaryDTOJobDescriptionEnum.ADDETTO_ALL_ACCOGLIENZA_CLIENTI;
-        case r'AIUTO_BARMAN': return EmployeeReportSummaryDTOJobDescriptionEnum.AIUTO_BARMAN;
-        case r'AIUTO_CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.AIUTO_CUOCO;
-        case r'ADD_ALLA_CUCINA': return EmployeeReportSummaryDTOJobDescriptionEnum.ADD_ALLA_CUCINA;
-        case r'AIUTO_CAMERIERE': return EmployeeReportSummaryDTOJobDescriptionEnum.AIUTO_CAMERIERE;
+        case r'ACCOGLIENZA': return EmployeeReportSummaryDTOJobDescriptionEnum.ACCOGLIENZA;
         case r'BARMAN': return EmployeeReportSummaryDTOJobDescriptionEnum.BARMAN;
-        case r'CAMERIERE_DI_BAR': return EmployeeReportSummaryDTOJobDescriptionEnum.CAMERIERE_DI_BAR;
         case r'CAMERIERE': return EmployeeReportSummaryDTOJobDescriptionEnum.CAMERIERE;
         case r'CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.CUOCO;
-        case r'CUOCO_DI_RISTORANTE': return EmployeeReportSummaryDTOJobDescriptionEnum.CUOCO_DI_RISTORANTE;
-        case r'COORDINATRICE_DI_SALA': return EmployeeReportSummaryDTOJobDescriptionEnum.COORDINATRICE_DI_SALA;
-        case r'COMMIS_DI_CUCINA': return EmployeeReportSummaryDTOJobDescriptionEnum.COMMIS_DI_CUCINA;
-        case r'DIRETTORE_SALA_DEHORS': return EmployeeReportSummaryDTOJobDescriptionEnum.DIRETTORE_SALA_DEHORS;
-        case r'FOOD_AND_BEVERAGE_MANAGER': return EmployeeReportSummaryDTOJobDescriptionEnum.FOOD_AND_BEVERAGE_MANAGER;
+        case r'DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.DIRETTORE;
+        case r'VICE_DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.VICE_DIRETTORE;
         case r'LAVAPIATTI': return EmployeeReportSummaryDTOJobDescriptionEnum.LAVAPIATTI;
-        case r'PASTICCIERE': return EmployeeReportSummaryDTOJobDescriptionEnum.PASTICCIERE;
         case r'PIZZAIOLO': return EmployeeReportSummaryDTOJobDescriptionEnum.PIZZAIOLO;
-        case r'RESPONSABILE_DI_SALA': return EmployeeReportSummaryDTOJobDescriptionEnum.RESPONSABILE_DI_SALA;
-        case r'TECNICI_WEB': return EmployeeReportSummaryDTOJobDescriptionEnum.TECNICI_WEB;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

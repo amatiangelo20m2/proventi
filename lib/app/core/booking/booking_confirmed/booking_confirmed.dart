@@ -354,14 +354,14 @@ class _BookingScreenState extends State<BookingScreen> {
                   if(!_isScrolledDown)Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
+                      //Row(
+                      //  children: [
                           buildCurrentGuestSituation(restaurantManager),
-                          IconButton(onPressed: (){
-                            Navigator.pushNamed(context, Floor.routeName);
-                          }, icon: Icon(CupertinoIcons.circle_grid_hex, color: Colors.grey[900],)),
-                        ],
-                      ),
+                      //    IconButton(onPressed: (){
+                      //      Navigator.pushNamed(context, Floor.routeName);
+                      //    }, icon: Icon(CupertinoIcons.circle_grid_hex, color: Colors.grey[900],)),
+                      //  ],
+                      //),
 
                       RefusedBookingArchive(bookingList:
                       restaurantManager.allBookings!.where((element) => isSameDay(

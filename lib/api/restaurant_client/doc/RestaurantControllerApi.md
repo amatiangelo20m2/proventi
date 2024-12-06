@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:32172/restaurantservice*
+All URIs are relative to *http://192.168.1.4:14918/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -24,7 +24,7 @@ Method | HTTP request | Description
 [**loginFromMobileDevice**](RestaurantControllerApi.md#loginfrommobiledevice) | **POST** /api/restaurant/employee/mobiledevice/login/{branchCode} | 
 [**resetBranchMessagesByType**](RestaurantControllerApi.md#resetbranchmessagesbytype) | **PUT** /api/restaurant/resetmessages/{branchCode} | 
 [**retrieveConfiguration**](RestaurantControllerApi.md#retrieveconfiguration) | **POST** /api/restaurant/restaurant/retrieveconfiguration/{branchCode}/{restaurantName} | 
-[**retrieveMessageByBranchCode**](RestaurantControllerApi.md#retrievemessagebybranchcode) | **GET** /api/restaurant/retrievemessage/{branchCode}/{messageType} | 
+[**retrieveMessageByBranchCode**](RestaurantControllerApi.md#retrievemessagebybranchcode) | **POST** /api/restaurant/retrievemessage | 
 [**retrieveReports**](RestaurantControllerApi.md#retrievereports) | **GET** /api/restaurant/retrievereports/{branchCode} | 
 [**updateAfterBookingMessage**](RestaurantControllerApi.md#updateafterbookingmessage) | **PUT** /api/restaurant/update/afterbookingmessage/{branchCode} | 
 [**updateBeforeBookingMessage**](RestaurantControllerApi.md#updatebeforebookingmessage) | **PUT** /api/restaurant/update/beforebookingmessage/{branchCode} | 
@@ -35,7 +35,7 @@ Method | HTTP request | Description
 
 
 # **createEmployee**
-> EmployeeDTO createEmployee(branchCode, employeeDTO)
+> EmployeeDTO createEmployee(branchCode, sendCredentials, employeeDTO)
 
 
 
@@ -45,10 +45,11 @@ import 'package:ventimetri_api_restaurant/api.dart';
 
 final api_instance = RestaurantControllerApi();
 final branchCode = branchCode_example; // String | 
+final sendCredentials = true; // bool | 
 final employeeDTO = EmployeeDTO(); // EmployeeDTO | 
 
 try {
-    final result = api_instance.createEmployee(branchCode, employeeDTO);
+    final result = api_instance.createEmployee(branchCode, sendCredentials, employeeDTO);
     print(result);
 } catch (e) {
     print('Exception when calling RestaurantControllerApi->createEmployee: $e\n');
@@ -60,6 +61,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **branchCode** | **String**|  | 
+ **sendCredentials** | **bool**|  | 
  **employeeDTO** | [**EmployeeDTO**](EmployeeDTO.md)|  | 
 
 ### Return type
@@ -656,7 +658,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **retrieveMessageByBranchCode**
-> GeneralMessage retrieveMessageByBranchCode(branchCode, messageType)
+> String retrieveMessageByBranchCode(branchCode, messageType, languageTag)
 
 
 
@@ -667,9 +669,10 @@ import 'package:ventimetri_api_restaurant/api.dart';
 final api_instance = RestaurantControllerApi();
 final branchCode = branchCode_example; // String | 
 final messageType = messageType_example; // String | 
+final languageTag = languageTag_example; // String | 
 
 try {
-    final result = api_instance.retrieveMessageByBranchCode(branchCode, messageType);
+    final result = api_instance.retrieveMessageByBranchCode(branchCode, messageType, languageTag);
     print(result);
 } catch (e) {
     print('Exception when calling RestaurantControllerApi->retrieveMessageByBranchCode: $e\n');
@@ -682,10 +685,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **branchCode** | **String**|  | 
  **messageType** | **String**|  | 
+ **languageTag** | **String**|  | 
 
 ### Return type
 
-[**GeneralMessage**](GeneralMessage.md)
+**String**
 
 ### Authorization
 

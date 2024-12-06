@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:32172/restaurantservice*
+All URIs are relative to *http://192.168.1.4:14918/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -60,7 +60,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **retrieveCustomerHistoryByBranchCode**
-> List<CustomerHistory> retrieveCustomerHistoryByBranchCode(branchCode)
+> List<Object> retrieveCustomerHistoryByBranchCode(branchCode)
 
 
 
@@ -87,7 +87,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<CustomerHistory>**](CustomerHistory.md)
+[**List<Object>**](Object.md)
 
 ### Authorization
 

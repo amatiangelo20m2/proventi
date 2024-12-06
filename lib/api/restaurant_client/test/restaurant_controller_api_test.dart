@@ -17,7 +17,7 @@ void main() {
   // final instance = RestaurantControllerApi();
 
   group('tests for RestaurantControllerApi', () {
-    //Future<EmployeeDTO> createEmployee(String branchCode, EmployeeDTO employeeDTO) async
+    //Future<EmployeeDTO> createEmployee(String branchCode, bool sendCredentials, EmployeeDTO employeeDTO) async
     test('test createEmployee', () async {
       // TODO
     });
@@ -92,7 +92,7 @@ void main() {
       // TODO
     });
 
-    //Future<GeneralMessage> retrieveMessageByBranchCode(String branchCode, String messageType) async
+    //Future<String> retrieveMessageByBranchCode(String branchCode, String messageType, String languageTag) async
     test('test retrieveMessageByBranchCode', () async {
       // TODO
     });

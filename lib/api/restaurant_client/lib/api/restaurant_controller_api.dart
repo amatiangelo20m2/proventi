@@ -21,8 +21,10 @@ class RestaurantControllerApi {
   ///
   /// * [String] branchCode (required):
   ///
+  /// * [bool] sendCredentials (required):
+  ///
   /// * [EmployeeDTO] employeeDTO (required):
-  Future<Response> createEmployeeWithHttpInfo(String branchCode, EmployeeDTO employeeDTO,) async {
+  Future<Response> createEmployeeWithHttpInfo(String branchCode, bool sendCredentials, EmployeeDTO employeeDTO,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/restaurant/employee/create/{branchCode}'
       .replaceAll('{branchCode}', branchCode);
@@ -33,6 +35,8 @@ class RestaurantControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'sendCredentials', sendCredentials));
 
     const contentTypes = <String>['application/json'];
 
@@ -52,9 +56,11 @@ class RestaurantControllerApi {
   ///
   /// * [String] branchCode (required):
   ///
+  /// * [bool] sendCredentials (required):
+  ///
   /// * [EmployeeDTO] employeeDTO (required):
-  Future<EmployeeDTO?> createEmployee(String branchCode, EmployeeDTO employeeDTO,) async {
-    final response = await createEmployeeWithHttpInfo(branchCode, employeeDTO,);
+  Future<EmployeeDTO?> createEmployee(String branchCode, bool sendCredentials, EmployeeDTO employeeDTO,) async {
+    final response = await createEmployeeWithHttpInfo(branchCode, sendCredentials, employeeDTO,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -747,17 +753,17 @@ class RestaurantControllerApi {
     return null;
   }
 
-  /// Performs an HTTP 'GET /api/restaurant/retrievemessage/{branchCode}/{messageType}' operation and returns the [Response].
+  /// Performs an HTTP 'POST /api/restaurant/retrievemessage' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] branchCode (required):
   ///
   /// * [String] messageType (required):
-  Future<Response> retrieveMessageByBranchCodeWithHttpInfo(String branchCode, String messageType,) async {
+  ///
+  /// * [String] languageTag (required):
+  Future<Response> retrieveMessageByBranchCodeWithHttpInfo(String branchCode, String messageType, String languageTag,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/restaurant/retrievemessage/{branchCode}/{messageType}'
-      .replaceAll('{branchCode}', branchCode)
-      .replaceAll('{messageType}', messageType);
+    final path = r'/api/restaurant/retrievemessage';
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -766,12 +772,16 @@ class RestaurantControllerApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
+      queryParams.addAll(_queryParams('', 'branchCode', branchCode));
+      queryParams.addAll(_queryParams('', 'messageType', messageType));
+      queryParams.addAll(_queryParams('', 'languageTag', languageTag));
+
     const contentTypes = <String>[];
 
 
     return apiClient.invokeAPI(
       path,
-      'GET',
+      'POST',
       queryParams,
       postBody,
       headerParams,
@@ -785,8 +795,10 @@ class RestaurantControllerApi {
   /// * [String] branchCode (required):
   ///
   /// * [String] messageType (required):
-  Future<GeneralMessage?> retrieveMessageByBranchCode(String branchCode, String messageType,) async {
-    final response = await retrieveMessageByBranchCodeWithHttpInfo(branchCode, messageType,);
+  ///
+  /// * [String] languageTag (required):
+  Future<String?> retrieveMessageByBranchCode(String branchCode, String messageType, String languageTag,) async {
+    final response = await retrieveMessageByBranchCodeWithHttpInfo(branchCode, messageType, languageTag,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -794,7 +806,7 @@ class RestaurantControllerApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'GeneralMessage',) as GeneralMessage;
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'String',) as String;
     
     }
     return null;

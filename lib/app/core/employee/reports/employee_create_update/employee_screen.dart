@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/employee/reports/employee_create_update/create_update_employee_screen.dart';
 import 'package:proventi/global/style.dart';
-
 import '../excel/employee_importer.dart';
 import '../report_employee_presence.dart';
 import '../state_manager/employee_state_manager.dart';
@@ -14,7 +13,7 @@ import '../state_manager/employee_state_manager.dart';
 class EmployeeScreen extends StatefulWidget {
   const EmployeeScreen({super.key});
 
-  static final String routeName = 'employee_screen';
+  static const String routeName = 'employee_screen';
 
   @override
   State<EmployeeScreen> createState() => _EmployeeScreenState();
@@ -50,7 +49,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EmployeeImporterFromExcel(),
+                      builder: (context) => const EmployeeImporterFromExcel(),
                     ),
                   );
                 },
@@ -66,11 +65,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
             leading: IconButton(onPressed: () {
-              //TODO da sistemare
-              //Navigator.of(context).pushNamed(ReportEmployeePresence.routeName);
-
-            }, icon: Icon(Icons.arrow_back),),
-            title: Text('Lista Dipendenti ' + employeeStateManager.branchName, style: TextStyle(fontSize: 12),),
+              Navigator.of(context).pushNamed(ReportEmployeePresence.routeName);
+            }, icon: const Icon(Icons.arrow_back),),
+            title: Text('Lista Dipendenti ${employeeStateManager.branchName}', style: const TextStyle(fontSize: 12),),
           ),
         );
       },
@@ -84,7 +81,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         employeeStateManager.retrieveCurrentEmployee();
       },
       child: ListView.builder(
-        padding: EdgeInsets.only(bottom: 140),
+        padding: const EdgeInsets.only(bottom: 140),
         itemCount: employeeStateManager.currentEmployeeList!.length!,
         itemBuilder: (BuildContext context, int index) {
 
@@ -99,7 +96,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 Fluttertoast.showToast(
                   webShowClose: true,
                   timeInSecForIosWeb: 6,
-                  msg: 'Visibilità modificata per ' + employeeDTO.firstName! + ' ' + employeeDTO.lastName!,
+                  msg: 'Visibilità modificata per ${employeeDTO.firstName!} ${employeeDTO.lastName!}',
                   toastLength: Toast.LENGTH_LONG,
                   gravity: ToastGravity.BOTTOM,
                   backgroundColor: Colors.blueGrey,
@@ -127,7 +124,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => CreateUpdateEmployeeScreen(employee: employeeDTO, isEmployeeUpdate: true, )));
 
 
-            }, icon: Icon(CupertinoIcons.pen),),
+            }, icon: const Icon(CupertinoIcons.pen),),
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,10 +136,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   ],
                 ),
                 Text(employeeDTO.jobDescription!.value.replaceAll('_', ' '), style: const TextStyle(fontSize: 8),),
-                Text('Assunto dal: ${italianDateFormat.format(employeeDTO.startDateInduction!)}',
-                    style: TextStyle(fontSize: 12)),
+                //Text('Assunto dal: ${italianDateFormat.format(employeeDTO.startDateInduction!)}', style: const TextStyle(fontSize: 12)),
                 if(employeeDTO.endDateInduction != null) Text('Data fine rapporto: ${italianDateFormat.format(employeeDTO.endDateInduction!)}',
-                    style: TextStyle(fontSize: 12, color: Colors.pink)),
+                    style: const TextStyle(fontSize: 12, color: Colors.pink)),
               ],
             ),
 

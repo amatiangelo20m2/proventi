@@ -10,8 +10,8 @@ class CustomerStateManager extends ChangeNotifier {
 
   late CustomerControllerApi _customerControllerApi;
 
-  List<CustomerHistory>? _currentCustomersList = [];
-  List<CustomerHistory>? get currentCustomersList => _currentCustomersList;
+  List<CustomerDTO>? _currentCustomersList = [];
+  List<CustomerDTO>? get currentCustomersList => _currentCustomersList;
 
   List<CustomerDTO>? _currentCutomerDTOList = [];
   List<CustomerDTO>? get currentCustomerDTOList => _currentCutomerDTOList;
@@ -34,7 +34,7 @@ class CustomerStateManager extends ChangeNotifier {
   retrieveCustomersListByBranchCode(String branchCode, bool refresh) async {
 
     if(refresh){
-      _currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode);
+      //_currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode);
     }
     _currentCutomerDTOList = await _customerControllerApi
         .retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode);
@@ -44,7 +44,7 @@ class CustomerStateManager extends ChangeNotifier {
   Future<void> refreshHistory() async {
     final prefs = await SharedPreferences.getInstance();
     branchCode = prefs.getString('branchCode')!;
-    _currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode!);
+    //_currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode!);
     _currentCutomerDTOList = await _customerControllerApi.retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode!);
     notifyListeners();
   }

@@ -71,6 +71,11 @@ void main() {
       // TODO
     });
 
+    // String prefix
+    test('to test the property `prefix`', () async {
+      // TODO
+    });
+
     // String phone
     test('to test the property `phone`', () async {
       // TODO

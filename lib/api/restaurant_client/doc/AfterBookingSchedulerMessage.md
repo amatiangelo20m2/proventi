@@ -23,8 +23,8 @@ Name | Type | Description | Notes
 **howManyDaysAfter** | **int** |  | [optional] 
 **dayHour** | **int** |  | [optional] 
 **whatsAppEnabled** | **bool** |  | [optional] 
-**smsEnabled** | **bool** |  | [optional] 
 **emailEnabled** | **bool** |  | [optional] 
+**smsEnabled** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

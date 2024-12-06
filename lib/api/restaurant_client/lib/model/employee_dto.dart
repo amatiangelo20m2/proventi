@@ -24,6 +24,7 @@ class EmployeeDTO {
     this.retribution,
     this.contractType,
     this.email,
+    this.prefix,
     this.phone,
     this.branchCode,
     this.remunerationType,
@@ -110,6 +111,14 @@ class EmployeeDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  String? prefix;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   String? phone;
 
   ///
@@ -169,6 +178,7 @@ class EmployeeDTO {
     other.retribution == retribution &&
     other.contractType == contractType &&
     other.email == email &&
+    other.prefix == prefix &&
     other.phone == phone &&
     other.branchCode == branchCode &&
     other.remunerationType == remunerationType &&
@@ -192,6 +202,7 @@ class EmployeeDTO {
     (retribution == null ? 0 : retribution!.hashCode) +
     (contractType == null ? 0 : contractType!.hashCode) +
     (email == null ? 0 : email!.hashCode) +
+    (prefix == null ? 0 : prefix!.hashCode) +
     (phone == null ? 0 : phone!.hashCode) +
     (branchCode == null ? 0 : branchCode!.hashCode) +
     (remunerationType == null ? 0 : remunerationType!.hashCode) +
@@ -202,7 +213,7 @@ class EmployeeDTO {
     (fired == null ? 0 : fired!.hashCode);
 
   @override
-  String toString() => 'EmployeeDTO[employeeId=$employeeId, lastName=$lastName, firstName=$firstName, gender=$gender, jobDescription=$jobDescription, dob=$dob, startDateInduction=$startDateInduction, endDateInduction=$endDateInduction, retribution=$retribution, contractType=$contractType, email=$email, phone=$phone, branchCode=$branchCode, remunerationType=$remunerationType, userName=$userName, password=$password, mobileDeviceDetails=$mobileDeviceDetails, visible=$visible, fired=$fired]';
+  String toString() => 'EmployeeDTO[employeeId=$employeeId, lastName=$lastName, firstName=$firstName, gender=$gender, jobDescription=$jobDescription, dob=$dob, startDateInduction=$startDateInduction, endDateInduction=$endDateInduction, retribution=$retribution, contractType=$contractType, email=$email, prefix=$prefix, phone=$phone, branchCode=$branchCode, remunerationType=$remunerationType, userName=$userName, password=$password, mobileDeviceDetails=$mobileDeviceDetails, visible=$visible, fired=$fired]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -260,6 +271,11 @@ class EmployeeDTO {
       json[r'email'] = this.email;
     } else {
       json[r'email'] = null;
+    }
+    if (this.prefix != null) {
+      json[r'prefix'] = this.prefix;
+    } else {
+      json[r'prefix'] = null;
     }
     if (this.phone != null) {
       json[r'phone'] = this.phone;
@@ -330,6 +346,7 @@ class EmployeeDTO {
         retribution: mapValueOfType<double>(json, r'retribution'),
         contractType: EmployeeDTOContractTypeEnum.fromJson(json[r'contractType']),
         email: mapValueOfType<String>(json, r'email'),
+        prefix: mapValueOfType<String>(json, r'prefix'),
         phone: mapValueOfType<String>(json, r'phone'),
         branchCode: mapValueOfType<String>(json, r'branchCode'),
         remunerationType: EmployeeDTORemunerationTypeEnum.fromJson(json[r'remunerationType']),
@@ -476,50 +493,26 @@ class EmployeeDTOJobDescriptionEnum {
   String toJson() => value;
 
   static const AMMINISTRATORE = EmployeeDTOJobDescriptionEnum._(r'AMMINISTRATORE');
-  static const ADDETTA_AL_MARKETING = EmployeeDTOJobDescriptionEnum._(r'ADDETTA_AL_MARKETING');
-  static const ADDETTO_ALL_ACCOGLIENZA_CLIENTI = EmployeeDTOJobDescriptionEnum._(r'ADDETTO_ALL_ACCOGLIENZA_CLIENTI');
-  static const AIUTO_BARMAN = EmployeeDTOJobDescriptionEnum._(r'AIUTO_BARMAN');
-  static const AIUTO_CUOCO = EmployeeDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
-  static const ADD_ALLA_CUCINA = EmployeeDTOJobDescriptionEnum._(r'ADD_ALLA_CUCINA');
-  static const AIUTO_CAMERIERE = EmployeeDTOJobDescriptionEnum._(r'AIUTO_CAMERIERE');
+  static const ACCOGLIENZA = EmployeeDTOJobDescriptionEnum._(r'ACCOGLIENZA');
   static const BARMAN = EmployeeDTOJobDescriptionEnum._(r'BARMAN');
-  static const CAMERIERE_DI_BAR = EmployeeDTOJobDescriptionEnum._(r'CAMERIERE_DI_BAR');
   static const CAMERIERE = EmployeeDTOJobDescriptionEnum._(r'CAMERIERE');
   static const CUOCO = EmployeeDTOJobDescriptionEnum._(r'CUOCO');
-  static const CUOCO_DI_RISTORANTE = EmployeeDTOJobDescriptionEnum._(r'CUOCO_DI_RISTORANTE');
-  static const COORDINATRICE_DI_SALA = EmployeeDTOJobDescriptionEnum._(r'COORDINATRICE_DI_SALA');
-  static const COMMIS_DI_CUCINA = EmployeeDTOJobDescriptionEnum._(r'COMMIS_DI_CUCINA');
-  static const DIRETTORE_SALA_DEHORS = EmployeeDTOJobDescriptionEnum._(r'DIRETTORE_SALA_DEHORS');
-  static const FOOD_AND_BEVERAGE_MANAGER = EmployeeDTOJobDescriptionEnum._(r'FOOD_AND_BEVERAGE_MANAGER');
+  static const DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'DIRETTORE');
+  static const VICE_DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
   static const LAVAPIATTI = EmployeeDTOJobDescriptionEnum._(r'LAVAPIATTI');
-  static const PASTICCIERE = EmployeeDTOJobDescriptionEnum._(r'PASTICCIERE');
   static const PIZZAIOLO = EmployeeDTOJobDescriptionEnum._(r'PIZZAIOLO');
-  static const RESPONSABILE_DI_SALA = EmployeeDTOJobDescriptionEnum._(r'RESPONSABILE_DI_SALA');
-  static const TECNICI_WEB = EmployeeDTOJobDescriptionEnum._(r'TECNICI_WEB');
 
   /// List of all possible values in this [enum][EmployeeDTOJobDescriptionEnum].
   static const values = <EmployeeDTOJobDescriptionEnum>[
     AMMINISTRATORE,
-    ADDETTA_AL_MARKETING,
-    ADDETTO_ALL_ACCOGLIENZA_CLIENTI,
-    AIUTO_BARMAN,
-    AIUTO_CUOCO,
-    ADD_ALLA_CUCINA,
-    AIUTO_CAMERIERE,
+    ACCOGLIENZA,
     BARMAN,
-    CAMERIERE_DI_BAR,
     CAMERIERE,
     CUOCO,
-    CUOCO_DI_RISTORANTE,
-    COORDINATRICE_DI_SALA,
-    COMMIS_DI_CUCINA,
-    DIRETTORE_SALA_DEHORS,
-    FOOD_AND_BEVERAGE_MANAGER,
+    DIRETTORE,
+    VICE_DIRETTORE,
     LAVAPIATTI,
-    PASTICCIERE,
     PIZZAIOLO,
-    RESPONSABILE_DI_SALA,
-    TECNICI_WEB,
   ];
 
   static EmployeeDTOJobDescriptionEnum? fromJson(dynamic value) => EmployeeDTOJobDescriptionEnumTypeTransformer().decode(value);
@@ -559,26 +552,14 @@ class EmployeeDTOJobDescriptionEnumTypeTransformer {
     if (data != null) {
       switch (data) {
         case r'AMMINISTRATORE': return EmployeeDTOJobDescriptionEnum.AMMINISTRATORE;
-        case r'ADDETTA_AL_MARKETING': return EmployeeDTOJobDescriptionEnum.ADDETTA_AL_MARKETING;
-        case r'ADDETTO_ALL_ACCOGLIENZA_CLIENTI': return EmployeeDTOJobDescriptionEnum.ADDETTO_ALL_ACCOGLIENZA_CLIENTI;
-        case r'AIUTO_BARMAN': return EmployeeDTOJobDescriptionEnum.AIUTO_BARMAN;
-        case r'AIUTO_CUOCO': return EmployeeDTOJobDescriptionEnum.AIUTO_CUOCO;
-        case r'ADD_ALLA_CUCINA': return EmployeeDTOJobDescriptionEnum.ADD_ALLA_CUCINA;
-        case r'AIUTO_CAMERIERE': return EmployeeDTOJobDescriptionEnum.AIUTO_CAMERIERE;
+        case r'ACCOGLIENZA': return EmployeeDTOJobDescriptionEnum.ACCOGLIENZA;
         case r'BARMAN': return EmployeeDTOJobDescriptionEnum.BARMAN;
-        case r'CAMERIERE_DI_BAR': return EmployeeDTOJobDescriptionEnum.CAMERIERE_DI_BAR;
         case r'CAMERIERE': return EmployeeDTOJobDescriptionEnum.CAMERIERE;
         case r'CUOCO': return EmployeeDTOJobDescriptionEnum.CUOCO;
-        case r'CUOCO_DI_RISTORANTE': return EmployeeDTOJobDescriptionEnum.CUOCO_DI_RISTORANTE;
-        case r'COORDINATRICE_DI_SALA': return EmployeeDTOJobDescriptionEnum.COORDINATRICE_DI_SALA;
-        case r'COMMIS_DI_CUCINA': return EmployeeDTOJobDescriptionEnum.COMMIS_DI_CUCINA;
-        case r'DIRETTORE_SALA_DEHORS': return EmployeeDTOJobDescriptionEnum.DIRETTORE_SALA_DEHORS;
-        case r'FOOD_AND_BEVERAGE_MANAGER': return EmployeeDTOJobDescriptionEnum.FOOD_AND_BEVERAGE_MANAGER;
+        case r'DIRETTORE': return EmployeeDTOJobDescriptionEnum.DIRETTORE;
+        case r'VICE_DIRETTORE': return EmployeeDTOJobDescriptionEnum.VICE_DIRETTORE;
         case r'LAVAPIATTI': return EmployeeDTOJobDescriptionEnum.LAVAPIATTI;
-        case r'PASTICCIERE': return EmployeeDTOJobDescriptionEnum.PASTICCIERE;
         case r'PIZZAIOLO': return EmployeeDTOJobDescriptionEnum.PIZZAIOLO;
-        case r'RESPONSABILE_DI_SALA': return EmployeeDTOJobDescriptionEnum.RESPONSABILE_DI_SALA;
-        case r'TECNICI_WEB': return EmployeeDTOJobDescriptionEnum.TECNICI_WEB;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

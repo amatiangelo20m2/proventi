@@ -22,7 +22,7 @@ void main() {
       // TODO
     });
 
-    //Future<List<CustomerHistory>> retrieveCustomerHistoryByBranchCode(String branchCode) async
+    //Future<List<Object>> retrieveCustomerHistoryByBranchCode(String branchCode) async
     test('test retrieveCustomerHistoryByBranchCode', () async {
       // TODO
     });

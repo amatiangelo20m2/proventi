@@ -77,9 +77,10 @@ class BookingToManageCard extends StatelessWidget {
                     Consumer<CustomerStateManager>(
                       builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
                         if(customerStateManager.currentCustomersList!.where((element) => element.customerId == booking.customer!.customerId).isNotEmpty){
-                          CustomerHistory customerHistory = customerStateManager.currentCustomersList!.where((element)
+                          CustomerDTO customerHistory = customerStateManager.currentCustomersList!.where((element)
                           => element.customerId == booking.customer!.customerId).first;
-                          if(customerHistory.nonArrivatoCount! > 0){
+                          //TODO DA SISTEMARE ASSOUTAMENTE STA STORIA DEL CUSTOMER HISTORY
+                          if(customerHistory.customerId! < 0){
                             return Positioned(
                               right: -10,
                               child: GestureDetector(
@@ -91,7 +92,7 @@ class BookingToManageCard extends StatelessWidget {
                                   controller: _controller,
 
                                   content: Text(
-                                    'Il cliente non si è presentato ${customerHistory.nonArrivatoCount!} volte',
+                                    'Il cliente non si è presentato ${customerHistory.customerId!} volte',
                                     softWrap: true,
                                     style: const TextStyle(
                                       color: Colors.black,

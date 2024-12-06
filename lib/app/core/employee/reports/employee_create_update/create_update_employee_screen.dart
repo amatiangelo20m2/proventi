@@ -280,8 +280,8 @@ class _CreateUpdateEmployeeScreenState extends State<CreateUpdateEmployeeScreen>
           branchCode: branchCode
       );
 
-      await Provider.of<EmployeeStateManager>(context, listen: false).restaurantControllerApi
-          .createEmployee(branchCode, newEmployee);
+      await Provider.of<EmployeeStateManager>(context, listen: false).restaurantControllerApi!
+          .createEmployee(branchCode, false, newEmployee);
 
       await Provider.of<EmployeeStateManager>(context, listen: false).retrieveCurrentEmployee();
       Fluttertoast.showToast(msg: 'Dipendente creato con successo!');
@@ -316,7 +316,7 @@ class _CreateUpdateEmployeeScreenState extends State<CreateUpdateEmployeeScreen>
           branchCode: branchCode
       );
 
-      await Provider.of<EmployeeStateManager>(context, listen: false).restaurantControllerApi.updateEmployee(branchCode, updatedEmployee);
+      await Provider.of<EmployeeStateManager>(context, listen: false).restaurantControllerApi!.updateEmployee(branchCode, updatedEmployee);
       Fluttertoast.showToast(msg: 'Dipendente aggiornato con successo!');
       await Provider.of<EmployeeStateManager>(context, listen: false).retrieveCurrentEmployee();
       Navigator.pop(context);
