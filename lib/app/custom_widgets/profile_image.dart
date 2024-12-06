@@ -8,7 +8,11 @@ import '../../state_manager/communication_state_manager.dart';
 import '../core/customer/single_customer_history.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({super.key,required this.branchCode, required this.avatarRadious, required this.customer, required this.allowNavigation});
+  const ProfileImage({super.key,required
+  this.branchCode,
+    required this.avatarRadious,
+    required this.customer,
+    required this.allowNavigation});
 
   final CustomerDTO customer;
   final String branchCode;

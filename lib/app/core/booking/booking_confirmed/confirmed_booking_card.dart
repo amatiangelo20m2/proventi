@@ -9,16 +9,14 @@ import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dar
 import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
-import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import '../../../../api/communication_client/lib/api.dart';
-import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../custom_widgets/profile_image.dart';
 import '../bookings_utils.dart';
 
 class BookingConfirmedCard extends StatelessWidget {
+
   final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
   final Color shadeColor;
@@ -29,7 +27,9 @@ class BookingConfirmedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+
         _showBookingActionMenuConfermato(context, booking);
+
       },
       child: Dismissible(
         key: Key(booking.bookingCode.toString()),
@@ -168,7 +168,7 @@ class BookingConfirmedCard extends StatelessWidget {
               ),
             ],
           ),
-          if((booking.specialRequests?.isNotEmpty ?? false)) Text('💬 ' + booking.specialRequests!, style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
+          if((booking.specialRequests?.isNotEmpty ?? false)) Text('💬 ${booking.specialRequests!}', style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
           Divider(height: 2, color: Colors.grey.shade300, ),
         ],
       ),
@@ -256,6 +256,7 @@ class BookingConfirmedCard extends StatelessWidget {
       ),
     );
   }
+
   Future<bool?> _showConfirmationDialog(BuildContext context, String message, String confirmText, String goBackText) async {
     return await showCupertinoDialog<bool>(
       context: context,

@@ -34,6 +34,7 @@ class EmployeeStateManager with ChangeNotifier {
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
     _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
 
+
     print('_restaurantControllerApi: $_restaurantControllerApi');
     retrieveCurrentEmployee();
     // retrievePresenteEmployeeForCurrentBranchAndCurrentDate(branchCode, now);

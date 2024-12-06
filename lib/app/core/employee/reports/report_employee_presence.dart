@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/app/core/employee/reports/state_manager/employee_state_manager.dart';
 import 'package:proventi/global/style.dart';
@@ -144,7 +145,6 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                     }else if(snapshot.connectionState == ConnectionState.done){
 
                       employeeReportList = snapshot.data;
-
                       List<EmployeeDTO> currentEmployeeList = [];
 
                       employeeStateManager.currentEmployeeList!.forEach((employee) {
@@ -160,12 +160,8 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                               currentEmployeeList.add(employee);
                             }
                           }
-
                         }
-
                       });
-
-
                       return Expanded(
                         child: ListView.builder(
                           padding: const EdgeInsets.only(bottom: 150),
@@ -290,8 +286,16 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                     children: [
                       Row(
                         children: [
-                          Text('${widget.currentEmployeeDTO.lastName!} ${widget.currentEmployeeDTO.firstName!}', style: const TextStyle(fontSize: 15),),
-                          Text('(${widget.currentEmployeeDTO.employeeId!})', style: const TextStyle(fontSize: 6),),
+                          ProfileImage(branchCode: widget.currentEmployeeDTO.branchCode!,
+                              avatarRadious: 30,
+                              customer: CustomerDTO(prefix: widget.currentEmployeeDTO.prefix, phone: widget.currentEmployeeDTO.phone),
+                              allowNavigation: false),
+                          Row(
+                            children: [
+                              Text('${widget.currentEmployeeDTO.lastName!} ${widget.currentEmployeeDTO.firstName!}', style: const TextStyle(fontSize: 15),),
+                              Text('(${widget.currentEmployeeDTO.employeeId!})', style: const TextStyle(fontSize: 6),),
+                            ],
+                          ),
                         ],
                       ),
                       Text(widget.currentEmployeeDTO.jobDescription!.value!.replaceAll('_', ' '), style: const TextStyle(fontSize: 9),),
