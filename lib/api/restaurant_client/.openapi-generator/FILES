@@ -10,6 +10,7 @@ doc/BookingDTO.md
 doc/CentralinoMessage.md
 doc/CustomerControllerApi.md
 doc/CustomerDTO.md
+doc/CustomerHistoryDTO.md
 doc/EmployeeDTO.md
 doc/EmployeePresenceReportDTO.md
 doc/EmployeeReportSummaryDTO.md
@@ -43,6 +44,7 @@ lib/model/before_booking_scheduled_message.dart
 lib/model/booking_dto.dart
 lib/model/centralino_message.dart
 lib/model/customer_dto.dart
+lib/model/customer_history_dto.dart
 lib/model/employee_dto.dart
 lib/model/employee_presence_report_dto.dart
 lib/model/employee_report_summary_dto.dart
@@ -63,6 +65,7 @@ test/booking_dto_test.dart
 test/centralino_message_test.dart
 test/customer_controller_api_test.dart
 test/customer_dto_test.dart
+test/customer_history_dto_test.dart
 test/employee_dto_test.dart
 test/employee_presence_report_dto_test.dart
 test/employee_report_summary_dto_test.dart

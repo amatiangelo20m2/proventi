@@ -31,6 +31,7 @@ Name | Type | Description | Notes
 **tags** | **String** |  | [optional] 
 **notes** | **String** |  | [optional] 
 **registrationDate** | [**DateTime**](DateTime.md) |  | [optional] 
+**branchCode** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

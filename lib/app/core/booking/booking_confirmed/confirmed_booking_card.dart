@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
+import 'package:proventi/app/core/customer/customer_state_manager.dart';
 import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../custom_widgets/profile_image.dart';
+import '../../whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 
 class BookingConfirmedCard extends StatelessWidget {
@@ -97,11 +100,25 @@ class BookingConfirmedCard extends StatelessWidget {
 
   Widget _buildCardContent(BuildContext context) {
     return ListTile(
-      leading: ProfileImage(
-        allowNavigation: true,
-        customer: booking.customer!,
-        branchCode: booking.branchCode!,
-        avatarRadious: 30,
+      leading: Consumer<CustomerStateManager>(
+        builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+
+          int noShowBookings = 0;
+
+          if(customerStateManager.historicalCustomerData!.where((element)
+          => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
+            CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
+            => element.customerDTO!.customerId == booking.customer!.customerId!).first;
+            noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
+          }
+          return ProfileImage(
+            allowNavigation: true,
+            customer: booking.customer!,
+            branchCode: booking.branchCode!,
+            avatarRadious: 30,
+            noShowBookings: noShowBookings,
+          );
+        },
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,30 +143,31 @@ class BookingConfirmedCard extends StatelessWidget {
                   buildComponentGuest(booking.numGuests.toString()),
                   Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
                     style: TextStyle(color: Colors.grey[900]),),
+                  Consumer<CustomerStateManager>(
+                      builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+
+                        int currentBookingsOfTheCurrentCustomer = 0;
+
+                        if(customerStateManager.historicalCustomerData!.where((element)
+                        => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
+                          CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
+                          => element.customerDTO!.customerId == booking.customer!.customerId!).first;
+                          currentBookingsOfTheCurrentCustomer = customerHistoryDTO.historicalBookingsNumber!;
+                        }
+                        return Card(
+                            color: Colors.blueGrey,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 7, right: 7),
+                              child: Center(child: Text(currentBookingsOfTheCurrentCustomer.toString(), style: TextStyle(color: Colors.white),)),
+                            ));
+                      },
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  Consumer<CommunicationStateManager>(
-                    builder: (BuildContext context,
-                        CommunicationStateManager communication,
-                        Widget? child) {
-                      return IconButton(onPressed: () {
-                        showCupertinoModalBottomSheet(
-                          expand: true,
-                          elevation: 10,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DashChatCustomized20(bookingDTO: booking,);
-                          },
-                        );
-                      }, icon: Stack(children: [
-                        const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25,),
-                        if(communication.checkIfChatsContainCurrentNumberWithUnreadChats(booking)) const Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red,))
-                      ]),
-                      );
-                    },
-                  ),
+                  ChatIconWhatsApp(booking: booking,),
+
                   IconButton(onPressed: (){
                     showCupertinoModalBottomSheet(
                       expand: true,

@@ -10,6 +10,7 @@ import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 
+import '../../whatsapp/chat_icon_whastapp.dart';
 import '../../whatsapp/whatsapp_chat.dart';
 
 class ReservationEditedByCustomerCard extends StatelessWidget {
@@ -66,22 +67,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                               color: Colors.grey[900],
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              showCupertinoModalBottomSheet(
-                                expand: true,
-                                elevation: 10,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return DashChatCustomized20(bookingDTO: booking,);
-                                },
-                              );
-                            },
-                            icon: const Icon(
-                              FontAwesomeIcons.whatsapp,
-                              color: Colors.green,
-                            ),
-                          ),
+                          ChatIconWhatsApp(booking: booking,),
                           Text(getFormEmoji(formDTOs, booking)),
                         ],
                       ),

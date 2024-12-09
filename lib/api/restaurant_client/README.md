@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.4:14918/restaurantservice*
+All URIs are relative to *http://192.168.1.9:37148/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -67,7 +67,7 @@ Class | Method | HTTP request | Description
 *BookingControllerApi* | [**retrieveBookingByCode**](doc//BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 
 *BookingControllerApi* | [**retrieveBookingByStatusAndBranchCode**](doc//BookingControllerApi.md#retrievebookingbystatusandbranchcode) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{fromDate}/{toDate} | 
 *BookingControllerApi* | [**updateBooking**](doc//BookingControllerApi.md#updatebooking) | **PUT** /api/booking/updatebooking | 
-*CustomerControllerApi* | [**findcustomerByPhoneAndPrefix**](doc//CustomerControllerApi.md#findcustomerbyphoneandprefix) | **GET** /api/customer/retrieve/{prefix}/{phoneNumber} | 
+*CustomerControllerApi* | [**findCustomerByPhoneAndPrefixAndBranchCode**](doc//CustomerControllerApi.md#findcustomerbyphoneandprefixandbranchcode) | **GET** /api/customer/retrieve/{prefix}/{phoneNumber}/{branchCode} | 
 *CustomerControllerApi* | [**retrieveCustomerHistoryByBranchCode**](doc//CustomerControllerApi.md#retrievecustomerhistorybybranchcode) | **GET** /api/customer/retrievecustomerhistory/{branchCode} | 
 *CustomerControllerApi* | [**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](doc//CustomerControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/customer/retrievehistoricalcustomers/{branchCode} | 
 *CustomerControllerApi* | [**save**](doc//CustomerControllerApi.md#save) | **POST** /api/customer/save | 
@@ -119,6 +119,7 @@ Class | Method | HTTP request | Description
  - [BookingDTO](doc//BookingDTO.md)
  - [CentralinoMessage](doc//CentralinoMessage.md)
  - [CustomerDTO](doc//CustomerDTO.md)
+ - [CustomerHistoryDTO](doc//CustomerHistoryDTO.md)
  - [EmployeeDTO](doc//EmployeeDTO.md)
  - [EmployeePresenceReportDTO](doc//EmployeePresenceReportDTO.md)
  - [EmployeeReportSummaryDTO](doc//EmployeeReportSummaryDTO.md)

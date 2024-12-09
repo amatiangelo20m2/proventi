@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/custom_widgets/profile_image.dart';
@@ -200,7 +201,7 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                                     style: globalStyle,
                                   ),
                                   subtitle: Text(
-                                    'id: ${booking.bookingId}',
+                                    'Ore: ${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
                                     style: smallStyle.copyWith(fontSize: 10),
                                   ),
                                   trailing: Text(

@@ -26,16 +26,16 @@ class _CustomerScreenState extends State<CustomerScreen> {
   Widget build(BuildContext context) {
     return Consumer<CustomerStateManager>(
       builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
-        final List<CustomerDTO> customers = customerStateManager.currentCustomerDTOList!;
+        final List<CustomerHistoryDTO> customerHistoryList = customerStateManager.historicalCustomerData!;
 
         // Grouping and filtering customers
-        Map<String, List<CustomerDTO>> groupedCustomers = {};
-        for (var customer in customers) {
-          if (customer.lastName != null &&
-              (customer.lastName!.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                  customer.firstName?.toLowerCase().contains(searchQuery.toLowerCase()) == true)) {
-            String firstLetter = customer.lastName![0].toUpperCase();
-            groupedCustomers.putIfAbsent(firstLetter, () => []).add(customer);
+        Map<String, List<CustomerHistoryDTO>> groupedCustomers = {};
+        for (var customerHist in customerHistoryList) {
+          if (customerHist.customerDTO!.lastName != null &&
+              (customerHist.customerDTO!.lastName!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                  customerHist.customerDTO!.firstName?.toLowerCase().contains(searchQuery.toLowerCase()) == true)) {
+            String firstLetter = customerHist.customerDTO!.lastName![0].toUpperCase();
+            groupedCustomers.putIfAbsent(firstLetter, () => []).add(customerHist);
           }
         }
 
@@ -44,32 +44,35 @@ class _CustomerScreenState extends State<CustomerScreen> {
         // Preparing DataRow entries
         List<DataRow> customerRows = [];
         for (var key in sortedKeys) {
-          List<CustomerDTO> customersGroup =
-          groupedCustomers[key]!..sort((a, b) => a.lastName!.compareTo(b.lastName!));
-          for (var customer in customersGroup) {
+          List<CustomerHistoryDTO> customersGroup =
+          groupedCustomers[key]!..sort((a, b) => a.customerDTO!.lastName!.compareTo(b.customerDTO!.lastName!));
+          for (var customerHist in customersGroup) {
             customerRows.add(
               DataRow(
                 cells: [
-                  DataCell(ProfileImage(
+                  DataCell(
+                      ProfileImage(
                     allowNavigation: true,
-                    customer: customer,
+                    customer: customerHist.customerDTO!,
                     branchCode: customerStateManager.branchCode,
                     avatarRadious: 30,
+                        noShowBookings: customerHist.historicalNoShowsNumber!,
                   )),
                   DataCell(
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${customer.firstName} ${customer.lastName}', style: testStyle),
+                        Text('${customerHist.customerDTO!.firstName} ${customerHist.customerDTO!.lastName}', style: testStyle),
                         Text(
-                          '+ ${customer.prefix ?? ""} ${customer.phone ?? ""}',
+                          '+ ${customerHist.customerDTO!.prefix ?? ""} ${customerHist.customerDTO!.phone ?? ""}',
                           style: const TextStyle(fontSize: 10),
                         ),
                       ],
                     ),
                   ),
-                  DataCell(Text(customer.email ?? "", style: testStyle)),
+                  DataCell(Text(customerHist.customerDTO!.email ?? "", style: testStyle)),
+                  DataCell(Text(customerHist.historicalBookingsNumber!.toString(), style: testStyle)),
                 ],
               ),
             );
@@ -79,14 +82,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Text('I miei clienti', style: TextStyle(color: Colors.grey[900], fontSize: 15)),
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  await customerStateManager.refreshHistory();
-                },
-                icon: const Icon(Icons.refresh),
-              ),
-            ],
           ),
           body: Column(
             children: [
@@ -108,21 +103,31 @@ class _CustomerScreenState extends State<CustomerScreen> {
                     // Calculate the width for the table
                     double tableWidth = constraints.maxWidth;
 
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(minWidth: tableWidth),
-                          child: DataTable(
-                            columns: const [
-                              DataColumn(label: Text('', style: testStyle)),
-                              DataColumn(label: Text('Nome', style: testStyle)),
-                              DataColumn(label: Text('Email', style: testStyle)),
-                            ],
-                            rows: customerRows,
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await customerStateManager.refreshHistory();
+                      },
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(minWidth: tableWidth),
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('', style: testStyle)),
+                                    DataColumn(label: Text('Nome', style: testStyle)),
+                                    DataColumn(label: Text('Email', style: testStyle)),
+                                    DataColumn(label: Text('Prenotazioni', style: testStyle)),
+                                  ],
+                                  rows: customerRows,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     );
                   },

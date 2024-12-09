@@ -36,6 +36,7 @@ class CustomerDTO {
     this.tags,
     this.notes,
     this.registrationDate,
+    this.branchCode,
   });
 
   ///
@@ -222,6 +223,14 @@ class CustomerDTO {
   ///
   DateTime? registrationDate;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? branchCode;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is CustomerDTO &&
     other.customerId == customerId &&
@@ -246,7 +255,8 @@ class CustomerDTO {
     other.emailSpamOptOut == emailSpamOptOut &&
     other.tags == tags &&
     other.notes == notes &&
-    other.registrationDate == registrationDate;
+    other.registrationDate == registrationDate &&
+    other.branchCode == branchCode;
 
   @override
   int get hashCode =>
@@ -273,10 +283,11 @@ class CustomerDTO {
     (emailSpamOptOut == null ? 0 : emailSpamOptOut!.hashCode) +
     (tags == null ? 0 : tags!.hashCode) +
     (notes == null ? 0 : notes!.hashCode) +
-    (registrationDate == null ? 0 : registrationDate!.hashCode);
+    (registrationDate == null ? 0 : registrationDate!.hashCode) +
+    (branchCode == null ? 0 : branchCode!.hashCode);
 
   @override
-  String toString() => 'CustomerDTO[customerId=$customerId, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, prefix=$prefix, birthDate=$birthDate, presenceCount=$presenceCount, origin=$origin, lastPresence=$lastPresence, flames=$flames, address=$address, city=$city, province=$province, postalCode=$postalCode, country=$country, privacyConsent=$privacyConsent, marketingConsent=$marketingConsent, profilingConsent=$profilingConsent, emailSpamOptOut=$emailSpamOptOut, tags=$tags, notes=$notes, registrationDate=$registrationDate]';
+  String toString() => 'CustomerDTO[customerId=$customerId, firstName=$firstName, lastName=$lastName, email=$email, phone=$phone, prefix=$prefix, birthDate=$birthDate, presenceCount=$presenceCount, origin=$origin, lastPresence=$lastPresence, flames=$flames, address=$address, city=$city, province=$province, postalCode=$postalCode, country=$country, privacyConsent=$privacyConsent, marketingConsent=$marketingConsent, profilingConsent=$profilingConsent, emailSpamOptOut=$emailSpamOptOut, tags=$tags, notes=$notes, registrationDate=$registrationDate, branchCode=$branchCode]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -395,6 +406,11 @@ class CustomerDTO {
     } else {
       json[r'registrationDate'] = null;
     }
+    if (this.branchCode != null) {
+      json[r'branchCode'] = this.branchCode;
+    } else {
+      json[r'branchCode'] = null;
+    }
     return json;
   }
 
@@ -440,6 +456,7 @@ class CustomerDTO {
         tags: mapValueOfType<String>(json, r'tags'),
         notes: mapValueOfType<String>(json, r'notes'),
         registrationDate: mapDateTime(json, r'registrationDate', r''),
+        branchCode: mapValueOfType<String>(json, r'branchCode'),
       );
     }
     return null;

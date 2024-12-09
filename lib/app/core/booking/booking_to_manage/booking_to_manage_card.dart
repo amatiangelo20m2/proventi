@@ -16,6 +16,7 @@ import 'package:super_tooltip/super_tooltip.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
 import '../../../../global/date_methods_utility.dart';
+import '../../whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 
 class BookingToManageCard extends StatelessWidget {
@@ -59,27 +60,37 @@ class BookingToManageCard extends StatelessWidget {
             trailing:
             Text(
               formatDuration(DateTime.now().difference(booking.createdAt!)),
-              style: const TextStyle(color: Colors.redAccent, fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.grey[900], fontSize: 14, fontWeight: FontWeight.bold),
             ),
             title: Row(
               children: [
                 Stack(
                   children: [
-                    Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ProfileImage(
-                      allowNavigation: true,
-                      customer: booking.customer!,
-                      branchCode: booking.branchCode!,
-                      avatarRadious: 30,
-                    ),
-                  ),
                     Consumer<CustomerStateManager>(
                       builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
-                        if(customerStateManager.currentCustomersList!.where((element) => element.customerId == booking.customer!.customerId).isNotEmpty){
-                          CustomerDTO customerHistory = customerStateManager.currentCustomersList!.where((element)
-                          => element.customerId == booking.customer!.customerId).first;
-                          //TODO DA SISTEMARE ASSOUTAMENTE STA STORIA DEL CUSTOMER HISTORY
+
+                        int noShowBookings = 0;
+
+                        if(customerStateManager.historicalCustomerData!.where((element)
+                        => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
+                          CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
+                          => element.customerDTO!.customerId == booking.customer!.customerId!).first;
+                          noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
+                        }
+                        return ProfileImage(
+                          allowNavigation: true,
+                          customer: booking.customer!,
+                          branchCode: booking.branchCode!,
+                          avatarRadious: 30,
+                          noShowBookings: noShowBookings,
+                        );
+                      },
+                    ),
+                    Consumer<CustomerStateManager>(
+                      builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+                        if(customerStateManager.historicalCustomerData!.where((element) => element.customerDTO!.customerId == booking.customer!.customerId).isNotEmpty){
+                          CustomerDTO customerHistory = customerStateManager.historicalCustomerData!.where((element)
+                          => element.customerDTO!.customerId == booking.customer!.customerId).first.customerDTO!;
                           if(customerHistory.customerId! < 0){
                             return Positioned(
                               right: -10,
@@ -156,20 +167,29 @@ class BookingToManageCard extends StatelessWidget {
                             },
                           );
                         }, icon: const Icon(CupertinoIcons.settings_solid)),
-                        GestureDetector(onTap: () {
+                        ChatIconWhatsApp(booking: booking,),
+                        Consumer<CustomerStateManager>(
+                          builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
 
-                          showCupertinoModalBottomSheet(
-                            expand: true,
-                            elevation: 10,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DashChatCustomized20(bookingDTO: booking,);
-                            },
-                          );
+                            int currentBookingsOfTheCurrentCustomer = 0;
 
-                        }, child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
+                            if(customerStateManager.historicalCustomerData!.where((element)
+                            => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
+                              CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
+                              => element.customerDTO!.customerId == booking.customer!.customerId!).first;
+                              currentBookingsOfTheCurrentCustomer = customerHistoryDTO.historicalBookingsNumber!;
+                            }
+                            return Card(
+                                color: Colors.blueGrey,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 7, right: 7),
+                                  child: Center(child: Text(currentBookingsOfTheCurrentCustomer.toString(), style: TextStyle(color: Colors.white),)),
+                                ));
+                          },
+                        ),
                       ],
                     ),
+
                     if(booking.specialRequests?.isNotEmpty ?? false)
                       Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
 

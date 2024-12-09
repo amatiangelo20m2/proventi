@@ -9,11 +9,12 @@ import '../environment_config.dart';
 
 class CommunicationStateManager extends ChangeNotifier {
 
+  final GlobalKey<NavigatorState> navigatorKey;
   late ApiClient _communicationClient;
 
   late WhatsAppConfigurationControllerApi whatsAppConfigurationControllerApi;
 
-  CommunicationStateManager(){
+  CommunicationStateManager(this.navigatorKey){
     _initializeClient();
     _initializePrefs();
   }
@@ -32,19 +33,17 @@ class CommunicationStateManager extends ChangeNotifier {
   }
 
   DateTime? _lastApiCallTime;
-  static const int _apiCallIntervalSeconds = 75;
+  static const int _apiCallIntervalSeconds = 30;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
 
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
     print('Refresh conf and in case retrieve chat daat');
     final currentTime = DateTime.now();
     // Check if 60 seconds have passed since the last API call
-    if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds
-        < _apiCallIntervalSeconds) {
+    if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds < _apiCallIntervalSeconds) {
       print('Skipping API call, last call was less than ${_apiCallIntervalSeconds} seconds ago.');
       return currentWhatsAppConfigurationDTO;
     }
-
     // Update the last call time
     _lastApiCallTime = currentTime;
 
@@ -60,23 +59,25 @@ class CommunicationStateManager extends ChangeNotifier {
 
   List<AllChatListDataDTO>? chatList = [];
 
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   Future<void> retrieveChatData() async {
     try {
-      BuildContext context = navigatorKey.currentContext!;
-      RestaurantStateManager restaurantStateManager =
-      Provider.of<RestaurantStateManager>(context, listen: false);
-      if(restaurantStateManager.allBookings!.isNotEmpty && restaurantStateManager.allBookings!.where((element) => element.status == RESTAURANT_CLIENT.BookingDTOStatusEnum.CONFERMATO).isNotEmpty){
+      BuildContext? context = navigatorKey.currentContext;
+      if (context == null) {
+        print('Navigator context is null');
+        return;
+      }
+      RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
+      if(restaurantStateManager.allBookings!.isNotEmpty){
         String branchCode = prefs.getString('branchCode').toString();
         chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 30);
-
       }else{
         print('No booking found, useless to retrieve chat data');
       }
 
     }catch(e){
       print('chat data set size : ${chatList!.length.toString()}');
-      print('Error: ' + e.toString());
+      print('Error -> : ' + e.toString());
     }
 
     notifyListeners();
@@ -128,12 +129,10 @@ class CommunicationStateManager extends ChangeNotifier {
   }
 
   checkIfChatsContainCurrentNumberWithUnreadChats(RESTAURANT_CLIENT.BookingDTO booking) {
-
-      if(chatList!.where((element) => element.fromNumber
-          == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty) {
+    
+      if(chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty) {
         AllChatListDataDTO chatListDataDTO = chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').first;
-        if(chatListDataDTO.unreadCount! > 0
-            && !chatListDataDTO.fromMe!){
+        if(chatListDataDTO.unreadCount! > 0 && !chatListDataDTO.fromMe!){
           return true;
         }
       }

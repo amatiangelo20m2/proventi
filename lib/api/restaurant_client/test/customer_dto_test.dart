@@ -131,6 +131,11 @@ void main() {
       // TODO
     });
 
+    // String branchCode
+    test('to test the property `branchCode`', () async {
+      // TODO
+    });
+
 
   });
 

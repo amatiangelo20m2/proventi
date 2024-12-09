@@ -16,17 +16,20 @@ class CustomerControllerApi {
 
   final ApiClient apiClient;
 
-  /// Performs an HTTP 'GET /api/customer/retrieve/{prefix}/{phoneNumber}' operation and returns the [Response].
+  /// Performs an HTTP 'GET /api/customer/retrieve/{prefix}/{phoneNumber}/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] prefix (required):
   ///
   /// * [String] phoneNumber (required):
-  Future<Response> findcustomerByPhoneAndPrefixWithHttpInfo(String prefix, String phoneNumber,) async {
+  ///
+  /// * [String] branchCode (required):
+  Future<Response> findCustomerByPhoneAndPrefixAndBranchCodeWithHttpInfo(String prefix, String phoneNumber, String branchCode,) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/customer/retrieve/{prefix}/{phoneNumber}'
+    final path = r'/api/customer/retrieve/{prefix}/{phoneNumber}/{branchCode}'
       .replaceAll('{prefix}', prefix)
-      .replaceAll('{phoneNumber}', phoneNumber);
+      .replaceAll('{phoneNumber}', phoneNumber)
+      .replaceAll('{branchCode}', branchCode);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -54,8 +57,10 @@ class CustomerControllerApi {
   /// * [String] prefix (required):
   ///
   /// * [String] phoneNumber (required):
-  Future<CustomerDTO?> findcustomerByPhoneAndPrefix(String prefix, String phoneNumber,) async {
-    final response = await findcustomerByPhoneAndPrefixWithHttpInfo(prefix, phoneNumber,);
+  ///
+  /// * [String] branchCode (required):
+  Future<CustomerDTO?> findCustomerByPhoneAndPrefixAndBranchCode(String prefix, String phoneNumber, String branchCode,) async {
+    final response = await findCustomerByPhoneAndPrefixAndBranchCodeWithHttpInfo(prefix, phoneNumber, branchCode,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -153,7 +158,7 @@ class CustomerControllerApi {
   /// Parameters:
   ///
   /// * [String] branchCode (required):
-  Future<List<CustomerDTO>?> retrieveHistoricalCustomersBasedOnReservationsByBranchCode(String branchCode,) async {
+  Future<List<CustomerHistoryDTO>?> retrieveHistoricalCustomersBasedOnReservationsByBranchCode(String branchCode,) async {
     final response = await retrieveHistoricalCustomersBasedOnReservationsByBranchCodeWithHttpInfo(branchCode,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -163,8 +168,8 @@ class CustomerControllerApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<CustomerDTO>') as List)
-        .cast<CustomerDTO>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<CustomerHistoryDTO>') as List)
+        .cast<CustomerHistoryDTO>()
         .toList(growable: false);
 
     }

@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +18,6 @@ import 'routes.dart';
 import 'state_manager/restaurant_state_manager.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Initialize Firebase in background handler if needed
   await Firebase.initializeApp();
 
   // Print the message to the console
@@ -62,10 +60,6 @@ Future<void> _setupFirebaseMessaging() async {
   } else {
     print('User declined or has not accepted permission');
   }
-
-
-
-
 
   // Handle messages when the app is in the foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -121,25 +115,24 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
   }
 
   AwesomeDialog(
-    dialogBackgroundColor: Colors.grey[900],
+    dialogBackgroundColor: Colors.white,
     context: context,
     dialogType: dialogType,
-    borderSide: BorderSide(
-      color: globalGold,
+    borderSide: const BorderSide(
+      color: Colors.white,
       width: 2,
     ),
     buttonsBorderRadius: const BorderRadius.all(
       Radius.circular(2),
     ),
     titleTextStyle: TextStyle(color: globalGold),
-    descTextStyle: const TextStyle(color: CupertinoColors.white, fontSize: 13, ),
+    descTextStyle: TextStyle(color: Colors.grey[900], fontSize: 13, ),
     btnOk: Padding(
       padding: const EdgeInsets.all(18.0),
       child: CupertinoButton(
         color: globalGold,
         borderRadius: BorderRadius.circular(8),
         onPressed: () {
-
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => MainScreen(pageIndex: pageIndex,)),
           );
@@ -176,7 +169,7 @@ class _Pro20State extends State<Pro20> {
         ChangeNotifierProvider(create: (context) => EmployeeStateManager()),
         ChangeNotifierProvider(create: (context) => CustomerStateManager()),
 
-        ChangeNotifierProvider(create: (context) => CommunicationStateManager()),
+        ChangeNotifierProvider(create: (context) => CommunicationStateManager(navigatorKey)),
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey, // Make sure to add the navigator key here

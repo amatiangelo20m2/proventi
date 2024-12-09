@@ -52,7 +52,7 @@ Color getStatusColor(BookingDTOStatusEnum statusEnum) {
     case BookingDTOStatusEnum.CONFERMATO:
       return Colors.blueAccent;
     case BookingDTOStatusEnum.IN_ATTESA:
-      return globalGold;
+      return elegantRed;
     case BookingDTOStatusEnum.RIFIUTATO:
       return elegantRed;
     case BookingDTOStatusEnum.ARRIVATO:

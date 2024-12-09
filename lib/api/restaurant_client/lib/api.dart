@@ -38,6 +38,7 @@ part 'model/before_booking_scheduled_message.dart';
 part 'model/booking_dto.dart';
 part 'model/centralino_message.dart';
 part 'model/customer_dto.dart';
+part 'model/customer_history_dto.dart';
 part 'model/employee_dto.dart';
 part 'model/employee_presence_report_dto.dart';
 part 'model/employee_report_summary_dto.dart';

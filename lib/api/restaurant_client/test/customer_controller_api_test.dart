@@ -17,8 +17,8 @@ void main() {
   // final instance = CustomerControllerApi();
 
   group('tests for CustomerControllerApi', () {
-    //Future<CustomerDTO> findcustomerByPhoneAndPrefix(String prefix, String phoneNumber) async
-    test('test findcustomerByPhoneAndPrefix', () async {
+    //Future<CustomerDTO> findCustomerByPhoneAndPrefixAndBranchCode(String prefix, String phoneNumber, String branchCode) async
+    test('test findCustomerByPhoneAndPrefixAndBranchCode', () async {
       // TODO
     });
 
@@ -27,7 +27,7 @@ void main() {
       // TODO
     });
 
-    //Future<List<CustomerDTO>> retrieveHistoricalCustomersBasedOnReservationsByBranchCode(String branchCode) async
+    //Future<List<CustomerHistoryDTO>> retrieveHistoricalCustomersBasedOnReservationsByBranchCode(String branchCode) async
     test('test retrieveHistoricalCustomersBasedOnReservationsByBranchCode', () async {
       // TODO
     });

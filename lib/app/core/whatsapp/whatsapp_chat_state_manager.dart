@@ -87,4 +87,5 @@ class ChatStateManager extends ChangeNotifier {
     _pollingTimer?.cancel();
     super.dispose();
   }
+
 }

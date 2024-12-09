@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../global/date_methods_utility.dart';
 import '../../main_screen.dart';
+import '../../whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 
 class RefusedBookingCard extends StatelessWidget {
@@ -96,17 +97,7 @@ class RefusedBookingCard extends StatelessWidget {
                 ],
               ),
 
-
-              IconButton(onPressed: () {
-                showCupertinoModalBottomSheet(
-                  expand: true,
-                  elevation: 10,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DashChatCustomized20(bookingDTO: booking,);
-                  },
-                );
-              }, icon: const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),),
+              ChatIconWhatsApp(booking: booking,),
             ],
           ),
         ),
