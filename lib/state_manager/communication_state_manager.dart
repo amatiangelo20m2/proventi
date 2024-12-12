@@ -32,12 +32,13 @@ class CommunicationStateManager extends ChangeNotifier {
     retrieveWaApiConfStatus();
   }
 
+
   DateTime? _lastApiCallTime;
   static const int _apiCallIntervalSeconds = 30;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
 
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
-    print('Refresh conf and in case retrieve chat daat');
+    print('Refresh conf and in case retrieve chat data');
     final currentTime = DateTime.now();
     // Check if 60 seconds have passed since the last API call
     if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds < _apiCallIntervalSeconds) {
@@ -69,8 +70,18 @@ class CommunicationStateManager extends ChangeNotifier {
       }
       RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
       if(restaurantStateManager.allBookings!.isNotEmpty){
-        String branchCode = prefs.getString('branchCode').toString();
-        chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 30);
+        try {
+          String branchCode = prefs.getString('branchCode').toString();
+          print('Retrieve all chat list for branch code $branchCode');
+
+          // Log the request details
+          print('Making API call to: ${_communicationClient.basePath}/api/wsapicontroller/fetchallmessages/$branchCode/30');
+
+          chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 25);
+          print('API call successful, chat list retrieved');
+        } catch (e) {
+          print('Error -> : ' + e.toString());
+        }
       }else{
         print('No booking found, useless to retrieve chat data');
       }
@@ -129,7 +140,7 @@ class CommunicationStateManager extends ChangeNotifier {
   }
 
   checkIfChatsContainCurrentNumberWithUnreadChats(RESTAURANT_CLIENT.BookingDTO booking) {
-    
+
       if(chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty) {
         AllChatListDataDTO chatListDataDTO = chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').first;
         if(chatListDataDTO.unreadCount! > 0 && !chatListDataDTO.fromMe!){

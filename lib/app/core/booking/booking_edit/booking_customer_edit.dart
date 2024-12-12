@@ -97,7 +97,8 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                 numGuests: int.parse(_numGuestsController.text),
                 bookingDate: _selectedNewDate,
                 specialRequests: _specialRequestsController.text,
-                status: widget.bookingDTO.status,
+                //with this line commented the status will be null so the reservation will be uptaded
+                //status: widget.bookingDTO.status,
 
                 timeSlot: TimeSlot(
                   timeRangeCode: widget.bookingDTO.timeSlot!.timeRangeCode,

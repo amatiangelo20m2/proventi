@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_communication/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.4:46909/communicationservice*
+All URIs are relative to *http://192.168.1.226:6003/communicationservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

@@ -1,6 +1,6 @@
-// String host = 'http://192.168.1.226';
+String host = 'http://192.168.1.226';
 // String host = 'http://172.20.10.8';
-String host = 'http://192.168.1.9';
+//String host = 'http://192.168.1.9';
 //String host = 'https://20m2datacloud.com';
 //String host = 'http://194.164.163.9';
 

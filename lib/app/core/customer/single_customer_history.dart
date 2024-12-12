@@ -145,7 +145,6 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                                 surfaceTintColor: Colors.grey[900],
                                 color: Colors.grey[900],
                                 child: DataTable(
-
                                   columns: [
                                     DataColumn(
                                       label: Text(
