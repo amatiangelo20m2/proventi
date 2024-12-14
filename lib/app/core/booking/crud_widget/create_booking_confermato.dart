@@ -72,7 +72,6 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-            backgroundColor: globalGold,
             cardColor: Colors.black
           ),
           child: child!,
