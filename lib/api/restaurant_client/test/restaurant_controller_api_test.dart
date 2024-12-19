@@ -107,6 +107,11 @@ void main() {
       // TODO
     });
 
+    //Future<RestaurantDTO> updateApproveRefuseBookConf(String branchCode, AutomaticApproveRefusedBookConf automaticApproveRefusedBookConf) async
+    test('test updateApproveRefuseBookConf', () async {
+      // TODO
+    });
+
     //Future<RestaurantDTO> updateBeforeBookingMessage(String branchCode, BeforeBookingScheduledMessage beforeBookingScheduledMessage) async
     test('test updateBeforeBookingMessage', () async {
       // TODO

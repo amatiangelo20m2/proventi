@@ -28,6 +28,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _specialRequests = TextEditingController();
+  final TextEditingController _privateNotes = TextEditingController();
   final TextEditingController _prefixController = TextEditingController();
 
   final FocusNode _minutesFocusNode = FocusNode();
@@ -161,7 +162,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                               );
                             }, child: Text('${_currentSelectedCountry.flagEmoji} '
                                 '+${_currentSelectedCountry.phoneCode}',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
+                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
                             Expanded(
                               child: CupertinoTextField(
                                 onChanged: (typingNumber){
@@ -170,7 +171,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                                     if(typingNumber.length > 4){
                                       for (var element in customerStateManager.historicalCustomerData!) {
                                         if(element.customerDTO!.phone!.contains(typingNumber)){
-                                          //currentCustomerDTOList.add(element);
+                                          currentCustomerDTOList.add(element.customerDTO!);
                                         }
                                       }
                                     }
@@ -180,7 +181,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                                 controller: _phoneController,
                                 placeholder: "Cellulare",
                                 clearButtonMode: OverlayVisibilityMode.always,
-                                style: const TextStyle(fontSize: 13),
+                                style: const TextStyle(fontSize: 17),
                                 padding: const EdgeInsets.all(8),
                               ),
                             ),
@@ -279,9 +280,17 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                       padding: const EdgeInsets.all(8),
                     ),
                     const SizedBox(height: 16),
+                    CupertinoTextField(
+                      controller: _privateNotes,
+                      placeholder: "Note private",
+                      maxLines: 3,
+                      keyboardType: TextInputType.text,
+                      padding: const EdgeInsets.all(8),
+                    ),
+                    const SizedBox(height: 16),
                     CupertinoButton(
                       color: Colors.grey[900],
-                      child: const Text("Crea"),
+                      child: const Text("Crea", style: TextStyle(fontSize: 20, color: Colors.white),),
                       onPressed: () async {
                         // Call your API method to create the booking with the waiting time in minutes
                         BookingDTO? bookingDTO = await restaurantStateManager.bookingControllerApi.create(BookingDTO(
@@ -301,6 +310,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                             numGuests: double.parse(_guests.text).toInt(),
                             status: BookingDTOStatusEnum.CONFERMATO,
                             specialRequests: _specialRequests.text,
+                            privateNotes: _privateNotes.text,
                             customer: CustomerDTO(
                                 firstName: _nameController.text,
                                 lastName: _lastNameController.text,
@@ -362,7 +372,6 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                                 setState(() {
                                   _nameController.text = currentCustomerDTOList[index].firstName!;
                                   _lastNameController.text = currentCustomerDTOList[index].lastName!;
-
                                   _prefixController.text = currentCustomerDTOList[index].prefix!;
                                   _emailController.text = currentCustomerDTOList[index].email!;
                                   _phoneController.text = currentCustomerDTOList[index].phone!;

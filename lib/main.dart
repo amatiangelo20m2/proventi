@@ -8,6 +8,7 @@ import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'app/core/customer/customer_state_manager.dart';
 import 'app/core/employee/reports/state_manager/employee_state_manager.dart';
 import 'app/core/main_screen.dart';
@@ -160,6 +161,7 @@ class Pro20 extends StatefulWidget {
 }
 
 class _Pro20State extends State<Pro20> {
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -189,14 +191,15 @@ class _Pro20State extends State<Pro20> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
           useMaterial3: true,
-
-          fontFamily: 'Helvetica',
+          fontFamily: 'Arial',
 
         ),
         home: const SplashScreen(),
       ),
     );
   }
+
 }
+
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

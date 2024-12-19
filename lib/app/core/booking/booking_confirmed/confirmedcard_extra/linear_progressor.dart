@@ -21,7 +21,7 @@ LinearProgressWidget(RestaurantStateManager restaurantManager, DateTime day, Fil
       / restaurantManager.restaurantConfiguration!.capacity!;
 
   return LinearProgressIndicator(
-    color: currentProgressValue > 1 ? Colors.redAccent : filterDailyType == FilterDailyType.PRANZO ? globalGoldDark : elegantBlue,
+    color: currentProgressValue > 1 ? Colors.redAccent : filterDailyType == FilterDailyType.PRANZO ? globalGoldDark : Colors.blueAccent,
     value: currentProgressValue,
   );
 }

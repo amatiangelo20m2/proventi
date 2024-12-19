@@ -16,6 +16,7 @@ import 'package:super_tooltip/super_tooltip.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
 import '../../../../global/date_methods_utility.dart';
+import '../../../../global/flag_picker.dart';
 import '../../whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 
@@ -23,7 +24,6 @@ class BookingToManageCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
-
 
   const BookingToManageCard({required this.booking,
     required this.formDTOs, required this.restaurantDTO});
@@ -53,149 +53,178 @@ class BookingToManageCard extends StatelessWidget {
 
     return Stack(
       children: [
-        Card(
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          child: ListTile(
-            trailing:
-            Text(
-              formatDuration(DateTime.now().difference(booking.createdAt!)),
-              style: TextStyle(color: Colors.grey[900], fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            title: Row(
-              children: [
-                Stack(
-                  children: [
-                    Consumer<CustomerStateManager>(
-                      builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            color: Colors.white,
+            surfaceTintColor: Colors.white,
+            child: ListTile(
+              trailing:
+              Text(
+                formatDuration(DateTime.now().difference(booking.createdAt!)),
+                style: TextStyle(color: Colors.grey[900], fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              title: Row(
+                children: [
+                  Stack(
+                    children: [
+                      Consumer<CustomerStateManager>(
+                        builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
 
-                        int noShowBookings = 0;
+                          int noShowBookings = 0;
 
-                        if(customerStateManager.historicalCustomerData!.where((element)
-                        => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
-                          CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
-                          => element.customerDTO!.customerId == booking.customer!.customerId!).first;
-                          noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
-                        }
-                        return ProfileImage(
-                          allowNavigation: true,
-                          customer: booking.customer!,
-                          branchCode: booking.branchCode!,
-                          avatarRadious: 30,
-                          noShowBookings: noShowBookings,
-                        );
-                      },
-                    ),
-                    Consumer<CustomerStateManager>(
-                      builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
-                        if(customerStateManager.historicalCustomerData!.where((element) => element.customerDTO!.customerId == booking.customer!.customerId).isNotEmpty){
-                          CustomerDTO customerHistory = customerStateManager.historicalCustomerData!.where((element)
-                          => element.customerDTO!.customerId == booking.customer!.customerId).first.customerDTO!;
-                          if(customerHistory.customerId! < 0){
-                            return Positioned(
-                              right: -10,
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await _controller.showTooltip();
-                                },
-                                child: SuperTooltip(
-                                  showBarrier: true,
-                                  controller: _controller,
+                          if(customerStateManager.historicalCustomerData!.where((element)
+                          => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
+                            CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
+                            => element.customerDTO!.customerId == booking.customer!.customerId!).first;
+                            noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
+                          }
+                          return ProfileImage(
+                            allowNavigation: true,
+                            customer: booking.customer!,
+                            branchCode: booking.branchCode!,
+                            avatarRadious: 30,
+                            noShowBookings: noShowBookings,
+                          );
+                        },
+                      ),
+                      Consumer<CustomerStateManager>(
+                        builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+                          if(customerStateManager.historicalCustomerData!.where((element) => element.customerDTO!.customerId == booking.customer!.customerId).isNotEmpty){
+                            CustomerDTO customerHistory = customerStateManager.historicalCustomerData!.where((element)
+                            => element.customerDTO!.customerId == booking.customer!.customerId).first.customerDTO!;
+                            if(customerHistory.customerId! < 0){
+                              return Positioned(
+                                right: -10,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await _controller.showTooltip();
+                                  },
+                                  child: SuperTooltip(
+                                    showBarrier: true,
+                                    controller: _controller,
 
-                                  content: Text(
-                                    'Il cliente non si è presentato ${customerHistory.customerId!} volte',
-                                    softWrap: true,
-                                    style: const TextStyle(
-                                      color: Colors.black,
+                                    content: Text(
+                                      'Il cliente non si è presentato ${customerHistory.customerId!} volte',
+                                      softWrap: true,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
                                     ),
+                                    child: Lottie.asset('assets/lotties/danger.json', height: 50),
                                   ),
-                                  child: Lottie.asset('assets/lotties/danger.json', height: 50),
                                 ),
-                              ),
-                            );
+                              );
+                            }else{
+                              return const Text('');
+                            }
                           }else{
                             return const Text('');
                           }
-                        }else{
-                          return const Text('');
-                        }
 
-                      },
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${booking.customer?.firstName!} ${booking.customer?.lastName!}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                        color: Colors.blueGrey.shade900,
+                        },
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            buildComponentGuest(booking.numGuests.toString()),
-                            Text(
-                              ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
-                              style: TextStyle(
-                                fontSize: 15,
-
-                                color: Colors.blueGrey.shade900,
-                              ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '${booking.customer?.firstName!} ${booking.customer?.lastName!} ${getFlagByPrefix(booking.customer!.prefix!)}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                              color: elegantBlue,
                             ),
-                          ],
-                        ),
-                        Text(getFormEmoji(formDTOs, booking)),
-                        IconButton(onPressed: (){
-                          showCupertinoModalBottomSheet(
-                            expand: true,
-                            elevation: 10,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return BookingCustomerEdit(
-                                bookingDTO: booking,
-                                restaurantDTO: restaurantDTO,
-                                isAlsoBookingEditing: true,
-                                branchCode: booking.branchCode!,);
+                          ),
+                          Consumer<CustomerStateManager>(
+                            builder: (BuildContext context,
+                                CustomerStateManager customerStateManager, Widget? child) {
+                              int currentBookingsOfTheCurrentCustomer = 0;
+
+                              if (customerStateManager.historicalCustomerData!
+                                  .where((element) =>
+                              element.customerDTO!.customerId ==
+                                  booking.customer!.customerId!)
+                                  .isNotEmpty) {
+                                CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                                    .historicalCustomerData!
+                                    .where((element) =>
+                                element.customerDTO!.customerId ==
+                                    booking.customer!.customerId!)
+                                    .first;
+                                currentBookingsOfTheCurrentCustomer =
+                                customerHistoryDTO.historicalBookingsNumber!;
+                              }
+
+                              return currentBookingsOfTheCurrentCustomer > 1
+                                  ? Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(60),
+                                    color: Colors.black,
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                        currentBookingsOfTheCurrentCustomer.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 7),
+                                      )))
+                                  : const Icon(
+                                Icons.fiber_new,
+                                color: Colors.green,
+                                size: 30,
+                              );
                             },
-                          );
-                        }, icon: const Icon(CupertinoIcons.settings_solid)),
-                        ChatIconWhatsApp(booking: booking,),
-                        Consumer<CustomerStateManager>(
-                          builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              buildComponentGuest(booking.numGuests.toString()),
+                              Text(
+                                ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
+                                style: TextStyle(
+                                  fontSize: 15,
 
-                            int currentBookingsOfTheCurrentCustomer = 0;
+                                  color: elegantBlue,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(getFormEmoji(formDTOs, booking)),
+                          IconButton(onPressed: (){
+                            showCupertinoModalBottomSheet(
+                              expand: true,
+                              elevation: 10,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BookingCustomerEdit(
+                                  bookingDTO: booking,
+                                  restaurantDTO: restaurantDTO,
+                                  isAlsoBookingEditing: true,
+                                  branchCode: booking.branchCode!,);
+                              },
+                            );
+                          }, icon: const Icon(CupertinoIcons.settings_solid)),
+                          ChatIconWhatsApp(booking: booking,),
+                        ],
+                      ),
 
-                            if(customerStateManager.historicalCustomerData!.where((element)
-                            => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
-                              CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
-                              => element.customerDTO!.customerId == booking.customer!.customerId!).first;
-                              currentBookingsOfTheCurrentCustomer = customerHistoryDTO.historicalBookingsNumber!;
-                            }
-                            return Card(
-                                color: Colors.blueGrey,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 7, right: 7),
-                                  child: Center(child: Text(currentBookingsOfTheCurrentCustomer.toString(), style: TextStyle(color: Colors.white),)),
-                                ));
-                          },
-                        ),
-                      ],
-                    ),
+                      if(booking.specialRequests?.isNotEmpty ?? false)
+                        Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
 
-                    if(booking.specialRequests?.isNotEmpty ?? false)
-                      Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
-
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

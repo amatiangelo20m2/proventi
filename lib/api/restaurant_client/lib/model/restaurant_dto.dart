@@ -22,6 +22,7 @@ class RestaurantDTO {
     this.afterBookingSchedulerMessages = const [],
     this.beforeBookingScheduledMessages = const [],
     this.centralinoMessages = const [],
+    this.automaticApproveRefuseBookConf = const [],
     this.restaurantName,
   });
 
@@ -73,6 +74,8 @@ class RestaurantDTO {
 
   List<CentralinoMessage> centralinoMessages;
 
+  List<AutomaticApproveRefusedBookConf> automaticApproveRefuseBookConf;
+
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -92,6 +95,7 @@ class RestaurantDTO {
     _deepEquality.equals(other.afterBookingSchedulerMessages, afterBookingSchedulerMessages) &&
     _deepEquality.equals(other.beforeBookingScheduledMessages, beforeBookingScheduledMessages) &&
     _deepEquality.equals(other.centralinoMessages, centralinoMessages) &&
+    _deepEquality.equals(other.automaticApproveRefuseBookConf, automaticApproveRefuseBookConf) &&
     other.restaurantName == restaurantName;
 
   @override
@@ -106,10 +110,11 @@ class RestaurantDTO {
     (afterBookingSchedulerMessages.hashCode) +
     (beforeBookingScheduledMessages.hashCode) +
     (centralinoMessages.hashCode) +
+    (automaticApproveRefuseBookConf.hashCode) +
     (restaurantName == null ? 0 : restaurantName!.hashCode);
 
   @override
-  String toString() => 'RestaurantDTO[branchCode=$branchCode, creationDate=$creationDate, daylyTimeWorkingRange=$daylyTimeWorkingRange, nightTimeWorkingRange=$nightTimeWorkingRange, capacity=$capacity, standardMessages=$standardMessages, afterBookingSchedulerMessages=$afterBookingSchedulerMessages, beforeBookingScheduledMessages=$beforeBookingScheduledMessages, centralinoMessages=$centralinoMessages, restaurantName=$restaurantName]';
+  String toString() => 'RestaurantDTO[branchCode=$branchCode, creationDate=$creationDate, daylyTimeWorkingRange=$daylyTimeWorkingRange, nightTimeWorkingRange=$nightTimeWorkingRange, capacity=$capacity, standardMessages=$standardMessages, afterBookingSchedulerMessages=$afterBookingSchedulerMessages, beforeBookingScheduledMessages=$beforeBookingScheduledMessages, centralinoMessages=$centralinoMessages, automaticApproveRefuseBookConf=$automaticApproveRefuseBookConf, restaurantName=$restaurantName]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -142,6 +147,7 @@ class RestaurantDTO {
       json[r'afterBookingSchedulerMessages'] = this.afterBookingSchedulerMessages;
       json[r'beforeBookingScheduledMessages'] = this.beforeBookingScheduledMessages;
       json[r'centralinoMessages'] = this.centralinoMessages;
+      json[r'automaticApproveRefuseBookConf'] = this.automaticApproveRefuseBookConf;
     if (this.restaurantName != null) {
       json[r'restaurantName'] = this.restaurantName;
     } else {
@@ -178,6 +184,7 @@ class RestaurantDTO {
         afterBookingSchedulerMessages: AfterBookingSchedulerMessage.listFromJson(json[r'afterBookingSchedulerMessages']),
         beforeBookingScheduledMessages: BeforeBookingScheduledMessage.listFromJson(json[r'beforeBookingScheduledMessages']),
         centralinoMessages: CentralinoMessage.listFromJson(json[r'centralinoMessages']),
+        automaticApproveRefuseBookConf: AutomaticApproveRefusedBookConf.listFromJson(json[r'automaticApproveRefuseBookConf']),
         restaurantName: mapValueOfType<String>(json, r'restaurantName'),
       );
     }

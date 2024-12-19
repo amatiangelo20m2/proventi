@@ -34,6 +34,7 @@ part 'api/form_controller_api.dart';
 part 'api/restaurant_controller_api.dart';
 
 part 'model/after_booking_scheduler_message.dart';
+part 'model/automatic_approve_refused_book_conf.dart';
 part 'model/before_booking_scheduled_message.dart';
 part 'model/booking_dto.dart';
 part 'model/centralino_message.dart';

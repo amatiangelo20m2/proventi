@@ -55,7 +55,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                         '${booking.customer!.firstName!} ${booking.customer!.lastName!}' ,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.blueGrey.shade900,
+                          color: elegantBlue,
                         ),
                       ),
                       Row(
@@ -120,7 +120,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                 ' ${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.blueGrey.shade900,
+                  color: elegantBlue,
                 ),
               ) : Row(
           children: [

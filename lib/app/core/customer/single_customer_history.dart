@@ -39,6 +39,7 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
     TextStyle smallStyle = const TextStyle(fontSize: 15, color: Colors.black);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         actions: [
           IconButton(onPressed: (){
@@ -71,161 +72,161 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Column(
-                  children: [
-                    ProfileImage(
-                      customer: widget.customerDTO,
-                      branchCode: widget.branchCode,
-                      avatarRadious: 100, allowNavigation: false,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        ProfileImage(
+                          customer: widget.customerDTO,
+                          branchCode: widget.branchCode,
+                          avatarRadious: 100, allowNavigation: false,
 
+                        ),
+                        Text(
+                          '📱 (${widget.customerDTO.prefix!}) ${widget.customerDTO.phone!}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[900],
+                          ),
+                        ),
+                        Text(
+                          '✉️ ${widget.customerDTO.email!}',
+                          style: TextStyle(
+                            fontSize: screenHeight / 50,
+                            color: Colors.grey[900],
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '📱 (${widget.customerDTO.prefix!}) ${widget.customerDTO.phone!}',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[900],
-                      ),
-                    ),
-                    Text(
-                      '✉️ ${widget.customerDTO.email!}',
-                      style: TextStyle(
-                        fontSize: screenHeight / 50,
-                        color: Colors.grey[900],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Text(
-                  'STORICO PRENOTAZIONI',
-                  style: headerStyle.copyWith(color: Colors.grey[900]),
-                ),
-              ),
-            ),
-            Consumer<RestaurantStateManager>(
-              builder: (context, restaurantManager, child) {
-                return FutureBuilder<List<BookingDTO>?>(
-                  future: restaurantManager
-                      .bookingControllerApi
-                      .findBookingByCustomerPrefixAndPhone(
-                    widget.customerDTO.prefix!,
-                    widget.customerDTO.phone!,
-                    widget.branchCode,
                   ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('Nessuna prenotazione trovata'));
-                    } else {
-                      List<BookingDTO> bookings = snapshot.data!
-                          .where((element) => filteredStatus.contains(element.status))
-                          .toList();
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text(
+                      'STORICO PRENOTAZIONI',
+                      style: headerStyle.copyWith(color: Colors.grey[900]),
+                    ),
+                  ),
+                ),
+                Consumer<RestaurantStateManager>(
+                  builder: (context, restaurantManager, child) {
+                    return FutureBuilder<List<BookingDTO>?>(
+                      future: restaurantManager
+                          .bookingControllerApi
+                          .findBookingByCustomerPrefixAndPhone(
+                        widget.customerDTO.prefix!,
+                        widget.customerDTO.phone!,
+                        widget.branchCode,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text('Nessuna prenotazione trovata'));
+                        } else {
+                          List<BookingDTO> bookings = snapshot.data!
+                              .where((element) => filteredStatus.contains(element.status))
+                              .toList();
 
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Card(
-                                surfaceTintColor: Colors.grey[900],
-                                color: Colors.grey[900],
-                                child: DataTable(
-                                  columns: [
-                                    DataColumn(
-                                      label: Text(
-                                        'ARRIVATO ${getIconByStatus(BookingDTOStatusEnum.ARRIVATO)}',
-                                        style: globalStyle.copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'NO SHOW ${getIconByStatus(BookingDTOStatusEnum.NON_ARRIVATO)}',
-                                        style: globalStyle.copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'RIFIUTATO ${getIconByStatus(BookingDTOStatusEnum.RIFIUTATO)}',
-                                        style: globalStyle.copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'ELIMINATO ${getIconByStatus(BookingDTOStatusEnum.ELIMINATO)}',
-                                        style: globalStyle.copyWith(color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                  rows: [
-                                    DataRow(
-                                      cells: [
-                                        DataCell(Center(child: Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.ARRIVATO).length}', style: globalStyle.copyWith(color: Colors.white),))),
-                                        DataCell(Center(child: Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.NON_ARRIVATO).length}', style: globalStyle.copyWith(color: Colors.white),)),),
-                                        DataCell(Center(child: Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO).length}', style: globalStyle.copyWith(color: Colors.white),))),
-                                        DataCell(Center(child: Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.ELIMINATO).length}', style: globalStyle.copyWith(color: Colors.white),))),
+                          return Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Text('ARRIVATO ${getIconByStatus(BookingDTOStatusEnum.ARRIVATO)}'),
+                                        Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.ARRIVATO).length}', style: globalStyle.copyWith(color: Colors.grey[900], fontSize: 20),),
                                       ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Text('NON ARRIVATO ${getIconByStatus(BookingDTOStatusEnum.NON_ARRIVATO)}'),
+                                        Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.NON_ARRIVATO).length}',style: globalStyle.copyWith(color: Colors.grey[900], fontSize: 20),)
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Text('RIFIUTATO ${getIconByStatus(BookingDTOStatusEnum.RIFIUTATO)}'),
+                                        Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO).length}',style: globalStyle.copyWith(color: Colors.grey[900], fontSize: 20),)
+                                      ],
+                                    ),
+                                  ),
 
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Text('ELIMINATO ${getIconByStatus(BookingDTOStatusEnum.ELIMINATO)}'),
+                                        Text('${bookings.where((element) => element.status == BookingDTOStatusEnum.ELIMINATO).length}', style: globalStyle.copyWith(color: Colors.grey[900], fontSize: 20),),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: bookings.length,
-                            itemBuilder: (context, index) {
-                              BookingDTO booking = bookings[index];
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                child: ListTile(
-                                  title: Text(
-                                    italianDateFormat.format(booking.bookingDate!),
-                                    style: globalStyle,
-                                  ),
-                                  subtitle: Text(
-                                    'Ore: ${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                                    style: smallStyle.copyWith(fontSize: 10),
-                                  ),
-                                  trailing: Text(
-                                    getIconByStatus(booking.status!),
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  leading: CircleAvatar(
-                                    backgroundColor: Colors.grey[900],
-                                    child: Text(
-                                      booking.numGuests!.toString(),
-                                      style: globalStyle.copyWith(color: Colors.white, fontSize: 20),
+                              Divider(),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: bookings.length,
+                                itemBuilder: (context, index) {
+                                  BookingDTO booking = bookings[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                    child: ListTile(
+                                      title: Text(
+                                        italianDateFormat.format(booking.bookingDate!),
+                                        style: globalStyle,
+                                      ),
+                                      subtitle: Text(
+                                        'Ore: ${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                                        style: smallStyle.copyWith(fontSize: 10),
+                                      ),
+                                      trailing: Text(
+                                        getIconByStatus(booking.status!),
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                      leading: CircleAvatar(
+                                        backgroundColor: Colors.grey[900],
+                                        child: Text(
+                                          booking.numGuests!.toString(),
+                                          style: globalStyle.copyWith(color: Colors.white, fontSize: 20),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    }
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -479,6 +479,7 @@ class EmployeeReportSummaryDTOJobDescriptionEnum {
   static const BARMAN = EmployeeReportSummaryDTOJobDescriptionEnum._(r'BARMAN');
   static const CAMERIERE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CAMERIERE');
   static const CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CUOCO');
+  static const AIUTO_CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
   static const DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'DIRETTORE');
   static const VICE_DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
   static const LAVAPIATTI = EmployeeReportSummaryDTOJobDescriptionEnum._(r'LAVAPIATTI');
@@ -491,6 +492,7 @@ class EmployeeReportSummaryDTOJobDescriptionEnum {
     BARMAN,
     CAMERIERE,
     CUOCO,
+    AIUTO_CUOCO,
     DIRETTORE,
     VICE_DIRETTORE,
     LAVAPIATTI,
@@ -538,6 +540,7 @@ class EmployeeReportSummaryDTOJobDescriptionEnumTypeTransformer {
         case r'BARMAN': return EmployeeReportSummaryDTOJobDescriptionEnum.BARMAN;
         case r'CAMERIERE': return EmployeeReportSummaryDTOJobDescriptionEnum.CAMERIERE;
         case r'CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.CUOCO;
+        case r'AIUTO_CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.AIUTO_CUOCO;
         case r'DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.DIRETTORE;
         case r'VICE_DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.VICE_DIRETTORE;
         case r'LAVAPIATTI': return EmployeeReportSummaryDTOJobDescriptionEnum.LAVAPIATTI;

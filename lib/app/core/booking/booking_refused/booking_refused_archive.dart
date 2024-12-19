@@ -27,54 +27,45 @@ class _RefusedBookingArchiveState extends State<RefusedBookingArchive> {
       List<BookingDTO> refusedBookings = getBookingListFilteredByStatus(widget.bookingList, [BookingDTOStatusEnum.RIFIUTATO, BookingDTOStatusEnum.MODIFICA_RIFIUTATA]);
 
       if(refusedBookings.isNotEmpty) {
-        return InkWell(
-          onTap: () {
-            showCupertinoModalBottomSheet(
-              expand: true,
-              elevation: 10,
-              context: context,
-              builder: (BuildContext context) {
-                return Material(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Stack(
+          children: [
+            IconButton(
+              onPressed: () {
+                showCupertinoModalBottomSheet(
+                  expand: true,
+                  elevation: 10,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Material(
+                      child: Column(
                         children: [
-                          Text('  Prenotazioni rifiutate del ${italianDateFormat.format(widget.dateTime)}'),
-                          IconButton(onPressed: (){
-                            Navigator.of(context).pop();
-                          }, icon: const Icon(Icons.clear))
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('  Prenotazioni rifiutate del ${italianDateFormat.format(widget.dateTime)}'),
+                              IconButton(onPressed: (){
+                                Navigator.of(context).pop();
+                              }, icon: const Icon(Icons.clear))
+                            ],
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: refusedBookings.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return RefusedBookingCard(booking: refusedBookings.elementAt(index));
+                              },
+                            ),
+                          ),
                         ],
                       ),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: refusedBookings.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return RefusedBookingCard(booking: refusedBookings.elementAt(index));
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
-            );
-
-          },
-          child: const Padding(
-            padding:
-            EdgeInsets.only(left: 30, top: 5, bottom: 5),
-            child: Row(
-              children: [
-                badges.Badge(child: Icon(CupertinoIcons.archivebox)),
-                Text(
-                  'Prenotazioni rifiutate  ',
-                  style: TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.w500),
-                )
-              ],
+              icon: const Icon(CupertinoIcons.archivebox, size: 30),
             ),
-          ),
+            const Positioned(right: 0, top: 0, child: Icon(Icons.circle, size: 15, color: Colors.red))
+          ]
         );
       }else{
         return const SizedBox(height: 0,);

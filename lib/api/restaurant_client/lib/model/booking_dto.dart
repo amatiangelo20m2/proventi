@@ -31,6 +31,7 @@ class BookingDTO {
     this.numGuestsAfterUpdate,
     this.timeSlotAfterUpdate,
     this.noShow,
+    this.privateNotes,
     this.comingWithDogs,
   });
 
@@ -172,6 +173,14 @@ class BookingDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  String? privateNotes;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   bool? comingWithDogs;
 
   @override
@@ -194,6 +203,7 @@ class BookingDTO {
     other.numGuestsAfterUpdate == numGuestsAfterUpdate &&
     other.timeSlotAfterUpdate == timeSlotAfterUpdate &&
     other.noShow == noShow &&
+    other.privateNotes == privateNotes &&
     other.comingWithDogs == comingWithDogs;
 
   @override
@@ -217,10 +227,11 @@ class BookingDTO {
     (numGuestsAfterUpdate == null ? 0 : numGuestsAfterUpdate!.hashCode) +
     (timeSlotAfterUpdate == null ? 0 : timeSlotAfterUpdate!.hashCode) +
     (noShow == null ? 0 : noShow!.hashCode) +
+    (privateNotes == null ? 0 : privateNotes!.hashCode) +
     (comingWithDogs == null ? 0 : comingWithDogs!.hashCode);
 
   @override
-  String toString() => 'BookingDTO[bookingId=$bookingId, formCode=$formCode, branchCode=$branchCode, branchName=$branchName, bookingCode=$bookingCode, bookingDate=$bookingDate, timeSlot=$timeSlot, numGuests=$numGuests, status=$status, specialRequests=$specialRequests, customer=$customer, createdAt=$createdAt, timeWaitingFastQueueMinutes=$timeWaitingFastQueueMinutes, bookingSource=$bookingSource, bookingDateAfterUpdate=$bookingDateAfterUpdate, numGuestsAfterUpdate=$numGuestsAfterUpdate, timeSlotAfterUpdate=$timeSlotAfterUpdate, noShow=$noShow, comingWithDogs=$comingWithDogs]';
+  String toString() => 'BookingDTO[bookingId=$bookingId, formCode=$formCode, branchCode=$branchCode, branchName=$branchName, bookingCode=$bookingCode, bookingDate=$bookingDate, timeSlot=$timeSlot, numGuests=$numGuests, status=$status, specialRequests=$specialRequests, customer=$customer, createdAt=$createdAt, timeWaitingFastQueueMinutes=$timeWaitingFastQueueMinutes, bookingSource=$bookingSource, bookingDateAfterUpdate=$bookingDateAfterUpdate, numGuestsAfterUpdate=$numGuestsAfterUpdate, timeSlotAfterUpdate=$timeSlotAfterUpdate, noShow=$noShow, privateNotes=$privateNotes, comingWithDogs=$comingWithDogs]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -314,6 +325,11 @@ class BookingDTO {
     } else {
       json[r'noShow'] = null;
     }
+    if (this.privateNotes != null) {
+      json[r'privateNotes'] = this.privateNotes;
+    } else {
+      json[r'privateNotes'] = null;
+    }
     if (this.comingWithDogs != null) {
       json[r'comingWithDogs'] = this.comingWithDogs;
     } else {
@@ -359,6 +375,7 @@ class BookingDTO {
         numGuestsAfterUpdate: mapValueOfType<int>(json, r'numGuestsAfterUpdate'),
         timeSlotAfterUpdate: TimeSlot.fromJson(json[r'timeSlotAfterUpdate']),
         noShow: mapValueOfType<bool>(json, r'noShow'),
+        privateNotes: mapValueOfType<String>(json, r'privateNotes'),
         comingWithDogs: mapValueOfType<bool>(json, r'comingWithDogs'),
       );
     }

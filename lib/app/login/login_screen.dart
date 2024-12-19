@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/src/response.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/main_screen.dart';
@@ -131,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
         builder:
             (BuildContext context, RestaurantStateManager value, Widget? child) {
           return Scaffold(
-            backgroundColor: Colors.grey[900],
+            backgroundColor: blackDir,
             body: Stack(
               children: [
                 Center(
@@ -192,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                           CupertinoButton(
                             color: globalGold,
                             onPressed: _isLoading ? null : _login,
-                            child: const Text('Login'),
+                            child: const Text('Accedi', style: TextStyle(color: Colors.white),),
                           ),
                           const SizedBox(height: 32),
 
@@ -244,8 +243,6 @@ class _LoginPageState extends State<LoginPage> {
           mdd);
 
       if (response.statusCode == 202) {
-        showCupertinoAlert(context, 'Info', 'Accesso eseguito!');
-
         if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
 
           EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)

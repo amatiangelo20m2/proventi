@@ -30,12 +30,12 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
                 child: Row(
                   children: [
                     const Icon(CupertinoIcons.book,
-                        size: 13, // Set the size of the icon
+                        size: 10, // Set the size of the icon
                         color: Colors.white),
                     Text(
                       ' $bookings', // Text to display inside the circle
                       style: const TextStyle(
-                          fontSize: 13,
+                          fontSize: 10,
                           color: Colors.white),
                     ),
                   ],
@@ -56,12 +56,12 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
               child: Row(
                 children: [
                   const Icon(CupertinoIcons.clear_circled,
-                      size: 13, // Set the size of the icon
+                      size: 10, // Set the size of the icon
                       color: Colors.white),
                   Text(
                     ' $refused', // Text to display inside the circle
                     style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 10,
                         color: Colors.white),
                   ),
                 ],

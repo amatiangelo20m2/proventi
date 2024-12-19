@@ -6,6 +6,8 @@ import 'package:proventi/app/core/notification/state_manager/notification_state_
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart' as badges;
 
+import '../../../global/style.dart';
+
 class NotificationsPage extends StatefulWidget {
   static final String routeName = 'notification_screen';
 
@@ -105,7 +107,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                     title: Text(
                       notification.title,
-                      style:  TextStyle(fontSize: 13, color: Colors.blueGrey.shade900),
+                      style:  TextStyle(fontSize: 13, color: elegantBlue),
                     ),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -122,7 +124,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     ),
                     trailing: Text(
                       _formatDate(notification.dateReceived),
-                      style: TextStyle(fontSize: 10, color: Colors.blueGrey.shade900),
+                      style: TextStyle(fontSize: 10, color: elegantBlue),
                     ),
                   ),
                 ),

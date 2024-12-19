@@ -106,6 +106,11 @@ void main() {
       // TODO
     });
 
+    // String privateNotes
+    test('to test the property `privateNotes`', () async {
+      // TODO
+    });
+
     // bool comingWithDogs
     test('to test the property `comingWithDogs`', () async {
       // TODO

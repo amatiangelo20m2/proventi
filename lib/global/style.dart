@@ -11,7 +11,8 @@ var globalGold = const Color(0xFFD4B26A);
 var globalGoldDark = const Color(0xFFae801f);
 var elegantRed = const Color(0xFFD32F2F);
 var elegantGreen = const Color(0xFF4CAF50);
-var elegantBlue = const Color(0xFF011f4b);
+var elegantBlue = const Color(0xFF001E28);
+var blackDir = const Color(0xFF010A0F);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 

@@ -125,4 +125,9 @@ class RestaurantStateManager extends ChangeNotifier {
   List<BookingDTO> bookingFilteredByCurrentDate(DateTime date){
     return _allBookings!.where((element) => isSameDay(element.bookingDate!, date)).toList();
   }
+
+  void setNewRestaurantConfiguration(RestaurantDTO restaurantDTO) {
+    _restaurantConfiguration = restaurantDTO;
+    notifyListeners();
+  }
 }

@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.9:37148/restaurantservice*
+All URIs are relative to *http://192.168.1.9:34041/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -105,6 +105,7 @@ Class | Method | HTTP request | Description
 *RestaurantControllerApi* | [**retrieveMessageByBranchCode**](doc//RestaurantControllerApi.md#retrievemessagebybranchcode) | **POST** /api/restaurant/retrievemessage | 
 *RestaurantControllerApi* | [**retrieveReports**](doc//RestaurantControllerApi.md#retrievereports) | **GET** /api/restaurant/retrievereports/{branchCode} | 
 *RestaurantControllerApi* | [**updateAfterBookingMessage**](doc//RestaurantControllerApi.md#updateafterbookingmessage) | **PUT** /api/restaurant/update/afterbookingmessage/{branchCode} | 
+*RestaurantControllerApi* | [**updateApproveRefuseBookConf**](doc//RestaurantControllerApi.md#updateapproverefusebookconf) | **PUT** /api/restaurant/update/approverefusebookconf/{branchCode} | 
 *RestaurantControllerApi* | [**updateBeforeBookingMessage**](doc//RestaurantControllerApi.md#updatebeforebookingmessage) | **PUT** /api/restaurant/update/beforebookingmessage/{branchCode} | 
 *RestaurantControllerApi* | [**updateCentralinoMessage**](doc//RestaurantControllerApi.md#updatecentralinomessage) | **PUT** /api/restaurant/update/centralinomessage/{branchCode} | 
 *RestaurantControllerApi* | [**updateConfiguration**](doc//RestaurantControllerApi.md#updateconfiguration) | **PUT** /api/restaurant/restaurant/updateconfiguration | 
@@ -115,6 +116,7 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [AfterBookingSchedulerMessage](doc//AfterBookingSchedulerMessage.md)
+ - [AutomaticApproveRefusedBookConf](doc//AutomaticApproveRefusedBookConf.md)
  - [BeforeBookingScheduledMessage](doc//BeforeBookingScheduledMessage.md)
  - [BookingDTO](doc//BookingDTO.md)
  - [CentralinoMessage](doc//CentralinoMessage.md)

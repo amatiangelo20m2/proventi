@@ -5,7 +5,6 @@ import 'package:proventi/app/custom_widgets/profile_image.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/restaurant_client/lib/api.dart';
-import '../../../global/style.dart';
 import '../../../state_manager/communication_state_manager.dart';
 
 class DashChatCustomized20 extends StatefulWidget {
@@ -68,34 +67,40 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
       child: Consumer<ChatStateManager>(
         builder: (context, stateManager, child) {
           return Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: Color(0xffECE5DD),
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               iconTheme: const IconThemeData(
                 color: Colors.white
               ),
-
-              backgroundColor: Colors.black,
-              title: Text('${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: const TextStyle(color: Colors.white, fontSize: 15),),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ProfileImage(
+              backgroundColor: Color(0xFF075E54),
+              actions: [Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(icon: Icon(Icons.clear, color: Colors.white,), onPressed: () {
+                  Navigator.of(context).pop();
+                },),
+              )],
+              title: Row(
+                children: [
+                  ProfileImage(
                       branchCode: widget.bookingDTO.branchCode!,
                       avatarRadious: 20,
                       customer: widget.bookingDTO.customer!,
                       allowNavigation: false),
-                )
-              ],
+                  Text(' ${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: const TextStyle(color: Colors.white, fontSize: 15),),
+                ],
+              ),
             ),
+
+
             body: stateManager.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : DashChat(
-
               messageOptions: const MessageOptions(
-                currentUserContainerColor: Color(0xFF005246),
-                containerColor: Color(0XFF363638),
+                currentUserContainerColor: Colors.lightGreen,
+                containerColor: Colors.white,
                 currentUserTextColor: Colors.white,
-                textColor: Colors.white,
+                textColor: Colors.black,
               ),
               currentUser: ChatUser(id: chatStateManager.user1Id),
               messages: stateManager.chatMessages.toList(),

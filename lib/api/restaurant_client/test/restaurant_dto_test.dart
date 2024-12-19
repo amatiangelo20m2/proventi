@@ -61,6 +61,11 @@ void main() {
       // TODO
     });
 
+    // List<AutomaticApproveRefusedBookConf> automaticApproveRefuseBookConf (default value: const [])
+    test('to test the property `automaticApproveRefuseBookConf`', () async {
+      // TODO
+    });
+
     // String restaurantName
     test('to test the property `restaurantName`', () async {
       // TODO

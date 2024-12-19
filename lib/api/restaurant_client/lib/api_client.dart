@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://192.168.1.9:37148/restaurantservice', this.authentication,});
+  ApiClient({this.basePath = 'http://192.168.1.9:34041/restaurantservice', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -184,6 +184,8 @@ class ApiClient {
           return value is DateTime ? value : DateTime.tryParse(value);
         case 'AfterBookingSchedulerMessage':
           return AfterBookingSchedulerMessage.fromJson(value);
+        case 'AutomaticApproveRefusedBookConf':
+          return AutomaticApproveRefusedBookConf.fromJson(value);
         case 'BeforeBookingScheduledMessage':
           return BeforeBookingScheduledMessage.fromJson(value);
         case 'BookingDTO':

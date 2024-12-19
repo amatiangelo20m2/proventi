@@ -926,6 +926,58 @@ class RestaurantControllerApi {
     return null;
   }
 
+  /// Performs an HTTP 'PUT /api/restaurant/update/approverefusebookconf/{branchCode}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [AutomaticApproveRefusedBookConf] automaticApproveRefusedBookConf (required):
+  Future<Response> updateApproveRefuseBookConfWithHttpInfo(String branchCode, AutomaticApproveRefusedBookConf automaticApproveRefusedBookConf,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/restaurant/update/approverefusebookconf/{branchCode}'
+      .replaceAll('{branchCode}', branchCode);
+
+    // ignore: prefer_final_locals
+    Object? postBody = automaticApproveRefusedBookConf;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] branchCode (required):
+  ///
+  /// * [AutomaticApproveRefusedBookConf] automaticApproveRefusedBookConf (required):
+  Future<RestaurantDTO?> updateApproveRefuseBookConf(String branchCode, AutomaticApproveRefusedBookConf automaticApproveRefusedBookConf,) async {
+    final response = await updateApproveRefuseBookConfWithHttpInfo(branchCode, automaticApproveRefusedBookConf,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'RestaurantDTO',) as RestaurantDTO;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'PUT /api/restaurant/update/beforebookingmessage/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///

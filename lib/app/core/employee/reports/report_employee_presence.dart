@@ -8,7 +8,6 @@ import 'package:proventi/global/style.dart';
 import '../../../../api/restaurant_client/lib/api.dart';
 import '../../main_screen.dart';
 import 'employee_create_update/employee_screen.dart';
-import 'excel/excel_report_exporter.dart';
 
 class ReportEmployeePresence extends StatefulWidget {
   const ReportEmployeePresence({super.key});
@@ -59,9 +58,6 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
     );
   }
 
-
-
-
   String capitalizeFirstLetter(String input) {
     if (input.isEmpty) {
       return input;
@@ -81,7 +77,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
               );
-            }, icon: Icon(CupertinoIcons.back, color: Colors.black,)),
+            }, icon: const Icon(CupertinoIcons.back, color: Colors.black,)),
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
 
@@ -103,103 +99,100 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
             onRefresh: () async {
               refresh();
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(onPressed: (){
-                      setState(() {
-                        _selectedDate = _selectedDate.subtract(const Duration(days: 1));
-                      });
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(onPressed: (){
+                        setState(() {
+                          _selectedDate = _selectedDate.subtract(const Duration(days: 1));
+                        });
 
-                    }, icon: const Icon(CupertinoIcons.arrow_left_square_fill, size: 30)),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        italianDateFormat.format(_selectedDate).toUpperCase(),
-                        style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1/43),
+                      }, icon: const Icon(CupertinoIcons.arrow_left_square_fill, size: 30)),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          italianDateFormat.format(_selectedDate).toUpperCase(),
+                          style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1/43),
+                        ),
                       ),
-                    ),
-                    IconButton(onPressed: (){
-                      setState(() {
-                        _selectedDate = _selectedDate.add(const Duration(days: 1));
-                      });
-                    }, icon: const Icon(CupertinoIcons.arrow_right_square_fill, size: 30,)),
-                  ],
-                ),
+                      IconButton(onPressed: (){
+                        setState(() {
+                          _selectedDate = _selectedDate.add(const Duration(days: 1));
+                        });
+                      }, icon: const Icon(CupertinoIcons.arrow_right_square_fill, size: 30,)),
+                    ],
+                  ),
 
-                FutureBuilder<List<EmployeePresenceReportDTO>?>(
+                  FutureBuilder<List<EmployeePresenceReportDTO>?>(
 
-                  future: employeeStateManager.restaurantControllerApi!.getReportsByBranchCodeAndDate(employeeStateManager.branchCode, _selectedDate),
+                    future: employeeStateManager.restaurantControllerApi!.getReportsByBranchCodeAndDate(employeeStateManager.branchCode, _selectedDate),
 
-                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                      return const Padding(
-                        padding: EdgeInsets.all(58.0),
-                        child: Center(
-                            child: CupertinoActivityIndicator()
-                        ),
-                      );
-                    }else if(snapshot.connectionState == ConnectionState.done){
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      if(snapshot.connectionState == ConnectionState.waiting){
+                        return const Padding(
+                          padding: EdgeInsets.all(58.0),
+                          child: Center(
+                              child: CupertinoActivityIndicator()
+                          ),
+                        );
+                      }else if(snapshot.connectionState == ConnectionState.done){
 
-                      employeeReportList = snapshot.data;
-                      List<EmployeeDTO> currentEmployeeList = [];
+                        employeeReportList = snapshot.data;
+                        List<EmployeeDTO> currentEmployeeList = [];
 
-                      employeeStateManager.currentEmployeeList!.forEach((employee) {
-                        if(employee.visible!){
-
-                          if(employee.endDateInduction == null){
-                            if(employee.startDateInduction!.isBefore(_selectedDate)){
-                              currentEmployeeList.add(employee);
-                            }
-                          }else{
-                            if(employee.startDateInduction!.isBefore(_selectedDate)
-                                && employee.endDateInduction!.isAfter(_selectedDate.subtract(const Duration(days: 1)))){
-                              currentEmployeeList.add(employee);
-                            }
+                        employeeStateManager.currentEmployeeList!.forEach((employee) {
+                          if(employee.visible!){
+                            currentEmployeeList.add(employee);
                           }
-                        }
-                      });
-                      return Expanded(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 150),
-                          itemCount: currentEmployeeList.length,
-                          itemBuilder: (BuildContext context, int index) {
+                        });
 
-                            EmployeeDTO currentEmployeeDTO = currentEmployeeList[index];
+                        currentEmployeeList = currentEmployeeList.where((element) => element.jobDescription != EmployeeDTOJobDescriptionEnum.AMMINISTRATORE).toList();
 
-                            EmployeePresenceReportDTO? employeePresence = EmployeePresenceReportDTO(reportId: 0,
-                                employee: currentEmployeeDTO,
-                                presentAtLunch: false,
-                                presentAtDinner: false,
-                                holiday: false,
-                                illness: false,
-                                rest: false,
-                                workedHours: 0,
-                                date: DateTime.utc(_selectedDate.year, _selectedDate.month, _selectedDate.day));
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 150),
+                            itemCount: currentEmployeeList.length,
+                            itemBuilder: (BuildContext context, int index) {
 
-                            if(employeeReportList!.where((element)
-                            => element.employee!.employeeId == currentEmployeeDTO.employeeId).isNotEmpty){
-                              employeePresence = employeeReportList!.where((element) => element.employee!.employeeId == currentEmployeeDTO.employeeId).first;
-                            }
+                              EmployeeDTO currentEmployeeDTO = currentEmployeeList[index];
 
-                            return EmployeePresenceWidget(
-                              currentEmployeeDTO: currentEmployeeDTO,
-                              employeePresence: employeePresence,
-                              refresh: refresh,
-                              choosedDate: _selectedDate,
-                            );
-                          },
-                        ),
-                      );
-                    }else{
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                ),
-              ],
+                              EmployeePresenceReportDTO? employeePresence = EmployeePresenceReportDTO(reportId: 0,
+                                  employee: currentEmployeeDTO,
+                                  presentAtLunch: false,
+                                  presentAtDinner: false,
+                                  holiday: false,
+                                  illness: false,
+                                  rest: false,
+                                  workedHours: 0,
+                                  date: DateTime.utc(_selectedDate.year, _selectedDate.month, _selectedDate.day));
+
+                              if(employeeReportList!.where((element)
+                              => element.employee!.employeeId == currentEmployeeDTO.employeeId).isNotEmpty){
+                                employeePresence = employeeReportList!.where((element) => element.employee!.employeeId == currentEmployeeDTO.employeeId).first;
+                              }
+
+                              return EmployeePresenceWidget(
+                                currentEmployeeDTO: currentEmployeeDTO,
+                                employeePresence: employeePresence,
+                                refresh: refresh,
+                                choosedDate: _selectedDate,
+                              );
+                            },
+                          ),
+                        );
+                      }else{
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -278,39 +271,26 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          ProfileImage(branchCode: widget.currentEmployeeDTO.branchCode!,
-                              avatarRadious: 30,
-                              customer: CustomerDTO(prefix: widget.currentEmployeeDTO.prefix, phone: widget.currentEmployeeDTO.phone),
-                              allowNavigation: false),
-                          Row(
-                            children: [
-                              Text('${widget.currentEmployeeDTO.lastName!} ${widget.currentEmployeeDTO.firstName!}', style: const TextStyle(fontSize: 15),),
-                              Text('(${widget.currentEmployeeDTO.employeeId!})', style: const TextStyle(fontSize: 6),),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(widget.currentEmployeeDTO.jobDescription!.value!.replaceAll('_', ' '), style: const TextStyle(fontSize: 9),),
-                      Text('Assunto dal: ${italianDateFormat.format(widget.currentEmployeeDTO.startDateInduction!)}',
-                        style: TextStyle(fontSize: 9, color: Colors.grey.shade500),),
-                      if(widget.currentEmployeeDTO.endDateInduction != null) Text('Assunto fino al: ${italianDateFormat.format(widget.currentEmployeeDTO.endDateInduction!)}',
-                        style: TextStyle(fontSize: 9, color: Colors.grey.shade500),),
-
-                    ],
-                  ),
-
-                  if(widget.employeePresence!.note != null && widget.employeePresence!.note!.isNotEmpty) Row(
-                    children: [
-                      Text(widget.employeePresence!.note!, style: const TextStyle(fontSize: 8, color: Colors.red, fontWeight: FontWeight.bold),),
-                    ],
+                  ProfileImage(branchCode: widget.currentEmployeeDTO.branchCode!,
+                      avatarRadious: 30,
+                      customer: CustomerDTO(prefix: widget.currentEmployeeDTO.prefix, phone: widget.currentEmployeeDTO.phone),
+                      allowNavigation: false),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${widget.currentEmployeeDTO.lastName!} ${widget.currentEmployeeDTO.firstName!}', style: const TextStyle(fontSize: 15),),
+                        Text(widget.currentEmployeeDTO.jobDescription!.value.replaceAll('_', ' '), style: const TextStyle(fontSize: 9),),
+                        //Text('Assunto dal: ${italianDateFormat.format(widget.currentEmployeeDTO.startDateInduction!)}',
+                        //  style: TextStyle(fontSize: 9, color: Colors.grey.shade500),),
+                        //if(widget.currentEmployeeDTO.endDateInduction != null) Text('Assunto fino al: ${italianDateFormat.format(widget.currentEmployeeDTO.endDateInduction!)}',
+                        //  style: TextStyle(fontSize: 9, color: Colors.grey.shade500),),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -349,11 +329,11 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                     activeColor: Colors.blue,
                     inactiveColor: Colors.white,
                     onTap: () async {
-                      if (widget.employeePresence!.illness! || widget.employeePresence!.holiday!) {
+                      if (widget.employeePresence!.illness! || widget.employeePresence!.holiday! || widget.employeePresence!.rest!) {
                         Fluttertoast.showToast(
                           webShowClose: true,
                           timeInSecForIosWeb: 6,
-                          msg: 'L\'utente non può essere presente se risulta essere in ferie o in malattia',
+                          msg: 'L\'utente non può essere presente se risulta essere in ferie, malattia o ha il giorno libero',
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.BOTTOM,
                           backgroundColor: Colors.red,
@@ -459,80 +439,67 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                         },
                       );
                     },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      borderOnForeground: true,
+                      surfaceTintColor: Colors.white,
+                      color: Colors.white,
+                      elevation: 5,
+                      child: const Center(child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('NOTE🖊️', style: TextStyle(fontSize: 7)),
+                      )),
+                    ),
+                  ),
+                ],
+              ) : Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return IncrementCounterDialog(
+                              widget.employeePresence!,
+                              widget.refresh,
+                              widget.choosedDate);
+                        },
+                      );
+                    },
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 1/14,
-                      width: MediaQuery.of(context).size.height * 1/14,
+                      height: 60,
+                      width: 120,
                       child: Card(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         borderOnForeground: true,
                         surfaceTintColor: Colors.white,
                         color: Colors.white,
-                        elevation: 5,
-                        child: const Row(
+                        elevation: widget.employeePresence!.workedHours! > 0 ? 10 : 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('NOTE', style: TextStyle(fontSize: 7)),
-                                ],
-                              ),
-                            ),
+                            Text('ORE LAVORATE',
+                              textAlign: TextAlign.center,
+                              style:  TextStyle(color: widget.employeePresence!.workedHours! > 0 ?  Colors.blueGrey : Colors.grey, fontSize: 7),),
+                            Text('${widget.employeePresence!.workedHours!}',
+                              textAlign: TextAlign.center,
+                              style:  TextStyle(color: widget.employeePresence!.workedHours! > 0 ?  Colors.blueGrey : Colors.grey),),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ],
-              ) : GestureDetector(
-                onTap: () async {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return IncrementCounterDialog(
-                          widget.employeePresence!,
-                          widget.refresh,
-                          widget.choosedDate);
-                    },
-                  );
-                },
-                child: SizedBox(
-                  height: 60,
-                  width: 120,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    borderOnForeground: true,
-                    surfaceTintColor: Colors.white,
-                    color: Colors.white,
-                    elevation: widget.employeePresence!.workedHours! > 0 ! ? 10 : 1,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('ORE LAVORATE',
-                                textAlign: TextAlign.center,
-                                style:  TextStyle(color: widget.employeePresence!.workedHours! > 0 ?  Colors.blueGrey : Colors.grey, fontSize: 7),),
-                              Text('${widget.employeePresence!.workedHours!}',
-                                textAlign: TextAlign.center,
-                                style:  TextStyle(color: widget.employeePresence!.workedHours! > 0 ?  Colors.blueGrey : Colors.grey),),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              ),
+              if(widget.employeePresence!.note != null && widget.employeePresence!.note!.isNotEmpty) Row(
+                children: [
+                  Text(widget.employeePresence!.note!, style: const TextStyle(fontSize: 10, color: Colors.orange, fontWeight: FontWeight.bold),),
+                ],
               ),
             ],
           ),
@@ -574,6 +541,7 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
           title: Text(
             'Ore lavorate di ${widget.employeePresence.employee!.firstName!} ${widget.employeePresence.employee!.lastName!}\n${widget.employeePresence.employee!.jobDescription!.value.replaceAll('_',' ')}',
             textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -685,6 +653,7 @@ class _NoteDialogState extends State<NoteDialog> {
           title: Text(
             'Note per ${widget.employeePresence.employee!.firstName!} ${widget.employeePresence.employee!.lastName!}\n${widget.employeePresence.employee!.jobDescription!.value.replaceAll('_', ' ')}',
             textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 12),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -716,11 +685,13 @@ class _NoteDialogState extends State<NoteDialog> {
                   widget.refresh();
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue.shade200),
+                  backgroundColor: MaterialStateProperty.resolveWith((states) => globalGoldDark),
                 ),
                 child: const Text(
                   'SALVA',
+                  style: TextStyle(color: Colors.white),
                 ),
+
               ),
             ],
           ),
@@ -750,36 +721,24 @@ class EmployeePresenceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onTap(),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 1 / 14,
-        width: MediaQuery.of(context).size.height * 1 / 4,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          borderOnForeground: true,
-          surfaceTintColor: isActive ? activeColor : Colors.white,
-          color: isActive ? activeColor : Colors.white,
-          elevation: isActive ? 1 : 10,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: isActive ? 9 : 7,
-                        color: isActive ? Colors.white : Colors.blueGrey,
-                      ),
-                    ),
-                  ],
-                ),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        borderOnForeground: true,
+        surfaceTintColor: isActive ? activeColor : Colors.white,
+        color: isActive ? activeColor : Colors.white,
+        elevation: isActive ? 1 : 10,
+        child: Padding(
+          padding: const EdgeInsets.all(13.0),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: isActive ? 9 : 7,
+                color: isActive ? Colors.white : Colors.blueGrey,
               ),
-            ],
+            ),
           ),
         ),
       ),

@@ -9,6 +9,8 @@ import 'package:proventi/state_manager/restaurant_state_manager.dart';
 
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 
+import '../../../../global/style.dart';
+
 class CreateBookingListAttesa extends StatefulWidget {
 
   @override
@@ -45,7 +47,7 @@ class _CreateBookingListAttesaState extends State<CreateBookingListAttesa> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('Seleziona il tempo di attesa', style: TextStyle(fontSize: 10, color: Colors.blueGrey.shade900),),
+                  child: Text('Seleziona il tempo di attesa', style: TextStyle(fontSize: 10, color: elegantBlue),),
                 ),
                 CupertinoTimerPicker(
                   mode: CupertinoTimerPickerMode.hm,

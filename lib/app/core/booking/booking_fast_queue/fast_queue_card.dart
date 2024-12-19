@@ -247,14 +247,14 @@ class _FastQueueCardState extends State<FastQueueCard> {
           widget.booking.customer?.firstName ?? '',
           style: TextStyle(
             fontSize: 14,
-            color: Colors.blueGrey.shade900,
+            color: elegantBlue,
           ),
         ),
         Text(
           widget.booking.customer?.lastName ?? '',
           style: TextStyle(
             fontSize: 11,
-            color: Colors.blueGrey.shade900,
+            color: elegantBlue,
           ),
         ),
       ],
@@ -270,7 +270,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
           ' ${NumberFormat("00").format(widget.booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(widget.booking.timeSlot?.bookingMinutes)}',
           style: TextStyle(
             fontSize: 13,
-            color: Colors.blueGrey.shade900,
+            color: elegantBlue,
           ),
         ),
       ],

@@ -497,6 +497,7 @@ class EmployeeDTOJobDescriptionEnum {
   static const BARMAN = EmployeeDTOJobDescriptionEnum._(r'BARMAN');
   static const CAMERIERE = EmployeeDTOJobDescriptionEnum._(r'CAMERIERE');
   static const CUOCO = EmployeeDTOJobDescriptionEnum._(r'CUOCO');
+  static const AIUTO_CUOCO = EmployeeDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
   static const DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'DIRETTORE');
   static const VICE_DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
   static const LAVAPIATTI = EmployeeDTOJobDescriptionEnum._(r'LAVAPIATTI');
@@ -509,6 +510,7 @@ class EmployeeDTOJobDescriptionEnum {
     BARMAN,
     CAMERIERE,
     CUOCO,
+    AIUTO_CUOCO,
     DIRETTORE,
     VICE_DIRETTORE,
     LAVAPIATTI,
@@ -556,6 +558,7 @@ class EmployeeDTOJobDescriptionEnumTypeTransformer {
         case r'BARMAN': return EmployeeDTOJobDescriptionEnum.BARMAN;
         case r'CAMERIERE': return EmployeeDTOJobDescriptionEnum.CAMERIERE;
         case r'CUOCO': return EmployeeDTOJobDescriptionEnum.CUOCO;
+        case r'AIUTO_CUOCO': return EmployeeDTOJobDescriptionEnum.AIUTO_CUOCO;
         case r'DIRETTORE': return EmployeeDTOJobDescriptionEnum.DIRETTORE;
         case r'VICE_DIRETTORE': return EmployeeDTOJobDescriptionEnum.VICE_DIRETTORE;
         case r'LAVAPIATTI': return EmployeeDTOJobDescriptionEnum.LAVAPIATTI;

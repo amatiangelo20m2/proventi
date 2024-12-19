@@ -1,51 +1,55 @@
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
 import 'package:proventi/app/core/customer/customer_state_manager.dart';
-import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
-import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import '../../../../global/flag_picker.dart';
+import '../../../../global/style.dart';
 import '../../../custom_widgets/profile_image.dart';
 import '../../whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
+import 'package:badges/badges.dart' as badges;
 
 class BookingConfirmedCard extends StatelessWidget {
-
   final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
   final Color shadeColor;
 
-  const BookingConfirmedCard({super.key, required this.booking, required this.restaurantDTO, required this.shadeColor});
+  const BookingConfirmedCard(
+      {super.key,
+      required this.booking,
+      required this.restaurantDTO,
+      required this.shadeColor});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-
         _showBookingActionMenuConfermato(context, booking);
-
       },
       child: Dismissible(
         key: Key(booking.bookingCode.toString()),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
-            bool? result = await _showConfirmationDialog(context, 'Conferma arrivo di ${booking.customer!.firstName!}?', 'Si', 'No' );
+            bool? result = await _showConfirmationDialog(
+                context,
+                'Conferma arrivo di ${booking.customer!.firstName!}?',
+                'Si',
+                'No');
 
             if (result == true) {
               return await _setAsArrivedReservation(context);
             }
           } else if (direction == DismissDirection.startToEnd) {
             // Asking confirmation for confirmation
-            bool? result = await _showConfirmationDialog(context, '${booking.customer!.firstName!} non è arrivato?', 'Si', 'No');
+            bool? result = await _showConfirmationDialog(context,
+                '${booking.customer!.firstName!} non è arrivato?', 'Si', 'No');
 
             if (result == true) {
               return await _refuseReservation(context);
@@ -69,30 +73,29 @@ class BookingConfirmedCard extends StatelessWidget {
   }
 
   Future<bool?> _setAsArrivedReservation(BuildContext context) async {
-
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.ARRIVATO
-    ));
+    Provider.of<RestaurantStateManager>(context, listen: false).updateBooking(
+        BookingDTO(
+            bookingCode: booking.bookingCode,
+            status: BookingDTOStatusEnum.ARRIVATO));
     return false;
   }
 
   Future<bool?> _refuseReservation(BuildContext context) async {
     booking.status = BookingDTOStatusEnum.NON_ARRIVATO;
-    Provider.of<RestaurantStateManager>(context, listen: false)
-        .updateBooking(BookingDTO(
-        bookingCode: booking.bookingCode,
-        status: BookingDTOStatusEnum.NON_ARRIVATO
-    ));
-    _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' aggiornata come non arrivata ❌' );
+    Provider.of<RestaurantStateManager>(context, listen: false).updateBooking(
+        BookingDTO(
+            bookingCode: booking.bookingCode,
+            status: BookingDTOStatusEnum.NON_ARRIVATO));
+    _showSnackbar(
+        context,
+        'Prenotazione di ${booking.customer!.firstName!} aggiornata come non arrivata ❌');
     return false; // Prevent automatic dismissal
   }
 
   void _showSnackbar(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       behavior: SnackBarBehavior.floating,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -101,14 +104,21 @@ class BookingConfirmedCard extends StatelessWidget {
   Widget _buildCardContent(BuildContext context) {
     return ListTile(
       leading: Consumer<CustomerStateManager>(
-        builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
-
+        builder: (BuildContext context,
+            CustomerStateManager customerStateManager, Widget? child) {
           int noShowBookings = 0;
 
-          if(customerStateManager.historicalCustomerData!.where((element)
-          => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
-            CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
-            => element.customerDTO!.customerId == booking.customer!.customerId!).first;
+          if (customerStateManager.historicalCustomerData!
+              .where((element) =>
+                  element.customerDTO!.customerId ==
+                  booking.customer!.customerId!)
+              .isNotEmpty) {
+            CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                .historicalCustomerData!
+                .where((element) =>
+                    element.customerDTO!.customerId ==
+                    booking.customer!.customerId!)
+                .first;
             noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
           }
           return ProfileImage(
@@ -128,11 +138,53 @@ class BookingConfirmedCard extends StatelessWidget {
               Text(
                 '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blueGrey.shade900,
+                  color: elegantBlue,
                 ),
               ),
+              Consumer<CustomerStateManager>(
+                builder: (BuildContext context,
+                    CustomerStateManager customerStateManager, Widget? child) {
+                  int currentBookingsOfTheCurrentCustomer = 0;
+
+                  if (customerStateManager.historicalCustomerData!
+                      .where((element) =>
+                          element.customerDTO!.customerId ==
+                          booking.customer!.customerId!)
+                      .isNotEmpty) {
+                    CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                        .historicalCustomerData!
+                        .where((element) =>
+                            element.customerDTO!.customerId ==
+                            booking.customer!.customerId!)
+                        .first;
+                    currentBookingsOfTheCurrentCustomer =
+                        customerHistoryDTO.historicalBookingsNumber!;
+                  }
+
+                  return currentBookingsOfTheCurrentCustomer > 1
+                      ? Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(60),
+                            color: Colors.black,
+                          ),
+                          child: Center(
+                              child: Text(
+                            currentBookingsOfTheCurrentCustomer.toString(),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 7),
+                          )))
+                      : const Icon(
+                          Icons.fiber_new,
+                          color: Colors.green,
+                          size: 30,
+                        );
+                },
+              ),
+
             ],
           ),
           Row(
@@ -141,59 +193,85 @@ class BookingConfirmedCard extends StatelessWidget {
               Row(
                 children: [
                   buildComponentGuest(booking.numGuests.toString()),
-                  Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                    style: TextStyle(color: Colors.grey[900]),),
-                  Consumer<CustomerStateManager>(
-                      builder: (BuildContext context, CustomerStateManager customerStateManager, Widget? child) {
-
-                        int currentBookingsOfTheCurrentCustomer = 0;
-
-                        if(customerStateManager.historicalCustomerData!.where((element)
-                        => element.customerDTO!.customerId == booking.customer!.customerId!).isNotEmpty){
-                          CustomerHistoryDTO customerHistoryDTO = customerStateManager.historicalCustomerData!.where((element)
-                          => element.customerDTO!.customerId == booking.customer!.customerId!).first;
-                          currentBookingsOfTheCurrentCustomer = customerHistoryDTO.historicalBookingsNumber!;
-                        }
-                        return Card(
-                            color: Colors.blueGrey,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 7, right: 7),
-                              child: Center(child: Text(currentBookingsOfTheCurrentCustomer.toString(), style: TextStyle(color: Colors.white),)),
-                            ));
-                      },
+                  Text(
+                    '  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                    style: TextStyle(color: Colors.grey[900], fontSize: 15),
+                  ),
+                  if(booking.specialRequests!.isNotEmpty || booking.privateNotes!.isNotEmpty) Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SuperTooltip(
+                      hideTooltipOnTap: true,
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height * 1/7,
+                        width: MediaQuery.of(context).size.width * 1/3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text('Note Cliente', style: TextStyle(fontSize: 8),),
+                            Text('💬${booking.specialRequests}'),
+                            Divider(),
+                            const Text('Note per ristoratore', style: TextStyle(fontSize: 8),),
+                            Text('🤵‍${booking.specialRequests}'),
+                          ],
+                        ),
+                      ),
+                      child: const Stack(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(CupertinoIcons.doc_on_clipboard),
+                          ),
+                          Positioned(
+                            right: 0,
+                            child: Icon(Icons.circle,color: Colors.red, size: 12,),
+                            ),
+                        ]
+                      ),
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: [
-                  ChatIconWhatsApp(booking: booking,),
-
-                  IconButton(onPressed: (){
-                    showCupertinoModalBottomSheet(
-                      expand: true,
-                      elevation: 10,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return BookingCustomerEdit(
-                          bookingDTO: booking,
-                          restaurantDTO: restaurantDTO,
-                          isAlsoBookingEditing: true,
-                          branchCode: booking.branchCode!, );
+                  ChatIconWhatsApp(
+                    booking: booking,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        showCupertinoModalBottomSheet(
+                          expand: true,
+                          elevation: 10,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return BookingCustomerEdit(
+                              bookingDTO: booking,
+                              restaurantDTO: restaurantDTO,
+                              isAlsoBookingEditing: true,
+                              branchCode: booking.branchCode!,
+                            );
+                          },
+                        );
                       },
-                    );
-                  }, icon: const Icon(CupertinoIcons.settings_solid)),
+                      icon: const Icon(CupertinoIcons.settings_solid)),
                 ],
               ),
             ],
           ),
-          if((booking.specialRequests?.isNotEmpty ?? false)) Text('💬 ${booking.specialRequests!}', style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
-          Divider(height: 2, color: Colors.grey.shade300, ),
+
+          Divider(
+            height: 1,
+            color: Colors.grey.shade300,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSwipeBackground({required Alignment alignment, required Color color, required IconData icon}) {
+  Widget _buildSwipeBackground(
+      {required Alignment alignment,
+      required Color color,
+      required IconData icon}) {
     return Container(
       alignment: alignment,
       color: Colors.white,
@@ -201,7 +279,9 @@ class BookingConfirmedCard extends StatelessWidget {
       child: Icon(icon, color: color, size: 28),
     );
   }
-  void _showBookingActionMenuConfermato(BuildContext context, BookingDTO booking) {
+
+  void _showBookingActionMenuConfermato(
+      BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -211,7 +291,8 @@ class BookingConfirmedCard extends StatelessWidget {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
+                  Text(
+                      'Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
                   Text(booking.formCode!),
@@ -221,8 +302,8 @@ class BookingConfirmedCard extends StatelessWidget {
             ),
             Positioned(
               right: 0,
-              child: IconButton(onPressed: () {
-              }, icon: Icon(CupertinoIcons.phone)),
+              child: IconButton(
+                  onPressed: () {}, icon: const Icon(CupertinoIcons.phone)),
             ),
           ],
         ),
@@ -231,9 +312,8 @@ class BookingConfirmedCard extends StatelessWidget {
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                status: BookingDTOStatusEnum.ARRIVATO
-              ));
+                      bookingCode: booking.bookingCode,
+                      status: BookingDTOStatusEnum.ARRIVATO));
               Navigator.pop(context, null);
             },
             child: const Text('Arrivato'),
@@ -242,26 +322,22 @@ class BookingConfirmedCard extends StatelessWidget {
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
-                  bookingCode: booking.bookingCode,
-                  status: BookingDTOStatusEnum.NON_ARRIVATO
-              ));
+                      bookingCode: booking.bookingCode,
+                      status: BookingDTOStatusEnum.NON_ARRIVATO));
               Navigator.pop(context, null);
             },
             child: const Text('Non arrivato'),
           ),
-
-
           CupertinoActionSheetAction(
             onPressed: () {
               Provider.of<RestaurantStateManager>(context, listen: false)
                   .updateBooking(BookingDTO(
-                bookingCode: booking.bookingCode,
-                bookingId: booking.bookingId,
-                status: BookingDTOStatusEnum.ELIMINATO
-              ));
+                      bookingCode: booking.bookingCode,
+                      bookingId: booking.bookingId,
+                      status: BookingDTOStatusEnum.ELIMINATO));
               Navigator.pop(context, null);
             },
-            child: Text('Elimina'),
+            child: const Text('Elimina'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
@@ -275,12 +351,16 @@ class BookingConfirmedCard extends StatelessWidget {
     );
   }
 
-  Future<bool?> _showConfirmationDialog(BuildContext context, String message, String confirmText, String goBackText) async {
+  Future<bool?> _showConfirmationDialog(BuildContext context, String message,
+      String confirmText, String goBackText) async {
     return await showCupertinoDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text(message, style: TextStyle(fontSize: 15),),
+          title: Text(
+            message,
+            style: const TextStyle(fontSize: 15),
+          ),
           actions: [
             CupertinoDialogAction(
               child: Text(goBackText),

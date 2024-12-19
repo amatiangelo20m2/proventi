@@ -75,7 +75,7 @@ class RefusedBookingCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                            color: Colors.blueGrey.shade900,
+                            color: elegantBlue,
                           ),
                         ),
                         _buildGuestInfo(),
@@ -116,7 +116,7 @@ class RefusedBookingCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
 
-            color: Colors.blueGrey.shade900,
+            color: elegantBlue,
           ),
         ),
       ],

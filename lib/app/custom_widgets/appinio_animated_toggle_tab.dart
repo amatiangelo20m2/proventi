@@ -46,7 +46,7 @@ class SwitchPro20 extends StatefulWidget {
     required this.inactiveStyle,
     required this.width,
     this.offset = 0.02,
-    this.duration = const Duration(milliseconds: 300),
+    this.duration = const Duration(milliseconds: 100),
     this.initialIndex = 0,
   }) : super(key: key);
 
@@ -81,6 +81,7 @@ class _SwitchPro20State extends State<SwitchPro20> {
               0),
           duration: widget.duration,
           child: Container(
+
             width: (widget.width / widget.tabTexts.length),
             height: widget.height * 0.9,
             decoration: widget.animatedBoxDecoration,

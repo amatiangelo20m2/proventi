@@ -10,7 +10,6 @@ class EmployeeStateManager with ChangeNotifier {
   late RestaurantControllerApi? _restaurantControllerApi;
   late String userCode;
   late String branchCode;
-  late String branchName;
 
 
   DateTime now = DateTime.now();
@@ -28,19 +27,15 @@ class EmployeeStateManager with ChangeNotifier {
     print('Initialize restaurant client inside employee state manager client with $customBasePathRestaurant. Each call will be redirect to this url.');
 
     final prefs = await SharedPreferences.getInstance();
-    branchCode = prefs.getString('branchCode').toString();
-
-
+    branchCode = prefs.getString('branch_code').toString();
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
     _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
-
-
-    print('_restaurantControllerApi: $_restaurantControllerApi');
-    retrieveCurrentEmployee();
+    await retrieveCurrentEmployee();
     // retrievePresenteEmployeeForCurrentBranchAndCurrentDate(branchCode, now);
   }
 
   retrieveCurrentEmployee() async {
+
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -48,10 +43,7 @@ class EmployeeStateManager with ChangeNotifier {
     //print('User code (for notification purposes): ' + prefs.getString('user_code').toString());
 
     branchCode = prefs.getString('branchCode').toString();
-    //userCode = prefs.getString('user_code').toString();
-    branchName = prefs.getString('branchName').toString();
-    _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
-    _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
+
     RestaurantDTO? restaurantDTO = await _restaurantControllerApi!.retrieveConfiguration(branchCode,'XXX');
 
     print('Restaurant conf found: $restaurantDTO');

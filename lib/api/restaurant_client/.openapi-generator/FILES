@@ -4,6 +4,7 @@
 README.md
 analysis_options.yaml
 doc/AfterBookingSchedulerMessage.md
+doc/AutomaticApproveRefusedBookConf.md
 doc/BeforeBookingScheduledMessage.md
 doc/BookingControllerApi.md
 doc/BookingDTO.md
@@ -40,6 +41,7 @@ lib/auth/http_basic_auth.dart
 lib/auth/http_bearer_auth.dart
 lib/auth/oauth.dart
 lib/model/after_booking_scheduler_message.dart
+lib/model/automatic_approve_refused_book_conf.dart
 lib/model/before_booking_scheduled_message.dart
 lib/model/booking_dto.dart
 lib/model/centralino_message.dart
@@ -59,6 +61,7 @@ lib/model/time_range.dart
 lib/model/time_slot.dart
 pubspec.yaml
 test/after_booking_scheduler_message_test.dart
+test/automatic_approve_refused_book_conf_test.dart
 test/before_booking_scheduled_message_test.dart
 test/booking_controller_api_test.dart
 test/booking_dto_test.dart

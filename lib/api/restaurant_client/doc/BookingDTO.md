@@ -26,6 +26,7 @@ Name | Type | Description | Notes
 **numGuestsAfterUpdate** | **int** |  | [optional] 
 **timeSlotAfterUpdate** | [**TimeSlot**](TimeSlot.md) |  | [optional] 
 **noShow** | **bool** |  | [optional] 
+**privateNotes** | **String** |  | [optional] 
 **comingWithDogs** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -25,7 +25,7 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Center(child: Text(' ${configuration.displayName ?? 'N/A'}', style: TextStyle(fontSize: 20, color: Colors.grey.shade900))),
+                  Center(child: Text(' ${configuration.displayName ?? 'N/A'}', style: TextStyle(fontSize: 20, color: elegantBlue))),
                   if (configuration.photoUrl != null && configuration.photoUrl!.isNotEmpty)
                     Center(
                       child: Container(
@@ -51,19 +51,19 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
 
               Column(
                 children: [
-                  Center(child: Text('Numero collegato', style: TextStyle(fontSize: 7, color: Colors.grey.shade900))),
-                  Center(child: Text(' ${configuration.phone ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.grey.shade900))),
+                  Center(child: Text('Numero collegato', style: TextStyle(fontSize: 7, color: elegantBlue))),
+                  Center(child: Text(' ${configuration.phone ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantBlue))),
 
-                  Center(child: Text('Codice attività associata', style: TextStyle(fontSize: 7, color: Colors.grey.shade900))),
-                  Center(child: Text(' ${configuration.branchCode ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.grey.shade900))),
+                  Center(child: Text('Codice attività associata', style: TextStyle(fontSize: 7, color: elegantBlue))),
+                  Center(child: Text(' ${configuration.branchCode ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantBlue))),
 
-                  Center(child: Text('Identificativo istanza', style: TextStyle(fontSize: 7, color: Colors.grey.shade900))),
-                  Center(child: Text(' ${configuration.waApiInstanceId ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.grey.shade900))),
+                  Center(child: Text('Identificativo istanza', style: TextStyle(fontSize: 7, color: elegantBlue))),
+                  Center(child: Text(' ${configuration.waApiInstanceId ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantBlue))),
 
-                  Center(child: Text('Stato', style: TextStyle(fontSize: 7, color: Colors.grey.shade900))),
-                  Card(color: Colors.grey.shade900, child: Center(child: Text(' ${configuration.waApiState.toString() ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.green.shade600)))),
+                  Center(child: Text('Stato', style: TextStyle(fontSize: 7, color: elegantBlue))),
+                  Card(color: elegantBlue, child: Center(child: Text(' ${configuration.waApiState.toString() ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.green.shade600)))),
                   
-                  Text('Connesso da ${italianDateFormatWithTime.format(configuration.creationDate!)}', style: TextStyle(fontSize: 10, color: Colors.grey.shade900)),
+                  Text('Connesso da ${italianDateFormatWithTime.format(configuration.creationDate!)}', style: TextStyle(fontSize: 10, color: elegantBlue)),
 
                 ],
               ),

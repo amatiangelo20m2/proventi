@@ -57,7 +57,7 @@ class ProcessedBookingCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey.shade900,
+                        color: elegantBlue,
                       ),
                     ),
                     Row(

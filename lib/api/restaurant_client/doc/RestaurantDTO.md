@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **afterBookingSchedulerMessages** | [**List<AfterBookingSchedulerMessage>**](AfterBookingSchedulerMessage.md) |  | [optional] [default to const []]
 **beforeBookingScheduledMessages** | [**List<BeforeBookingScheduledMessage>**](BeforeBookingScheduledMessage.md) |  | [optional] [default to const []]
 **centralinoMessages** | [**List<CentralinoMessage>**](CentralinoMessage.md) |  | [optional] [default to const []]
+**automaticApproveRefuseBookConf** | [**List<AutomaticApproveRefusedBookConf>**](AutomaticApproveRefusedBookConf.md) |  | [optional] [default to const []]
 **restaurantName** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

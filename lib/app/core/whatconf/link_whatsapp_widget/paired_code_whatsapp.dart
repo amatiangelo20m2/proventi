@@ -220,7 +220,7 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
           Fluttertoast.showToast(
             msg: "Codice copiato negli appunti",
             toastLength: Toast.LENGTH_SHORT,
-            backgroundColor: Colors.grey.shade900,
+            backgroundColor: elegantBlue,
             fontSize: 16.0,
           );
         }, child: const Text('Copia il codice')),

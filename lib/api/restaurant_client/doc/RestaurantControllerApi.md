@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.9:37148/restaurantservice*
+All URIs are relative to *http://192.168.1.9:34041/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -27,6 +27,7 @@ Method | HTTP request | Description
 [**retrieveMessageByBranchCode**](RestaurantControllerApi.md#retrievemessagebybranchcode) | **POST** /api/restaurant/retrievemessage | 
 [**retrieveReports**](RestaurantControllerApi.md#retrievereports) | **GET** /api/restaurant/retrievereports/{branchCode} | 
 [**updateAfterBookingMessage**](RestaurantControllerApi.md#updateafterbookingmessage) | **PUT** /api/restaurant/update/afterbookingmessage/{branchCode} | 
+[**updateApproveRefuseBookConf**](RestaurantControllerApi.md#updateapproverefusebookconf) | **PUT** /api/restaurant/update/approverefusebookconf/{branchCode} | 
 [**updateBeforeBookingMessage**](RestaurantControllerApi.md#updatebeforebookingmessage) | **PUT** /api/restaurant/update/beforebookingmessage/{branchCode} | 
 [**updateCentralinoMessage**](RestaurantControllerApi.md#updatecentralinomessage) | **PUT** /api/restaurant/update/centralinomessage/{branchCode} | 
 [**updateConfiguration**](RestaurantControllerApi.md#updateconfiguration) | **PUT** /api/restaurant/restaurant/updateconfiguration | 
@@ -774,6 +775,49 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **branchCode** | **String**|  | 
  **afterBookingSchedulerMessage** | [**AfterBookingSchedulerMessage**](AfterBookingSchedulerMessage.md)|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateApproveRefuseBookConf**
+> RestaurantDTO updateApproveRefuseBookConf(branchCode, automaticApproveRefusedBookConf)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final automaticApproveRefusedBookConf = AutomaticApproveRefusedBookConf(); // AutomaticApproveRefusedBookConf | 
+
+try {
+    final result = api_instance.updateApproveRefuseBookConf(branchCode, automaticApproveRefusedBookConf);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->updateApproveRefuseBookConf: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **automaticApproveRefusedBookConf** | [**AutomaticApproveRefusedBookConf**](AutomaticApproveRefusedBookConf.md)|  | 
 
 ### Return type
 

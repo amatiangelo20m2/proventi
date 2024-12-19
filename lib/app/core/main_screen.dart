@@ -14,6 +14,7 @@ import 'package:proventi/app/core/booking/booking_fast_queue/fast_queue.dart';
 import 'package:proventi/app/core/customer/customer_screen.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import '../../api/communication_client/lib/api.dart';
 import '../../landing/landing_page.dart';
 import 'booking/booking_confirmed/booking_confirmed.dart';
@@ -52,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
       builder: (BuildContext context,
           RestaurantStateManager restaurantStateManager, Widget? child) {
         return Scaffold(
-
+          backgroundColor: Colors.white,
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _pageIndex,
             selectedItemColor: Colors.black,
@@ -74,8 +75,10 @@ class _MainScreenState extends State<MainScreen> {
                 label: BookingDTOStatusEnum.CONFERMATO.value.replaceAll('_', ' '),
                 badgeColor: getStatusColor(BookingDTOStatusEnum.CONFERMATO),
                 badgeCount: restaurantStateManager.allBookings!
+                .where((element) => isSameDay(element.bookingDate!, DateTime.now()))
                     .where((element) =>
-                        element.status == BookingDTOStatusEnum.CONFERMATO || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
+                        element.status == BookingDTOStatusEnum.CONFERMATO
+                            || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
                     .length,
                 isSelected: _pageIndex == 0,
               ),
@@ -120,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ),
           drawer: Drawer(
-            backgroundColor: Colors.grey[900],
+            backgroundColor: blackDir,
             child: Column(
               children: [
                 const SizedBox(
@@ -208,7 +211,6 @@ class _MainScreenState extends State<MainScreen> {
             surfaceTintColor: CupertinoColors.white,
             backgroundColor: CupertinoColors.white,
             actions: [
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -250,7 +252,7 @@ class _MainScreenState extends State<MainScreen> {
 
                 Image.asset('assets/images/20whitenb.png', width: MediaQuery.of(context).size.height*0.05),
                 Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
-                  style: TextStyle(fontSize: 15, color: Colors.grey.shade900),),
+                  style: TextStyle(fontSize: 15, color: elegantBlue),),
               ],
             ),
           ),

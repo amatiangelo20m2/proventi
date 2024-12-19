@@ -7,7 +7,6 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 
 import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
-import '../booking_confirmed/confirmed_booking_card.dart';
 import 'booking_to_manage_card.dart';
 
 class BookingManager extends StatefulWidget {
@@ -138,10 +137,10 @@ class _BookingManagerState extends State<BookingManager> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${italianDateFormat.format(date)}'.toUpperCase(),
+                    '🗓️ ${italianDateFormat.format(date)}'.toUpperCase(),
                     style: TextStyle(
-                        fontSize: 13,
-                        color: globalGoldDark,
+                        fontSize: 11,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
                   Row(

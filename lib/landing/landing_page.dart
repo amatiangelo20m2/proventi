@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proventi/global/style.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 import '../app/login/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,26 +13,58 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+
+  final _updater = ShorebirdUpdater();
+  late final bool _isUpdaterAvailable;
+  var _isCheckingForUpdates = false;
+  Patch? _currentPatch;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize the AnimationController
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2200),
-    )..repeat(reverse: true);
 
-    // Define scaling and rotation animations
-    _scaleAnimation = Tween<double>(begin: 1, end: 1.1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    setState(() => _isUpdaterAvailable = _updater.isAvailable);
 
-    // Load data after delay
+    print(_updater.readCurrentPatch());
+
+    _updater.readCurrentPatch().then((currentPatch) {
+      setState(() => _currentPatch = currentPatch);
+    }).catchError((Object error) {
+      debugPrint('Error reading current patch: $error');
+    });
+    _checkForUpdate();
     _loadData();
+  }
+
+
+  Future<void> _checkForUpdate() async {
+    if (_isCheckingForUpdates) return;
+
+    try {
+      setState(() => _isCheckingForUpdates = true);
+      // Check if there's an update available.
+      final status = await _updater.checkForUpdate(track: UpdateTrack.stable);
+      if (!mounted) return;
+      // If there is an update available, show a banner.
+      switch (status) {
+        case UpdateStatus.upToDate:
+        // Do nothing, the app is up to date.
+          break;
+        case UpdateStatus.outdated:
+          _showUpdateAvailableBanner();
+        case UpdateStatus.restartRequired:
+          _showRestartBanner();
+        case UpdateStatus.unavailable:
+        // Do nothing, there is already a warning displayed at the top of the
+        // screen.
+      }
+    } catch (error) {
+      // If an error occurs, we log it for now.
+      debugPrint('Error checking for update: $error');
+    } finally {
+      setState(() => _isCheckingForUpdates = false);
+    }
   }
 
   Future<void> _loadData() async {
@@ -43,35 +76,117 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _downloadUpdate() async {
+    _showDownloadingBanner();
+    try {
+      await _updater.update(track: UpdateTrack.stable);
+      if (!mounted) return;
+      _showRestartBanner();
+    } on UpdateException catch (error) {
+      _showErrorBanner(error.message);
+    }
+  }
+
+  void _showDownloadingBanner() {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentMaterialBanner()
+      ..showMaterialBanner(
+        const MaterialBanner(
+          content: Text('Downloading...'),
+          actions: [
+            SizedBox(
+              height: 14,
+              width: 14,
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+  }
+  void _showRestartBanner() {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentMaterialBanner()
+      ..showMaterialBanner(
+        MaterialBanner(
+          content: const Text('A new patch is ready! Please restart your app.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: const Text('Dismiss'),
+            ),
+          ],
+        ),
+      );
+  }
+  void _showErrorBanner(Object error) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentMaterialBanner()
+      ..showMaterialBanner(
+        MaterialBanner(
+          content: Text(
+            'An error occurred while downloading the update: $error.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: const Text('Dismiss'),
+            ),
+          ],
+        ),
+      );
+  }
+  void _showUpdateAvailableBanner() {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentMaterialBanner()
+      ..showMaterialBanner(
+        MaterialBanner(
+          content: const Text(
+            'Scarica aggiornamento',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                await _downloadUpdate();
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: const Text('Download'),
+            ),
+          ],
+        ),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: blackDir,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: child,
-                );
-              },
-              child: Image.asset(
-                'assets/images/logo.png',
-                width: MediaQuery.of(context).size.width / 3,
+            Image.asset(
+              'assets/images/logo.png',
+              width: MediaQuery.of(context).size.width / 4,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 200, right: 200),
+              child: LinearProgressIndicator(
+                color: globalGold,
               ),
             ),
-            const SizedBox(height: 20),
-            CupertinoActivityIndicator(
-              color: globalGold,
-              radius: 25,
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('1.0.0+21', style: TextStyle(color: Colors.white, fontSize: 10),),
             ),
           ],
         ),
