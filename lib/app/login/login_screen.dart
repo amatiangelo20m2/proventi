@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('assets/images/logo.png', width: 190),
+                          Hero( tag: 'logo_landing',child: Image.asset('assets/images/logo.png', width: 120)),
                           const SizedBox(height: 16),
                           CupertinoTextField(
                             clearButtonMode: OverlayVisibilityMode.always,

@@ -57,8 +57,9 @@ class _MainScreenState extends State<MainScreen> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _pageIndex,
             selectedItemColor: Colors.black,
-            backgroundColor: Colors.red,
-            useLegacyColorScheme: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+
             unselectedItemColor: Colors.grey,
             selectedLabelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
             unselectedLabelStyle: const TextStyle(fontSize: 8),
@@ -133,7 +134,7 @@ class _MainScreenState extends State<MainScreen> {
                 const ListTile(
                   title: Text(
                     'Proventi',
-                    style: TextStyle(color: CupertinoColors.white),
+                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
                   ),
                   leading: Icon(
                     CupertinoIcons.home,
@@ -147,7 +148,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                   title: const Text(
                     'Lista clienti',
-                    style: TextStyle(color: CupertinoColors.white),
+                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
                   ),
                   leading: const Icon(
                     CupertinoIcons.person_2,
@@ -161,10 +162,10 @@ class _MainScreenState extends State<MainScreen> {
                   },
                   title: const Text(
                     'Report Dipendenti',
-                    style: TextStyle(color: CupertinoColors.white),
+                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
                   ),
-                  leading: const Icon(
-                    CupertinoIcons.person_2,
+                  leading: Icon(
+                    CupertinoIcons.doc_plaintext,
                     color: CupertinoColors.white,
                   ),
                 ),
@@ -191,7 +192,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                   title: const Text(
                     'Log out',
-                    style: TextStyle(color: CupertinoColors.destructiveRed),
+                    style: TextStyle(color: CupertinoColors.destructiveRed, fontWeight: FontWeight.bold),
                   ),
                   leading: const Icon(
                     Icons.logout,
@@ -203,13 +204,14 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           appBar: AppBar(
+
             iconTheme: IconThemeData(
-              color: Colors.grey[900],
-              size: 30,
+              color: blackDir,
+              size: 27,
             ),
 
-            surfaceTintColor: CupertinoColors.white,
-            backgroundColor: CupertinoColors.white,
+            surfaceTintColor: Colors.white,
+            backgroundColor: Colors.white,
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -250,14 +252,18 @@ class _MainScreenState extends State<MainScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
 
-                Image.asset('assets/images/20whitenb.png', width: MediaQuery.of(context).size.height*0.05),
+
                 Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
-                  style: TextStyle(fontSize: 15, color: elegantBlue),),
+                  style: TextStyle(fontSize: 18, color: blackDir, fontWeight: FontWeight.bold),),
               ],
             ),
           ),
-          body: getPageByIndex(_pageIndex,
-              restaurantStateManager),
+          body: Stack(
+            children: [
+              getPageByIndex(_pageIndex, restaurantStateManager),
+
+            ],
+          ),
         );
       },
     );

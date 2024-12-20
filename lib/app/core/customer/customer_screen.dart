@@ -51,13 +51,16 @@ class _CustomerScreenState extends State<CustomerScreen> {
               DataRow(
                 cells: [
                   DataCell(
-                      ProfileImage(
-                    allowNavigation: true,
-                    customer: customerHist.customerDTO!,
-                    branchCode: customerStateManager.branchCode,
-                    avatarRadious: 30,
-                        noShowBookings: customerHist.historicalNoShowsNumber!,
-                  )),
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ProfileImage(
+                                            allowNavigation: true,
+                                            customer: customerHist.customerDTO!,
+                                            branchCode: customerStateManager.branchCode,
+                                            avatarRadious: 30,
+                          noShowBookings: customerHist.historicalNoShowsNumber!,
+                                          ),
+                      )),
                   DataCell(
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -80,7 +83,10 @@ class _CustomerScreenState extends State<CustomerScreen> {
         }
 
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
             title: Text('I miei clienti', style: TextStyle(color: Colors.grey[900], fontSize: 15)),
           ),
           body: Column(

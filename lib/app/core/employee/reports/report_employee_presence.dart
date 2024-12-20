@@ -117,7 +117,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           italianDateFormat.format(_selectedDate).toUpperCase(),
-                          style: TextStyle(fontSize: MediaQuery.of(context).size.height * 1/43),
+                          style: TextStyle(fontSize: 14),
                         ),
                       ),
                       IconButton(onPressed: (){

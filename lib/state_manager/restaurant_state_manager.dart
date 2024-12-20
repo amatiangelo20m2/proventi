@@ -130,4 +130,19 @@ class RestaurantStateManager extends ChangeNotifier {
     _restaurantConfiguration = restaurantDTO;
     notifyListeners();
   }
+
+  updateAutomaticBookingManageConfiguration(DateTime currentDate,
+      {required bool acceptLunch, required bool refuseLunch, required bool acceptDinner, required bool refuseDinner}) async {
+    RestaurantDTO? restaurantDTO = await restaurantControllerApi.updateApproveRefuseBookConf(
+      restaurantConfiguration!.branchCode!,
+      AutomaticApproveRefusedBookConf(
+        date: currentDate,
+        doAcceptBookingLunch: acceptLunch,
+        doRefuseBookingLunch: refuseLunch,
+        doAcceptBookingDinner: acceptDinner,
+        doRefuseBookingDinner: refuseDinner,
+      ),
+    );
+    setNewRestaurantConfiguration(restaurantDTO!);
+  }
 }

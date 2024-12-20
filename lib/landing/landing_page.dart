@@ -171,22 +171,33 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: blackDir,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              'assets/images/logo.png',
-              width: MediaQuery.of(context).size.width / 4,
-            ),
+            SizedBox(width: 0,),
+            Hero(
 
-            Padding(
-              padding: const EdgeInsets.only(left: 200, right: 200),
-              child: LinearProgressIndicator(
-                color: globalGold,
+              tag: 'logo_landing',
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: MediaQuery.of(context).size.width / 2,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('1.0.0+21', style: TextStyle(color: Colors.white, fontSize: 10),),
+            Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('1.0.4+21', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    child: LinearProgressIndicator(
+                      color: globalGold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

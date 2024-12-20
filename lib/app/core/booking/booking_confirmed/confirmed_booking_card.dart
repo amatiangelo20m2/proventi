@@ -138,7 +138,7 @@ class BookingConfirmedCard extends StatelessWidget {
               Text(
                 '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: MediaQuery.of(context).size.height * 0.018,
                   fontWeight: FontWeight.bold,
                   color: elegantBlue,
                 ),
@@ -164,19 +164,12 @@ class BookingConfirmedCard extends StatelessWidget {
                   }
 
                   return currentBookingsOfTheCurrentCustomer > 1
-                      ? Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(60),
-                            color: Colors.black,
-                          ),
-                          child: Center(
-                              child: Text(
-                            currentBookingsOfTheCurrentCustomer.toString(),
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 7),
-                          )))
+                      ? Center(
+                          child: Text(
+                        '(' + currentBookingsOfTheCurrentCustomer.toString() + ')',
+                        style: TextStyle(
+                            color: blackDir, fontSize: 10),
+                      ))
                       : const Icon(
                           Icons.fiber_new,
                           color: Colors.green,
@@ -192,48 +185,58 @@ class BookingConfirmedCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  buildComponentGuest(booking.numGuests.toString()),
-                  Text(
-                    '  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                    style: TextStyle(color: Colors.grey[900], fontSize: 15),
-                  ),
-                  if(booking.specialRequests!.isNotEmpty || booking.privateNotes!.isNotEmpty) Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SuperTooltip(
-                      hideTooltipOnTap: true,
-                      content: SizedBox(
-                        height: MediaQuery.of(context).size.height * 1/7,
-                        width: MediaQuery.of(context).size.width * 1/3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text('Note Cliente', style: TextStyle(fontSize: 8),),
-                            Text('💬${booking.specialRequests}'),
-                            Divider(),
-                            const Text('Note per ristoratore', style: TextStyle(fontSize: 8),),
-                            Text('🤵‍${booking.specialRequests}'),
-                          ],
-                        ),
-                      ),
-                      child: const Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(CupertinoIcons.doc_on_clipboard),
-                          ),
-                          Positioned(
-                            right: 0,
-                            child: Icon(Icons.circle,color: Colors.red, size: 12,),
-                            ),
-                        ]
-                      ),
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildComponentGuest(booking.numGuests.toString()),
+                      buildHourComponent(booking.timeSlot!),
+                    ],
                   ),
                 ],
               ),
               Row(
                 children: [
+                  if(booking.specialRequests!.isNotEmpty || booking.privateNotes!.isNotEmpty) Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SuperTooltip(
+                      controller: SuperTooltipController(),
+                      hideTooltipOnTap: true,
+                      content: IntrinsicWidth(
+                        child: IntrinsicHeight(
+                          child: SizedBox(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                if (booking.specialRequests != null && booking.specialRequests!.isNotEmpty) ...[
+                                  const Text('Note Cliente', style: TextStyle(fontSize: 8)),
+                                  Text('💬${booking.specialRequests}'),
+
+                                ],
+                                if (booking.privateNotes != null && booking.privateNotes!.isNotEmpty) ...[
+                                  const Text('Note per ristoratore', style: TextStyle(fontSize: 8)),
+                                  Text('🤵‍${booking.privateNotes}'),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: const Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(CupertinoIcons.doc_on_clipboard),
+                            ),
+                            Positioned(
+                              right: 0,
+                              child: Icon(Icons.circle,color: Colors.red, size: 12,),
+                            ),
+                          ]
+                      ),
+                    ),
+                  ),
                   ChatIconWhatsApp(
                     booking: booking,
                   ),

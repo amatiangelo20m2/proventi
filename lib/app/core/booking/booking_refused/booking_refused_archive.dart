@@ -62,9 +62,9 @@ class _RefusedBookingArchiveState extends State<RefusedBookingArchive> {
                   },
                 );
               },
-              icon: const Icon(CupertinoIcons.archivebox, size: 30),
+              icon: const Icon(CupertinoIcons.archivebox, size: 25),
             ),
-            const Positioned(right: 0, top: 0, child: Icon(Icons.circle, size: 15, color: Colors.red))
+            const Positioned(right: 0, top: 0, child: Icon(Icons.circle, size: 12, color: Colors.red))
           ]
         );
       }else{

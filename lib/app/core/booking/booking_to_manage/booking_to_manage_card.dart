@@ -387,7 +387,7 @@ class BookingToManageCard extends StatelessWidget {
         color: elegantBlue,
         child: const Padding(
           padding: EdgeInsets.all(2.0),
-          child: Icon(CupertinoIcons.moon_stars, color: CupertinoColors.white),
+          child: Icon(CupertinoIcons.moon_circle, color: CupertinoColors.white),
         ));
   }
 }

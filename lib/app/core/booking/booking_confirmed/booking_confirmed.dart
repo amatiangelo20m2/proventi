@@ -149,16 +149,13 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
 
-
-
     return Container(
-      color: Colors.grey.shade50,
+      color: Colors.white,
       child: Consumer<RestaurantStateManager>(
         builder: (BuildContext context,
             RestaurantStateManager restaurantManager, Widget? child) {
           return Stack(
             children: [
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -175,9 +172,10 @@ class _BookingScreenState extends State<BookingScreen> {
                                 queryString = newQuery;
                               });
                             },
+
                             clearButtonMode: OverlayVisibilityMode.always,
-                            style: const TextStyle(fontSize: 12),
-                            placeholder: '🔎 Ricerca per nome o cellulare',
+                            style: TextStyle(fontSize: 13),
+                            placeholder: '🔎 Cerca per nome o cellulare',
                           ),
                         ),
 
@@ -188,6 +186,11 @@ class _BookingScreenState extends State<BookingScreen> {
                           icon: const Icon(CupertinoIcons.sort_down,
                               color: Colors.blueGrey),
                         ),
+                        RefusedBookingArchive(bookingList:
+                        restaurantManager.allBookings!.where((element) => isSameDay(
+                            element.bookingDate!,
+                            _selectedDate)).toList(), dateTime: _selectedDate,),
+
                       ],
                     ),
                   ),
@@ -196,17 +199,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-
-                            RefusedBookingArchive(bookingList:
-                            restaurantManager.allBookings!.where((element) => isSameDay(
-                                element.bookingDate!, _selectedDate)).toList(), dateTime: _selectedDate,),
-                            _buildSwitch(restaurantManager),
-
-                          ],
-                        ),
-
+                        _buildSwitch(restaurantManager),
                         Row(
                           children: [
                             TextButton(
@@ -218,6 +211,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                 'OGGI',
                                 style: TextStyle(
                                     fontSize: 12,
+                                    fontWeight: FontWeight.bold,
                                     color: isTodaySelected
                                         ? globalGoldDark
                                         : Colors.grey),
@@ -291,10 +285,10 @@ class _BookingScreenState extends State<BookingScreen> {
                                     elevation: isSelected ? 1 : 3,
                                     borderRadius: BorderRadius.circular(15),
                                     child: Container(
-                                      width: 92,
+                                      width: 100,
                                       decoration: BoxDecoration(
                                           color: isSelected
-                                              ? globalGold
+                                              ? elegantBlue
                                               : Colors.grey.shade100,
                                           borderRadius:
                                               BorderRadius.circular(15)),
@@ -308,7 +302,8 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 .substring(0, 3)
                                                 .toUpperCase(),
                                             style: TextStyle(
-                                                fontSize: 7,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 8,
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black),
@@ -316,14 +311,16 @@ class _BookingScreenState extends State<BookingScreen> {
                                           Text(
                                             '${day.day}',
                                             style: TextStyle(
+                                              fontWeight: FontWeight.bold,
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontSize: 15),
+                                                fontSize: 20),
                                           ),
                                           Text(
                                             months[day.month - 1].toUpperCase(),
                                             style: TextStyle(
+                                                fontWeight: FontWeight.bold,
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
@@ -389,7 +386,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           },
                           child: filteredBooking.isNotEmpty ? ListView.builder(
                             controller: _scrollBookingsController,
-                            padding: const EdgeInsets.only(bottom: 160),
+                            padding: EdgeInsets.only(bottom: filteredBooking.length > 5 ? 300 : 700),
                             itemCount: filteredBooking.length,
                             itemBuilder: (context, index) {
                               return BookingConfirmedCard(
@@ -407,7 +404,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                 padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/10), // Ensure some spacing
                                 child: Column(
                                   children: [
-                                    Lottie.asset('assets/lotties/nocalendar.json'),
+                                    Lottie.asset('assets/lotties/nocalendar.json', height: 100),
                                     Text('Non ci sono prenotazioni ${filterDailyType == FilterDailyType.TUTTO_IL_GIORNO ? '' : 'per ${filterDailyType.name.toString().toLowerCase()}'}'
                                     )
                                   ],
@@ -703,7 +700,7 @@ class _BookingScreenState extends State<BookingScreen> {
             badgeAnimation: const badges.BadgeAnimation.rotation(),
             child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Icon(CupertinoIcons.sun_max, size: 25, color: globalGoldDark,)
+                child: Icon(CupertinoIcons.sun_max_fill, size: 25, color: globalGoldDark,)
             )),
 
         badges.Badge(
@@ -712,7 +709,7 @@ class _BookingScreenState extends State<BookingScreen> {
             badgeAnimation: const badges.BadgeAnimation.rotation(),
             child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Icon(CupertinoIcons.moon_stars, color: elegantBlue, size: 25,)
+                child: Icon(CupertinoIcons.moon_circle, color: elegantBlue, size: 25,)
             )),
       ],
       height: 40,
