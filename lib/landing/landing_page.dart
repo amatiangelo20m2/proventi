@@ -167,6 +167,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: blackDir,
       body: Center(
@@ -174,8 +175,8 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(width: 0,),
-            Hero(
 
+            Hero(
               tag: 'logo_landing',
               child: Image.asset(
                 'assets/images/logo.png',
@@ -186,7 +187,7 @@ class _SplashScreenState extends State<SplashScreen>
               children: [
                 const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('1.0.4+21', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+                  child: Text('1.0.7+1', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 100),

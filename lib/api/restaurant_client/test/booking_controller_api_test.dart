@@ -57,7 +57,7 @@ void main() {
       // TODO
     });
 
-    //Future<BookingDTO> updateBooking(BookingDTO bookingDTO) async
+    //Future<BookingDTO> updateBooking(bool sendMessage, BookingDTO bookingDTO) async
     test('test updateBooking', () async {
       // TODO
     });

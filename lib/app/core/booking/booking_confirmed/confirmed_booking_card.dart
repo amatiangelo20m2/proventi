@@ -1,31 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
 import 'package:proventi/app/core/customer/customer_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import 'package:super_tooltip/super_tooltip.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../../global/style.dart';
-import '../../../custom_widgets/profile_image.dart';
-import '../../whatsapp/chat_icon_whastapp.dart';
+import '../../../custom_widgets/profile_image_pro20/profile_image.dart';
+import '../../../custom_widgets/whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
-import 'package:badges/badges.dart' as badges;
 
 class BookingConfirmedCard extends StatelessWidget {
   final RestaurantDTO restaurantDTO;
   final BookingDTO booking;
-  final Color shadeColor;
+  final List<FormDTO> forms;
 
   const BookingConfirmedCard(
       {super.key,
       required this.booking,
       required this.restaurantDTO,
-      required this.shadeColor});
+        required this.forms});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +73,7 @@ class BookingConfirmedCard extends StatelessWidget {
     Provider.of<RestaurantStateManager>(context, listen: false).updateBooking(
         BookingDTO(
             bookingCode: booking.bookingCode,
-            status: BookingDTOStatusEnum.ARRIVATO));
+            status: BookingDTOStatusEnum.ARRIVATO), true);
     return false;
   }
 
@@ -85,7 +82,7 @@ class BookingConfirmedCard extends StatelessWidget {
     Provider.of<RestaurantStateManager>(context, listen: false).updateBooking(
         BookingDTO(
             bookingCode: booking.bookingCode,
-            status: BookingDTOStatusEnum.NON_ARRIVATO));
+            status: BookingDTOStatusEnum.NON_ARRIVATO), true);
     _showSnackbar(
         context,
         'Prenotazione di ${booking.customer!.firstName!} aggiornata come non arrivata ❌');
@@ -177,7 +174,7 @@ class BookingConfirmedCard extends StatelessWidget {
                         );
                 },
               ),
-
+              Text(getFormEmoji(forms, booking), style: const TextStyle(fontSize: 13),),
             ],
           ),
           Row(
@@ -185,83 +182,53 @@ class BookingConfirmedCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildComponentGuest(booking.numGuests.toString()),
-                      buildHourComponent(booking.timeSlot!),
-                    ],
-                  ),
+                  buildComponentGuest(booking.numGuests.toString()),
+                  buildHourComponent(booking.timeSlot!),
                 ],
               ),
               Row(
                 children: [
-                  if(booking.specialRequests!.isNotEmpty || booking.privateNotes!.isNotEmpty) Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SuperTooltip(
-                      controller: SuperTooltipController(),
-                      hideTooltipOnTap: true,
-                      content: IntrinsicWidth(
-                        child: IntrinsicHeight(
-                          child: SizedBox(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if (booking.specialRequests != null && booking.specialRequests!.isNotEmpty) ...[
-                                  const Text('Note Cliente', style: TextStyle(fontSize: 8)),
-                                  Text('💬${booking.specialRequests}'),
 
-                                ],
-                                if (booking.privateNotes != null && booking.privateNotes!.isNotEmpty) ...[
-                                  const Text('Note per ristoratore', style: TextStyle(fontSize: 8)),
-                                  Text('🤵‍${booking.privateNotes}'),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      child: const Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(CupertinoIcons.doc_on_clipboard),
-                            ),
-                            Positioned(
-                              right: 0,
-                              child: Icon(Icons.circle,color: Colors.red, size: 12,),
-                            ),
-                          ]
-                      ),
-                    ),
-                  ),
                   ChatIconWhatsApp(
                     booking: booking,
                   ),
-                  IconButton(
-                      onPressed: () {
-                        showCupertinoModalBottomSheet(
-                          expand: true,
-                          elevation: 10,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return BookingCustomerEdit(
-                              bookingDTO: booking,
-                              restaurantDTO: restaurantDTO,
-                              isAlsoBookingEditing: true,
-                              branchCode: booking.branchCode!,
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(CupertinoIcons.settings_solid)),
+
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8, left: 8),
+                    child: GestureDetector(
+                        onTap: () {
+                          showCupertinoModalBottomSheet(
+                            expand: true,
+                            elevation: 10,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return BookingCustomerEdit(
+                                bookingDTO: booking,
+                                restaurantDTO: restaurantDTO,
+                                isAlsoBookingEditing: true,
+                                branchCode: booking.branchCode!,
+                              );
+                            },
+                          );
+                        },
+                        child: const Icon(CupertinoIcons.settings_solid)),
+                  ),
                 ],
               ),
             ],
           ),
-
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              if (booking.specialRequests != null && booking.specialRequests!.isNotEmpty) ...[
+                Text('💬${booking.specialRequests}', style: TextStyle(fontSize: 12, color: Colors.grey.shade700),),
+              ],
+              if (booking.privateNotes != null && booking.privateNotes!.isNotEmpty) ...[
+                Text('🤵‍${booking.privateNotes}', style: TextStyle(fontSize: 12,  color: Colors.grey.shade700),),
+              ],
+            ],
+          ),
           Divider(
             height: 1,
             color: Colors.grey.shade300,
@@ -312,37 +279,57 @@ class BookingConfirmedCard extends StatelessWidget {
         ),
         actions: [
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                      bookingCode: booking.bookingCode,
-                      status: BookingDTOStatusEnum.ARRIVATO));
+            onPressed: () async {
+              bool? isArrivedConfirmeed = await _showConfirmationDialog(context,
+                  'Segna ${booking.customer!.firstName!} come arrivato?', 'Si', 'No');
+
+              if(isArrivedConfirmeed!){
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    status: BookingDTOStatusEnum.ARRIVATO), false);
+              }
+
               Navigator.pop(context, null);
             },
             child: const Text('Arrivato'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                      bookingCode: booking.bookingCode,
-                      status: BookingDTOStatusEnum.NON_ARRIVATO));
+            onPressed: () async {
+              bool? isNotArrivedConfirmeed = await _showConfirmationDialog(context,
+                  'Segna ${booking.customer!.firstName!} come non arrivato?', 'Si', 'No');
+              if(isNotArrivedConfirmeed!){
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    status: BookingDTOStatusEnum.NON_ARRIVATO), false);
+              }
               Navigator.pop(context, null);
             },
             child: const Text('Non arrivato'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                      bookingCode: booking.bookingCode,
-                      bookingId: booking.bookingId,
-                      status: BookingDTOStatusEnum.ELIMINATO));
-              Navigator.pop(context, null);
+            onPressed: () async {
+              bool? deleteBooking = await _showConfirmationDialog(context,
+                  'Eliminare la prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No');
+              if(deleteBooking!){
+                bool? result = await _showConfirmationDialog(context,
+                    'Invia messaggio ${booking.customer!.firstName!}?', 'Si', 'No');
+
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    bookingId: booking.bookingId,
+                    status: BookingDTOStatusEnum.ELIMINATO), result!);
+                Navigator.pop(context, null);
+              }else{
+                Navigator.pop(context, null);
+              }
             },
             child: const Text('Elimina'),
           ),
         ],
+
         cancelButton: CupertinoActionSheetAction(
           onPressed: () {
             Navigator.of(context).pop();
@@ -353,6 +340,7 @@ class BookingConfirmedCard extends StatelessWidget {
       ),
     );
   }
+
 
   Future<bool?> _showConfirmationDialog(BuildContext context, String message,
       String confirmText, String goBackText) async {

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
+import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
@@ -107,7 +107,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                 ),
 
                 noShow: false
-            )
+            ), true
         );
       }
       await Provider.of<RestaurantStateManager>(context, listen: false)

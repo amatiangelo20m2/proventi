@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
+import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                   isAlsoBookingEditing: false,);
               },
             );
-          }, icon: const Icon(CupertinoIcons.settings))
+          }, icon: const Icon(CupertinoIcons.settings, size: 30,))
         ],
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,

@@ -113,6 +113,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
           List<String> timeSlotLunch = generateTimeSlots(restaurantStateManager.restaurantConfiguration!.daylyTimeWorkingRange!);
           List<String> timeSlotDinner = generateTimeSlots(restaurantStateManager.restaurantConfiguration!.nightTimeWorkingRange!);
           return CupertinoPageScaffold(
+            backgroundColor: Colors.white,
             navigationBar: const CupertinoNavigationBar(
               middle: Text("Crea prenotazione"),
             ),
@@ -297,7 +298,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                             bookingId: 0,
                             branchName: restaurantStateManager.restaurantConfiguration!.restaurantName!,
                             formCode: '',
-                            branchCode: restaurantStateManager.currentEmployee!.branchCode!,
+                            branchCode: restaurantStateManager.restaurantConfiguration!.branchCode!,
                             bookingCode: '',
                             bookingDate: DateTime(_bookingDate.year, _bookingDate.month, _bookingDate.day, 1, 0).toUtc(),
                             noShow: false,

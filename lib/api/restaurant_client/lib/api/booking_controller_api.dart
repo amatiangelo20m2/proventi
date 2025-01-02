@@ -434,8 +434,10 @@ class BookingControllerApi {
   /// Performs an HTTP 'PUT /api/booking/updatebooking' operation and returns the [Response].
   /// Parameters:
   ///
+  /// * [bool] sendMessage (required):
+  ///
   /// * [BookingDTO] bookingDTO (required):
-  Future<Response> updateBookingWithHttpInfo(BookingDTO bookingDTO,) async {
+  Future<Response> updateBookingWithHttpInfo(bool sendMessage, BookingDTO bookingDTO,) async {
     // ignore: prefer_const_declarations
     final path = r'/api/booking/updatebooking';
 
@@ -445,6 +447,8 @@ class BookingControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+      queryParams.addAll(_queryParams('', 'sendMessage', sendMessage));
 
     const contentTypes = <String>['application/json'];
 
@@ -462,9 +466,11 @@ class BookingControllerApi {
 
   /// Parameters:
   ///
+  /// * [bool] sendMessage (required):
+  ///
   /// * [BookingDTO] bookingDTO (required):
-  Future<BookingDTO?> updateBooking(BookingDTO bookingDTO,) async {
-    final response = await updateBookingWithHttpInfo(bookingDTO,);
+  Future<BookingDTO?> updateBooking(bool sendMessage, BookingDTO bookingDTO,) async {
+    final response = await updateBookingWithHttpInfo(sendMessage, bookingDTO,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

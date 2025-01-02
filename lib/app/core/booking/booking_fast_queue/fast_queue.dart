@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
+import '../../customer/customer_state_manager.dart';
 import '../crud_widget/create_booking_lista_attesa.dart';
 import 'fast_queue_card.dart';
 
@@ -77,7 +78,8 @@ class _FastQueueState extends State<FastQueue> {
               padding: const EdgeInsets.all(18.0),
               child: FloatingActionButton(
                 backgroundColor: globalGold,
-                onPressed: () {
+                onPressed: () async {
+                  await Provider.of<CustomerStateManager>(context, listen: false).refreshHistory();
                   showFormBottomSheet(context, BookingDTOStatusEnum.LISTA_ATTESA);
                 },
                 child: const Icon(CupertinoIcons.book, color: Colors.white,),),

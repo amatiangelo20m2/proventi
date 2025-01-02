@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
 import 'package:proventi/app/core/customer/customer_state_manager.dart';
-import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
+import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
@@ -17,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart';
 import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
-import '../../whatsapp/chat_icon_whastapp.dart';
+import '../../../custom_widgets/whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 
 class BookingToManageCard extends StatelessWidget {
@@ -140,6 +138,7 @@ class BookingToManageCard extends StatelessWidget {
                               color: elegantBlue,
                             ),
                           ),
+                          Text(getFormEmoji(formDTOs, booking), style: TextStyle(fontSize: 13),),
                           Consumer<CustomerStateManager>(
                             builder: (BuildContext context,
                                 CustomerStateManager customerStateManager, Widget? child) {
@@ -199,7 +198,7 @@ class BookingToManageCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Text(getFormEmoji(formDTOs, booking)),
+
                           IconButton(onPressed: (){
                             showCupertinoModalBottomSheet(
                               expand: true,
@@ -220,7 +219,6 @@ class BookingToManageCard extends StatelessWidget {
 
                       if(booking.specialRequests?.isNotEmpty ?? false)
                         Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
-
                     ],
                   ),
                 ],
@@ -247,14 +245,14 @@ class BookingToManageCard extends StatelessWidget {
                   Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
-                  Text('Codice prenotazione:' + booking.bookingCode!, style: const TextStyle(fontSize: 7),),
-                  Text('Codice form:' + booking.formCode! + getFormEmoji(formDTOs, booking), style: const TextStyle(fontSize: 7),),
+                  Text('Codice prenotazione:${booking.bookingCode!}', style: const TextStyle(fontSize: 7),),
+                  Text('Codice form:${booking.formCode!}' + getFormEmoji(formDTOs, booking), style: const TextStyle(fontSize: 7),),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(Icons.circle, color: getStatusColor(booking.status!),),
-                      Text(booking.status!.value.replaceAll('_', '')),
+                      Text(booking.status!.value.replaceAll('_', ' ')),
                     ],
                   ),
                 ],
@@ -262,6 +260,7 @@ class BookingToManageCard extends StatelessWidget {
             ),
             Positioned(
               right: 0,
+
               child: IconButton(onPressed: () async {
 
 
@@ -280,10 +279,12 @@ class BookingToManageCard extends StatelessWidget {
             onPressed: () async {
 
 
-              bool confirmed = await _showConfirmationDialog(context, 'Coneferma prenotazione di ${booking.customer!.firstName!}?' , '');
+              bool confirmed = await _showConfirmationDialog(context,
+                  'Conferma prenotazione di ${booking.customer!.firstName!}?' , '');
+
               if(confirmed){
                 Response responseUpdate = await Provider.of<RestaurantStateManager>(context, listen: false)
-                    .bookingControllerApi.updateBookingWithHttpInfo(BookingDTO(
+                    .bookingControllerApi.updateBookingWithHttpInfo(true, BookingDTO(
                     bookingCode: booking.bookingCode,
                     status: BookingDTOStatusEnum.CONFERMATO
                 ));
@@ -291,15 +292,14 @@ class BookingToManageCard extends StatelessWidget {
 
                   await Provider.of<RestaurantStateManager>(context, listen: false)
                       .refreshDate();
-                  _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' è già stata elaborata' );
+                  _showSnackbar(context, 'Prenotazione di ${booking.customer!.firstName!} è già stata elaborata' );
 
                 } else if(responseUpdate.statusCode == 200){
-
                   await Provider.of<RestaurantStateManager>(context, listen: false)
                       .refreshDate();
-                  _showSnackbar(context, 'Prenotazione di ' + booking.customer!.firstName! + ' confermata ✅' );
+                  _showSnackbar(context, 'Prenotazione di ${booking.customer!.firstName!} confermata ✅' );
                 }else{
-                  _showSnackbar(context, 'Ho riscontrato un errore generico durante aggiormamento prenotazione di '+ booking.customer!.firstName!+ '. Riprova fra 2 minuti.❌❌' );
+                  _showSnackbar(context, 'Ho riscontrato un errore generico durante aggiormamento prenotazione di ${booking.customer!.firstName!}. Riprova fra 2 minuti.❌❌' );
                 }
               }
 
@@ -317,23 +317,26 @@ class BookingToManageCard extends StatelessWidget {
                     bookingCode: booking.bookingCode,
                     bookingId: booking.bookingId,
                     status: BookingDTOStatusEnum.RIFIUTATO
-                ));
+                ), true);
                 Navigator.pop(context, null);
               }
             },
             child: const Text('Rifiuta prenotazione'),
           ),
           CupertinoActionSheetAction(
+
             onPressed: () async {
 
                 bool confirmed = await _showConfirmationDialog(context, 'Elimina prenotazione di ${booking.customer!.firstName}?', '');
                 if(confirmed) {
+                  bool sendMessage = await _showConfirmationDialog(context, 'Invia messaggio di cancellazione a ${booking.customer!.firstName}?', '');
+
                   Provider.of<RestaurantStateManager>(context, listen: false)
                       .updateBooking(BookingDTO(
                       bookingCode: booking.bookingCode,
                       bookingId: booking.bookingId,
                       status: BookingDTOStatusEnum.ELIMINATO
-                  ));
+                  ), sendMessage);
                   Navigator.pop(context, null);
                 }
             },
@@ -354,6 +357,7 @@ class BookingToManageCard extends StatelessWidget {
   Future<bool> _showConfirmationDialog(BuildContext context, String title, String content) {
     return showCupertinoDialog<bool>(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
           title: Text(title),

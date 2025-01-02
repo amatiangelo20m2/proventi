@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_refused/booking_refused_archive.dart';
+import 'package:proventi/app/core/customer/customer_state_manager.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
@@ -14,7 +15,7 @@ import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:vibration/vibration.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
-import '../../../custom_widgets/appinio_animated_toggle_tab.dart';
+import '../../../custom_widgets/toggle_pro20/appinio_animated_toggle_tab.dart';
 import 'automatic_book_manager/auto_booking_manager.dart';
 import 'confirmed_booking_card.dart';
 import 'confirmedcard_extra/filter_booking_type.dart';
@@ -392,7 +393,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               return BookingConfirmedCard(
                                 booking: sortBookings(filteredBooking, filterBookingType)[index],
                                 restaurantDTO: restaurantManager.restaurantConfiguration!,
-                                shadeColor: globalGoldDark,
+                                forms: restaurantManager.currentBranchForms!,
                               );
                             },
 
@@ -446,7 +447,9 @@ class _BookingScreenState extends State<BookingScreen> {
                             size: 25,
                             color: Colors.white,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            await Provider.of<CustomerStateManager>(context, listen: false).refreshHistory();
+
                             showCupertinoModalBottomSheet(
                               expand: true,
                               elevation: 10,
@@ -641,7 +644,7 @@ class _BookingScreenState extends State<BookingScreen> {
     return sortedBookings;
   }
 
-  _buildSwitch(RestaurantStateManager restaurantStateManager) {
+  _buildSwitch(RestaurantStateManager? restaurantStateManager) {
     return SwitchPro20(
       callback: (int i) {
         switch(i){
@@ -685,7 +688,7 @@ class _BookingScreenState extends State<BookingScreen> {
       tabTexts: [
         badges.Badge(
             badgeStyle: badges.BadgeStyle(badgeColor: Colors.grey.shade800),
-            badgeContent: Text(restaurantStateManager
+            badgeContent: Text(restaurantStateManager!
                 .retrieveTotalTableNumberForDayAndActiveBookings(_selectedDate).toString(), style: const TextStyle(fontSize: 10, color: CupertinoColors.white),),
             badgeAnimation: const badges.BadgeAnimation.rotation(),
             child: const Padding(
@@ -694,7 +697,7 @@ class _BookingScreenState extends State<BookingScreen> {
             )),
         badges.Badge(
             badgeStyle: badges.BadgeStyle(badgeColor: globalGold),
-            badgeContent: Text(restaurantStateManager
+            badgeContent: Text(restaurantStateManager!
                 .retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantStateManager.restaurantConfiguration!).toString(),
               style: const TextStyle(fontSize: 10, color: CupertinoColors.white),),
             badgeAnimation: const badges.BadgeAnimation.rotation(),

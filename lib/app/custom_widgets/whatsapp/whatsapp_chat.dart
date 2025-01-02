@@ -1,7 +1,7 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
-import 'package:proventi/app/core/whatsapp/whatsapp_chat_state_manager.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
+import 'package:proventi/app/custom_widgets/whatsapp/whatsapp_chat_state_manager.dart';
+import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/restaurant_client/lib/api.dart';
@@ -26,7 +26,7 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
     // Initialize the chat state manager
     chatStateManager = ChatStateManager(
       user1Id: '1', // Replace with the actual user1 ID
-      user2Id: widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone! + '@c.us',
+      user2Id: '${widget.bookingDTO.customer!.prefix!}${widget.bookingDTO.customer!.phone!}@c.us',
       fetchMessages: () async {
         // Define the function to fetch messages from the API
         final communicationStateManager = context.read<CommunicationStateManager>();
@@ -34,6 +34,8 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
           widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!,
         );
 
+
+        print(chatMessagesResponse);
         if (chatMessagesResponse != null) {
           return chatMessagesResponse.data
               .map((e) => ChatMessage(
@@ -82,12 +84,15 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
               )],
               title: Row(
                 children: [
+
                   ProfileImage(
                       branchCode: widget.bookingDTO.branchCode!,
                       avatarRadious: 20,
                       customer: widget.bookingDTO.customer!,
                       allowNavigation: false),
+
                   Text(' ${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: const TextStyle(color: Colors.white, fontSize: 15),),
+
                 ],
               ),
             ),

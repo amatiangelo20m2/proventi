@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../api/communication_client/lib/api.dart';
-import '../../main_screen.dart';
+import '../../home_screen.dart';
 
 class PairedCodeWhatsApp extends StatefulWidget {
   const PairedCodeWhatsApp({super.key});
@@ -158,7 +158,7 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
           fontSize: 18.0,
         );
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
+          MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
         );
 
 

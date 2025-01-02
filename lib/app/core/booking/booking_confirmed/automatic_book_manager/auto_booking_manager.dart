@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import '../../../../../api/restaurant_client/lib/api.dart';
 import '../../../../../state_manager/restaurant_state_manager.dart';
-import '../../../../custom_widgets/appinio_animated_toggle_tab.dart';
+import '../../../../custom_widgets/toggle_pro20/appinio_animated_toggle_tab.dart';
 
 class AutoBookingManager extends StatefulWidget {
-  const AutoBookingManager({super.key, required this.currentDate});
+  const AutoBookingManager({super.key,
+    required this.currentDate});
 
   final DateTime currentDate;
 
@@ -60,7 +61,7 @@ class _AutoBookingManagerState extends State<AutoBookingManager> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Configurazione per ${italianDateFormat.format(widget.currentDate)}', style: TextStyle(fontSize: 12),),
+                child: Text('Configurazione per ${italianDateFormat.format(widget.currentDate)}', style: const TextStyle(fontSize: 12),),
               ),
             ],
           ),
@@ -163,10 +164,10 @@ class _AutoBookingManagerState extends State<AutoBookingManager> {
 
 
       },
-      tabTexts: [
-        Text('Inattivo', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: MediaQuery.of(context).size.width * 1 / 30)),
-        Text('Conferma Tutto', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize: MediaQuery.of(context).size.width * 1 / 30)),
-        Text('Rifiuta Tutto', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize: MediaQuery.of(context).size.width * 1 / 30)),
+      tabTexts: const [
+        Text('Inattivo', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+        Text('Conferma Tutto', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)),
+        Text('Rifiuta Tutto', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)),
       ],
       height: MediaQuery.of(context).size.height * 1 / 14,
       width: MediaQuery.of(context).size.width / 2,

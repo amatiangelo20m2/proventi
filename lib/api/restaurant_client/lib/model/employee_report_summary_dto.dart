@@ -474,29 +474,29 @@ class EmployeeReportSummaryDTOJobDescriptionEnum {
 
   String toJson() => value;
 
-  static const AMMINISTRATORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AMMINISTRATORE');
   static const ACCOGLIENZA = EmployeeReportSummaryDTOJobDescriptionEnum._(r'ACCOGLIENZA');
+  static const AIUTO_CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
+  static const AMMINISTRATORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AMMINISTRATORE');
   static const BARMAN = EmployeeReportSummaryDTOJobDescriptionEnum._(r'BARMAN');
   static const CAMERIERE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CAMERIERE');
   static const CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'CUOCO');
-  static const AIUTO_CUOCO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
   static const DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'DIRETTORE');
-  static const VICE_DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
   static const LAVAPIATTI = EmployeeReportSummaryDTOJobDescriptionEnum._(r'LAVAPIATTI');
   static const PIZZAIOLO = EmployeeReportSummaryDTOJobDescriptionEnum._(r'PIZZAIOLO');
+  static const VICE_DIRETTORE = EmployeeReportSummaryDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
 
   /// List of all possible values in this [enum][EmployeeReportSummaryDTOJobDescriptionEnum].
   static const values = <EmployeeReportSummaryDTOJobDescriptionEnum>[
-    AMMINISTRATORE,
     ACCOGLIENZA,
+    AIUTO_CUOCO,
+    AMMINISTRATORE,
     BARMAN,
     CAMERIERE,
     CUOCO,
-    AIUTO_CUOCO,
     DIRETTORE,
-    VICE_DIRETTORE,
     LAVAPIATTI,
     PIZZAIOLO,
+    VICE_DIRETTORE,
   ];
 
   static EmployeeReportSummaryDTOJobDescriptionEnum? fromJson(dynamic value) => EmployeeReportSummaryDTOJobDescriptionEnumTypeTransformer().decode(value);
@@ -535,16 +535,16 @@ class EmployeeReportSummaryDTOJobDescriptionEnumTypeTransformer {
   EmployeeReportSummaryDTOJobDescriptionEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'AMMINISTRATORE': return EmployeeReportSummaryDTOJobDescriptionEnum.AMMINISTRATORE;
         case r'ACCOGLIENZA': return EmployeeReportSummaryDTOJobDescriptionEnum.ACCOGLIENZA;
+        case r'AIUTO_CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.AIUTO_CUOCO;
+        case r'AMMINISTRATORE': return EmployeeReportSummaryDTOJobDescriptionEnum.AMMINISTRATORE;
         case r'BARMAN': return EmployeeReportSummaryDTOJobDescriptionEnum.BARMAN;
         case r'CAMERIERE': return EmployeeReportSummaryDTOJobDescriptionEnum.CAMERIERE;
         case r'CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.CUOCO;
-        case r'AIUTO_CUOCO': return EmployeeReportSummaryDTOJobDescriptionEnum.AIUTO_CUOCO;
         case r'DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.DIRETTORE;
-        case r'VICE_DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.VICE_DIRETTORE;
         case r'LAVAPIATTI': return EmployeeReportSummaryDTOJobDescriptionEnum.LAVAPIATTI;
         case r'PIZZAIOLO': return EmployeeReportSummaryDTOJobDescriptionEnum.PIZZAIOLO;
+        case r'VICE_DIRETTORE': return EmployeeReportSummaryDTOJobDescriptionEnum.VICE_DIRETTORE;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

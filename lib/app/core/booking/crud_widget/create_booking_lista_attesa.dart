@@ -247,7 +247,7 @@ class _CreateBookingListAttesaState extends State<CreateBookingListAttesa> {
                           bookingId: 0,
                           formCode: '',
                           branchName: restaurantStateManager.restaurantConfiguration!.restaurantName!,
-                          branchCode: restaurantStateManager.currentEmployee!.branchCode!,
+                          branchCode: restaurantStateManager.restaurantConfiguration!.branchCode!,
                           bookingCode: '',
                           bookingDate: DateTime.now(),
                           timeSlot: TimeSlot(

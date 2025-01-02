@@ -144,7 +144,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
         .updateBooking(BookingDTO(
         bookingCode: widget.booking.bookingCode,
         status: BookingDTOStatusEnum.ARRIVATO
-    ));
+    ), true);
     _showSnackbar(context, 'Segna ${widget.booking.customer!.firstName!} come arrivato?');
     return false; // Prevent automatic dismissal
   }
@@ -156,7 +156,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
         .updateBooking(BookingDTO(
         bookingCode: widget.booking.bookingCode,
         status: BookingDTOStatusEnum.NON_ARRIVATO
-    ));
+    ), true);
 
     _showSnackbar(context, 'Segna ${widget.booking.customer!.firstName!} come non arrivato?');
     return false; // Prevent automatic dismissal
@@ -319,7 +319,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
                   .updateBooking(BookingDTO(
                 bookingCode: booking.bookingCode,
                 status: BookingDTOStatusEnum.ARRIVATO,
-              ));
+              ), true);
               Navigator.pop(context, null);
 
             },
@@ -329,7 +329,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
             onPressed: () {
               booking.status = BookingDTOStatusEnum.NON_ARRIVATO;
               Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(booking);
+                  .updateBooking(booking, true);
               Navigator.pop(context, null);
 
             },
@@ -339,7 +339,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
             onPressed: () {
               booking.status = BookingDTOStatusEnum.ELIMINATO;
               Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(booking);
+                  .updateBooking(booking, true);
               Navigator.pop(context, null);
             },
             child: const Text('Cancella'),

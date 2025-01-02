@@ -26,18 +26,18 @@ import 'floor/floor.dart';
 import 'notification/notification_screen.dart';
 import 'notification/state_manager/notification_state_manager.dart';
 
-class MainScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static const String routeName = 'main_screen';
 
-  const MainScreen({super.key, required this.pageIndex});
+  const HomeScreen({super.key, required this.pageIndex});
 
   final int pageIndex;
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
 
 
@@ -76,10 +76,10 @@ class _MainScreenState extends State<MainScreen> {
                 label: BookingDTOStatusEnum.CONFERMATO.value.replaceAll('_', ' '),
                 badgeColor: getStatusColor(BookingDTOStatusEnum.CONFERMATO),
                 badgeCount: restaurantStateManager.allBookings!
-                .where((element) => isSameDay(element.bookingDate!, DateTime.now()))
+                    .where((element) => isSameDay(element.bookingDate!, DateTime.now()))
                     .where((element) =>
-                        element.status == BookingDTOStatusEnum.CONFERMATO
-                            || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
+                element.status == BookingDTOStatusEnum.CONFERMATO
+                    || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
                     .length,
                 isSelected: _pageIndex == 0,
               ),
@@ -89,7 +89,7 @@ class _MainScreenState extends State<MainScreen> {
                 badgeColor: getStatusColor(BookingDTOStatusEnum.IN_ATTESA),
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
-                        element.status == BookingDTOStatusEnum.IN_ATTESA)
+                element.status == BookingDTOStatusEnum.IN_ATTESA)
                     .length,
                 isSelected: _pageIndex == 1,
               ),
@@ -99,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                 badgeColor: getStatusColor(BookingDTOStatusEnum.LISTA_ATTESA),
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
-                        element.status == BookingDTOStatusEnum.LISTA_ATTESA)
+                element.status == BookingDTOStatusEnum.LISTA_ATTESA)
                     .length,
                 isSelected: _pageIndex == 2,
               ),
@@ -109,8 +109,8 @@ class _MainScreenState extends State<MainScreen> {
                 badgeColor: Colors.deepOrange,
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
-                        element.status ==
-                        BookingDTOStatusEnum.MODIFICATO_DA_UTENTE || element.status == BookingDTOStatusEnum.ELIMINATO_DA_UTENTE)
+                element.status ==
+                    BookingDTOStatusEnum.MODIFICATO_DA_UTENTE || element.status == BookingDTOStatusEnum.ELIMINATO_DA_UTENTE)
                     .length,
                 isSelected: _pageIndex == 3,
               ),
@@ -251,10 +251,43 @@ class _MainScreenState extends State<MainScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                IconButton(icon: const Icon(Icons.arrow_drop_down_circle_outlined), onPressed: () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoActionSheet(
+                      title: Text('Seleziona il branch', style: TextStyle(color: blackDir),),
+                      actions: <CupertinoActionSheetAction>[
+                        for (var restaurant in restaurantStateManager.restaurantConfigurations!)
+                          CupertinoActionSheetAction(
+                            child: Builder(
+                              builder: (context) {
+                                bool isCurrentRestaurant = restaurantStateManager.restaurantConfiguration!.branchCode == restaurant.branchCode;
 
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
 
-                Text(restaurantStateManager.restaurantConfiguration!.restaurantName!,
-                  style: TextStyle(fontSize: 18, color: blackDir, fontWeight: FontWeight.bold),),
+                                    Text(restaurant.restaurantName!, style: TextStyle(color: blackDir, fontSize: isCurrentRestaurant ? 18 : 15),),
+                                    Text(isCurrentRestaurant ? '  ✅' : '' , style: TextStyle(color: blackDir),),
+                                  ],
+                                );
+                              }
+                            ),
+                            onPressed: () async {
+                              await restaurantStateManager.retrieveBranchConfiguration(restaurant.branchCode!, DateTime.now());
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                      ],
+                    ),
+                  );
+                },),
+                Text(
+                  restaurantStateManager.restaurantConfiguration != null
+                      ? restaurantStateManager.restaurantConfiguration!.restaurantName!
+                      : '...',
+                  style: TextStyle(fontSize: 18, color: blackDir, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),

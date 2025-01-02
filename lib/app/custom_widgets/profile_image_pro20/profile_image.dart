@@ -6,9 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../api/restaurant_client/lib/api.dart';
-import '../../state_manager/communication_state_manager.dart';
-import '../core/customer/single_customer_history.dart';
+import '../../../api/restaurant_client/lib/api.dart';
+import '../../../state_manager/communication_state_manager.dart';
+import '../../core/customer/single_customer_history.dart';
 
 class ProfileImage extends StatelessWidget {
   const ProfileImage({
@@ -99,7 +99,7 @@ class ProfileImage extends StatelessWidget {
   Widget _buildFallbackAvatar() {
     return CircleAvatar(
       radius: avatarRadious,
-      backgroundImage: const AssetImage('assets/images/profile.png'),
+      backgroundImage: AssetImage('assets/images/user.png'),
       backgroundColor: Colors.transparent,
     );
   }

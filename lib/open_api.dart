@@ -2,6 +2,14 @@ import 'package:openapi_generator_annotations/openapi_generator_annotations.dart
 
 @Openapi(
     additionalProperties:
+    AdditionalProperties(pubName: 'ventimetri_api_auth', pubAuthor: 'Angelo Amati'),
+    inputSpecFile: 'lib/json/authentication_service.yaml',
+    generatorName: Generator.dart,
+    outputDirectory: 'lib/api/auth_client')
+class OpenApiAuth extends OpenapiGeneratorConfig {}
+
+@Openapi(
+    additionalProperties:
     AdditionalProperties(pubName: 'ventimetri_api', pubAuthor: 'Angelo Amati'),
     inputSpecFile: 'lib/json/ventimetri_service.yaml',
     generatorName: Generator.dart,

@@ -34,7 +34,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
         elevation: 0,
         actions: [
           IconButton(onPressed: (){
-             notificationProvider.deleteAll();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Conferma'),
+                  content: const Text('Sei sicuro di voler eliminare tutte le notifiche?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: const Text('No'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        notificationProvider.deleteAll();
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Si'),
+                    ),
+                  ],
+                );
+              },
+            );
           }, icon: const Icon(CupertinoIcons.delete))
         ],
       ),
@@ -115,11 +138,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       children: [
                         Text(notification.body,
                           maxLines: 2,
-                          overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11),),
+                          overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11),),
 
                         Text('Codice prenotazione:' + notification.bookingId,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 7),),
+                          overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 7),),
                       ],
                     ),
                     trailing: Text(

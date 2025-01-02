@@ -5,13 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
+import 'package:proventi/state_manager/user_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'app/core/customer/customer_state_manager.dart';
 import 'app/core/employee/reports/state_manager/employee_state_manager.dart';
-import 'app/core/main_screen.dart';
+import 'app/core/home_screen.dart';
 import 'app/core/notification/model/notification_entity.dart';
 import 'app/core/notification/state_manager/notification_state_manager.dart';
 import 'landing/landing_page.dart';
@@ -79,7 +80,7 @@ Future<void> _setupFirebaseMessaging() async {
     try{
 
       BuildContext context = navigatorKey.currentContext!;
-      showDialogPushNotification(context, message);
+
 
       NotificationStateManager notificationProvider = Provider.of<NotificationStateManager>(context, listen: false);
       RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
@@ -87,7 +88,7 @@ Future<void> _setupFirebaseMessaging() async {
 
       await notificationProvider.addNotification(notification);
       await restaurantStateManager.refresh(DateTime.now());
-
+      showDialogPushNotification(context, message);
       print('Show dialog notification');
 
 
@@ -133,9 +134,9 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
       child: CupertinoButton(
         color: globalGold,
         borderRadius: BorderRadius.circular(8),
-        onPressed: () {
+        onPressed: () async {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => MainScreen(pageIndex: pageIndex,)),
+            MaterialPageRoute(builder: (context) => HomeScreen(pageIndex: pageIndex,)),
           );
         }, child: const Text('Gestisci la prenotazione', style: TextStyle(color: CupertinoColors.white),),
       ),
@@ -170,7 +171,7 @@ class _Pro20State extends State<Pro20> {
         ChangeNotifierProvider(create: (context) => NotificationStateManager()),
         ChangeNotifierProvider(create: (context) => EmployeeStateManager()),
         ChangeNotifierProvider(create: (context) => CustomerStateManager()),
-
+        ChangeNotifierProvider(create: (context) => UserStateManager(navigatorKey)),
         ChangeNotifierProvider(create: (context) => CommunicationStateManager(navigatorKey)),
       ],
       child: MaterialApp(

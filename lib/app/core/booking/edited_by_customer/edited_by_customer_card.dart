@@ -1,188 +1,195 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
+import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-
-import '../../whatsapp/chat_icon_whastapp.dart';
-import '../../whatsapp/whatsapp_chat.dart';
+import '../../../../global/flag_picker.dart';
+import '../../../custom_widgets/whatsapp/chat_icon_whastapp.dart';
+import '../../customer/customer_state_manager.dart';
+import '../bookings_utils.dart';
 
 class ReservationEditedByCustomerCard extends StatelessWidget {
   final BookingDTO booking;
   final List<FormDTO> formDTOs;
 
   const ReservationEditedByCustomerCard(
-      {super.key, required this.booking, required this.formDTOs});
+      {super.key,
+        required this.booking,
+        required this.formDTOs});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showActionMenu(context, booking);
+        _showBookingActionMenuConfermato(context, booking);
       },
-      child: _buildCardContent(context),
+      child: _buildCardContent(context)
     );
   }
 
   Widget _buildCardContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-      child: Card(
-        surfaceTintColor: Colors.white,
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  ProfileImage(branchCode: booking.branchCode!,
-                      avatarRadious: 30,
-                      customer: booking.customer!,
-                      allowNavigation: true),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${booking.customer!.firstName!} ${booking.customer!.lastName!}' ,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: elegantBlue,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              CupertinoIcons.settings_solid,
-                              color: Colors.grey[900],
-                            ),
-                          ),
-                          ChatIconWhatsApp(booking: booking,),
-                          Text(getFormEmoji(formDTOs, booking)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Expanded(
-                flex: 3,
-                child: Card(
-                  elevation: 5,
-                  surfaceTintColor: Colors.white,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildDateWidget(),
-                        _buildGuestInfo(),
-                        _buildTimeBooking(),
-                        Text(booking.specialRequests!, style: TextStyle(fontSize: 10),)
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Text(getIconByStatus(booking.status!), style: TextStyle(fontSize: 20),),
+    return ListTile(
+      leading: Consumer<CustomerStateManager>(
+        builder: (BuildContext context,
+            CustomerStateManager customerStateManager, Widget? child) {
+          int noShowBookings = 0;
 
-            ],
-          ),
-        ),
+          if (customerStateManager.historicalCustomerData!
+              .where((element) =>
+          element.customerDTO!.customerId ==
+              booking.customer!.customerId!)
+              .isNotEmpty) {
+            CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                .historicalCustomerData!
+                .where((element) =>
+            element.customerDTO!.customerId ==
+                booking.customer!.customerId!)
+                .first;
+            noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
+          }
+          return ProfileImage(
+            allowNavigation: true,
+            customer: booking.customer!,
+            branchCode: booking.branchCode!,
+            avatarRadious: 30,
+            noShowBookings: noShowBookings,
+          );
+        },
       ),
-    );
-  }
-  Row _buildTimeBooking() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Icon(
-          CupertinoIcons.clock, color: Colors.black,
-        ),
-        booking.timeSlot?.bookingHour ==
-                    booking.timeSlotAfterUpdate?.bookingHour &&
-                booking.timeSlot?.bookingMinutes ==
-                    booking.timeSlotAfterUpdate?.bookingMinutes
-
-            ? Text(
-                ' ${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: MediaQuery.of(context).size.height * 0.013,
+                  fontWeight: FontWeight.bold,
                   color: elegantBlue,
                 ),
-              ) : Row(
-          children: [
-            Text(
-              ' ${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
-              style: TextStyle(
-                fontSize: 13,
-                decoration: TextDecoration.lineThrough,
-                color: Colors.redAccent.shade700,
               ),
-            ),
-            const Icon(Icons.arrow_forward),
-            Text(
-              ' ${NumberFormat("00").format(booking.timeSlotAfterUpdate?.bookingHour)}:${NumberFormat("00").format(booking.timeSlotAfterUpdate?.bookingMinutes)}',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.green.shade700,
+              Consumer<CustomerStateManager>(
+                builder: (BuildContext context,
+                    CustomerStateManager customerStateManager, Widget? child) {
+                  int currentBookingsOfTheCurrentCustomer = 0;
+
+                  if (customerStateManager.historicalCustomerData!
+                      .where((element) =>
+                  element.customerDTO!.customerId ==
+                      booking.customer!.customerId!)
+                      .isNotEmpty) {
+                    CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                        .historicalCustomerData!
+                        .where((element) =>
+                    element.customerDTO!.customerId ==
+                        booking.customer!.customerId!)
+                        .first;
+                    currentBookingsOfTheCurrentCustomer =
+                    customerHistoryDTO.historicalBookingsNumber!;
+                  }
+
+                  return currentBookingsOfTheCurrentCustomer > 1
+                      ? Center(
+                      child: Text(
+                        '(' + currentBookingsOfTheCurrentCustomer.toString() + ')',
+                        style: TextStyle(
+                            color: blackDir, fontSize: 10),
+                      ))
+                      : const Icon(
+                    Icons.fiber_new,
+                    color: Colors.green,
+                    size: 30,
+                  );
+                },
               ),
-            ),
-          ],
-        )
-      ],
-    );
-  }
-  Row _buildGuestInfo() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(CupertinoIcons.person_2, color: Colors.black,),
-        const SizedBox(width: 5),
-        booking.numGuests != booking.numGuestsAfterUpdate ? Row(
-          children: [
-            Text(
-              ' ${booking.numGuests ?? 0}',
-              style: TextStyle(
-                decoration: TextDecoration.lineThrough,
-                fontSize: 13,
-                color: Colors.redAccent.shade700,
-              ),
-            ),
-            const Icon(Icons.arrow_forward),
-            Text(
-              ' ${booking.numGuestsAfterUpdate ?? 0}',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.green.shade700,
-              ),
-            ),
-          ],
-        ) : Text(
-          ' ${booking.numGuests ?? 0}',
-          style: const TextStyle(
-            fontSize: 13,
-            color: CupertinoColors.label,
+              Text(getFormEmoji(formDTOs, booking), style: TextStyle(fontSize: 13),),
+            ],
           ),
-        )
 
-      ],
+          Card(
+            surfaceTintColor: Colors.white,
+            color: Colors.white,
+            child: Column(
+              children: [
+                buildDateComponent(booking.bookingDate!),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+
+                    buildComponentGuest(booking.numGuests.toString()),
+                    buildHourComponent(booking.timeSlot!),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Center(child: Icon(Icons.arrow_downward, color: Colors.grey.shade700, size: 20,)),
+          Stack(
+            children: [
+              Card(
+                surfaceTintColor: Colors.white,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    buildDateComponent(booking.bookingDateAfterUpdate!),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+
+                        buildComponentGuest(booking.numGuestsAfterUpdate.toString()),
+                        buildHourComponent(booking.timeSlotAfterUpdate!),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(right: 0, child: Icon(
+                Icons.fiber_new,
+                color: Colors.green,
+                size: 30,
+              ))
+            ]
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              if (booking.specialRequests != null && booking.specialRequests!.isNotEmpty) ...[
+                Text('💬${booking.specialRequests}', style: const TextStyle(fontSize: 12),),
+              ],
+              if (booking.privateNotes != null && booking.privateNotes!.isNotEmpty) ...[
+                Text('🤵‍${booking.privateNotes}', style: const TextStyle(fontSize: 12),),
+              ],
+            ],
+          ),
+          Divider(
+            height: 1,
+            color: Colors.grey.shade300,
+          ),
+        ],
+      ),
+      trailing: ChatIconWhatsApp(booking: booking,),
     );
   }
 
-  void showActionMenu(BuildContext context, BookingDTO booking) {
+  Widget _buildSwipeBackground(
+      {required Alignment alignment,
+        required Color color,
+        required IconData icon}) {
+    return Container(
+      alignment: alignment,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Icon(icon, color: color, size: 28),
+    );
+  }
+
+  void _showBookingActionMenuConfermato(
+      BuildContext context, BookingDTO booking) {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
@@ -197,6 +204,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
                   Text(booking.formCode!),
+                  Text('Stato:${booking.status!.value}'.replaceAll('_', ' ')),
                 ],
               ),
             ),
@@ -208,45 +216,66 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
           ],
         ),
         actions: [
-          if(booking.status == BookingDTOStatusEnum.MODIFICATO_DA_UTENTE) CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                      bookingCode: booking.bookingCode,
-                      numGuests: booking.numGuestsAfterUpdate,
-                      timeSlot: booking.timeSlotAfterUpdate,
-                      bookingDate: booking.bookingDateAfterUpdate!.add(const Duration(hours: 12)),
-                      status: BookingDTOStatusEnum.MODIFICA_CONFERMATA));
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context, null);
+
+              bool? isArrivedConfirmeed = await _showConfirmationDialog(context,
+                  'Conferma le modifiche effettuate da ${booking.customer!.firstName!}?', 'Si', 'No');
+
+              if(isArrivedConfirmeed!){
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    numGuests: booking.numGuestsAfterUpdate,
+                    timeSlot: booking.timeSlotAfterUpdate,
+                    bookingDate: booking.bookingDateAfterUpdate!.add(const Duration(hours: 12)),
+                    status: BookingDTOStatusEnum.MODIFICA_CONFERMATA), false);
+              }
+
               Navigator.pop(context, null);
             },
-            child: const Text('Conferma modifica'),
+            child: const Text('Accetta modifica'),
           ),
-          if(booking.status == BookingDTOStatusEnum.MODIFICATO_DA_UTENTE) CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                      bookingCode: booking.bookingCode,
-                      bookingId: booking.bookingId,
-                      status: BookingDTOStatusEnum.MODIFICA_RIFIUTATA));
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              bool? isNotArrivedConfirmeed = await _showConfirmationDialog(context,
+                  'Rifiuta le modifiche di ${booking.customer!.firstName!}?', 'Si', 'No');
+              if(isNotArrivedConfirmeed!){
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    status: BookingDTOStatusEnum.MODIFICA_RIFIUTATA), false);
+              }
               Navigator.pop(context, null);
             },
             child: const Text('Rifiuta modifica'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              Provider.of<RestaurantStateManager>(context, listen: false)
-                  .updateBooking(BookingDTO(
-                      bookingCode: booking.bookingCode,
-                      bookingId: booking.bookingId,
-                      status: BookingDTOStatusEnum.ELIMINATO));
-              Navigator.pop(context, null);
+            onPressed: () async {
+              bool? deleteBooking = await _showConfirmationDialog(context,
+                  'Eliminare la prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No');
+              if(deleteBooking!){
+                bool? result = await _showConfirmationDialog(context,
+                    'Invia messaggio ${booking.customer!.firstName!}?', 'Si', 'No');
+
+                Provider.of<RestaurantStateManager>(context, listen: false)
+                    .updateBooking(BookingDTO(
+                    bookingCode: booking.bookingCode,
+                    bookingId: booking.bookingId,
+                    status: BookingDTOStatusEnum.ELIMINATO), result!);
+                Navigator.pop(context, null);
+              }else{
+                Navigator.pop(context, null);
+              }
             },
-            child: Text('Elimina'),
+            child: const Text('Elimina'),
           ),
         ],
+
         cancelButton: CupertinoActionSheetAction(
           onPressed: () {
-            // Close without any action
+            Navigator.of(context).pop();
           },
           isDefaultAction: true,
           child: const Text('Indietro'),
@@ -255,15 +284,38 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
     );
   }
 
-  _buildDateWidget() {
-    return !isSameDay(booking.bookingDate!, booking.bookingDateAfterUpdate!) ? Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Icon(CupertinoIcons.calendar_today),
-        Text('${booking.bookingDate!.day}/${booking.bookingDate!.month}', style: const TextStyle( decoration: TextDecoration.lineThrough,color: Colors.red),),
-        const Icon(CupertinoIcons.arrow_right_circle, color: Colors.grey,),
-        Text('${booking.bookingDateAfterUpdate!.day}/${booking.bookingDateAfterUpdate!.month}', style: TextStyle(color: Colors.green.shade700),),
-      ],
-    ) : Text('${booking.bookingDate!.day}/${booking.bookingDate!.month}');
+
+  Future<bool?> _showConfirmationDialog(BuildContext context, String message,
+      String confirmText, String goBackText) async {
+    return await showCupertinoDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            message,
+            style: const TextStyle(fontSize: 15),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(goBackText),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(confirmText),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  buildDateComponent(DateTime dateTime) {
+    return Text(italianDateFormat.format(dateTime).toUpperCase(),
+        style: const TextStyle(fontSize: 7));
   }
 }

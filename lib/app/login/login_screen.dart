@@ -6,9 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/src/response.dart';
+import 'package:proventi/api/client/lib/api.dart';
+import 'package:proventi/state_manager/user_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import 'package:proventi/app/core/main_screen.dart';
+import 'package:proventi/app/core/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../global/style.dart';
 import '../../state_manager/restaurant_state_manager.dart';
@@ -20,15 +22,18 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-
 class _LoginPageState extends State<LoginPage> {
+
+  final TextEditingController _branchCodeController = TextEditingController(text: '');
   final TextEditingController _usernameController = TextEditingController(text: '');
   final TextEditingController _passwordController = TextEditingController(text: '');
-  final TextEditingController _branchCodeController = TextEditingController(text: '');
+
+  final TextEditingController _userCodeController = TextEditingController(text: '');
+  final TextEditingController _passwordUserController = TextEditingController(text: '');
 
   MobileDeviceDetails mdd = MobileDeviceDetails();
   bool _isLoading = false;
-
+  bool _isLoginWithUserCode = false;
   bool _rememberCredentials = false;
 
   @override
@@ -37,9 +42,8 @@ class _LoginPageState extends State<LoginPage> {
     _fetchDeviceInfo();
     _retrieveFcmToken();
     _loadSavedCredentials();
-    _checkIfUserAlreadyLoggedIn();
+    //_checkIfUserAlreadyLoggedIn();
   }
-
 
   Future<void> _loadSavedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,6 +55,8 @@ class _LoginPageState extends State<LoginPage> {
         _usernameController.text = prefs.getString('username') ?? '';
         _passwordController.text = prefs.getString('password') ?? '';
         _branchCodeController.text = prefs.getString('branchCode') ?? '';
+        _userCodeController.text = prefs.getString('userCode') ?? '';
+        _passwordUserController.text = prefs.getString('userPassword') ?? '';
       }
     });
   }
@@ -63,21 +69,27 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.setString('username', _usernameController.text);
       await prefs.setString('password', _passwordController.text);
       await prefs.setString('branchCode', _branchCodeController.text);
+      await prefs.setString('userCode', _userCodeController.text);
+      await prefs.setString('userPassword', _passwordUserController.text);
     } else {
       await prefs.remove('rememberCredentials');
       await prefs.remove('username');
       await prefs.remove('password');
       await prefs.remove('branchCode');
+      await prefs.remove('userCode');
+      await prefs.remove('userPassword');
     }
   }
 
   Future<void> _checkIfUserAlreadyLoggedIn() async {
-    var employeeDTO = Provider.of<RestaurantStateManager>(context, listen: false).currentEmployee;
-    if(employeeDTO != null){
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
-      );
-    }
+
+    //var employeeDTO = Provider.of<RestaurantStateManager>(context, listen: false).currentEmployee;
+
+    //if (employeeDTO != null) {
+      //Navigator.of(context).pushReplacement(
+        //MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)),
+          //  );
+    //}
   }
 
   Future<void> _retrieveFcmToken() async {
@@ -127,8 +139,7 @@ class _LoginPageState extends State<LoginPage> {
         FocusScope.of(context).unfocus(); // Close the keyboard when tapping outside
       },
       child: Consumer<RestaurantStateManager>(
-        builder:
-            (BuildContext context, RestaurantStateManager value, Widget? child) {
+        builder: (BuildContext context, RestaurantStateManager value, Widget? child) {
           return Scaffold(
             backgroundColor: blackDir,
             body: Stack(
@@ -140,61 +151,27 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Hero( tag: 'logo_landing',child: Image.asset('assets/images/logo.png', width: 120)),
-                          const SizedBox(height: 16),
-                          CupertinoTextField(
-                            clearButtonMode: OverlayVisibilityMode.always,
-                            controller: _branchCodeController,
-                            keyboardType: TextInputType.text,
-                            placeholder: 'Codice Attività',
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(10),
-                            ],
-                            padding: const EdgeInsets.all(10),
-                            onChanged: (text) {
-                              _branchCodeController.value = _branchCodeController.value.copyWith(
-                                text: text.toUpperCase(),
-                                selection: TextSelection.collapsed(offset: text.length),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          CupertinoTextField(
-                            controller: _usernameController,
-                            placeholder: 'Username',
-                            padding: const EdgeInsets.all(10),
-                          ),
-                          const SizedBox(height: 16),
-                          CupertinoTextField(
-                            controller: _passwordController,
-                            placeholder: 'Password',
-                            obscureText: true,
-                            padding: const EdgeInsets.all(10),
-                          ),
-                          const SizedBox(height: 32),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CupertinoCheckbox(
+                          Hero(tag: 'logo_landing', child: Image.asset('assets/images/logo.png', width: 120)),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8, left: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(_isLoginWithUserCode ? 'Accedi con codice utente' : 'Accedi con codice attività', style: const TextStyle(color: CupertinoColors.white, fontSize: 10)),
+                                Switch(
                                   activeColor: globalGold,
-                                  value: _rememberCredentials,
-                                  onChanged: (re){
+                                  inactiveThumbColor: globalGoldDark,
+                                  value: _isLoginWithUserCode,
+                                  onChanged: (value) {
                                     setState(() {
-                                      _rememberCredentials = !_rememberCredentials;
+                                      _isLoginWithUserCode = value;
                                     });
-                                  }),
-                              Text('Ricorda credenziali', style: TextStyle(color: CupertinoColors.white, fontSize: 15),),
-
-                            ],
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 15),
-                          CupertinoButton(
-                            color: globalGold,
-                            onPressed: _isLoading ? null : _login,
-                            child: const Text('Accedi', style: TextStyle(color: Colors.white),),
-                          ),
-                          const SizedBox(height: 32),
-
+                          _isLoginWithUserCode ? _buildUserCodeLogin() : _buildBranchCodeLogin(),
                         ],
                       ),
                     ),
@@ -217,56 +194,165 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _buildBranchCodeLogin() {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        _buildTextField(_branchCodeController, 'Codice Attività', TextInputType.text, toUpperCase: true),
+        const SizedBox(height: 16),
+        _buildTextField(_usernameController, 'Username', TextInputType.text),
+        const SizedBox(height: 16),
+        _buildTextField(_passwordController, 'Password', TextInputType.visiblePassword, obscureText: true),
+        const SizedBox(height: 32),
+        _buildRememberCredentials(),
+        const SizedBox(height: 15),
+        _buildLoginButton(),
+        const SizedBox(height: 32),
+      ],
+    );
+  }
+
+  Widget _buildUserCodeLogin() {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        _buildTextField(_userCodeController, 'Codice Utente', TextInputType.text, toUpperCase: true),
+        const SizedBox(height: 16),
+        _buildTextField(_passwordUserController, 'Password', TextInputType.visiblePassword, obscureText: true),
+        const SizedBox(height: 16),
+        _buildRememberCredentials(),
+        const SizedBox(height: 15),
+        _buildLoginButton(),
+        const SizedBox(height: 32),
+      ],
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String placeholder, TextInputType keyboardType, {bool obscureText = false, bool toUpperCase = false}) {
+    return CupertinoTextField(
+      clearButtonMode: OverlayVisibilityMode.always,
+      controller: controller,
+      keyboardType: keyboardType,
+      placeholder: placeholder,
+      obscureText: obscureText,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(10),
+      ],
+      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+      padding: const EdgeInsets.all(15),
+      onChanged: (text) {
+        controller.value = controller.value.copyWith(
+          text: toUpperCase ? text.toUpperCase() : text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
+      },
+    );
+  }
+
+  Widget _buildRememberCredentials() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CupertinoCheckbox(
+          activeColor: globalGold,
+          value: _rememberCredentials,
+          onChanged: (re) {
+            setState(() {
+              _rememberCredentials = !_rememberCredentials;
+            });
+          },
+        ),
+        const Text('Ricorda credenziali', style: TextStyle(color: CupertinoColors.white, fontSize: 10)),
+      ],
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: CupertinoButton(
+        color: globalGold,
+        onPressed: _isLoading ? null : _login,
+        child: const Text('ACCEDI', style: TextStyle(color: Colors.white, fontSize: 15)),
+      ),
+    );
+  }
+
   Future<void> _login() async {
-    if (_branchCodeController.text.isEmpty ||
-        _usernameController.text.isEmpty ||
-        _passwordController.text.isEmpty) {
+    if (!_isLoginWithUserCode && (_branchCodeController.text.isEmpty || _usernameController.text.isEmpty || _passwordController.text.isEmpty)) {
       showCupertinoAlert(context, 'Errore', 'I campi del form sono obbligatori');
       return; // Exit the function if validation fails
+    } else if (_isLoginWithUserCode && (_userCodeController.text.isEmpty || _passwordUserController.text.isEmpty)) {
+      showCupertinoAlert(context, 'Errore', 'I campi del form sono obbligatori');
     }
 
     setState(() => _isLoading = true); // Show loading indicator
 
     try {
-      print("Username: ${_usernameController.text}");
-      print("Password: ${_passwordController.text}");
-      print("Branch Code: ${_branchCodeController.text}");
-
-
       mdd.registrationDate = DateTime.now();
-      var response = await Provider.of<RestaurantStateManager>(context, listen: false)
-          .restaurantControllerApi
-          .loginFromMobileDeviceWithHttpInfo(
+
+      if (!_isLoginWithUserCode) {
+
+        var response = await Provider.of<RestaurantStateManager>(context, listen: false)
+            .restaurantControllerApi
+            .loginFromMobileDeviceWithHttpInfo(
           _branchCodeController.text,
           _usernameController.text,
           _passwordController.text,
-          mdd);
+          mdd,
+        );
 
-      if (response.statusCode == 202) {
-        if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+        if (response.statusCode == 202) {
+          if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
 
-          EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
-              .restaurantClient
-              .deserializeAsync(await _decodeBodyBytes(response), 'EmployeeDTO') as EmployeeDTO;
+            EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
+                .restaurantClient.deserializeAsync(await _decodeBodyBytes(response), 'EmployeeDTO') as EmployeeDTO;
+            print('Log in with employeeDTO: $employeeDTO');
 
-          await Provider.of<RestaurantStateManager>(context, listen: false)
-              .setDataEmployeeAndRetrieveData(employeeDTO, DateTime.now());
+            RestaurantDTO? restaurantDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
+                .restaurantControllerApi.retrieveConfiguration(employeeDTO.branchCode!, 'XXX');
 
-          await _saveCredentials(); // Save credentials if the login is successful
+            await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([restaurantDTO!]);
+            await _saveCredentials();
 
-          
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
-          );
-        }else{
-          showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
+
+
+          } else {
+            showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');
+          }
+        } else if (response.statusCode == 204) {
+          showCupertinoAlert(context, 'Error', 'User not found');
+        } else if (response.statusCode == 401) {
+          showCupertinoAlert(context, 'Error', 'Incorrect password');
+        } else {
+          showCupertinoAlert(context, 'Error', 'Errore generico');
         }
-      } else if (response.statusCode == 204) {
-        showCupertinoAlert(context, 'Error', 'User not found');
-      } else if (response.statusCode == 401) {
-        showCupertinoAlert(context, 'Error', 'Incorrect password');
       } else {
-        showCupertinoAlert(context, 'Error', 'Errore generico');
+
+        print("UserCode: ${_userCodeController.text}");
+        print("Password: ${_passwordUserController.text}");
+
+        await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(_userCodeController.text,
+            _passwordUserController.text, mdd.fcmToken!);
+
+        VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
+
+        //here i will convert a BranchResponseEntity list into a Restaurant configuration in order to have a list of branchConfiguration, when the customer will choose a branch it will refresh the configuration each time
+        List<RestaurantDTO> restaurantDTOs = [];
+        for(BranchResponseEntity branchResEntity in ventiMetriQuadriData.branches){
+          restaurantDTOs.add(RestaurantDTO(
+            branchCode: branchResEntity.branchCode,
+            restaurantName: branchResEntity.name,
+          ));
+        }
+
+        await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList(restaurantDTOs);
+        await _saveCredentials();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
+
+        //await Provider.of<RestaurantStateManager>(context, listen: false).
+
       }
     } catch (e) {
       showCupertinoAlert(context, 'Error', 'An error occurred: $e');
@@ -281,5 +367,4 @@ class _LoginPageState extends State<LoginPage> {
         ? response.bodyBytes.isEmpty ? '' : utf8.decode(response.bodyBytes)
         : response.body;
   }
-
 }

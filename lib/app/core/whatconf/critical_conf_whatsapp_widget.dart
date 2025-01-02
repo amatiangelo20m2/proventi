@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../api/communication_client/lib/api.dart';
 import '../../../state_manager/communication_state_manager.dart';
-import '../main_screen.dart';
+import '../home_screen.dart';
 
 class CriticalWhatsAppConfigurationWidget extends StatefulWidget {
   const CriticalWhatsAppConfigurationWidget({super.key});
@@ -73,7 +73,7 @@ class _CriticalWhatsAppConfigurationWidgetState extends State<CriticalWhatsAppCo
                           );
 
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
+                            MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
                           );
                         }else{
                           setState(() {

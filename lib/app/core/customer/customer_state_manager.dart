@@ -29,10 +29,6 @@ class CustomerStateManager extends ChangeNotifier {
   }
 
   retrieveCustomersListByBranchCode(String branchCode, bool refresh) async {
-
-    if(refresh){
-      //_currentCustomersList = await _customerControllerApi.retrieveCustomerHistoryByBranchCode(branchCode);
-    }
     _historicalCustomerData = await _customerControllerApi.retrieveHistoricalCustomersBasedOnReservationsByBranchCode(branchCode);
     notifyListeners();
   }

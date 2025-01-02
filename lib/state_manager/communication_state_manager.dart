@@ -5,6 +5,7 @@ import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/communication_client/lib/api.dart';
+import '../app/custom_widgets/whatsapp/db/message_helper.dart';
 import '../environment_config.dart';
 
 class CommunicationStateManager extends ChangeNotifier {
@@ -18,25 +19,19 @@ class CommunicationStateManager extends ChangeNotifier {
     _initializeClient();
     _initializePrefs();
   }
-
   late final SharedPreferences prefs;
-
   Future<void> _initializePrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
-
   Future<void> _initializeClient() async {
     print('Initialize client with $customBasePathCommunication. Each call will be redirect to this url.');
     _communicationClient = ApiClient(basePath: customBasePathCommunication);
     whatsAppConfigurationControllerApi = WhatsAppConfigurationControllerApi(_communicationClient);
     retrieveWaApiConfStatus();
   }
-
-
   DateTime? _lastApiCallTime;
-  static const int _apiCallIntervalSeconds = 300;
+  static const int _apiCallIntervalSeconds = 30;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
-
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
     final currentTime = DateTime.now();
     // Check if 60 seconds have passed since the last API call
@@ -56,10 +51,7 @@ class CommunicationStateManager extends ChangeNotifier {
     }
     return currentWhatsAppConfigurationDTO;
   }
-
   List<AllChatListDataDTO>? chatList = [];
-
-
   Future<void> retrieveChatData() async {
     try {
       BuildContext? context = navigatorKey.currentContext;
@@ -76,8 +68,8 @@ class CommunicationStateManager extends ChangeNotifier {
           // Log the request details
           print('Making API call to: ${_communicationClient.basePath}/api/wsapicontroller/fetchallmessages/$branchCode/30');
 
-          chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 25);
-          print('API call successful, chat list retrieved');
+          chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 5);
+          print('API call successful, chat list retrieved' + chatList!.toString());
         } catch (e) {
           print('Error -> : ' + e.toString());
         }
@@ -92,9 +84,6 @@ class CommunicationStateManager extends ChangeNotifier {
 
     notifyListeners();
   }
-
-
-
   Future<void> sendWhatsAppMessage(String phone, ChatMessage chatMessage) async {
     String branchCode = prefs.getString('branchCode').toString();
     await whatsAppConfigurationControllerApi.sendMessage(branchCode, chatMessage.text, phone);
@@ -103,30 +92,21 @@ class CommunicationStateManager extends ChangeNotifier {
     notifyListeners();
 
   }
-
   List<ChatMessage> messages = [];
-
   Future<ChatMessagesResponseDTO?> retrieveChatSpecificWithUserData(String customerNumber) async {
-
     //final prefs = await SharedPreferences.getInstance();
     String branchCode = prefs.getString('branchCode').toString();
-
     ChatMessagesResponseDTO? chatMessageResponseDTO = await whatsAppConfigurationControllerApi.fetchMessages(branchCode,customerNumber, '20', false);
 
 
     return chatMessageResponseDTO;
   }
-
   void setCurrentMessages(List<ChatMessage> mapMessages) {
     messages = mapMessages;
     notifyListeners();
 
   }
-
-
   Map<String, String> urlsPhotos = Map();
-
-
   retrievePhotoUrlByPhone(String branchCode, String phoneNumber) async {
 
     if(urlsPhotos.containsKey(phoneNumber)){
@@ -138,16 +118,23 @@ class CommunicationStateManager extends ChangeNotifier {
     }
   }
 
-  checkIfChatsContainCurrentNumberWithUnreadChats(RESTAURANT_CLIENT.BookingDTO booking) {
 
-      if(chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty) {
+  Future<bool> checkIfChatsContainCurrentNumberWithUnreadChats(RESTAURANT_CLIENT.BookingDTO booking) async {
+
+    List<String> listMessageAlreadyRead = await DatabaseWhatsAppMessageHelper.instance.fetchAllMessageIdsRead();
+
+      if(chatList!.where((element) => element.fromNumber
+          == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').isNotEmpty) {
         AllChatListDataDTO chatListDataDTO = chatList!.where((element) => element.fromNumber == '${booking.customer!.prefix}${booking.customer!.phone}@c.us').first;
-        if(chatListDataDTO.unreadCount! > 0 && !chatListDataDTO.fromMe!){
+        if(chatListDataDTO.unreadCount! > 0
+            && !chatListDataDTO.fromMe!
+            && !listMessageAlreadyRead.contains(chatListDataDTO.timestamp!.toString())){
           return true;
         }
       }
       return false;
   }
+
 
   setNewWhatsAppConfigurationDTO(WhatsAppConfigurationDTO updatedWhatsAppConfigurationDTO) {
     currentWhatsAppConfigurationDTO = updatedWhatsAppConfigurationDTO;

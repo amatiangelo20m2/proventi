@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../api/communication_client/lib/api.dart';
 import '../../../../global/style.dart';
-import '../../main_screen.dart';
+import '../../home_screen.dart';
 
 class QrCodeWidgetScannerWhatsApp extends StatefulWidget {
   const QrCodeWidgetScannerWhatsApp({super.key, required this.base64ImageString});
@@ -48,7 +48,7 @@ class _QrCodeWidgetScannerWhatsAppState extends State<QrCodeWidgetScannerWhatsAp
         fontSize: 18.0,
       );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0)),
+        MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)),
       );
     }
   }

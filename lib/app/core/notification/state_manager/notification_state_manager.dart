@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../helper/database_helper.dart';
+import '../db/database_helper.dart';
 import '../model/notification_entity.dart';
 
 
@@ -9,7 +9,7 @@ class NotificationStateManager with ChangeNotifier {
   List<NotificationModel> get notifications => _notifications;
 
   NotificationProvider() {
-    fetchNotifications(); // Load notifications initially
+    fetchNotifications();
   }
 
   // Fetch all notifications from the database
@@ -18,11 +18,11 @@ class NotificationStateManager with ChangeNotifier {
     _notifications = await DatabaseHelper.instance.fetchAllNotifications();
 
     _notifications.forEach((element) {
-      print(element.title + ' - ' + element.bookingId);
+      print('${element.title} - ${element.bookingId}');
     });
 
 
-    print('Al momento ci sono queste notifiche: ' + notifications.length.toString());
+    print('At the moment those number of notifications are present: ${notifications.length}');
     notifyListeners();
   }
 

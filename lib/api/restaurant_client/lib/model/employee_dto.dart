@@ -492,29 +492,29 @@ class EmployeeDTOJobDescriptionEnum {
 
   String toJson() => value;
 
-  static const AMMINISTRATORE = EmployeeDTOJobDescriptionEnum._(r'AMMINISTRATORE');
   static const ACCOGLIENZA = EmployeeDTOJobDescriptionEnum._(r'ACCOGLIENZA');
+  static const AIUTO_CUOCO = EmployeeDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
+  static const AMMINISTRATORE = EmployeeDTOJobDescriptionEnum._(r'AMMINISTRATORE');
   static const BARMAN = EmployeeDTOJobDescriptionEnum._(r'BARMAN');
   static const CAMERIERE = EmployeeDTOJobDescriptionEnum._(r'CAMERIERE');
   static const CUOCO = EmployeeDTOJobDescriptionEnum._(r'CUOCO');
-  static const AIUTO_CUOCO = EmployeeDTOJobDescriptionEnum._(r'AIUTO_CUOCO');
   static const DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'DIRETTORE');
-  static const VICE_DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
   static const LAVAPIATTI = EmployeeDTOJobDescriptionEnum._(r'LAVAPIATTI');
   static const PIZZAIOLO = EmployeeDTOJobDescriptionEnum._(r'PIZZAIOLO');
+  static const VICE_DIRETTORE = EmployeeDTOJobDescriptionEnum._(r'VICE_DIRETTORE');
 
   /// List of all possible values in this [enum][EmployeeDTOJobDescriptionEnum].
   static const values = <EmployeeDTOJobDescriptionEnum>[
-    AMMINISTRATORE,
     ACCOGLIENZA,
+    AIUTO_CUOCO,
+    AMMINISTRATORE,
     BARMAN,
     CAMERIERE,
     CUOCO,
-    AIUTO_CUOCO,
     DIRETTORE,
-    VICE_DIRETTORE,
     LAVAPIATTI,
     PIZZAIOLO,
+    VICE_DIRETTORE,
   ];
 
   static EmployeeDTOJobDescriptionEnum? fromJson(dynamic value) => EmployeeDTOJobDescriptionEnumTypeTransformer().decode(value);
@@ -553,16 +553,16 @@ class EmployeeDTOJobDescriptionEnumTypeTransformer {
   EmployeeDTOJobDescriptionEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'AMMINISTRATORE': return EmployeeDTOJobDescriptionEnum.AMMINISTRATORE;
         case r'ACCOGLIENZA': return EmployeeDTOJobDescriptionEnum.ACCOGLIENZA;
+        case r'AIUTO_CUOCO': return EmployeeDTOJobDescriptionEnum.AIUTO_CUOCO;
+        case r'AMMINISTRATORE': return EmployeeDTOJobDescriptionEnum.AMMINISTRATORE;
         case r'BARMAN': return EmployeeDTOJobDescriptionEnum.BARMAN;
         case r'CAMERIERE': return EmployeeDTOJobDescriptionEnum.CAMERIERE;
         case r'CUOCO': return EmployeeDTOJobDescriptionEnum.CUOCO;
-        case r'AIUTO_CUOCO': return EmployeeDTOJobDescriptionEnum.AIUTO_CUOCO;
         case r'DIRETTORE': return EmployeeDTOJobDescriptionEnum.DIRETTORE;
-        case r'VICE_DIRETTORE': return EmployeeDTOJobDescriptionEnum.VICE_DIRETTORE;
         case r'LAVAPIATTI': return EmployeeDTOJobDescriptionEnum.LAVAPIATTI;
         case r'PIZZAIOLO': return EmployeeDTOJobDescriptionEnum.PIZZAIOLO;
+        case r'VICE_DIRETTORE': return EmployeeDTOJobDescriptionEnum.VICE_DIRETTORE;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');

@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.9:34041/restaurantservice*
+All URIs are relative to *http://192.168.1.9:50980/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -358,7 +358,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateBooking**
-> BookingDTO updateBooking(bookingDTO)
+> BookingDTO updateBooking(sendMessage, bookingDTO)
 
 
 
@@ -367,10 +367,11 @@ No authorization required
 import 'package:ventimetri_api_restaurant/api.dart';
 
 final api_instance = BookingControllerApi();
+final sendMessage = true; // bool | 
 final bookingDTO = BookingDTO(); // BookingDTO | 
 
 try {
-    final result = api_instance.updateBooking(bookingDTO);
+    final result = api_instance.updateBooking(sendMessage, bookingDTO);
     print(result);
 } catch (e) {
     print('Exception when calling BookingControllerApi->updateBooking: $e\n');
@@ -381,6 +382,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **sendMessage** | **bool**|  | 
  **bookingDTO** | [**BookingDTO**](BookingDTO.md)|  | 
 
 ### Return type

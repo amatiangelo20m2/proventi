@@ -3,10 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/global/style.dart';
-
 import '../environment_config.dart';
 import '../global/date_methods_utility.dart';
-import 'package:http/http.dart';
 
 class RestaurantStateManager extends ChangeNotifier {
 
@@ -19,22 +17,23 @@ class RestaurantStateManager extends ChangeNotifier {
   late FormControllerApi _formControllerApi;
   late CustomerControllerApi _customerControllerApi;
 
-  RestaurantDTO? _restaurantConfiguration;
 
-  EmployeeDTO? _currentEmployee;
-
+  List<RestaurantDTO>? _restaurantConfigurations = [];
+  RestaurantDTO? _choosedRestaurantConfiguration;
+  //EmployeeDTO? _currentEmployee;
   List<BookingDTO>? _allBookings = [];
-
   List<FormDTO>? _currentBranchForms = [];
 
   // GETTER METHODS
-  RestaurantDTO? get restaurantConfiguration => _restaurantConfiguration;
+  RestaurantDTO? get restaurantConfiguration => _choosedRestaurantConfiguration;
   BookingControllerApi get bookingControllerApi => _bookingControllerApi;
   List<BookingDTO>? get allBookings => _allBookings;
+  List<RestaurantDTO>? get restaurantConfigurations => _restaurantConfigurations;
   ApiClient get restaurantClient => _restaurantClient;
   RestaurantControllerApi get restaurantControllerApi => _restaurantControllerApi;
   CustomerControllerApi get customerControllerApi => _customerControllerApi;
-  EmployeeDTO? get currentEmployee => _currentEmployee;
+
+  //EmployeeDTO? get currentEmployee => _currentEmployee;
   List<FormDTO>? get currentBranchForms => _currentBranchForms;
 
   RestaurantStateManager() {
@@ -47,28 +46,36 @@ class RestaurantStateManager extends ChangeNotifier {
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
     _restaurantControllerApi = RestaurantControllerApi(_restaurantClient);
     _bookingControllerApi = BookingControllerApi(_restaurantClient);
+
     _formControllerApi = FormControllerApi(_restaurantClient);
     _customerControllerApi = CustomerControllerApi(_restaurantClient);
   }
 
   refreshDate(){
-    setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
+    retrieveBranchConfiguration(_choosedRestaurantConfiguration!.branchCode!, DateTime.now());
     notifyListeners();
   }
-  Future<void> setDataEmployeeAndRetrieveData(EmployeeDTO employee, DateTime dateTime) async {
-    _currentEmployee = employee;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('branchCode', _currentEmployee!.branchCode!);
 
-    _restaurantConfiguration = await _restaurantControllerApi.retrieveConfiguration(_currentEmployee!.branchCode!,'XXX');
-    _currentBranchForms = await _formControllerApi.retrieveByBranchCode(_currentEmployee!.branchCode!);
+  setBranchList(List<RestaurantDTO> restaurantDTOList) {
+    _restaurantConfigurations = restaurantDTOList;
+    if(_restaurantConfigurations!.isNotEmpty) {
+      retrieveBranchConfiguration(_restaurantConfigurations!.first.branchCode!, DateTime.now());
+    }
+    notifyListeners();
+  }
+
+  Future<void> retrieveBranchConfiguration(String branchCode, DateTime dateTime) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('branchCode', branchCode);
+    _choosedRestaurantConfiguration = await _restaurantControllerApi.retrieveConfiguration(branchCode, 'XXX');
+    _currentBranchForms = await _formControllerApi.retrieveByBranchCode(branchCode);
     fetchAllBookings();
     notifyListeners();
   }
 
-  updateBooking(BookingDTO bookingDTO) async {
-      await _bookingControllerApi.updateBooking(bookingDTO);
-      setDataEmployeeAndRetrieveData(_currentEmployee!, DateTime.now());
+  updateBooking(BookingDTO bookingDTO, bool sendMessage) async {
+      await _bookingControllerApi.updateBooking(sendMessage, bookingDTO);
+      retrieveBranchConfiguration(_choosedRestaurantConfiguration!.branchCode!, DateTime.now());
   }
 
   retrieveTotalGuestsNumberForDayAndActiveBookings(DateTime day) {
@@ -112,14 +119,15 @@ class RestaurantStateManager extends ChangeNotifier {
 
   Future<void> fetchAllBookings() async {
     _allBookings = await _bookingControllerApi
-        .retrieveBookingByStatusAndBranchCode(_currentEmployee!.branchCode!,
-        format_yyyy_MM_dd.format(DateTime.now().subtract(Duration(days: 14))),
+        .retrieveBookingByStatusAndBranchCode(_choosedRestaurantConfiguration!.branchCode!,
+        format_yyyy_MM_dd.format(DateTime.now().subtract(const Duration(days: 14))),
         format_yyyy_MM_dd.format(DateTime.now().add(const Duration(days: 360))));
     notifyListeners();
   }
 
   refresh(DateTime dateTime) {
-    setDataEmployeeAndRetrieveData(_currentEmployee!, dateTime);
+    print('refresh with code '+ _choosedRestaurantConfiguration!.branchCode!);
+    retrieveBranchConfiguration(_choosedRestaurantConfiguration!.branchCode!, dateTime);
   }
 
   List<BookingDTO> bookingFilteredByCurrentDate(DateTime date){
@@ -127,7 +135,7 @@ class RestaurantStateManager extends ChangeNotifier {
   }
 
   void setNewRestaurantConfiguration(RestaurantDTO restaurantDTO) {
-    _restaurantConfiguration = restaurantDTO;
+    _choosedRestaurantConfiguration = restaurantDTO;
     notifyListeners();
   }
 

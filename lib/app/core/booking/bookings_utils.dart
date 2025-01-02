@@ -9,7 +9,7 @@ import '../../../global/style.dart';
 TextStyle globalStyle = TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.bold,
-  color: Colors.grey.shade700,
+  color: blackDir
 );
 
 List<BookingDTO> getBookingListFilteredByStatus(List<BookingDTO> list, List<BookingDTOStatusEnum> bookingStatus){
@@ -19,12 +19,12 @@ List<BookingDTO> getBookingListFilteredByStatus(List<BookingDTO> list, List<Book
 
 buildComponentGuest(String numGuests){
   return Padding(
-    padding: const EdgeInsets.only(left: 3, right: 3),
+    padding: const EdgeInsets.only(left: 3, right: 13),
     child: Row(
       children: [
-        Icon(FontAwesomeIcons.peopleGroup, color: Colors.grey.shade700, size : 15),
+        Icon(FontAwesomeIcons.peopleGroup, color: blackDir, size : 15),
         Text(
-          '  ' + numGuests,
+          ' ' + numGuests,
           style: globalStyle
         ),
       ],
@@ -37,7 +37,7 @@ buildHourComponent(TimeSlot timeSlot){
  return Row(
    children: [
      Icon(FontAwesomeIcons.clock, color: Colors.grey.shade700, size: 15,),
-     Text('  ${timeSlot.bookingHour!}:${NumberFormat("00").format(timeSlot.bookingMinutes!)}', style: globalStyle,),
+     Text('${timeSlot.bookingHour!}:${NumberFormat("00").format(timeSlot.bookingMinutes!)}', style: globalStyle,),
    ],
  );
 }

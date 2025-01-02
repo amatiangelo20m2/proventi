@@ -10,8 +10,8 @@ class ChatStateManager extends ChangeNotifier {
 
   final String user1Id;
   final String user2Id;
-  final Future<List<ChatMessage>> Function() fetchMessages; // API fetch callback
-  final Future<void> Function(ChatMessage) sendMessage; // API send callback
+  final Future<List<ChatMessage>> Function() fetchMessages;
+  final Future<void> Function(ChatMessage) sendMessage;
 
   ChatStateManager({
     required this.user1Id,
@@ -58,7 +58,6 @@ class ChatStateManager extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   /// Send a new message and add it to the chat
   Future<void> sendNewMessage(ChatMessage message) async {

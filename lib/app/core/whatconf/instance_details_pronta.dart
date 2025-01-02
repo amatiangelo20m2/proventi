@@ -7,7 +7,7 @@ import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart';
 
-import '../main_screen.dart';
+import '../home_screen.dart';
 
 class InstanceDetailsWhenPronta extends StatelessWidget {
   const InstanceDetailsWhenPronta({super.key});
@@ -101,7 +101,7 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
                                   );
                                   communicationStateManager.retrieveWaApiConfStatus();
                                   Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
+                                    MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
                                   );
 
                                 }

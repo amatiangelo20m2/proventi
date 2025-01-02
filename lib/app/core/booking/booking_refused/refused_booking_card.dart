@@ -1,22 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
-import 'package:proventi/app/core/whatsapp/whatsapp_chat.dart';
-import 'package:proventi/app/custom_widgets/profile_image.dart';
+import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import 'package:badges/badges.dart' as badges;
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../global/date_methods_utility.dart';
-import '../../main_screen.dart';
-import '../../whatsapp/chat_icon_whastapp.dart';
+import '../../../custom_widgets/whatsapp/chat_icon_whastapp.dart';
+import '../../home_screen.dart';
 import '../bookings_utils.dart';
 
 class RefusedBookingCard extends StatelessWidget {
@@ -155,7 +147,7 @@ class RefusedBookingCard extends StatelessWidget {
                   .updateBooking(BookingDTO(
                   bookingCode: booking.bookingCode,
                   status: BookingDTOStatusEnum.CONFERMATO
-              ));
+              ), true);
 
               Fluttertoast.showToast(
                 msg: "La prenotazione di " +booking.customer!.firstName! + ' è stata spostata fra quelle confermate ed il cliente notificato',
@@ -163,7 +155,7 @@ class RefusedBookingCard extends StatelessWidget {
                 fontSize: 18.0,
               );
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const MainScreen(pageIndex: 0,)),
+                MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
               );
             },
             child: const Text('Converti in CONFERMATA'),
