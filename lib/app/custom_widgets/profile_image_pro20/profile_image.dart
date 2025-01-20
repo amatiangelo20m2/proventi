@@ -18,6 +18,7 @@ class ProfileImage extends StatelessWidget {
     required this.customer,
     required this.allowNavigation,
     this.noShowBookings = 0,
+    this.disableHero = false,
   });
 
   final CustomerDTO customer;
@@ -25,6 +26,7 @@ class ProfileImage extends StatelessWidget {
   final double avatarRadious;
   final bool allowNavigation;
   final num noShowBookings;
+  final bool? disableHero;
 
   static final Map<String, String?> _photoCache = {};
 

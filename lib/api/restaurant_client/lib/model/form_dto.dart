@@ -31,6 +31,10 @@ class FormDTO {
     this.cutterTimeForRanges,
     this.maxGuests,
     this.maxTableGuestNumber,
+    this.showEmailField,
+    this.showCapField,
+    this.showDobField,
+    this.showSpecialRequestField,
     this.dogsAreAccepted,
   });
 
@@ -148,6 +152,38 @@ class FormDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
+  bool? showEmailField;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? showCapField;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? showDobField;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  bool? showSpecialRequestField;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
   bool? dogsAreAccepted;
 
   @override
@@ -170,6 +206,10 @@ class FormDTO {
     other.cutterTimeForRanges == cutterTimeForRanges &&
     other.maxGuests == maxGuests &&
     other.maxTableGuestNumber == maxTableGuestNumber &&
+    other.showEmailField == showEmailField &&
+    other.showCapField == showCapField &&
+    other.showDobField == showDobField &&
+    other.showSpecialRequestField == showSpecialRequestField &&
     other.dogsAreAccepted == dogsAreAccepted;
 
   @override
@@ -193,10 +233,14 @@ class FormDTO {
     (cutterTimeForRanges == null ? 0 : cutterTimeForRanges!.hashCode) +
     (maxGuests == null ? 0 : maxGuests!.hashCode) +
     (maxTableGuestNumber == null ? 0 : maxTableGuestNumber!.hashCode) +
+    (showEmailField == null ? 0 : showEmailField!.hashCode) +
+    (showCapField == null ? 0 : showCapField!.hashCode) +
+    (showDobField == null ? 0 : showDobField!.hashCode) +
+    (showSpecialRequestField == null ? 0 : showSpecialRequestField!.hashCode) +
     (dogsAreAccepted == null ? 0 : dogsAreAccepted!.hashCode);
 
   @override
-  String toString() => 'FormDTO[formId=$formId, formCode=$formCode, formName=$formName, outputNameForCustomer=$outputNameForCustomer, branchCode=$branchCode, branchName=$branchName, branchAddress=$branchAddress, redirectPage=$redirectPage, creationDate=$creationDate, formType=$formType, formStatus=$formStatus, logo=$logo, regularOpeningHours=$regularOpeningHours, specialDays=$specialDays, holidays=$holidays, cutterTimeForRanges=$cutterTimeForRanges, maxGuests=$maxGuests, maxTableGuestNumber=$maxTableGuestNumber, dogsAreAccepted=$dogsAreAccepted]';
+  String toString() => 'FormDTO[formId=$formId, formCode=$formCode, formName=$formName, outputNameForCustomer=$outputNameForCustomer, branchCode=$branchCode, branchName=$branchName, branchAddress=$branchAddress, redirectPage=$redirectPage, creationDate=$creationDate, formType=$formType, formStatus=$formStatus, logo=$logo, regularOpeningHours=$regularOpeningHours, specialDays=$specialDays, holidays=$holidays, cutterTimeForRanges=$cutterTimeForRanges, maxGuests=$maxGuests, maxTableGuestNumber=$maxTableGuestNumber, showEmailField=$showEmailField, showCapField=$showCapField, showDobField=$showDobField, showSpecialRequestField=$showSpecialRequestField, dogsAreAccepted=$dogsAreAccepted]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -274,6 +318,26 @@ class FormDTO {
     } else {
       json[r'maxTableGuestNumber'] = null;
     }
+    if (this.showEmailField != null) {
+      json[r'showEmailField'] = this.showEmailField;
+    } else {
+      json[r'showEmailField'] = null;
+    }
+    if (this.showCapField != null) {
+      json[r'showCapField'] = this.showCapField;
+    } else {
+      json[r'showCapField'] = null;
+    }
+    if (this.showDobField != null) {
+      json[r'showDobField'] = this.showDobField;
+    } else {
+      json[r'showDobField'] = null;
+    }
+    if (this.showSpecialRequestField != null) {
+      json[r'showSpecialRequestField'] = this.showSpecialRequestField;
+    } else {
+      json[r'showSpecialRequestField'] = null;
+    }
     if (this.dogsAreAccepted != null) {
       json[r'dogsAreAccepted'] = this.dogsAreAccepted;
     } else {
@@ -321,6 +385,10 @@ class FormDTO {
         cutterTimeForRanges: mapValueOfType<int>(json, r'cutterTimeForRanges'),
         maxGuests: mapValueOfType<int>(json, r'maxGuests'),
         maxTableGuestNumber: mapValueOfType<int>(json, r'maxTableGuestNumber'),
+        showEmailField: mapValueOfType<bool>(json, r'showEmailField'),
+        showCapField: mapValueOfType<bool>(json, r'showCapField'),
+        showDobField: mapValueOfType<bool>(json, r'showDobField'),
+        showSpecialRequestField: mapValueOfType<bool>(json, r'showSpecialRequestField'),
         dogsAreAccepted: mapValueOfType<bool>(json, r'dogsAreAccepted'),
       );
     }

@@ -31,6 +31,7 @@ part 'auth/http_bearer_auth.dart';
 part 'api/booking_controller_api.dart';
 part 'api/campain_controller_api.dart';
 part 'api/customer_controller_api.dart';
+part 'api/floor_controller_api.dart';
 part 'api/form_controller_api.dart';
 part 'api/restaurant_controller_api.dart';
 
@@ -46,6 +47,8 @@ part 'model/date_range20m2.dart';
 part 'model/employee_dto.dart';
 part 'model/employee_presence_report_dto.dart';
 part 'model/employee_report_summary_dto.dart';
+part 'model/floor_calendar.dart';
+part 'model/floor_dto.dart';
 part 'model/form_dto.dart';
 part 'model/holidays_dto.dart';
 part 'model/mobile_device_details.dart';
@@ -54,6 +57,7 @@ part 'model/restaurant_dto.dart';
 part 'model/sending_campain_dto.dart';
 part 'model/special_day_dto.dart';
 part 'model/standard_message.dart';
+part 'model/table_conf.dart';
 part 'model/time_range.dart';
 part 'model/time_slot.dart';
 

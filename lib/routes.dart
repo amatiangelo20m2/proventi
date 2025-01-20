@@ -11,7 +11,6 @@ class Routes {
   static Map<String, StatefulWidget Function(dynamic context)> routes = {
     NotificationsPage.routeName: (context) => NotificationsPage(),
     CustomerScreen.routeName: (context) => const CustomerScreen(),
-    Floor.routeName: (context) => const Floor(),
     LinkWhatsAppComponent.routeName: (context) => const LinkWhatsAppComponent(),
     EmployeeScreen.routeName: (context) => const EmployeeScreen(),
     ReportEmployeePresence.routeName: (context) => const ReportEmployeePresence(),

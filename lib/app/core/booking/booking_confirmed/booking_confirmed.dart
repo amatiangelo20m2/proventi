@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,8 @@ import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_refused/booking_refused_archive.dart';
 import 'package:proventi/app/core/customer/customer_state_manager.dart';
+import 'package:proventi/app/core/floor/accessories/floor_icon_button.dart';
+import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
@@ -230,9 +233,9 @@ class _BookingScreenState extends State<BookingScreen> {
                               icon: const Icon(CupertinoIcons.calendar,
                                   color: Colors.blueGrey),
                             ),
-                            IconButton(onPressed: () {
-                              Navigator.of(context).pushNamed(Floor.routeName);
-                            }, icon: Icon(Icons.table_restaurant, color: Colors.blueGrey),),
+                            FloorIconButton(branchCode: restaurantManager.restaurantConfiguration!.branchCode!, bookingList: restaurantManager.allBookings!
+                                .where((element) => isSameDay(element.bookingDate!, _selectedDate))
+                                .toList(), selectedDate: _selectedDate),
                           ],
                         ),
                       ],
@@ -702,7 +705,8 @@ class _BookingScreenState extends State<BookingScreen> {
             )),
         badges.Badge(
             badgeStyle: badges.BadgeStyle(badgeColor: globalGold),
-            badgeContent: Text(restaurantStateManager!.retrieveTotalTablesNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantStateManager.restaurantConfiguration!).toString(),
+            badgeContent: Text(restaurantStateManager!
+                .retrieveTotalTablesNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantStateManager.restaurantConfiguration!).toString(),
               style: const TextStyle(fontSize: 10, color: CupertinoColors.white),),
             badgeAnimation: const badges.BadgeAnimation.rotation(),
             child: Padding(

@@ -19,10 +19,10 @@ class EmployeePresenceReportDTO {
     this.date,
     this.workedHours,
     this.note,
-    this.presentAtLunch,
+    this.illness,
     this.presentAtDinner,
     this.holiday,
-    this.illness,
+    this.presentAtLunch,
     this.rest,
   });
 
@@ -80,7 +80,7 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? presentAtLunch;
+  bool? illness;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -104,7 +104,7 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? illness;
+  bool? presentAtLunch;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -122,10 +122,10 @@ class EmployeePresenceReportDTO {
     other.date == date &&
     other.workedHours == workedHours &&
     other.note == note &&
-    other.presentAtLunch == presentAtLunch &&
+    other.illness == illness &&
     other.presentAtDinner == presentAtDinner &&
     other.holiday == holiday &&
-    other.illness == illness &&
+    other.presentAtLunch == presentAtLunch &&
     other.rest == rest;
 
   @override
@@ -137,14 +137,14 @@ class EmployeePresenceReportDTO {
     (date == null ? 0 : date!.hashCode) +
     (workedHours == null ? 0 : workedHours!.hashCode) +
     (note == null ? 0 : note!.hashCode) +
-    (presentAtLunch == null ? 0 : presentAtLunch!.hashCode) +
+    (illness == null ? 0 : illness!.hashCode) +
     (presentAtDinner == null ? 0 : presentAtDinner!.hashCode) +
     (holiday == null ? 0 : holiday!.hashCode) +
-    (illness == null ? 0 : illness!.hashCode) +
+    (presentAtLunch == null ? 0 : presentAtLunch!.hashCode) +
     (rest == null ? 0 : rest!.hashCode);
 
   @override
-  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, presentAtLunch=$presentAtLunch, presentAtDinner=$presentAtDinner, holiday=$holiday, illness=$illness, rest=$rest]';
+  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, illness=$illness, presentAtDinner=$presentAtDinner, holiday=$holiday, presentAtLunch=$presentAtLunch, rest=$rest]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -178,10 +178,10 @@ class EmployeePresenceReportDTO {
     } else {
       json[r'note'] = null;
     }
-    if (this.presentAtLunch != null) {
-      json[r'presentAtLunch'] = this.presentAtLunch;
+    if (this.illness != null) {
+      json[r'illness'] = this.illness;
     } else {
-      json[r'presentAtLunch'] = null;
+      json[r'illness'] = null;
     }
     if (this.presentAtDinner != null) {
       json[r'presentAtDinner'] = this.presentAtDinner;
@@ -193,10 +193,10 @@ class EmployeePresenceReportDTO {
     } else {
       json[r'holiday'] = null;
     }
-    if (this.illness != null) {
-      json[r'illness'] = this.illness;
+    if (this.presentAtLunch != null) {
+      json[r'presentAtLunch'] = this.presentAtLunch;
     } else {
-      json[r'illness'] = null;
+      json[r'presentAtLunch'] = null;
     }
     if (this.rest != null) {
       json[r'rest'] = this.rest;
@@ -231,10 +231,10 @@ class EmployeePresenceReportDTO {
         date: mapDateTime(json, r'date', r''),
         workedHours: mapValueOfType<int>(json, r'workedHours'),
         note: mapValueOfType<String>(json, r'note'),
-        presentAtLunch: mapValueOfType<bool>(json, r'presentAtLunch'),
+        illness: mapValueOfType<bool>(json, r'illness'),
         presentAtDinner: mapValueOfType<bool>(json, r'presentAtDinner'),
         holiday: mapValueOfType<bool>(json, r'holiday'),
-        illness: mapValueOfType<bool>(json, r'illness'),
+        presentAtLunch: mapValueOfType<bool>(json, r'presentAtLunch'),
         rest: mapValueOfType<bool>(json, r'rest'),
       );
     }

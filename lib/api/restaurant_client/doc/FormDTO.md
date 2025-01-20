@@ -26,6 +26,10 @@ Name | Type | Description | Notes
 **cutterTimeForRanges** | **int** |  | [optional] 
 **maxGuests** | **int** |  | [optional] 
 **maxTableGuestNumber** | **int** |  | [optional] 
+**showEmailField** | **bool** |  | [optional] 
+**showCapField** | **bool** |  | [optional] 
+**showDobField** | **bool** |  | [optional] 
+**showSpecialRequestField** | **bool** |  | [optional] 
 **dogsAreAccepted** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

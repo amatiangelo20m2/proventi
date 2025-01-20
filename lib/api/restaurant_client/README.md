@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.9:23012/restaurantservice*
+All URIs are relative to *http://192.168.1.9:33308/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -76,6 +76,10 @@ Class | Method | HTTP request | Description
 *CustomerControllerApi* | [**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](doc//CustomerControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/customer/retrievehistoricalcustomers/{branchCode} | 
 *CustomerControllerApi* | [**save**](doc//CustomerControllerApi.md#save) | **POST** /api/customer/save | 
 *CustomerControllerApi* | [**updateCustomer**](doc//CustomerControllerApi.md#updatecustomer) | **PUT** /api/customer/updatecustomer | 
+*FloorControllerApi* | [**createFloorConfiguration**](doc//FloorControllerApi.md#createfloorconfiguration) | **POST** /api/floor/createfloorconfiguration/{branchCode} | 
+*FloorControllerApi* | [**deleteConfiguration**](doc//FloorControllerApi.md#deleteconfiguration) | **DELETE** /api/floor/deletefloorconfiguration/{branchCode}/{floorCode} | 
+*FloorControllerApi* | [**getFloorByBranchCodeAndDate**](doc//FloorControllerApi.md#getfloorbybranchcodeanddate) | **GET** /api/floor/getfloorbybranchcodeanddate/{branchCode} | 
+*FloorControllerApi* | [**updateFloorConfiguration**](doc//FloorControllerApi.md#updatefloorconfiguration) | **PUT** /api/floor/updatefloorconfiguration/{branchCode} | 
 *FormControllerApi* | [**addDefaultTimeRangeForAllDays**](doc//FormControllerApi.md#adddefaulttimerangeforalldays) | **PUT** /api/form/create/defaulttimerange/{formCode} | 
 *FormControllerApi* | [**addSpecialDayConf**](doc//FormControllerApi.md#addspecialdayconf) | **PUT** /api/form/add/specialdayconf/{formCode} | 
 *FormControllerApi* | [**addTimeRange**](doc//FormControllerApi.md#addtimerange) | **PUT** /api/form/add/timerange/{formCode}/{dayOfWeek} | 
@@ -135,6 +139,8 @@ Class | Method | HTTP request | Description
  - [EmployeeDTO](doc//EmployeeDTO.md)
  - [EmployeePresenceReportDTO](doc//EmployeePresenceReportDTO.md)
  - [EmployeeReportSummaryDTO](doc//EmployeeReportSummaryDTO.md)
+ - [FloorCalendar](doc//FloorCalendar.md)
+ - [FloorDTO](doc//FloorDTO.md)
  - [FormDTO](doc//FormDTO.md)
  - [HolidaysDTO](doc//HolidaysDTO.md)
  - [MobileDeviceDetails](doc//MobileDeviceDetails.md)
@@ -143,6 +149,7 @@ Class | Method | HTTP request | Description
  - [SendingCampainDTO](doc//SendingCampainDTO.md)
  - [SpecialDayDTO](doc//SpecialDayDTO.md)
  - [StandardMessage](doc//StandardMessage.md)
+ - [TableConf](doc//TableConf.md)
  - [TimeRange](doc//TimeRange.md)
  - [TimeSlot](doc//TimeSlot.md)
 

@@ -62,13 +62,13 @@ class CommunicationStateManager extends ChangeNotifier {
       if(restaurantStateManager.allBookings!.isNotEmpty){
         try {
           String branchCode = prefs.getString('branchCode').toString();
-          print('Retrieve all chat list for branch code $branchCode');
+          //print('Retrieve all chat list for branch code $branchCode');
 
           // Log the request details
-          print('Making API call to: ${_communicationClient.basePath}/api/wsapicontroller/fetchallmessages/$branchCode/30');
+          //print('Making API call to: ${_communicationClient.basePath}/api/wsapicontroller/fetchallmessages/$branchCode/30');
 
           chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 5);
-          print('API call successful, chat list retrieved' + chatList!.toString());
+          //print('API call successful, chat list retrieved' + chatList!.toString());
         } catch (e) {
           print('Error -> : ' + e.toString());
         }

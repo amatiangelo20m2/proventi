@@ -10,12 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
-import 'package:badges/badges.dart' as badges;
-import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
-import '../../../../state_manager/communication_state_manager.dart';
 import '../../../custom_widgets/whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 

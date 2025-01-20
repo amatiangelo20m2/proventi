@@ -1,4 +1,4 @@
-# ventimetri_api_restaurant.api.CampainControllerApi
+# ventimetri_api_restaurant.api.FloorControllerApi
 
 ## Load the API package
 ```dart
@@ -9,14 +9,14 @@ All URIs are relative to *http://192.168.1.9:33308/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createCampain**](CampainControllerApi.md#createcampain) | **GET** /api/campain/create/{branchCode}/{campainName} | 
-[**retrieveCampainByBranchCode**](CampainControllerApi.md#retrievecampainbybranchcode) | **GET** /api/campain/retrieve/{branchCode} | 
-[**start**](CampainControllerApi.md#start) | **PUT** /api/campain/startcampain/{campainCode} | 
-[**updateCampain**](CampainControllerApi.md#updatecampain) | **PUT** /api/campain/updatecampain | 
+[**createFloorConfiguration**](FloorControllerApi.md#createfloorconfiguration) | **POST** /api/floor/createfloorconfiguration/{branchCode} | 
+[**deleteConfiguration**](FloorControllerApi.md#deleteconfiguration) | **DELETE** /api/floor/deletefloorconfiguration/{branchCode}/{floorCode} | 
+[**getFloorByBranchCodeAndDate**](FloorControllerApi.md#getfloorbybranchcodeanddate) | **GET** /api/floor/getfloorbybranchcodeanddate/{branchCode} | 
+[**updateFloorConfiguration**](FloorControllerApi.md#updatefloorconfiguration) | **PUT** /api/floor/updatefloorconfiguration/{branchCode} | 
 
 
-# **createCampain**
-> SendingCampainDTO createCampain(branchCode, campainName, createdBy)
+# **createFloorConfiguration**
+> FloorDTO createFloorConfiguration(branchCode, floorDTO)
 
 
 
@@ -24,16 +24,15 @@ Method | HTTP request | Description
 ```dart
 import 'package:ventimetri_api_restaurant/api.dart';
 
-final api_instance = CampainControllerApi();
+final api_instance = FloorControllerApi();
 final branchCode = branchCode_example; // String | 
-final campainName = campainName_example; // String | 
-final createdBy = createdBy_example; // String | 
+final floorDTO = FloorDTO(); // FloorDTO | 
 
 try {
-    final result = api_instance.createCampain(branchCode, campainName, createdBy);
+    final result = api_instance.createFloorConfiguration(branchCode, floorDTO);
     print(result);
 } catch (e) {
-    print('Exception when calling CampainControllerApi->createCampain: $e\n');
+    print('Exception when calling FloorControllerApi->createFloorConfiguration: $e\n');
 }
 ```
 
@@ -42,12 +41,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **branchCode** | **String**|  | 
- **campainName** | **String**|  | 
- **createdBy** | **String**|  | 
+ **floorDTO** | [**FloorDTO**](FloorDTO.md)|  | 
 
 ### Return type
 
-[**SendingCampainDTO**](SendingCampainDTO.md)
+[**FloorDTO**](FloorDTO.md)
 
 ### Authorization
 
@@ -55,13 +53,13 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **retrieveCampainByBranchCode**
-> List<SendingCampainDTO> retrieveCampainByBranchCode(branchCode)
+# **deleteConfiguration**
+> deleteConfiguration(branchCode, floorCode)
 
 
 
@@ -69,14 +67,14 @@ No authorization required
 ```dart
 import 'package:ventimetri_api_restaurant/api.dart';
 
-final api_instance = CampainControllerApi();
+final api_instance = FloorControllerApi();
 final branchCode = branchCode_example; // String | 
+final floorCode = floorCode_example; // String | 
 
 try {
-    final result = api_instance.retrieveCampainByBranchCode(branchCode);
-    print(result);
+    api_instance.deleteConfiguration(branchCode, floorCode);
 } catch (e) {
-    print('Exception when calling CampainControllerApi->retrieveCampainByBranchCode: $e\n');
+    print('Exception when calling FloorControllerApi->deleteConfiguration: $e\n');
 }
 ```
 
@@ -85,46 +83,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **branchCode** | **String**|  | 
-
-### Return type
-
-[**List<SendingCampainDTO>**](SendingCampainDTO.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: */*
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **start**
-> start(campainCode)
-
-
-
-### Example
-```dart
-import 'package:ventimetri_api_restaurant/api.dart';
-
-final api_instance = CampainControllerApi();
-final campainCode = campainCode_example; // String | 
-
-try {
-    api_instance.start(campainCode);
-} catch (e) {
-    print('Exception when calling CampainControllerApi->start: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **campainCode** | **String**|  | 
+ **floorCode** | **String**|  | 
 
 ### Return type
 
@@ -141,8 +100,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updateCampain**
-> SendingCampainDTO updateCampain(sendingCampainDTO)
+# **getFloorByBranchCodeAndDate**
+> List<FloorDTO> getFloorByBranchCodeAndDate(branchCode)
 
 
 
@@ -150,14 +109,14 @@ No authorization required
 ```dart
 import 'package:ventimetri_api_restaurant/api.dart';
 
-final api_instance = CampainControllerApi();
-final sendingCampainDTO = SendingCampainDTO(); // SendingCampainDTO | 
+final api_instance = FloorControllerApi();
+final branchCode = branchCode_example; // String | 
 
 try {
-    final result = api_instance.updateCampain(sendingCampainDTO);
+    final result = api_instance.getFloorByBranchCodeAndDate(branchCode);
     print(result);
 } catch (e) {
-    print('Exception when calling CampainControllerApi->updateCampain: $e\n');
+    print('Exception when calling FloorControllerApi->getFloorByBranchCodeAndDate: $e\n');
 }
 ```
 
@@ -165,11 +124,54 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **sendingCampainDTO** | [**SendingCampainDTO**](SendingCampainDTO.md)|  | 
+ **branchCode** | **String**|  | 
 
 ### Return type
 
-[**SendingCampainDTO**](SendingCampainDTO.md)
+[**List<FloorDTO>**](FloorDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateFloorConfiguration**
+> FloorDTO updateFloorConfiguration(branchCode, floorDTO)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = FloorControllerApi();
+final branchCode = branchCode_example; // String | 
+final floorDTO = FloorDTO(); // FloorDTO | 
+
+try {
+    final result = api_instance.updateFloorConfiguration(branchCode, floorDTO);
+    print(result);
+} catch (e) {
+    print('Exception when calling FloorControllerApi->updateFloorConfiguration: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **floorDTO** | [**FloorDTO**](FloorDTO.md)|  | 
+
+### Return type
+
+[**FloorDTO**](FloorDTO.md)
 
 ### Authorization
 

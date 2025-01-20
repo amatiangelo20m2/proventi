@@ -106,6 +106,26 @@ void main() {
       // TODO
     });
 
+    // bool showEmailField
+    test('to test the property `showEmailField`', () async {
+      // TODO
+    });
+
+    // bool showCapField
+    test('to test the property `showCapField`', () async {
+      // TODO
+    });
+
+    // bool showDobField
+    test('to test the property `showDobField`', () async {
+      // TODO
+    });
+
+    // bool showSpecialRequestField
+    test('to test the property `showSpecialRequestField`', () async {
+      // TODO
+    });
+
     // bool dogsAreAccepted
     test('to test the property `dogsAreAccepted`', () async {
       // TODO

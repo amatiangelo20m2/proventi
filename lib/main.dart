@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'app/core/customer/customer_state_manager.dart';
 import 'app/core/employee/reports/state_manager/employee_state_manager.dart';
+import 'app/core/floor/state_manager/floor_state_manager.dart';
 import 'app/core/home_screen.dart';
 import 'app/core/notification/model/notification_entity.dart';
 import 'app/core/notification/state_manager/notification_state_manager.dart';
@@ -170,6 +171,7 @@ class _Pro20State extends State<Pro20> {
         ChangeNotifierProvider(create: (context) => NotificationStateManager()),
         ChangeNotifierProvider(create: (context) => EmployeeStateManager()),
         ChangeNotifierProvider(create: (context) => CustomerStateManager()),
+        ChangeNotifierProvider(create: (context) => FloorStateManagerProvider()),
         ChangeNotifierProvider(create: (context) => UserStateManager(navigatorKey)),
         ChangeNotifierProvider(create: (context) => CommunicationStateManager(navigatorKey)),
       ],
