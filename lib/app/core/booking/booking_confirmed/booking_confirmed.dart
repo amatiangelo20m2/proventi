@@ -16,6 +16,7 @@ import 'package:vibration/vibration.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../custom_widgets/toggle_pro20/appinio_animated_toggle_tab.dart';
+import '../../floor/floor.dart';
 import 'automatic_book_manager/auto_booking_manager.dart';
 import 'confirmed_booking_card.dart';
 import 'confirmedcard_extra/filter_booking_type.dart';
@@ -24,7 +25,9 @@ import 'confirmedcard_extra/filter_daily_type.dart';
 import 'confirmedlist_extra/widgett.dart';
 
 class BookingScreen extends StatefulWidget {
-  const BookingScreen({super.key});
+  const BookingScreen({super.key, required this.dateTime});
+
+  final DateTime dateTime;
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();
@@ -46,8 +49,10 @@ class _BookingScreenState extends State<BookingScreen> {
 
   @override
   void initState() {
+
     super.initState();
     _generateDays();
+    _selectedDate = widget.dateTime;
     _scrollController = ScrollController();
     _scrollBookingsController = ScrollController();
     _scrollBookingsController.addListener(_scrollListener);
@@ -191,7 +196,6 @@ class _BookingScreenState extends State<BookingScreen> {
                         restaurantManager.allBookings!.where((element) => isSameDay(
                             element.bookingDate!,
                             _selectedDate)).toList(), dateTime: _selectedDate,),
-
                       ],
                     ),
                   ),
@@ -203,6 +207,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         _buildSwitch(restaurantManager),
                         Row(
                           children: [
+
                             TextButton(
                               onPressed: () {
                                 Vibration.vibrate(duration: 1000);
@@ -225,6 +230,9 @@ class _BookingScreenState extends State<BookingScreen> {
                               icon: const Icon(CupertinoIcons.calendar,
                                   color: Colors.blueGrey),
                             ),
+                            IconButton(onPressed: () {
+                              Navigator.of(context).pushNamed(Floor.routeName);
+                            }, icon: Icon(Icons.table_restaurant, color: Colors.blueGrey),),
                           ],
                         ),
                       ],
@@ -304,7 +312,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 .toUpperCase(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 8,
+                                                fontSize: 9,
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black),
@@ -316,7 +324,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontSize: 20),
+                                                fontSize: 18),
                                           ),
                                           Text(
                                             months[day.month - 1].toUpperCase(),
@@ -325,7 +333,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontSize: 8),
+                                                fontSize: 7),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(right: 15, left: 15),
@@ -365,7 +373,9 @@ class _BookingScreenState extends State<BookingScreen> {
                     builder: (context) {
                       List<BookingDTO>? filteredBooking = restaurantManager
                           .bookingFilteredByCurrentDate(_selectedDate)
-                          .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO || bookingDTO.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
+                          .where((bookingDTO) => bookingDTO.status == BookingDTOStatusEnum.CONFERMATO
+                          || bookingDTO.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA
+                          || bookingDTO.status == BookingDTOStatusEnum.MODIFICA_RIFIUTATA)
                           .where((bookingDTO) => bookingDTO.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase()) || bookingDTO.customer!.phone!.toLowerCase().contains(queryString.toLowerCase()))
                           .where((bookingDTO) {
                         if (filterDailyType == FilterDailyType.PRANZO) {
@@ -424,13 +434,9 @@ class _BookingScreenState extends State<BookingScreen> {
                   left: 0,
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildCurrentGuestSituation(restaurantManager),
-                      ],
-                    ),
-                  )),
+                    child: buildCurrentGuestSituation(restaurantManager),
+                  ),
+              ),
               Positioned(
                   bottom: 0,
                   right: 0,
@@ -455,7 +461,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               elevation: 10,
                               context: context,
                               builder: (BuildContext context) {
-                                return const CreateBookingStatusConfirmed();
+                                return CreateBooking(currentSelectedDate: _selectedDate);
                               },
                             );
                           },
@@ -658,7 +664,6 @@ class _BookingScreenState extends State<BookingScreen> {
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1);
-
             break;
           case 1:
             setState(() {
@@ -697,8 +702,7 @@ class _BookingScreenState extends State<BookingScreen> {
             )),
         badges.Badge(
             badgeStyle: badges.BadgeStyle(badgeColor: globalGold),
-            badgeContent: Text(restaurantStateManager!
-                .retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantStateManager.restaurantConfiguration!).toString(),
+            badgeContent: Text(restaurantStateManager!.retrieveTotalTablesNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantStateManager.restaurantConfiguration!).toString(),
               style: const TextStyle(fontSize: 10, color: CupertinoColors.white),),
             badgeAnimation: const badges.BadgeAnimation.rotation(),
             child: Padding(
@@ -712,8 +716,9 @@ class _BookingScreenState extends State<BookingScreen> {
             badgeAnimation: const badges.BadgeAnimation.rotation(),
             child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Icon(CupertinoIcons.moon_circle, color: elegantBlue, size: 25,)
+                child: Icon(CupertinoIcons.moon, color: elegantBlue, size: 25,)
             )),
+
       ],
       height: 40,
       width: 130,

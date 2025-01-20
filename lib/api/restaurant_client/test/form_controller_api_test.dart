@@ -62,6 +62,11 @@ void main() {
       // TODO
     });
 
+    //Future<List<String>> retrieveAllForms(String timeRangeTagsId) async
+    test('test retrieveAllForms', () async {
+      // TODO
+    });
+
     //Future<List<FormDTO>> retrieveByBranchCode(String branchCode) async
     test('test retrieveByBranchCode', () async {
       // TODO
@@ -82,7 +87,7 @@ void main() {
       // TODO
     });
 
-    //Future updateOpeningHourConfByCode(String formCode, String timeRangeCode, TimeRange timeRange) async
+    //Future<FormDTO> updateOpeningHourConfByCode(String formCode, String timeRangeCode, TimeRange timeRange) async
     test('test updateOpeningHourConfByCode', () async {
       // TODO
     });

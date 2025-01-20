@@ -18,6 +18,7 @@ class TimeRange {
     this.openingMinutes,
     this.closingHour,
     this.closingMinutes,
+    this.timeRangeTags,
   });
 
   ///
@@ -60,13 +61,22 @@ class TimeRange {
   ///
   int? closingMinutes;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? timeRangeTags;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is TimeRange &&
     other.timeRangeCode == timeRangeCode &&
     other.openingHour == openingHour &&
     other.openingMinutes == openingMinutes &&
     other.closingHour == closingHour &&
-    other.closingMinutes == closingMinutes;
+    other.closingMinutes == closingMinutes &&
+    other.timeRangeTags == timeRangeTags;
 
   @override
   int get hashCode =>
@@ -75,10 +85,11 @@ class TimeRange {
     (openingHour == null ? 0 : openingHour!.hashCode) +
     (openingMinutes == null ? 0 : openingMinutes!.hashCode) +
     (closingHour == null ? 0 : closingHour!.hashCode) +
-    (closingMinutes == null ? 0 : closingMinutes!.hashCode);
+    (closingMinutes == null ? 0 : closingMinutes!.hashCode) +
+    (timeRangeTags == null ? 0 : timeRangeTags!.hashCode);
 
   @override
-  String toString() => 'TimeRange[timeRangeCode=$timeRangeCode, openingHour=$openingHour, openingMinutes=$openingMinutes, closingHour=$closingHour, closingMinutes=$closingMinutes]';
+  String toString() => 'TimeRange[timeRangeCode=$timeRangeCode, openingHour=$openingHour, openingMinutes=$openingMinutes, closingHour=$closingHour, closingMinutes=$closingMinutes, timeRangeTags=$timeRangeTags]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -107,6 +118,11 @@ class TimeRange {
     } else {
       json[r'closingMinutes'] = null;
     }
+    if (this.timeRangeTags != null) {
+      json[r'timeRangeTags'] = this.timeRangeTags;
+    } else {
+      json[r'timeRangeTags'] = null;
+    }
     return json;
   }
 
@@ -134,6 +150,7 @@ class TimeRange {
         openingMinutes: mapValueOfType<int>(json, r'openingMinutes'),
         closingHour: mapValueOfType<int>(json, r'closingHour'),
         closingMinutes: mapValueOfType<int>(json, r'closingMinutes'),
+        timeRangeTags: mapValueOfType<String>(json, r'timeRangeTags'),
       );
     }
     return null;

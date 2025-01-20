@@ -167,7 +167,7 @@ class _CreateBookingListAttesaState extends State<CreateBookingListAttesa> {
                                     if(typingNumber.length > 4){
                                       for (var element in customerStateManager.historicalCustomerData!) {
                                         if(element.customerDTO!.phone!.contains(typingNumber)){
-                                          //currentCustomerDTOList.add(element);
+                                          currentCustomerDTOList.add(element.customerDTO!);
                                         }
                                       }
                                     }

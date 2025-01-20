@@ -32,6 +32,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
   late TextEditingController _timeSlotController;
   late TextEditingController _numGuestsController;
   late TextEditingController _specialRequestsController;
+  late TextEditingController _privateNotes;
 
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
@@ -60,7 +61,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
     _prefixController = TextEditingController(text: widget.bookingDTO.customer!.prefix ?? '');
     _phoneController = TextEditingController(text: widget.bookingDTO.customer!.phone ?? '');
     _capController = TextEditingController(text: widget.bookingDTO.customer!.postalCode ?? '');
-
+    _privateNotes = TextEditingController(text: widget.bookingDTO.privateNotes ?? '');
     if(widget.isAlsoBookingEditing){
       selectedTime = '${widget.bookingDTO.timeSlot!.bookingHour!}:${NumberFormat("00").format(widget.bookingDTO.timeSlot!.bookingMinutes!)}';
       selectedHour = widget.bookingDTO.timeSlot!.bookingHour!;
@@ -82,6 +83,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
     }
     _numGuestsController.dispose();
     _specialRequestsController.dispose();
+    _privateNotes.dispose();
 
     super.dispose();
   }
@@ -97,6 +99,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                 numGuests: int.parse(_numGuestsController.text),
                 bookingDate: _selectedNewDate,
                 specialRequests: _specialRequestsController.text,
+                privateNotes: _privateNotes.text,
                 //with this line commented the status will be null so the reservation will be uptaded
                 //status: widget.bookingDTO.status,
 
@@ -324,9 +327,14 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                       keyboardType: TextInputType.number,
                     ),
                     CustomFormRow(
-                      label: 'Note',
+                      label: 'Note cliente',
                       controller: _specialRequestsController,
-                      placeholder: 'Enter special requests or notes',
+                      placeholder: 'Note cliente',
+                    ),
+                    CustomFormRow(
+                      label: 'Note ristoarnte',
+                      controller: _privateNotes,
+                      placeholder: 'Note ristorante',
                     ),
                   ],
                 )

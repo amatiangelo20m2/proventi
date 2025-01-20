@@ -7,9 +7,9 @@ import '../../../api/restaurant_client/lib/api.dart';
 import '../../../global/style.dart';
 
 TextStyle globalStyle = TextStyle(
-  fontSize: 15,
+  fontSize: 13,
   fontWeight: FontWeight.bold,
-  color: blackDir
+  color: Colors.grey.shade900
 );
 
 List<BookingDTO> getBookingListFilteredByStatus(List<BookingDTO> list, List<BookingDTOStatusEnum> bookingStatus){
@@ -22,9 +22,9 @@ buildComponentGuest(String numGuests){
     padding: const EdgeInsets.only(left: 3, right: 13),
     child: Row(
       children: [
-        Icon(FontAwesomeIcons.peopleGroup, color: blackDir, size : 15),
+        Icon(CupertinoIcons.person_2, color: blackDir, size : 20),
         Text(
-          ' ' + numGuests,
+          ' $numGuests',
           style: globalStyle
         ),
       ],
@@ -36,7 +36,7 @@ buildComponentGuest(String numGuests){
 buildHourComponent(TimeSlot timeSlot){
  return Row(
    children: [
-     Icon(FontAwesomeIcons.clock, color: Colors.grey.shade700, size: 15,),
+     Icon(CupertinoIcons.clock, color: Colors.grey.shade700, size: 18,),
      Text('${timeSlot.bookingHour!}:${NumberFormat("00").format(timeSlot.bookingMinutes!)}', style: globalStyle,),
    ],
  );

@@ -245,8 +245,9 @@ class BookingToManageCard extends StatelessWidget {
                   Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
-                  Text('Codice prenotazione:${booking.bookingCode!}', style: const TextStyle(fontSize: 7),),
-                  Text('Codice form:${booking.formCode!}' + getFormEmoji(formDTOs, booking), style: const TextStyle(fontSize: 7),),
+                  Text('Data inserimento: ${DateFormat('dd-MM-yyyy HH:mm').format(booking.createdAt!)}', style: TextStyle(fontSize: 10),),
+
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -391,7 +392,7 @@ class BookingToManageCard extends StatelessWidget {
         color: elegantBlue,
         child: const Padding(
           padding: EdgeInsets.all(2.0),
-          child: Icon(CupertinoIcons.moon_circle, color: CupertinoColors.white),
+          child: Icon(CupertinoIcons.moon, color: CupertinoColors.white),
         ));
   }
 }

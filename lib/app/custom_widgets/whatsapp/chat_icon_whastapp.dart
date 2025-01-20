@@ -39,7 +39,6 @@ class _ChatIconWhatsAppState extends State<ChatIconWhatsApp> {
                 }
               }
             }
-
             showCupertinoModalBottomSheet(
               expand: true,
               elevation: 10,
@@ -48,8 +47,6 @@ class _ChatIconWhatsAppState extends State<ChatIconWhatsApp> {
                 return DashChatCustomized20(bookingDTO: widget.booking);
               },
             );
-
-
           },
           child: FutureBuilder<bool>(
             future: communication.checkIfChatsContainCurrentNumberWithUnreadChats(widget.booking),

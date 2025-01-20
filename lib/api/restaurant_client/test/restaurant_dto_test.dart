@@ -41,6 +41,11 @@ void main() {
       // TODO
     });
 
+    // List<DateRange20m2> closingDateRanges (default value: const [])
+    test('to test the property `closingDateRanges`', () async {
+      // TODO
+    });
+
     // List<StandardMessage> standardMessages (default value: const [])
     test('to test the property `standardMessages`', () async {
       // TODO
@@ -68,6 +73,11 @@ void main() {
 
     // String restaurantName
     test('to test the property `restaurantName`', () async {
+      // TODO
+    });
+
+    // List<String> globalTimeRangesTags (default value: const [])
+    test('to test the property `globalTimeRangesTags`', () async {
       // TODO
     });
 

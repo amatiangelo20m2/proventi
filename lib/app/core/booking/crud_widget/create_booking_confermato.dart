@@ -12,14 +12,16 @@ import '../../../../global/date_methods_utility.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
 import '../../customer/customer_state_manager.dart';
 
-class CreateBookingStatusConfirmed extends StatefulWidget {
-  const CreateBookingStatusConfirmed({super.key});
+class CreateBooking extends StatefulWidget {
+  const CreateBooking({super.key, required this.currentSelectedDate});
+
+  final DateTime currentSelectedDate;
 
   @override
-  State<CreateBookingStatusConfirmed> createState() => _CreateBookingStatusConfirmedState();
+  State<CreateBooking> createState() => _CreateBookingState();
 }
 
-class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfirmed> {
+class _CreateBookingState extends State<CreateBooking> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -50,7 +52,10 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
   @override
   void initState() {
     super.initState();
-    _minutesFocusNode.addListener(() {
+
+    _bookingDate = widget.currentSelectedDate;
+
+      _minutesFocusNode.addListener(() {
       if (_minutesFocusNode.hasFocus) {
         _minutesFocusNode.unfocus();
       }
@@ -167,6 +172,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                             Expanded(
                               child: CupertinoTextField(
                                 onChanged: (typingNumber){
+
                                   setState(() {
                                     currentCustomerDTOList.clear();
                                     if(typingNumber.length > 4){
@@ -177,6 +183,7 @@ class _CreateBookingStatusConfirmedState extends State<CreateBookingStatusConfir
                                       }
                                     }
                                   });
+
                                 },
                                 keyboardType: TextInputType.number,
                                 controller: _phoneController,

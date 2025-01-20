@@ -490,6 +490,57 @@ class FormControllerApi {
     return null;
   }
 
+  /// Performs an HTTP 'GET /api/form/gettags/{timeRangeTagsId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] timeRangeTagsId (required):
+  Future<Response> retrieveAllFormsWithHttpInfo(String timeRangeTagsId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/form/gettags/{timeRangeTagsId}'
+      .replaceAll('{timeRangeTagsId}', timeRangeTagsId);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] timeRangeTagsId (required):
+  Future<List<String>?> retrieveAllForms(String timeRangeTagsId,) async {
+    final response = await retrieveAllFormsWithHttpInfo(timeRangeTagsId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<String>') as List)
+        .cast<String>()
+        .toList(growable: false);
+
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /api/form/retrievebybranchcode/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -696,15 +747,13 @@ class FormControllerApi {
       .replaceAll('{timeRangeCode}', timeRangeCode);
 
     // ignore: prefer_final_locals
-    Object? postBody;
+    Object? postBody = timeRange;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-      queryParams.addAll(_queryParams('', 'timeRange', timeRange));
-
-    const contentTypes = <String>[];
+    const contentTypes = <String>['application/json'];
 
 
     return apiClient.invokeAPI(
@@ -725,11 +774,19 @@ class FormControllerApi {
   /// * [String] timeRangeCode (required):
   ///
   /// * [TimeRange] timeRange (required):
-  Future<void> updateOpeningHourConfByCode(String formCode, String timeRangeCode, TimeRange timeRange,) async {
+  Future<FormDTO?> updateOpeningHourConfByCode(String formCode, String timeRangeCode, TimeRange timeRange,) async {
     final response = await updateOpeningHourConfByCodeWithHttpInfo(formCode, timeRangeCode, timeRange,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'FormDTO',) as FormDTO;
+    
+    }
+    return null;
   }
 
   /// Performs an HTTP 'PUT /api/form/update/timerange/{formCode}' operation and returns the [Response].

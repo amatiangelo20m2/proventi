@@ -18,12 +18,14 @@ class RestaurantDTO {
     this.daylyTimeWorkingRange,
     this.nightTimeWorkingRange,
     this.capacity,
+    this.closingDateRanges = const [],
     this.standardMessages = const [],
     this.afterBookingSchedulerMessages = const [],
     this.beforeBookingScheduledMessages = const [],
     this.centralinoMessages = const [],
     this.automaticApproveRefuseBookConf = const [],
     this.restaurantName,
+    this.globalTimeRangesTags = const [],
   });
 
   ///
@@ -66,6 +68,8 @@ class RestaurantDTO {
   ///
   int? capacity;
 
+  List<DateRange20m2> closingDateRanges;
+
   List<StandardMessage> standardMessages;
 
   List<AfterBookingSchedulerMessage> afterBookingSchedulerMessages;
@@ -84,6 +88,8 @@ class RestaurantDTO {
   ///
   String? restaurantName;
 
+  List<String> globalTimeRangesTags;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is RestaurantDTO &&
     other.branchCode == branchCode &&
@@ -91,12 +97,14 @@ class RestaurantDTO {
     other.daylyTimeWorkingRange == daylyTimeWorkingRange &&
     other.nightTimeWorkingRange == nightTimeWorkingRange &&
     other.capacity == capacity &&
+    _deepEquality.equals(other.closingDateRanges, closingDateRanges) &&
     _deepEquality.equals(other.standardMessages, standardMessages) &&
     _deepEquality.equals(other.afterBookingSchedulerMessages, afterBookingSchedulerMessages) &&
     _deepEquality.equals(other.beforeBookingScheduledMessages, beforeBookingScheduledMessages) &&
     _deepEquality.equals(other.centralinoMessages, centralinoMessages) &&
     _deepEquality.equals(other.automaticApproveRefuseBookConf, automaticApproveRefuseBookConf) &&
-    other.restaurantName == restaurantName;
+    other.restaurantName == restaurantName &&
+    _deepEquality.equals(other.globalTimeRangesTags, globalTimeRangesTags);
 
   @override
   int get hashCode =>
@@ -106,15 +114,17 @@ class RestaurantDTO {
     (daylyTimeWorkingRange == null ? 0 : daylyTimeWorkingRange!.hashCode) +
     (nightTimeWorkingRange == null ? 0 : nightTimeWorkingRange!.hashCode) +
     (capacity == null ? 0 : capacity!.hashCode) +
+    (closingDateRanges.hashCode) +
     (standardMessages.hashCode) +
     (afterBookingSchedulerMessages.hashCode) +
     (beforeBookingScheduledMessages.hashCode) +
     (centralinoMessages.hashCode) +
     (automaticApproveRefuseBookConf.hashCode) +
-    (restaurantName == null ? 0 : restaurantName!.hashCode);
+    (restaurantName == null ? 0 : restaurantName!.hashCode) +
+    (globalTimeRangesTags.hashCode);
 
   @override
-  String toString() => 'RestaurantDTO[branchCode=$branchCode, creationDate=$creationDate, daylyTimeWorkingRange=$daylyTimeWorkingRange, nightTimeWorkingRange=$nightTimeWorkingRange, capacity=$capacity, standardMessages=$standardMessages, afterBookingSchedulerMessages=$afterBookingSchedulerMessages, beforeBookingScheduledMessages=$beforeBookingScheduledMessages, centralinoMessages=$centralinoMessages, automaticApproveRefuseBookConf=$automaticApproveRefuseBookConf, restaurantName=$restaurantName]';
+  String toString() => 'RestaurantDTO[branchCode=$branchCode, creationDate=$creationDate, daylyTimeWorkingRange=$daylyTimeWorkingRange, nightTimeWorkingRange=$nightTimeWorkingRange, capacity=$capacity, closingDateRanges=$closingDateRanges, standardMessages=$standardMessages, afterBookingSchedulerMessages=$afterBookingSchedulerMessages, beforeBookingScheduledMessages=$beforeBookingScheduledMessages, centralinoMessages=$centralinoMessages, automaticApproveRefuseBookConf=$automaticApproveRefuseBookConf, restaurantName=$restaurantName, globalTimeRangesTags=$globalTimeRangesTags]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -143,6 +153,7 @@ class RestaurantDTO {
     } else {
       json[r'capacity'] = null;
     }
+      json[r'closingDateRanges'] = this.closingDateRanges;
       json[r'standardMessages'] = this.standardMessages;
       json[r'afterBookingSchedulerMessages'] = this.afterBookingSchedulerMessages;
       json[r'beforeBookingScheduledMessages'] = this.beforeBookingScheduledMessages;
@@ -153,6 +164,7 @@ class RestaurantDTO {
     } else {
       json[r'restaurantName'] = null;
     }
+      json[r'globalTimeRangesTags'] = this.globalTimeRangesTags;
     return json;
   }
 
@@ -180,12 +192,16 @@ class RestaurantDTO {
         daylyTimeWorkingRange: TimeRange.fromJson(json[r'daylyTimeWorkingRange']),
         nightTimeWorkingRange: TimeRange.fromJson(json[r'nightTimeWorkingRange']),
         capacity: mapValueOfType<int>(json, r'capacity'),
+        closingDateRanges: DateRange20m2.listFromJson(json[r'closingDateRanges']),
         standardMessages: StandardMessage.listFromJson(json[r'standardMessages']),
         afterBookingSchedulerMessages: AfterBookingSchedulerMessage.listFromJson(json[r'afterBookingSchedulerMessages']),
         beforeBookingScheduledMessages: BeforeBookingScheduledMessage.listFromJson(json[r'beforeBookingScheduledMessages']),
         centralinoMessages: CentralinoMessage.listFromJson(json[r'centralinoMessages']),
         automaticApproveRefuseBookConf: AutomaticApproveRefusedBookConf.listFromJson(json[r'automaticApproveRefuseBookConf']),
         restaurantName: mapValueOfType<String>(json, r'restaurantName'),
+        globalTimeRangesTags: json[r'globalTimeRangesTags'] is Iterable
+            ? (json[r'globalTimeRangesTags'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
       );
     }
     return null;

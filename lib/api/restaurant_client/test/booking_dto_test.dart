@@ -111,6 +111,11 @@ void main() {
       // TODO
     });
 
+    // String processedBy
+    test('to test the property `processedBy`', () async {
+      // TODO
+    });
+
     // bool comingWithDogs
     test('to test the property `comingWithDogs`', () async {
       // TODO

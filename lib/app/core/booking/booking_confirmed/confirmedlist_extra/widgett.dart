@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../api/restaurant_client/lib/api.dart';
 import '../../bookings_utils.dart';
 
 buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
-  int bookings = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.CONFERMATO, BookingDTOStatusEnum.MODIFICA_CONFERMATA]).length;
+  int bookings = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.CONFERMATO, BookingDTOStatusEnum.MODIFICA_RIFIUTATA, BookingDTOStatusEnum.MODIFICA_CONFERMATA]).length;
 
-  int refused = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.RIFIUTATO, BookingDTOStatusEnum.MODIFICA_RIFIUTATA]).length;
+  int refused = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.RIFIUTATO]).length;
 
   if (bookings == 0 && refused == 0) {
     return SizedBox(
@@ -15,25 +16,35 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
     );
   }
   return Positioned(
-      right: 0,
-      child: Column(
-        children: [
-          if (bookings > 0)
-            Container(
+    right: 0,
+    child: Column(
+      children: [
+        if (bookings > 0)
+          Material(
+            elevation: 5,
+            borderRadius: BorderRadius.circular(5),
+            child: Container(
               decoration: BoxDecoration(
                 color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(
-                    5), // Half of width/height for a circular effect
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(3.0),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Row(
                   children: [
-                    const Icon(CupertinoIcons.book,
-                        size: 15, // Set the size of the icon
+                    Icon(CupertinoIcons.book,
+                        size: 18,
                         color: Colors.white),
                     Text(
-                      ' $bookings', // Text to display inside the circle
+                      ' $bookings',
                       style: const TextStyle(
                           fontSize: 15,
                           color: Colors.white),
@@ -42,32 +53,46 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
                 ),
               ),
             ),
-          const SizedBox(
-            height: 2,
           ),
-          if(refused > 0) Container(
-            decoration: BoxDecoration(
-              color: Colors.redAccent,
-              borderRadius: BorderRadius.circular(
-                  5), // Half of width/height for a circular effect
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Row(
-                children: [
-                  const Icon(CupertinoIcons.clear_circled,
-                      size: 15, // Set the size of the icon
-                      color: Colors.white),
-                  Text(
-                    ' $refused', // Text to display inside the circle
-                    style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.white),
+        const SizedBox(
+          height: 2,
+        ),
+        if (refused > 0)
+          Material(
+            elevation: 5,
+            borderRadius: BorderRadius.circular(5),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Row(
+                  children: [
+                    const Icon(CupertinoIcons.clear_circled,
+                        size: 18,
+                        color: Colors.white),
+                    Text(
+                      ' $refused',
+                      style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ],
-      ));
+      ],
+    ),
+  );
 }

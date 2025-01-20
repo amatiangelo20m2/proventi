@@ -5,7 +5,7 @@
 import 'package:ventimetri_api/api.dart';
 ```
 
-All URIs are relative to *http://localhost:59493/ventimetriservice*
+All URIs are relative to *http://192.168.1.9:8536/ventimetriservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

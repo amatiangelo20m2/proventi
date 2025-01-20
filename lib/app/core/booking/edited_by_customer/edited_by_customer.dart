@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+import 'package:super_cupertino_navigation_bar/super_cupertino_navigation_bar.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
 import 'edited_by_customer_card.dart';
 
@@ -103,7 +104,7 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
         children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Prenotazioni modificate',
+            child: Text('Prenotazioni modificate o eliminate',
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold),

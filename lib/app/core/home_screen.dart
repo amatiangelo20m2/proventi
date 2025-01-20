@@ -22,6 +22,7 @@ import 'booking/booking_processed/booking_processed.dart';
 import 'booking/booking_to_manage/booking_to_manage.dart';
 import 'booking/edited_by_customer/edited_by_customer.dart';
 import 'employee/reports/report_employee_presence.dart';
+import 'employee/reports/state_manager/employee_state_manager.dart';
 import 'floor/floor.dart';
 import 'notification/notification_screen.dart';
 import 'notification/state_manager/notification_state_manager.dart';
@@ -66,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             showSelectedLabels: true,
             showUnselectedLabels: true,
             unselectedFontSize: 7,
+
             onTap: (index) {
               restaurantStateManager.refresh(DateTime.now());
               setPageIndex(index);
@@ -79,7 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     .where((element) => isSameDay(element.bookingDate!, DateTime.now()))
                     .where((element) =>
                 element.status == BookingDTOStatusEnum.CONFERMATO
-                    || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
+                    || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA
+                    || element.status == BookingDTOStatusEnum.MODIFICA_RIFIUTATA)
                     .length,
                 isSelected: _pageIndex == 0,
               ),
@@ -99,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 badgeColor: getStatusColor(BookingDTOStatusEnum.LISTA_ATTESA),
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
-                element.status == BookingDTOStatusEnum.LISTA_ATTESA)
+                element.status == BookingDTOStatusEnum.LISTA_ATTESA || element.status == BookingDTOStatusEnum.AVVISATO_LISTA_ATTESA)
                     .length,
                 isSelected: _pageIndex == 2,
               ),
@@ -156,33 +159,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.of(context).pop();
+                    await EmployeeStateManager().retrieveCurrentEmployee();
                     Navigator.pushNamed(context, ReportEmployeePresence.routeName);
                   },
                   title: const Text(
                     'Report Dipendenti',
                     style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
                   ),
-                  leading: Icon(
+                  leading: const Icon(
                     CupertinoIcons.doc_plaintext,
                     color: CupertinoColors.white,
                   ),
                 ),
-                //ListTile(
-                //  onTap: () {
-                //    Navigator.of(context).pop();
-                //    Navigator.pushNamed(context, Floor.routeName);
-                //  },
-                //  title: const Text(
-                //    'Floor',
-                //    style: TextStyle(color: CupertinoColors.white),
-                //  ),
-                //  leading: const Icon(
-                //    CupertinoIcons.square,
-                //    color: CupertinoColors.white,
-                //  ),
-                //),
+
                 ListTile(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -294,7 +285,6 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Stack(
             children: [
               getPageByIndex(_pageIndex, restaurantStateManager),
-
             ],
           ),
         );
@@ -303,10 +293,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getPageByIndex(int pageIndex, RestaurantStateManager restaurantStateManager) {
-
     switch (pageIndex) {
       case 0:
-        return const BookingScreen();
+        return BookingScreen(dateTime: DateTime.now(),);
       case 1:
         return const BookingManager();
       case 2:

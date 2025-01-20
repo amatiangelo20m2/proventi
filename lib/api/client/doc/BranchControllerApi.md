@@ -5,7 +5,7 @@
 import 'package:ventimetri_api/api.dart';
 ```
 
-All URIs are relative to *http://localhost:59493/ventimetriservice*
+All URIs are relative to *http://192.168.1.9:8536/ventimetriservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -21,6 +21,7 @@ Method | HTTP request | Description
 [**retrieveAll**](BranchControllerApi.md#retrieveall) | **GET** /api/retrieveall | 
 [**retrieveBranchByUserCodeAndBranchCode**](BranchControllerApi.md#retrievebranchbyusercodeandbranchcode) | **GET** /api/retrievebranchbyusercodeandbranchcode | 
 [**retrieveBranchCounters**](BranchControllerApi.md#retrievebranchcounters) | **GET** /api/retrievebranchcounters/{branchCode} | 
+[**retrieveBranches**](BranchControllerApi.md#retrievebranches) | **GET** /api/retrievebranches | 
 [**retrieveData**](BranchControllerApi.md#retrievedata) | **GET** /api/retrievedata | 
 [**save**](BranchControllerApi.md#save) | **POST** /api/branch/save | 
 [**setFcmToken**](BranchControllerApi.md#setfcmtoken) | **POST** /api/setfmctoken | 
@@ -521,6 +522,51 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**CounterEntity**](CounterEntity.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **retrieveBranches**
+> VentiMetriQuadriData retrieveBranches(userCode, branchType, fcmToken)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api/api.dart';
+
+final api_instance = BranchControllerApi();
+final userCode = userCode_example; // String | 
+final branchType = branchType_example; // String | 
+final fcmToken = fcmToken_example; // String | 
+
+try {
+    final result = api_instance.retrieveBranches(userCode, branchType, fcmToken);
+    print(result);
+} catch (e) {
+    print('Exception when calling BranchControllerApi->retrieveBranches: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userCode** | **String**|  | 
+ **branchType** | **String**|  | 
+ **fcmToken** | **String**|  | [optional] 
+
+### Return type
+
+[**VentiMetriQuadriData**](VentiMetriQuadriData.md)
 
 ### Authorization
 

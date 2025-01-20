@@ -23,11 +23,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final TextEditingController _branchCodeController = TextEditingController(text: '');
   final TextEditingController _usernameController = TextEditingController(text: '');
   final TextEditingController _passwordController = TextEditingController(text: '');
-
   final TextEditingController _userCodeController = TextEditingController(text: '');
   final TextEditingController _passwordUserController = TextEditingController(text: '');
 
@@ -35,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isLoginWithUserCode = false;
   bool _rememberCredentials = false;
+  bool _passwordVisible = false;
+  bool _passwordUserVisible = false;
 
   @override
   void initState() {
@@ -82,13 +82,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _checkIfUserAlreadyLoggedIn() async {
-
     //var employeeDTO = Provider.of<RestaurantStateManager>(context, listen: false).currentEmployee;
 
     //if (employeeDTO != null) {
-      //Navigator.of(context).pushReplacement(
-        //MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)),
-          //  );
+    //Navigator.of(context).pushReplacement(
+    //MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)),
+    //  );
     //}
   }
 
@@ -103,12 +102,39 @@ class _LoginPageState extends State<LoginPage> {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         String? token = await messaging.getToken();
-        setState(() => mdd.fcmToken = token);
-        print('FCM Token: ${mdd.fcmToken}');
+        if (token != null) {
+          setState(() => mdd.fcmToken = token);
+          print('FCM Token: ${mdd.fcmToken}');
+        } else {
+          _showRestartAppDialog();
+        }
+      } else {
+        _showRestartAppDialog();
       }
     } catch (e) {
       print("Error retrieving FCM token: $e");
+      _showRestartAppDialog();
     }
+  }
+
+  void _showRestartAppDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text('Errore'),
+          content: const Text('Si è verificato un errore durante il recupero del token FCM. Si prega di riavviare l\'applicazione.'),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _fetchDeviceInfo() async {
@@ -202,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 16),
         _buildTextField(_usernameController, 'Username', TextInputType.text),
         const SizedBox(height: 16),
-        _buildTextField(_passwordController, 'Password', TextInputType.visiblePassword, obscureText: true),
+        _buildTextField(_passwordController, 'Password', TextInputType.visiblePassword, obscureText: true, isPassword: true),
         const SizedBox(height: 32),
         _buildRememberCredentials(),
         const SizedBox(height: 15),
@@ -218,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 16),
         _buildTextField(_userCodeController, 'Codice Utente', TextInputType.text, toUpperCase: true),
         const SizedBox(height: 16),
-        _buildTextField(_passwordUserController, 'Password', TextInputType.visiblePassword, obscureText: true),
+        _buildTextField(_passwordUserController, 'Password', TextInputType.visiblePassword, obscureText: true, isPassword: true, isUserPassword: true),
         const SizedBox(height: 16),
         _buildRememberCredentials(),
         const SizedBox(height: 15),
@@ -228,18 +254,35 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String placeholder, TextInputType keyboardType, {bool obscureText = false, bool toUpperCase = false}) {
+  Widget _buildTextField(TextEditingController controller, String placeholder, TextInputType keyboardType, {bool obscureText = false, bool toUpperCase = false, bool isPassword = false, bool isUserPassword = false}) {
     return CupertinoTextField(
       clearButtonMode: OverlayVisibilityMode.always,
       controller: controller,
       keyboardType: keyboardType,
       placeholder: placeholder,
-      obscureText: obscureText,
+      obscureText: isPassword ? !_passwordVisible : isUserPassword ? !_passwordUserVisible : obscureText,
       inputFormatters: [
         LengthLimitingTextInputFormatter(10),
       ],
       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
       padding: const EdgeInsets.all(15),
+      suffix: isPassword || isUserPassword
+          ? IconButton(
+        icon: Icon(
+          isPassword ? (_passwordVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye) : (_passwordUserVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
+          color: Colors.grey,
+        ),
+        onPressed: () {
+          setState(() {
+            if (isPassword) {
+              _passwordVisible = !_passwordVisible;
+            } else if (isUserPassword) {
+              _passwordUserVisible = !_passwordUserVisible;
+            }
+          });
+        },
+      )
+          : null,
       onChanged: (text) {
         controller.value = controller.value.copyWith(
           text: toUpperCase ? text.toUpperCase() : text,
@@ -292,7 +335,6 @@ class _LoginPageState extends State<LoginPage> {
       mdd.registrationDate = DateTime.now();
 
       if (!_isLoginWithUserCode) {
-
         var response = await Provider.of<RestaurantStateManager>(context, listen: false)
             .restaurantControllerApi
             .loginFromMobileDeviceWithHttpInfo(
@@ -304,7 +346,6 @@ class _LoginPageState extends State<LoginPage> {
 
         if (response.statusCode == 202) {
           if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-
             EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
                 .restaurantClient.deserializeAsync(await _decodeBodyBytes(response), 'EmployeeDTO') as EmployeeDTO;
             print('Log in with employeeDTO: $employeeDTO');
@@ -316,8 +357,6 @@ class _LoginPageState extends State<LoginPage> {
             await _saveCredentials();
 
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
-
-
           } else {
             showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');
           }
@@ -329,13 +368,17 @@ class _LoginPageState extends State<LoginPage> {
           showCupertinoAlert(context, 'Error', 'Errore generico');
         }
       } else {
-
         print("UserCode: ${_userCodeController.text}");
         print("Password: ${_passwordUserController.text}");
+
+        await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([]);
+
+        print('FCM Token: ${mdd.fcmToken}');
 
         await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(_userCodeController.text,
             _passwordUserController.text, mdd.fcmToken!);
 
+        print('User logged in with user code');
         VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
 
         //here i will convert a BranchResponseEntity list into a Restaurant configuration in order to have a list of branchConfiguration, when the customer will choose a branch it will refresh the configuration each time

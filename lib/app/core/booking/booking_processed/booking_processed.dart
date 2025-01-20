@@ -31,11 +31,11 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
 
         // Filter and group bookings by date
         final Map<DateTime, List<BookingDTO>> groupedBookings = _groupBookingsByDate(
-          restaurantStateManager.allBookings!
-              .where((booking) => booking.status == BookingDTOStatusEnum.ARRIVATO
-              || booking.status == BookingDTOStatusEnum.ELIMINATO
-              || booking.status == BookingDTOStatusEnum.NON_ARRIVATO)
-              .toList());
+            restaurantStateManager.allBookings!
+                .where((booking) => booking.status == BookingDTOStatusEnum.ARRIVATO
+                || booking.status == BookingDTOStatusEnum.ELIMINATO
+                || booking.status == BookingDTOStatusEnum.NON_ARRIVATO)
+                .toList());
 
         final Map<DateTime, List<BookingDTO>> sortedGroupedBookings =
         SplayTreeMap<DateTime, List<BookingDTO>>.from(
@@ -73,7 +73,7 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
                   itemBuilder: (context, index) {
                     final date = sortedGroupedBookings.keys.elementAt(index);
                     final bookings = sortedGroupedBookings[date]!;
-                
+
                     return _buildDateGroup(date, bookings, restaurantStateManager);
                   },
                 ),
@@ -107,32 +107,28 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
   }
 
   Widget _buildDateGroup(DateTime date, List<BookingDTO> bookings, RestaurantStateManager restaurantStateManager) {
-    return Container(
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Prenotazioni processate di ${italianDateFormat.format(date)}'.toUpperCase(),
-              style: TextStyle(
-                  fontSize: 10,
-                  color: globalGoldDark,
-                  fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Prenotazioni processate di ${italianDateFormat.format(date)}'.toUpperCase(),
+            style: TextStyle(
+                fontSize: 10,
+                color: blackDir,
+                fontWeight: FontWeight.bold),
           ),
-          ...bookings.where((element) => element.customer!.firstName!
-              .toLowerCase().contains(queryString.toLowerCase()) || element.customer!
-              .phone!.toLowerCase().contains(queryString.toLowerCase())).map((booking) {
-            return ProcessedBookingCard(
-              booking: booking,
-              formDTOs: restaurantStateManager.currentBranchForms!,
-            );
-          }).toList(),
-        ],
-      ),
+        ),
+        ...bookings.where((element) => element.customer!.firstName!
+            .toLowerCase().contains(queryString.toLowerCase()) || element.customer!
+            .phone!.toLowerCase().contains(queryString.toLowerCase())).map((booking) {
+          return ProcessedBookingCard(
+            booking: booking,
+            formDTOs: restaurantStateManager.currentBranchForms!,
+          );
+        }).toList(),
+      ],
     );
   }
 }

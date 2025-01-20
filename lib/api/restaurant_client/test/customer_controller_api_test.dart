@@ -22,8 +22,8 @@ void main() {
       // TODO
     });
 
-    //Future<List<Object>> retrieveCustomerHistoryByBranchCode(String branchCode) async
-    test('test retrieveCustomerHistoryByBranchCode', () async {
+    //Future<List<CustomerHistoryDTO>> retrieveCustomerByQuery(String branchCode, { String includeTags, String excludeTags, String minAge, String maxAge, String names }) async
+    test('test retrieveCustomerByQuery', () async {
       // TODO
     });
 

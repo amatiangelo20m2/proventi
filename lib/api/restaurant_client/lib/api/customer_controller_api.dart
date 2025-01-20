@@ -74,13 +74,23 @@ class CustomerControllerApi {
     return null;
   }
 
-  /// Performs an HTTP 'GET /api/customer/retrievecustomerhistory/{branchCode}' operation and returns the [Response].
+  /// Performs an HTTP 'GET /api/customer/retrievecustomer/queryfiltered/{branchCode}' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] branchCode (required):
-  Future<Response> retrieveCustomerHistoryByBranchCodeWithHttpInfo(String branchCode,) async {
+  ///
+  /// * [String] includeTags:
+  ///
+  /// * [String] excludeTags:
+  ///
+  /// * [String] minAge:
+  ///
+  /// * [String] maxAge:
+  ///
+  /// * [String] names:
+  Future<Response> retrieveCustomerByQueryWithHttpInfo(String branchCode, { String? includeTags, String? excludeTags, String? minAge, String? maxAge, String? names, }) async {
     // ignore: prefer_const_declarations
-    final path = r'/api/customer/retrievecustomerhistory/{branchCode}'
+    final path = r'/api/customer/retrievecustomer/queryfiltered/{branchCode}'
       .replaceAll('{branchCode}', branchCode);
 
     // ignore: prefer_final_locals
@@ -89,6 +99,22 @@ class CustomerControllerApi {
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
+
+    if (includeTags != null) {
+      queryParams.addAll(_queryParams('', 'includeTags', includeTags));
+    }
+    if (excludeTags != null) {
+      queryParams.addAll(_queryParams('', 'excludeTags', excludeTags));
+    }
+    if (minAge != null) {
+      queryParams.addAll(_queryParams('', 'minAge', minAge));
+    }
+    if (maxAge != null) {
+      queryParams.addAll(_queryParams('', 'maxAge', maxAge));
+    }
+    if (names != null) {
+      queryParams.addAll(_queryParams('', 'names', names));
+    }
 
     const contentTypes = <String>[];
 
@@ -107,8 +133,18 @@ class CustomerControllerApi {
   /// Parameters:
   ///
   /// * [String] branchCode (required):
-  Future<List<Object>?> retrieveCustomerHistoryByBranchCode(String branchCode,) async {
-    final response = await retrieveCustomerHistoryByBranchCodeWithHttpInfo(branchCode,);
+  ///
+  /// * [String] includeTags:
+  ///
+  /// * [String] excludeTags:
+  ///
+  /// * [String] minAge:
+  ///
+  /// * [String] maxAge:
+  ///
+  /// * [String] names:
+  Future<List<CustomerHistoryDTO>?> retrieveCustomerByQuery(String branchCode, { String? includeTags, String? excludeTags, String? minAge, String? maxAge, String? names, }) async {
+    final response = await retrieveCustomerByQueryWithHttpInfo(branchCode,  includeTags: includeTags, excludeTags: excludeTags, minAge: minAge, maxAge: maxAge, names: names, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -117,8 +153,8 @@ class CustomerControllerApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Object>') as List)
-        .cast<Object>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<CustomerHistoryDTO>') as List)
+        .cast<CustomerHistoryDTO>()
         .toList(growable: false);
 
     }

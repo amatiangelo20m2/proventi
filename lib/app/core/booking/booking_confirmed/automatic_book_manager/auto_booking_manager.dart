@@ -77,7 +77,7 @@ class _AutoBookingManagerState extends State<AutoBookingManager> {
           ),
           Row(
             children: [
-              Icon(CupertinoIcons.moon_circle, size: 40, color: elegantBlue),
+              Icon(CupertinoIcons.moon, size: 40, color: elegantBlue),
               _buildSwitcher(
                 restaurantStateManager,
                 widget.currentDate,
@@ -236,7 +236,8 @@ class _AutoBookingManagerState extends State<AutoBookingManager> {
     }
 
     return Card(
-      color: elegantBlue,
+      surfaceTintColor: Colors.white,
+      color: Colors.white,
       elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(3.0),
@@ -247,8 +248,9 @@ class _AutoBookingManagerState extends State<AutoBookingManager> {
               color: sunIconColor,
               size: 30,
             ),
+
             Icon(
-              CupertinoIcons.moon_circle,
+              CupertinoIcons.moon,
               color: moonIconColor,
               size: 30,
             ),

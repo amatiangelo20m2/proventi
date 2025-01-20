@@ -36,7 +36,6 @@ class CommunicationStateManager extends ChangeNotifier {
     final currentTime = DateTime.now();
     // Check if 60 seconds have passed since the last API call
     if (_lastApiCallTime != null && currentTime.difference(_lastApiCallTime!).inSeconds < _apiCallIntervalSeconds) {
-      print('Skipping API call, last call was less than ${_apiCallIntervalSeconds} seconds ago.');
       return currentWhatsAppConfigurationDTO;
     }
     // Update the last call time

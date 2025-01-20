@@ -51,13 +51,12 @@ class ProfileImage extends StatelessWidget {
         }
       },
       child: Hero(
-        
         tag: customer.prefix! + customer.phone!,
         child: Consumer<CommunicationStateManager>(
           builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
             // Generate the key for this customer
             final String cacheKey = customer.prefix! + customer.phone!;
-        
+
             // Check if the image URL is already cached
             if (_photoCache.containsKey(cacheKey)) {
               final cachedImageUrl = _photoCache[cacheKey];
@@ -69,7 +68,7 @@ class ProfileImage extends StatelessWidget {
                 return _buildCachedNetworkImage(cachedImageUrl);
               }
             }
-        
+
             // If not cached, fetch from the API
             return FutureBuilder<String?>(
               future: communicationStateManager.whatsAppConfigurationControllerApi
@@ -97,26 +96,47 @@ class ProfileImage extends StatelessWidget {
   }
 
   Widget _buildFallbackAvatar() {
-    return CircleAvatar(
-      radius: avatarRadious,
-      backgroundImage: AssetImage('assets/images/user.png'),
-      backgroundColor: Colors.transparent,
+    return _buildAvatarContainer(
+      CircleAvatar(
+        radius: avatarRadious * 0.96,
+        backgroundColor: Colors.white,
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              colors: [Colors.white, Colors.white],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+
+          ),
+          child: ClipOval(
+            child: Image.asset(
+              'assets/images/user.png',
+              fit: BoxFit.contain,
+              width: avatarRadious * 1.3,
+              height: avatarRadious * 2,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   // Helper to build shimmer avatar (loading placeholder)
   Widget _buildShimmerAvatar() {
-
-    return CircleAvatar(
-      radius: avatarRadious,
-      backgroundColor: Colors.transparent,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey[300],
+    return _buildAvatarContainer(
+      CircleAvatar(
+        radius: avatarRadious,
+        backgroundColor: Colors.transparent,
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[300],
+            ),
           ),
         ),
       ),
@@ -125,26 +145,43 @@ class ProfileImage extends StatelessWidget {
 
   // Helper to build the network image avatar
   Widget _buildCachedNetworkImage(String imageUrl) {
-    return Stack(
-      children: [
-        CachedNetworkImage(
-          imageUrl: imageUrl,
-          placeholder: (context, url) => _buildShimmerAvatar(),
-          errorWidget: (context, url, error) => _buildFallbackAvatar(),
-          imageBuilder: (context, imageProvider) => CircleAvatar(
-            radius: avatarRadious,
-            backgroundImage: imageProvider,
-            backgroundColor: Colors.transparent,
+    return _buildAvatarContainer(
+      Stack(
+          children: [
+            CachedNetworkImage(
+              imageUrl: imageUrl,
+              placeholder: (context, url) => _buildShimmerAvatar(),
+              errorWidget: (context, url, error) => _buildFallbackAvatar(),
+              imageBuilder: (context, imageProvider) => CircleAvatar(
+                radius: avatarRadious,
+                backgroundImage: imageProvider,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
+            if(noShowBookings > 0) Positioned(
+                right: 0, bottom: 0, child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  const Icon(Icons.circle, color: Colors.white,),
+                  Lottie.asset('assets/lotties/danger.json', width: 20, height: 20, fit: BoxFit.cover)
+                ])),
+          ]
+      ),
+    );
+  }
+
+  Widget _buildAvatarContainer(Widget child) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            offset: const Offset(0, 1),
           ),
-        ),
-        if(noShowBookings > 0) Positioned(
-            right: 0, bottom: 0, child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(Icons.circle, color: Colors.white,),
-              Lottie.asset('assets/lotties/danger.json', width: 20, height: 20, fit: BoxFit.cover)
-        ])),
-      ]
+        ],
+      ),
+      child: child,
     );
   }
 }

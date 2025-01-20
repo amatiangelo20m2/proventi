@@ -81,7 +81,6 @@ Future<void> _setupFirebaseMessaging() async {
 
       BuildContext context = navigatorKey.currentContext!;
 
-
       NotificationStateManager notificationProvider = Provider.of<NotificationStateManager>(context, listen: false);
       RestaurantStateManager restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
       print('Notification with open app: ${notification.toMap()}');

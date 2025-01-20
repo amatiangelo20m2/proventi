@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.9:50980/restaurantservice*
+All URIs are relative to *http://192.168.1.9:23012/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -67,8 +67,12 @@ Class | Method | HTTP request | Description
 *BookingControllerApi* | [**retrieveBookingByCode**](doc//BookingControllerApi.md#retrievebookingbycode) | **GET** /api/booking/retrievebooking/{bookingCode} | 
 *BookingControllerApi* | [**retrieveBookingByStatusAndBranchCode**](doc//BookingControllerApi.md#retrievebookingbystatusandbranchcode) | **GET** /api/booking/retrievebynranchcode/{branchCode}/{fromDate}/{toDate} | 
 *BookingControllerApi* | [**updateBooking**](doc//BookingControllerApi.md#updatebooking) | **PUT** /api/booking/updatebooking | 
+*CampainControllerApi* | [**createCampain**](doc//CampainControllerApi.md#createcampain) | **GET** /api/campain/create/{branchCode}/{campainName} | 
+*CampainControllerApi* | [**retrieveCampainByBranchCode**](doc//CampainControllerApi.md#retrievecampainbybranchcode) | **GET** /api/campain/retrieve/{branchCode} | 
+*CampainControllerApi* | [**start**](doc//CampainControllerApi.md#start) | **PUT** /api/campain/startcampain/{campainCode} | 
+*CampainControllerApi* | [**updateCampain**](doc//CampainControllerApi.md#updatecampain) | **PUT** /api/campain/updatecampain | 
 *CustomerControllerApi* | [**findCustomerByPhoneAndPrefixAndBranchCode**](doc//CustomerControllerApi.md#findcustomerbyphoneandprefixandbranchcode) | **GET** /api/customer/retrieve/{prefix}/{phoneNumber}/{branchCode} | 
-*CustomerControllerApi* | [**retrieveCustomerHistoryByBranchCode**](doc//CustomerControllerApi.md#retrievecustomerhistorybybranchcode) | **GET** /api/customer/retrievecustomerhistory/{branchCode} | 
+*CustomerControllerApi* | [**retrieveCustomerByQuery**](doc//CustomerControllerApi.md#retrievecustomerbyquery) | **GET** /api/customer/retrievecustomer/queryfiltered/{branchCode} | 
 *CustomerControllerApi* | [**retrieveHistoricalCustomersBasedOnReservationsByBranchCode**](doc//CustomerControllerApi.md#retrievehistoricalcustomersbasedonreservationsbybranchcode) | **GET** /api/customer/retrievehistoricalcustomers/{branchCode} | 
 *CustomerControllerApi* | [**save**](doc//CustomerControllerApi.md#save) | **POST** /api/customer/save | 
 *CustomerControllerApi* | [**updateCustomer**](doc//CustomerControllerApi.md#updatecustomer) | **PUT** /api/customer/updatecustomer | 
@@ -81,14 +85,17 @@ Class | Method | HTTP request | Description
 *FormControllerApi* | [**insertHolidays**](doc//FormControllerApi.md#insertholidays) | **PUT** /api/form/add/holidays/{formCode} | 
 *FormControllerApi* | [**resetDefaultConfigurationForm**](doc//FormControllerApi.md#resetdefaultconfigurationform) | **DELETE** /api/form/resetconf/{formCode} | 
 *FormControllerApi* | [**retrieveAll**](doc//FormControllerApi.md#retrieveall) | **GET** /api/form/retrieveall | 
+*FormControllerApi* | [**retrieveAllForms**](doc//FormControllerApi.md#retrieveallforms) | **GET** /api/form/gettags/{timeRangeTagsId} | 
 *FormControllerApi* | [**retrieveByBranchCode**](doc//FormControllerApi.md#retrievebybranchcode) | **GET** /api/form/retrievebybranchcode/{branchCode} | 
 *FormControllerApi* | [**retrieveByFormCode**](doc//FormControllerApi.md#retrievebyformcode) | **GET** /api/form/retrievebyformcode/{formCode} | 
 *FormControllerApi* | [**switchOpeningStatus**](doc//FormControllerApi.md#switchopeningstatus) | **PUT** /api/form/switchOpeningStatus/{formCode}/{dayOfWeek} | 
 *FormControllerApi* | [**updateForm**](doc//FormControllerApi.md#updateform) | **PUT** /api/form/updateform | 
 *FormControllerApi* | [**updateOpeningHourConfByCode**](doc//FormControllerApi.md#updateopeninghourconfbycode) | **PUT** /api/form/update/openinghourconf/{formCode}/{timeRangeCode} | 
 *FormControllerApi* | [**updateTimeRange**](doc//FormControllerApi.md#updatetimerange) | **PUT** /api/form/update/timerange/{formCode} | 
+*RestaurantControllerApi* | [**addClosingDateRange**](doc//RestaurantControllerApi.md#addclosingdaterange) | **PUT** /api/restaurant/update/restaurantconf/{branchCode}/addclosingdaterange | 
 *RestaurantControllerApi* | [**createEmployee**](doc//RestaurantControllerApi.md#createemployee) | **POST** /api/restaurant/employee/create/{branchCode} | 
 *RestaurantControllerApi* | [**createReports**](doc//RestaurantControllerApi.md#createreports) | **POST** /api/restaurant/create/reports | 
+*RestaurantControllerApi* | [**deleteClosingDateRange**](doc//RestaurantControllerApi.md#deleteclosingdaterange) | **DELETE** /api/restaurant/update/restaurantconf/{branchCode}/closingDateRange/{dateTimeRangeCode} | 
 *RestaurantControllerApi* | [**deleteEmployee**](doc//RestaurantControllerApi.md#deleteemployee) | **DELETE** /api/restaurant/deleteemployee/{employeeId} | 
 *RestaurantControllerApi* | [**deleteReport**](doc//RestaurantControllerApi.md#deletereport) | **DELETE** /api/restaurant/report/{id} | 
 *RestaurantControllerApi* | [**findFiredEmployeeByBranchCode**](doc//RestaurantControllerApi.md#findfiredemployeebybranchcode) | **GET** /api/restaurant/getfiredemployeebybranchcode/{branchCode} | 
@@ -110,6 +117,7 @@ Class | Method | HTTP request | Description
 *RestaurantControllerApi* | [**updateCentralinoMessage**](doc//RestaurantControllerApi.md#updatecentralinomessage) | **PUT** /api/restaurant/update/centralinomessage/{branchCode} | 
 *RestaurantControllerApi* | [**updateConfiguration**](doc//RestaurantControllerApi.md#updateconfiguration) | **PUT** /api/restaurant/restaurant/updateconfiguration | 
 *RestaurantControllerApi* | [**updateEmployee**](doc//RestaurantControllerApi.md#updateemployee) | **PUT** /api/restaurant/employee/update/{branchCode} | 
+*RestaurantControllerApi* | [**updateGlobalTimeRangesTags**](doc//RestaurantControllerApi.md#updateglobaltimerangestags) | **PUT** /api/restaurant/update/restauranttags/{branchCode} | 
 *RestaurantControllerApi* | [**updateStandardMessage**](doc//RestaurantControllerApi.md#updatestandardmessage) | **PUT** /api/restaurant/update/standardmessage/{branchCode} | 
 
 
@@ -120,8 +128,10 @@ Class | Method | HTTP request | Description
  - [BeforeBookingScheduledMessage](doc//BeforeBookingScheduledMessage.md)
  - [BookingDTO](doc//BookingDTO.md)
  - [CentralinoMessage](doc//CentralinoMessage.md)
+ - [CustomerCampainDetail](doc//CustomerCampainDetail.md)
  - [CustomerDTO](doc//CustomerDTO.md)
  - [CustomerHistoryDTO](doc//CustomerHistoryDTO.md)
+ - [DateRange20m2](doc//DateRange20m2.md)
  - [EmployeeDTO](doc//EmployeeDTO.md)
  - [EmployeePresenceReportDTO](doc//EmployeePresenceReportDTO.md)
  - [EmployeeReportSummaryDTO](doc//EmployeeReportSummaryDTO.md)
@@ -130,6 +140,7 @@ Class | Method | HTTP request | Description
  - [MobileDeviceDetails](doc//MobileDeviceDetails.md)
  - [OpeningHoursDTO](doc//OpeningHoursDTO.md)
  - [RestaurantDTO](doc//RestaurantDTO.md)
+ - [SendingCampainDTO](doc//SendingCampainDTO.md)
  - [SpecialDayDTO](doc//SpecialDayDTO.md)
  - [StandardMessage](doc//StandardMessage.md)
  - [TimeRange](doc//TimeRange.md)

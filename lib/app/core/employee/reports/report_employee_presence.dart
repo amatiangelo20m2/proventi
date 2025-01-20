@@ -5,6 +5,7 @@ import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.da
 import 'package:provider/provider.dart';
 import 'package:proventi/app/core/employee/reports/state_manager/employee_state_manager.dart';
 import 'package:proventi/global/style.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../api/restaurant_client/lib/api.dart';
 import '../../home_screen.dart';
 import 'employee_create_update/employee_screen.dart';
@@ -22,6 +23,7 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
   DateTime _selectedDate = DateTime.now();
 
   DateTimeRange? selectedDateRange;
+
   @override
   void initState() {
     final now = DateTime.now();
@@ -37,8 +39,6 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
   void dispose() {
     super.dispose();
   }
-
-  List<EmployeePresenceReportDTO>? employeeReportList = List.from([], growable: true);
 
   void _onDaySelected(DateTime day) {
 
@@ -68,11 +68,11 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
   @override
   Widget build(BuildContext context) {
     return Consumer<EmployeeStateManager>(
-
       builder: (BuildContext context, EmployeeStateManager employeeStateManager, Widget? child) {
         return Scaffold(
-
           appBar: AppBar(
+
+            title: Text('Presenze ${employeeStateManager.currentEmployeeList!.length}' , style: TextStyle(color: Colors.black,fontSize: 14)),
             leading: IconButton(onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
@@ -88,13 +88,12 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
               IconButton(onPressed: (){
                 _selectDate(context, _selectedDate);
                 // _pickDateRange(context);
-              }, icon: const Icon(CupertinoIcons.calendar, color:  Colors.blueGrey)),
+              }, icon: const Icon(CupertinoIcons.calendar, color: Colors.blueGrey)),
             ],
           ),
           backgroundColor: Colors.white,
           body: RefreshIndicator(
-            edgeOffset: 150,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.red,
             color:  Colors.blueGrey,
             onRefresh: () async {
               refresh();
@@ -127,10 +126,9 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                       }, icon: const Icon(CupertinoIcons.arrow_right_square_fill, size: 30,)),
                     ],
                   ),
-
                   FutureBuilder<List<EmployeePresenceReportDTO>?>(
 
-                    future: employeeStateManager.restaurantControllerApi!.getReportsByBranchCodeAndDate(employeeStateManager.branchCode, _selectedDate),
+                    future: employeeStateManager.getReportsByBranchCodeAndDate(_selectedDate),
 
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       if(snapshot.connectionState == ConnectionState.waiting){
@@ -142,14 +140,13 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                         );
                       }else if(snapshot.connectionState == ConnectionState.done){
 
-                        employeeReportList = snapshot.data;
                         List<EmployeeDTO> currentEmployeeList = [];
 
-                        employeeStateManager.currentEmployeeList!.forEach((employee) {
+                        for (var employee in employeeStateManager.currentEmployeeList!) {
                           if(employee.visible!){
                             currentEmployeeList.add(employee);
                           }
-                        });
+                        }
 
                         currentEmployeeList = currentEmployeeList.where((element) => element.jobDescription != EmployeeDTOJobDescriptionEnum.AMMINISTRATORE).toList();
 
@@ -172,9 +169,9 @@ class _ReportEmployeePresenceState extends State<ReportEmployeePresence> {
                                   workedHours: 0,
                                   date: DateTime.utc(_selectedDate.year, _selectedDate.month, _selectedDate.day));
 
-                              if(employeeReportList!.where((element)
+                              if(snapshot.data!.where((element)
                               => element.employee!.employeeId == currentEmployeeDTO.employeeId).isNotEmpty){
-                                employeePresence = employeeReportList!.where((element) => element.employee!.employeeId == currentEmployeeDTO.employeeId).first;
+                                employeePresence = snapshot.data!.where((element) => element.employee!.employeeId == currentEmployeeDTO.employeeId).first;
                               }
 
                               return EmployeePresenceWidget(
@@ -274,7 +271,7 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ProfileImage(branchCode: widget.currentEmployeeDTO.branchCode!,
-                      avatarRadious: 30,
+                      avatarRadious: 25,
                       customer: CustomerDTO(prefix: widget.currentEmployeeDTO.prefix, phone: widget.currentEmployeeDTO.phone),
                       allowNavigation: false),
                   Padding(
@@ -315,9 +312,11 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           fontSize: 12.0,
                         );
                       } else {
+                        final prefs = await SharedPreferences.getInstance();
+                        String branchCode = prefs.getString('branchCode').toString();
                         setState(() {
                           widget.employeePresence!.presentAtLunch = !widget.employeePresence!.presentAtLunch!;
-                          widget.employeePresence!.branchCode = employeeStateManager.branchCode;
+                          widget.employeePresence!.branchCode = branchCode;
                         });
                         await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
@@ -341,9 +340,11 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           fontSize: 12.0,
                         );
                       } else {
+                        final prefs = await SharedPreferences.getInstance();
+                        String branchCode = prefs.getString('branchCode').toString();
                         setState(() {
                           widget.employeePresence!.presentAtDinner = !widget.employeePresence!.presentAtDinner!;
-                          widget.employeePresence!.branchCode = employeeStateManager.branchCode;
+                          widget.employeePresence!.branchCode = branchCode;
                         });
                         await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
@@ -367,9 +368,11 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           fontSize: 12.0,
                         );
                       } else {
+                        final prefs = await SharedPreferences.getInstance();
+                        String branchCode = prefs.getString('branchCode').toString();
                         setState(() {
                           widget.employeePresence!.holiday = !widget.employeePresence!.holiday!;
-                          widget.employeePresence!.branchCode = employeeStateManager.branchCode;
+                          widget.employeePresence!.branchCode = branchCode;
                         });
                         await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
@@ -393,9 +396,12 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           fontSize: 12.0,
                         );
                       } else {
+                        final prefs = await SharedPreferences.getInstance();
+                        String branchCode = prefs.getString('branchCode').toString();
+
                         setState(() {
                           widget.employeePresence!.illness = !widget.employeePresence!.illness!;
-                          widget.employeePresence!.branchCode = employeeStateManager.branchCode;
+                          widget.employeePresence!.branchCode = branchCode;
                         });
                         await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
@@ -419,9 +425,11 @@ class _EmployeePresenceWidgetState extends State<EmployeePresenceWidget> {
                           fontSize: 12.0,
                         );
                       } else {
+                        final prefs = await SharedPreferences.getInstance();
+                        String branchCode = prefs.getString('branchCode').toString();
                         setState(() {
                           widget.employeePresence!.rest = !widget.employeePresence!.rest!;
-                          widget.employeePresence!.branchCode = employeeStateManager.branchCode;
+                          widget.employeePresence!.branchCode = branchCode;
                         });
                         await employeeStateManager.restaurantControllerApi!.createReports([widget.employeePresence!]);
                       }
@@ -585,9 +593,11 @@ class _IncrementCounterDialogState extends State<IncrementCounterDialog> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  String branchCode = prefs.getString('branchCode').toString();
                   setState(() {
                     widget.employeePresence.workedHours = _counter;
-                    widget.employeePresence.branchCode = employeeStateManager.branchCode;
+                    widget.employeePresence.branchCode = branchCode;
                     widget.employeePresence.date = widget.chosedDate;
                   });
 
@@ -671,9 +681,11 @@ class _NoteDialogState extends State<NoteDialog> {
               ElevatedButton(
                 onPressed: () async {
                   // Update the employee presence with the input note
+                  final prefs = await SharedPreferences.getInstance();
+                  String branchCode = prefs.getString('branchCode').toString();
                   setState(() {
                     widget.employeePresence.note = _noteController.text;
-                    widget.employeePresence.branchCode = employeeStateManager.branchCode;
+                    widget.employeePresence.branchCode = branchCode;
                     widget.employeePresence.date = widget.chosedDate;
                   });
 

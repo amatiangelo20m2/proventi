@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.9:50980/restaurantservice*
+All URIs are relative to *http://192.168.1.9:23012/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -18,6 +18,7 @@ Method | HTTP request | Description
 [**insertHolidays**](FormControllerApi.md#insertholidays) | **PUT** /api/form/add/holidays/{formCode} | 
 [**resetDefaultConfigurationForm**](FormControllerApi.md#resetdefaultconfigurationform) | **DELETE** /api/form/resetconf/{formCode} | 
 [**retrieveAll**](FormControllerApi.md#retrieveall) | **GET** /api/form/retrieveall | 
+[**retrieveAllForms**](FormControllerApi.md#retrieveallforms) | **GET** /api/form/gettags/{timeRangeTagsId} | 
 [**retrieveByBranchCode**](FormControllerApi.md#retrievebybranchcode) | **GET** /api/form/retrievebybranchcode/{branchCode} | 
 [**retrieveByFormCode**](FormControllerApi.md#retrievebyformcode) | **GET** /api/form/retrievebyformcode/{formCode} | 
 [**switchOpeningStatus**](FormControllerApi.md#switchopeningstatus) | **PUT** /api/form/switchOpeningStatus/{formCode}/{dayOfWeek} | 
@@ -412,6 +413,47 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **retrieveAllForms**
+> List<String> retrieveAllForms(timeRangeTagsId)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = FormControllerApi();
+final timeRangeTagsId = timeRangeTagsId_example; // String | 
+
+try {
+    final result = api_instance.retrieveAllForms(timeRangeTagsId);
+    print(result);
+} catch (e) {
+    print('Exception when calling FormControllerApi->retrieveAllForms: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **timeRangeTagsId** | **String**|  | 
+
+### Return type
+
+**List<String>**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **retrieveByBranchCode**
 > List<FormDTO> retrieveByBranchCode(branchCode)
 
@@ -578,7 +620,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **updateOpeningHourConfByCode**
-> updateOpeningHourConfByCode(formCode, timeRangeCode, timeRange)
+> FormDTO updateOpeningHourConfByCode(formCode, timeRangeCode, timeRange)
 
 
 
@@ -589,10 +631,11 @@ import 'package:ventimetri_api_restaurant/api.dart';
 final api_instance = FormControllerApi();
 final formCode = formCode_example; // String | 
 final timeRangeCode = timeRangeCode_example; // String | 
-final timeRange = ; // TimeRange | 
+final timeRange = TimeRange(); // TimeRange | 
 
 try {
-    api_instance.updateOpeningHourConfByCode(formCode, timeRangeCode, timeRange);
+    final result = api_instance.updateOpeningHourConfByCode(formCode, timeRangeCode, timeRange);
+    print(result);
 } catch (e) {
     print('Exception when calling FormControllerApi->updateOpeningHourConfByCode: $e\n');
 }
@@ -604,11 +647,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **formCode** | **String**|  | 
  **timeRangeCode** | **String**|  | 
- **timeRange** | [**TimeRange**](.md)|  | 
+ **timeRange** | [**TimeRange**](TimeRange.md)|  | 
 
 ### Return type
 
-void (empty response body)
+[**FormDTO**](FormDTO.md)
 
 ### Authorization
 
@@ -616,8 +659,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Content-Type**: application/json
+ - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -77,6 +77,11 @@ void main() {
       // TODO
     });
 
+    //Future<VentiMetriQuadriData> retrieveBranches(String userCode, String branchType, { String fcmToken }) async
+    test('test retrieveBranches', () async {
+      // TODO
+    });
+
     //Future<VentiMetriQuadriData> retrieveData(String userCode, { String fcmToken }) async
     test('test retrieveData', () async {
       // TODO

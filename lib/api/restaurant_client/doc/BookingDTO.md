@@ -27,6 +27,7 @@ Name | Type | Description | Notes
 **timeSlotAfterUpdate** | [**TimeSlot**](TimeSlot.md) |  | [optional] 
 **noShow** | **bool** |  | [optional] 
 **privateNotes** | **String** |  | [optional] 
+**processedBy** | **String** |  | [optional] 
 **comingWithDogs** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

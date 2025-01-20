@@ -41,6 +41,11 @@ void main() {
       // TODO
     });
 
+    // String timeRangeTags
+    test('to test the property `timeRangeTags`', () async {
+      // TODO
+    });
+
 
   });
 

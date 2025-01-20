@@ -61,7 +61,7 @@ Color getStatusColor(BookingDTOStatusEnum statusEnum) {
     case BookingDTOStatusEnum.NON_ARRIVATO:
       return Colors.grey;
     case BookingDTOStatusEnum.LISTA_ATTESA:
-      return Colors.teal.shade300;
+      return Colors.pink;
     case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
       return Colors.deepOrange;
     case BookingDTOStatusEnum.ELIMINATO:

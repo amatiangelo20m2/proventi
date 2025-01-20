@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../global/date_methods_utility.dart';
 import '../../../../global/flag_picker.dart';
 import '../../../../state_manager/communication_state_manager.dart';
+import '../../../custom_widgets/whatsapp/chat_icon_whastapp.dart';
 import '../bookings_utils.dart';
 
 class ProcessedBookingCard extends StatelessWidget {
@@ -89,63 +90,49 @@ class ProcessedBookingCard extends StatelessWidget {
       onTap: (){
         _showBookingActionMenu(context, booking);
       },
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Card(
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          elevation: 1,
-          child:  Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ProfileImage(
-                      allowNavigation: true,
-                      customer: booking.customer!,
-                      branchCode: booking.branchCode!,
-                      avatarRadious: 30,
-                    ),
+      child: ListTile(
+        leading: ProfileImage(
+          allowNavigation: true,
+          customer: booking.customer!,
+          branchCode: booking.branchCode!,
+          avatarRadious: 25,
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: elegantBlue,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: elegantBlue,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                ),
+                Row(
+                  children: [
+                    buildComponentGuest(booking.numGuests.toString()),
+                    Text('🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[900]),),
+                  ],
+                ),
+              ],
+            ),
 
-                          Row(
-                            children: [
-                              buildComponentGuest(booking.numGuests.toString()),
-                              Text('  🕖${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
-                                style: TextStyle(color: Colors.grey[900]),),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ChatIconWhatsApp(
+                booking: booking,
               ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(getIconByStatus(booking.status!), style: const TextStyle(fontSize: 20)),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
+        trailing: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(getIconByStatus(booking.status!), style: const TextStyle(fontSize: 15)),
         ),
       ),
     );

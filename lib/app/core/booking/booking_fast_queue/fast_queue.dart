@@ -32,7 +32,7 @@ class _FastQueueState extends State<FastQueue> {
         // Filter and group bookings by date
         final Map<DateTime, List<BookingDTO>> groupedBookings = _groupBookingsByDate(
           restaurantStateManager.allBookings!
-              .where((booking) => booking.status == BookingDTOStatusEnum.LISTA_ATTESA
+              .where((booking) => (booking.status == BookingDTOStatusEnum.LISTA_ATTESA || booking.status == BookingDTOStatusEnum.AVVISATO_LISTA_ATTESA)
               && (booking.customer!.firstName!.toLowerCase().contains(queryString.toLowerCase().toString()) || booking.customer!.lastName!.toLowerCase().contains(queryString.toLowerCase().toString())))
               .toList(),
         );
@@ -77,7 +77,7 @@ class _FastQueueState extends State<FastQueue> {
             Positioned(right: 0, bottom: 0, child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: FloatingActionButton(
-                backgroundColor: globalGold,
+                backgroundColor: elegantBlue,
                 onPressed: () async {
                   await Provider.of<CustomerStateManager>(context, listen: false).refreshHistory();
                   showFormBottomSheet(context, BookingDTOStatusEnum.LISTA_ATTESA);

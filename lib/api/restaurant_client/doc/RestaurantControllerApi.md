@@ -5,12 +5,14 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.9:50980/restaurantservice*
+All URIs are relative to *http://192.168.1.9:23012/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**addClosingDateRange**](RestaurantControllerApi.md#addclosingdaterange) | **PUT** /api/restaurant/update/restaurantconf/{branchCode}/addclosingdaterange | 
 [**createEmployee**](RestaurantControllerApi.md#createemployee) | **POST** /api/restaurant/employee/create/{branchCode} | 
 [**createReports**](RestaurantControllerApi.md#createreports) | **POST** /api/restaurant/create/reports | 
+[**deleteClosingDateRange**](RestaurantControllerApi.md#deleteclosingdaterange) | **DELETE** /api/restaurant/update/restaurantconf/{branchCode}/closingDateRange/{dateTimeRangeCode} | 
 [**deleteEmployee**](RestaurantControllerApi.md#deleteemployee) | **DELETE** /api/restaurant/deleteemployee/{employeeId} | 
 [**deleteReport**](RestaurantControllerApi.md#deletereport) | **DELETE** /api/restaurant/report/{id} | 
 [**findFiredEmployeeByBranchCode**](RestaurantControllerApi.md#findfiredemployeebybranchcode) | **GET** /api/restaurant/getfiredemployeebybranchcode/{branchCode} | 
@@ -32,8 +34,52 @@ Method | HTTP request | Description
 [**updateCentralinoMessage**](RestaurantControllerApi.md#updatecentralinomessage) | **PUT** /api/restaurant/update/centralinomessage/{branchCode} | 
 [**updateConfiguration**](RestaurantControllerApi.md#updateconfiguration) | **PUT** /api/restaurant/restaurant/updateconfiguration | 
 [**updateEmployee**](RestaurantControllerApi.md#updateemployee) | **PUT** /api/restaurant/employee/update/{branchCode} | 
+[**updateGlobalTimeRangesTags**](RestaurantControllerApi.md#updateglobaltimerangestags) | **PUT** /api/restaurant/update/restauranttags/{branchCode} | 
 [**updateStandardMessage**](RestaurantControllerApi.md#updatestandardmessage) | **PUT** /api/restaurant/update/standardmessage/{branchCode} | 
 
+
+# **addClosingDateRange**
+> RestaurantDTO addClosingDateRange(branchCode, dateRange20m2)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final dateRange20m2 = DateRange20m2(); // DateRange20m2 | 
+
+try {
+    final result = api_instance.addClosingDateRange(branchCode, dateRange20m2);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->addClosingDateRange: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **dateRange20m2** | [**DateRange20m2**](DateRange20m2.md)|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **createEmployee**
 > EmployeeDTO createEmployee(branchCode, sendCredentials, employeeDTO)
@@ -117,6 +163,49 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **deleteClosingDateRange**
+> RestaurantDTO deleteClosingDateRange(branchCode, dateTimeRangeCode)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final dateTimeRangeCode = dateTimeRangeCode_example; // String | 
+
+try {
+    final result = api_instance.deleteClosingDateRange(branchCode, dateTimeRangeCode);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->deleteClosingDateRange: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **dateTimeRangeCode** | **String**|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -992,6 +1081,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**EmployeeDTO**](EmployeeDTO.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateGlobalTimeRangesTags**
+> RestaurantDTO updateGlobalTimeRangesTags(branchCode, requestBody)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = RestaurantControllerApi();
+final branchCode = branchCode_example; // String | 
+final requestBody = [List<String>()]; // List<String> | 
+
+try {
+    final result = api_instance.updateGlobalTimeRangesTags(branchCode, requestBody);
+    print(result);
+} catch (e) {
+    print('Exception when calling RestaurantControllerApi->updateGlobalTimeRangesTags: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **branchCode** | **String**|  | 
+ **requestBody** | [**List<String>**](String.md)|  | 
+
+### Return type
+
+[**RestaurantDTO**](RestaurantDTO.md)
 
 ### Authorization
 

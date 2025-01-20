@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://localhost:59493/ventimetriservice', this.authentication,});
+  ApiClient({this.basePath = 'http://192.168.1.9:8536/ventimetriservice', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;

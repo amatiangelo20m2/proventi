@@ -13,12 +13,14 @@ Name | Type | Description | Notes
 **daylyTimeWorkingRange** | [**TimeRange**](TimeRange.md) |  | [optional] 
 **nightTimeWorkingRange** | [**TimeRange**](TimeRange.md) |  | [optional] 
 **capacity** | **int** |  | [optional] 
+**closingDateRanges** | [**List<DateRange20m2>**](DateRange20m2.md) |  | [optional] [default to const []]
 **standardMessages** | [**List<StandardMessage>**](StandardMessage.md) |  | [optional] [default to const []]
 **afterBookingSchedulerMessages** | [**List<AfterBookingSchedulerMessage>**](AfterBookingSchedulerMessage.md) |  | [optional] [default to const []]
 **beforeBookingScheduledMessages** | [**List<BeforeBookingScheduledMessage>**](BeforeBookingScheduledMessage.md) |  | [optional] [default to const []]
 **centralinoMessages** | [**List<CentralinoMessage>**](CentralinoMessage.md) |  | [optional] [default to const []]
 **automaticApproveRefuseBookConf** | [**List<AutomaticApproveRefusedBookConf>**](AutomaticApproveRefusedBookConf.md) |  | [optional] [default to const []]
 **restaurantName** | **String** |  | [optional] 
+**globalTimeRangesTags** | **List<String>** |  | [optional] [default to const []]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

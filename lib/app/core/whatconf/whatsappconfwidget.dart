@@ -119,7 +119,7 @@ class _AnimatedBorderContainerState extends State<AnimatedBorderContainer> with 
               ]);
             }else{
               Fluttertoast.showToast(
-                  msg: "⚠️⚠️⚠️ATTENZIONE! Numero what's app risulta non collegato⚠️⚠️⚠️",
+                  msg: "⚠️️ATTENZIONE! Numero what's app risulta non collegato⚠️",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 2);

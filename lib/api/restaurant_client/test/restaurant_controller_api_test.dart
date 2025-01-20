@@ -17,6 +17,11 @@ void main() {
   // final instance = RestaurantControllerApi();
 
   group('tests for RestaurantControllerApi', () {
+    //Future<RestaurantDTO> addClosingDateRange(String branchCode, DateRange20m2 dateRange20m2) async
+    test('test addClosingDateRange', () async {
+      // TODO
+    });
+
     //Future<EmployeeDTO> createEmployee(String branchCode, bool sendCredentials, EmployeeDTO employeeDTO) async
     test('test createEmployee', () async {
       // TODO
@@ -24,6 +29,11 @@ void main() {
 
     //Future<List<EmployeePresenceReportDTO>> createReports(List<EmployeePresenceReportDTO> employeePresenceReportDTO) async
     test('test createReports', () async {
+      // TODO
+    });
+
+    //Future<RestaurantDTO> deleteClosingDateRange(String branchCode, String dateTimeRangeCode) async
+    test('test deleteClosingDateRange', () async {
       // TODO
     });
 
@@ -129,6 +139,11 @@ void main() {
 
     //Future<EmployeeDTO> updateEmployee(String branchCode, EmployeeDTO employeeDTO) async
     test('test updateEmployee', () async {
+      // TODO
+    });
+
+    //Future<RestaurantDTO> updateGlobalTimeRangesTags(String branchCode, List<String> requestBody) async
+    test('test updateGlobalTimeRangesTags', () async {
       // TODO
     });
 

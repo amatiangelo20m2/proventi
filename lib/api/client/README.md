@@ -55,7 +55,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:59493/ventimetriservice*
+All URIs are relative to *http://192.168.1.9:8536/ventimetriservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -71,6 +71,7 @@ Class | Method | HTTP request | Description
 *BranchControllerApi* | [**retrieveAll**](doc//BranchControllerApi.md#retrieveall) | **GET** /api/retrieveall | 
 *BranchControllerApi* | [**retrieveBranchByUserCodeAndBranchCode**](doc//BranchControllerApi.md#retrievebranchbyusercodeandbranchcode) | **GET** /api/retrievebranchbyusercodeandbranchcode | 
 *BranchControllerApi* | [**retrieveBranchCounters**](doc//BranchControllerApi.md#retrievebranchcounters) | **GET** /api/retrievebranchcounters/{branchCode} | 
+*BranchControllerApi* | [**retrieveBranches**](doc//BranchControllerApi.md#retrievebranches) | **GET** /api/retrievebranches | 
 *BranchControllerApi* | [**retrieveData**](doc//BranchControllerApi.md#retrievedata) | **GET** /api/retrievedata | 
 *BranchControllerApi* | [**save**](doc//BranchControllerApi.md#save) | **POST** /api/branch/save | 
 *BranchControllerApi* | [**setFcmToken**](doc//BranchControllerApi.md#setfcmtoken) | **POST** /api/setfmctoken | 

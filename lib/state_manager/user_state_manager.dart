@@ -45,7 +45,7 @@ class UserStateManager extends ChangeNotifier {
       );
 
       if (httpResult.statusCode == 200) {
-        final branchResponse = await _branchControllerApi.retrieveData(userCode, fcmToken: fcmToken);
+        final branchResponse = await _branchControllerApi.retrieveBranches(userCode, BranchResponseEntityTypeEnum.RISTORANTE.value, fcmToken: fcmToken);
         if (branchResponse != null) {
           _ventiMetriQuadriData = branchResponse;
           notifyListeners();
