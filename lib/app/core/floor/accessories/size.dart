@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 Size getTableSize(int partySize) {
-  if (partySize <= 4) {
+  if (partySize <= 2) {
     return const Size(70, 70);
   } else if (partySize <= 7) {
     return const Size(100, 70);

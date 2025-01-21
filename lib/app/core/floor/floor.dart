@@ -5,6 +5,7 @@ import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 import 'package:uuid/uuid.dart';
 import '../../../api/restaurant_client/lib/api.dart';
 import 'accessories/booking_widget.dart';
@@ -13,7 +14,10 @@ import 'accessories/grid_painter.dart';
 import 'accessories/size.dart';
 
 class Floor extends StatefulWidget {
-  const Floor({super.key, required this.bookingsIncoming, required this.currentSelectedDate});
+  const Floor(
+      {super.key,
+      required this.bookingsIncoming,
+      required this.currentSelectedDate});
 
   final List<BookingDTO> bookingsIncoming;
   final DateTime currentSelectedDate;
@@ -23,7 +27,6 @@ class Floor extends StatefulWidget {
 }
 
 class _FloorState extends State<Floor> {
-
   List<BookingDTO> bookings = [];
   double tableSize = 80.0;
 
@@ -43,7 +46,8 @@ class _FloorState extends State<Floor> {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               backgroundColor: Colors.white,
-              title: const Text('Crea nuovo tavolo', style: TextStyle(fontSize: 18)),
+              title: const Text('Crea nuovo tavolo',
+                  style: TextStyle(fontSize: 18)),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -57,9 +61,12 @@ class _FloorState extends State<Floor> {
                       value: selectedSize,
                       items: List.generate(18, (index) => index + 1)
                           .map((size) => DropdownMenuItem<int>(
-                        value: size,
-                        child: Text('Tavolo per $size', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                      ))
+                                value: size,
+                                child: Text('Tavolo per $size',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                              ))
                           .toList(),
                       onChanged: (value) {
                         if (value != null) {
@@ -85,7 +92,8 @@ class _FloorState extends State<Floor> {
                         builder: (BuildContext context) {
                           return CupertinoAlertDialog(
                             title: const Text('Errore'),
-                            content: const Text('Il nome del tavolo è obbligatorio.'),
+                            content: const Text(
+                                'Il nome del tavolo è obbligatorio.'),
                             actions: <Widget>[
                               CupertinoDialogAction(
                                 onPressed: () {
@@ -97,14 +105,16 @@ class _FloorState extends State<Floor> {
                           );
                         },
                       );
-
-                    } else if(floorStateManager.currentFloor.tables.any((t) => t.tableName!.toLowerCase() == nameController.text.toLowerCase())){
+                    } else if (floorStateManager.currentFloor.tables.any((t) =>
+                        t.tableName!.toLowerCase() ==
+                        nameController.text.toLowerCase())) {
                       showCupertinoDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return CupertinoAlertDialog(
                             title: const Text('Errore'),
-                            content: const Text('Esiste già un tavolo con questo nome.'),
+                            content: const Text(
+                                'Esiste già un tavolo con questo nome.'),
                             actions: <Widget>[
                               CupertinoDialogAction(
                                 onPressed: () {
@@ -116,7 +126,7 @@ class _FloorState extends State<Floor> {
                           );
                         },
                       );
-                    }else{
+                    } else {
                       Navigator.pop(context, selectedSize); // Confirm
                     }
                   },
@@ -140,39 +150,50 @@ class _FloorState extends State<Floor> {
       ));
     }
   }
-  void assignBookingToTable(FloorStateManagerProvider floorStateManager,
-      String tableCode,
-      String bookingCode) {
-    setState(() {
-      final table = floorStateManager.currentFloor.tables.firstWhere((t) => t.tableCode == tableCode);
-      table.tableBookingCalendarConf.add(TableBookingCalendar(bookingCode: bookingCode, date: DateTime.now()));
 
-      // Remove the booking from the available list
-      bookings.removeWhere((b) => b.bookingCode == bookingCode);
+  void assignBookingToTable(FloorStateManagerProvider floorStateManager,
+      String tableCode, String bookingCode) {
+    setState(() {
+      floorStateManager.assignBookingToTable(tableCode, bookingCode);
     });
   }
+
+  final _controller = SuperTooltipController();
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
     return Consumer<FloorStateManagerProvider>(
-      builder: (BuildContext context, FloorStateManagerProvider floorStateManager, Widget? child) {
+      builder: (BuildContext context,
+          FloorStateManagerProvider floorStateManager, Widget? child) {
+        final filteredBookings =
+            floorStateManager.getFilteredBookings(bookings);
+
         return Scaffold(
           drawer: FloorDrawer(),
           appBar: AppBar(
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(floorStateManager.currentFloor.floorName!, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey.shade900),),
-                Text(floorStateManager.currentFloor.floorDescription!, style: TextStyle(fontSize: 10, color: Colors.grey.shade700),),
+                Text(
+                  floorStateManager.currentFloor.floorName!,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade900),
+                ),
+                Text(
+                  floorStateManager.currentFloor.floorDescription!,
+                  style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
+                ),
               ],
             ),
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(1.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: globalGoldDark,
+                  color: blackDir,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(10.0),
                   ),
@@ -183,38 +204,114 @@ class _FloorState extends State<Floor> {
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
             actions: [
-              IconButton(onPressed: () async {
-                if(floorStateManager.isEdited){
-                  await floorStateManager.saveCurrentConfiguration();
-                  Fluttertoast.showToast(
-                    msg: "Configurazione salvata",
-                    toastLength: Toast.LENGTH_LONG,
-                    backgroundColor: blackDir,
-                    timeInSecForIosWeb: 2,
-                    fontSize: 14.0,
-                  );
-                }else{
-                  await floorStateManager.saveCurrentConfiguration();
-                  Fluttertoast.showToast(
-                    msg: "Nessuna modifica da salvare",
-                    toastLength: Toast.LENGTH_LONG,
-                    backgroundColor: Colors.grey,
-                    timeInSecForIosWeb: 2,
-                    fontSize: 14.0,
-                  );
-                }
-
-              }, icon: Icon(floorStateManager.isEdited ? CupertinoIcons.square_arrow_down_fill
-                  : CupertinoIcons.square_arrow_down, color: floorStateManager.isEdited ? globalGold :  Colors.grey, size: floorStateManager.isEdited ? 30 : 25,)),
               IconButton(
-                icon: const Icon(Icons.add, size: 30,),
-                onPressed: (){
-                  addTable(floorStateManager);
+                  onPressed: () async {
+                    if (floorStateManager.isEdited) {
+                      await floorStateManager.saveCurrentConfiguration();
+                      Fluttertoast.showToast(
+                        msg: "Configurazione salvata",
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: blackDir,
+                        timeInSecForIosWeb: 2,
+                        fontSize: 14.0,
+                      );
+                    } else {
+                      await floorStateManager.saveCurrentConfiguration();
+                      Fluttertoast.showToast(
+                        msg: "Nessuna modifica da salvare",
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.grey,
+                        timeInSecForIosWeb: 2,
+                        fontSize: 14.0,
+                      );
+                    }
                   },
+                  icon: Icon(
+                    floorStateManager.isEdited
+                        ? CupertinoIcons.square_arrow_down_fill
+                        : CupertinoIcons.square_arrow_down,
+                    color: floorStateManager.isEdited
+                        ? Colors.blueAccent
+                        : Colors.grey,
+                    size: floorStateManager.isEdited ? 30 : 25,
+                  )),
+              IconButton(
+                icon: const Icon(
+                  CupertinoIcons.settings,
+                  size: 27,
+                ),
+                onPressed: () {
+                  addTable(floorStateManager);
+                },
               ),
               IconButton(
-                icon: const Icon(Icons.clear, size: 30,),
-                onPressed: (){
+                icon: const Icon(
+                  Icons.add,
+                  size: 30,
+                ),
+                onPressed: () {
+                  addTable(floorStateManager);
+                },
+              ),
+              GestureDetector(
+                onTap: () async {
+                  await _controller.showTooltip();
+                },
+                child: SuperTooltip(
+                  showBarrier: true,
+                  controller: _controller,
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.circle, color: Colors.redAccent, size: 16),
+                          const SizedBox(width: 8),
+                          const Text('Tavolo occupato',
+                              style: TextStyle(fontSize: 14)),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.circle,
+                              color: Colors.green.shade600, size: 16),
+                          const SizedBox(width: 8),
+                          const Text('Tavolo libero',
+                              style: TextStyle(fontSize: 14)),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Prenotazioni da assegnare:',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('- Prenotazione 1',
+                              style: TextStyle(fontSize: 14)),
+                          Text('- Prenotazione 2',
+                              style: TextStyle(fontSize: 14)),
+                          Text('- Prenotazione 3',
+                              style: TextStyle(fontSize: 14)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    CupertinoIcons.info,
+                    size: 27,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.clear,
+                  size: 30,
+                ),
+                onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
@@ -239,14 +336,15 @@ class _FloorState extends State<Floor> {
                           feedback: TableWidget(
                             table: table,
                             isDragging: true,
-                            onToggleOrientation:
-                                () {}, // No toggling while dragging
+                            onToggleOrientation: () {},
+                            bookings: [],
                           ),
                           childWhenDragging: Opacity(
                             opacity: 0.2,
                             child: TableWidget(
                               table: table,
                               onToggleOrientation: () {},
+                              bookings: [],
                             ),
                           ),
                           onDragEnd: (details) {
@@ -262,24 +360,28 @@ class _FloorState extends State<Floor> {
                               double newY = (details.offset.dy - tableSize / 2)
                                   .clamp(0.0, maxY);
 
-                              table.offsetX =newX;
+                              table.offsetX = newX;
                               table.offsetY = newY;
                             });
                             floorStateManager.turnIsEdited();
                           },
                           child: DragTarget<String>(
-                            onAccept: (bookingCode){
-                                floorStateManager.turnIsEdited();
-                                assignBookingToTable(floorStateManager, table.tableCode!, bookingCode);
+                            onAcceptWithDetails: (bookingCode) {
+                              print('Booking code: $bookingCode');
+                              floorStateManager.turnIsEdited();
+
+                              assignBookingToTable(floorStateManager,
+                                  table.tableCode!, bookingCode.data!);
                             },
                             builder: (context, candidateData, rejectedData) {
                               return TableWidget(
                                 table: table,
                                 highlight: candidateData.isNotEmpty,
+                                bookings: widget.bookingsIncoming,
                                 onToggleOrientation: () {
                                   setState(() {
                                     table.orientation = table.orientation ==
-                                        TableConfDTOOrientationEnum.VERTICAL
+                                            TableConfDTOOrientationEnum.VERTICAL
                                         ? TableConfDTOOrientationEnum.HORIZONTAL
                                         : TableConfDTOOrientationEnum.VERTICAL;
                                   });
@@ -288,8 +390,7 @@ class _FloorState extends State<Floor> {
                               );
                             },
                           ),
-                        )
-                    );
+                        ));
                   }).toList(),
                 ),
               ),
@@ -301,12 +402,13 @@ class _FloorState extends State<Floor> {
                   color: Colors.transparent,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: bookings.length,
+                    itemCount: filteredBookings.length,
                     itemBuilder: (context, index) {
-                      final booking = bookings[index];
+                      final booking = filteredBookings[index];
                       return Draggable<String>(
                         data: booking.bookingCode,
-                        feedback: BookingWidget(booking: booking, isDragging: true),
+                        feedback:
+                            BookingWidget(booking: booking, isDragging: true),
                         child: BookingWidget(booking: booking),
                       );
                     },
@@ -326,12 +428,15 @@ class TableWidget extends StatefulWidget {
   final bool isDragging;
   final bool highlight;
   final VoidCallback onToggleOrientation;
+  final List<BookingDTO> bookings;
 
   const TableWidget({
+    super.key,
     required this.table,
     this.isDragging = false,
     this.highlight = false,
     required this.onToggleOrientation,
+    required this.bookings,
   });
 
   @override
@@ -344,7 +449,23 @@ class _TableWidgetState extends State<TableWidget> {
     Size tableSize = getTableSize(widget.table.partyNumber!);
 
     return Consumer<FloorStateManagerProvider>(
-      builder: (BuildContext context, FloorStateManagerProvider value, Widget? child) {
+      builder: (BuildContext context, FloorStateManagerProvider value,
+          Widget? child) {
+        BookingDTO bookingDTO = BookingDTO(
+            numGuests: 0,
+            customer: CustomerDTO(
+              firstName: '',
+              lastName: '',
+            ));
+        if (widget.table.tableBookingCalendarConf.isNotEmpty) {
+          widget.bookings
+              .where((element) =>
+                  element.bookingCode ==
+                  widget.table.tableBookingCalendarConf[0].bookingCode)
+              .forEach((element) {
+            bookingDTO = element;
+          });
+        }
         return GestureDetector(
           onDoubleTap: widget.onToggleOrientation,
           onTap: () {
@@ -355,32 +476,36 @@ class _TableWidgetState extends State<TableWidget> {
                   return CupertinoActionSheet(
                     title: const Text(
                       'Gestione Tavolo',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     message: Text(
                       'Vuoi rimuovere la prenotazione dal tavolo "${widget.table.tableBookingCalendarConf.length}"?',
                       style: const TextStyle(fontSize: 16),
                     ),
                     actions: [
-                      CupertinoActionSheetAction(
-                        onPressed: () {
-                          Navigator.pop(context); // Close the sheet
+                      ...widget.table.tableBookingCalendarConf.map((conf) {
+                        return CupertinoActionSheetAction(
+                          onPressed: () {
+                            Navigator.pop(context); // Close the sheet
 
-                          // Update local state
-                          setState(() {
-                            widget.table.tableCode = null;
-                          });
-                        },
-                        child: const Text(
-                          'Rimuovi Prenotazione',
-                          style: TextStyle(color: CupertinoColors.systemRed),
-                        ),
-                      ),
+                            // Remove reservation from table
+                            Provider.of<FloorStateManagerProvider>(context,
+                                    listen: false)
+                                .removeReservationFromTable(
+                                    widget.table.tableCode!, conf.bookingCode!);
+                          },
+                          child: Text(
+                            'Rimuovi Prenotazione ${conf.bookingCode}',
+                            style: const TextStyle(
+                                color: CupertinoColors.systemRed, fontSize: 15),
+                          ),
+                        );
+                      }).toList(),
                       CupertinoActionSheetAction(
                         onPressed: () {
                           value.deleteTable(widget.table.tableCode!);
                           Navigator.pop(context); // Close the sheet
-
                         },
                         child: const Text(
                           'Elimina Tavolo',
@@ -404,43 +529,82 @@ class _TableWidgetState extends State<TableWidget> {
             child: Column(
               children: [
                 badges.Badge(
-                  badgeStyle: badges.BadgeStyle(badgeColor: blackDir),
+                  badgeStyle: badges.BadgeStyle(
+                      badgeColor: bookingDTO.numGuests! > 0
+                          ? Colors.redAccent
+                          : Colors.green.shade600),
                   badgeContent: Text(
-                    widget.table.partyNumber.toString(),
-                    style: const TextStyle(fontSize: 8, color: CupertinoColors.white),
+                    bookingDTO.numGuests! > 0
+                        ? bookingDTO.numGuests.toString()
+                        : widget.table.partyNumber.toString(),
+                    style: const TextStyle(
+                        fontSize: 8, color: CupertinoColors.white),
                   ),
                   badgeAnimation: const badges.BadgeAnimation.slide(),
-                  child: Container(
-                    width: widget.table.orientation == TableConfDTOOrientationEnum.VERTICAL
-                        ? tableSize.width
-                        : tableSize.height,
-
-                    height: widget.table.orientation == TableConfDTOOrientationEnum.VERTICAL
-                        ? tableSize.height
-                        : tableSize.width,
-
-                    decoration: BoxDecoration(
-                      color: widget.highlight ? Colors.pink.withOpacity(0.5) : Colors.transparent,
-                      border: Border.all(color: globalGoldDark, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.table.tableCode != null
-                            ? 'Mattia\nLiuzzi'
-                            : '+',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: blackDir,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,),
+                  child: Card(
+                    elevation: bookingDTO.numGuests! > 0 ? 1 : 9,
+                    child: Container(
+                      width: widget.table.orientation ==
+                              TableConfDTOOrientationEnum.VERTICAL
+                          ? tableSize.width
+                          : tableSize.height,
+                      height: widget.table.orientation ==
+                              TableConfDTOOrientationEnum.VERTICAL
+                          ? tableSize.height
+                          : tableSize.width,
+                      decoration: BoxDecoration(
+                        color: widget.highlight
+                            ? globalGoldDark.withOpacity(0.5)
+                            : Colors.transparent,
+                        border:
+                            Border.all(color: Colors.grey.shade600, width: 1.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Builder(
+                        builder: (BuildContext context) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                widget.table.tableBookingCalendarConf.isNotEmpty
+                                    ? Column(
+                                        children: [
+                                          Text(
+                                            bookingDTO.customer!.firstName!,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: blackDir,
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            bookingDTO.customer!.lastName!,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: blackDir,
+                                              fontSize: 7,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    : IconButton(
+                                        onPressed: () {}, icon: Icon(Icons.add))
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
                 ),
                 Text(
                   widget.table.tableName!,
-                  style: const TextStyle(fontSize: 7, fontWeight: FontWeight.bold),
-                )
+                  style:
+                      const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),
@@ -449,7 +613,3 @@ class _TableWidgetState extends State<TableWidget> {
     );
   }
 }
-
-
-
-

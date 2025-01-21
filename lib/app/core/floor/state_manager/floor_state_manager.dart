@@ -11,8 +11,6 @@ class FloorStateManagerProvider extends ChangeNotifier {
 
   bool isEdited = false;
 
-  List<BookingDTO> bookings = [];
-
   FloorControllerApi get floorControllerApi => _floorControllerApi;
 
   FloorStateManagerProvider() {
@@ -23,11 +21,6 @@ class FloorStateManagerProvider extends ChangeNotifier {
     print('Initialize client with $customBasePathRestaurant. Each call will be redirected to this URL.');
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
     _floorControllerApi = FloorControllerApi(_restaurantClient);
-  }
-
-  setBookingList(List<BookingDTO> bookingList) {
-    bookings = bookingList;
-    notifyListeners();
   }
 
   turnIsEdited(){
@@ -88,5 +81,31 @@ class FloorStateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  void assignBookingToTable(String tableCode, String bookingCode) {
+    final table = currentFloor.tables.firstWhere((t) => t.tableCode == tableCode);
+    table.tableBookingCalendarConf = List.from(table.tableBookingCalendarConf)
+      ..add(TableBookingCalendar(bookingCode: bookingCode, date: DateTime.now()));
+
+    // Notify listeners about the change
+    notifyListeners();
+  }
+
+  List<BookingDTO> getFilteredBookings(List<BookingDTO> allBookings) {
+    final assignedBookingCodes = currentFloor.tables
+        .expand((table) => table.tableBookingCalendarConf)
+        .map((conf) => conf.bookingCode)
+        .toSet();
+
+    return allBookings.where((booking) => !assignedBookingCodes.contains(booking.bookingCode)).toList();
+  }
+
+  void removeReservationFromTable(String tableCode, String bookingCode) {
+    final table = currentFloor.tables.firstWhere((t) => t.tableCode == tableCode);
+    table.tableBookingCalendarConf = List<TableBookingCalendar>.from(
+        table.tableBookingCalendarConf.where((conf) => conf.bookingCode != bookingCode)
+    );
+    notifyListeners();
+  }
 
 }
