@@ -19,7 +19,6 @@ class FloorDTO {
     this.floorName,
     this.floorDescription,
     this.tables = const [],
-    this.floorCalendarConf = const [],
   });
 
   ///
@@ -62,9 +61,7 @@ class FloorDTO {
   ///
   String? floorDescription;
 
-  List<TableConf> tables;
-
-  List<FloorCalendar> floorCalendarConf;
+  List<TableConfDTO> tables;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is FloorDTO &&
@@ -73,8 +70,7 @@ class FloorDTO {
     other.branchCode == branchCode &&
     other.floorName == floorName &&
     other.floorDescription == floorDescription &&
-    _deepEquality.equals(other.tables, tables) &&
-    _deepEquality.equals(other.floorCalendarConf, floorCalendarConf);
+    _deepEquality.equals(other.tables, tables);
 
   @override
   int get hashCode =>
@@ -84,11 +80,10 @@ class FloorDTO {
     (branchCode == null ? 0 : branchCode!.hashCode) +
     (floorName == null ? 0 : floorName!.hashCode) +
     (floorDescription == null ? 0 : floorDescription!.hashCode) +
-    (tables.hashCode) +
-    (floorCalendarConf.hashCode);
+    (tables.hashCode);
 
   @override
-  String toString() => 'FloorDTO[floorId=$floorId, floorCode=$floorCode, branchCode=$branchCode, floorName=$floorName, floorDescription=$floorDescription, tables=$tables, floorCalendarConf=$floorCalendarConf]';
+  String toString() => 'FloorDTO[floorId=$floorId, floorCode=$floorCode, branchCode=$branchCode, floorName=$floorName, floorDescription=$floorDescription, tables=$tables]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -118,7 +113,6 @@ class FloorDTO {
       json[r'floorDescription'] = null;
     }
       json[r'tables'] = this.tables;
-      json[r'floorCalendarConf'] = this.floorCalendarConf;
     return json;
   }
 
@@ -146,8 +140,7 @@ class FloorDTO {
         branchCode: mapValueOfType<String>(json, r'branchCode'),
         floorName: mapValueOfType<String>(json, r'floorName'),
         floorDescription: mapValueOfType<String>(json, r'floorDescription'),
-        tables: TableConf.listFromJson(json[r'tables']),
-        floorCalendarConf: FloorCalendar.listFromJson(json[r'floorCalendarConf']),
+        tables: TableConfDTO.listFromJson(json[r'tables']),
       );
     }
     return null;

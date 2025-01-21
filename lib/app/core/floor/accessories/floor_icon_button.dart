@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
 import 'package:provider/provider.dart';
-import 'dialog_helper.dart';
+import 'package:uuid/uuid.dart';
 import '../floor.dart';
 
 class FloorIconButton extends StatefulWidget {
@@ -23,71 +23,129 @@ class FloorIconButton extends StatefulWidget {
 }
 
 class _FloorIconButtonState extends State<FloorIconButton> {
-  late Future<List<FloorDTO>?> _futureFloors;
 
   @override
   void initState() {
     super.initState();
-    _futureFloors = _fetchFloors();
   }
 
-  Future<List<FloorDTO>?> _fetchFloors() async {
-    final floorStateProvider = Provider.of<FloorStateManagerProvider>(context, listen: false);
-    final floors = await floorStateProvider.floorControllerApi.getFloorByBranchCodeAndDate(widget.branchCode);
-    floorStateProvider.setFloorList(floors!);
-    floorStateProvider.setBookingList(widget.bookingList);
-    return floors;
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<FloorDTO>?>(
-      future: _futureFloors,
-      builder: (BuildContext context, AsyncSnapshot<List<FloorDTO>?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CupertinoActivityIndicator();
-        } else if (snapshot.hasError) {
-          return IconButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Errore nel caricamento dei dati, riprova fra 2 minuti..'),
+    return Consumer<FloorStateManagerProvider>(
+      builder: (BuildContext context, FloorStateManagerProvider floorStateManager, Widget? child) {
+
+
+
+
+        return IconButton(
+          onPressed: () async {
+            await floorStateManager.loadData(widget.branchCode);
+            if(floorStateManager.floorList!.isNotEmpty){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Floor(
+                    bookingsIncoming: widget.bookingList,
+                    currentSelectedDate: widget.selectedDate,
+                  ),
                 ),
               );
-            },
-            icon: const Icon(Icons.error, color: Colors.red),
-          );
-        } else {
-          if (snapshot.data!.isEmpty) {
-            return IconButton(
-              onPressed: () {
-                DialogHelper.showAddFloorDialog(
-                  context,
-                  Provider.of<FloorStateManagerProvider>(context, listen: false),
-                  widget.branchCode,
-                  widget.bookingList,
-                  widget.selectedDate,
-                );
-              },
-              icon: const Icon(Icons.table_restaurant, color: Colors.blueGrey),
-            );
-          } else {
-            return IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Floor(
-                      bookingsIncoming: widget.bookingList,
-                    ),
-                  ),
-                );
-              },
+            } else {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  final _formKey = GlobalKey<FormState>();
+                  String name = '';
+                  String description = '';
 
-              icon: const Icon(Icons.table_restaurant, color: Colors.black),
-            );
-          }
-        }
+                  return AlertDialog(
+                    backgroundColor: Colors.white,
+                    title: const Text('Crea una nuova sala', style: TextStyle(fontSize: 12),),
+                    content: SingleChildScrollView(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            CupertinoTextField(
+                              placeholder: 'Name',
+                              onChanged: (value) {
+                                name = value;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            CupertinoTextField(
+                              placeholder: 'Description',
+                              onChanged: (value) {
+                                description = value;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Indietro'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          if (name.isNotEmpty) {
+
+                            await floorStateManager.createFloor(FloorDTO(
+                              floorName: name,
+                              branchCode: widget.branchCode,
+                              floorDescription: description,
+                              floorId: 0,
+                              floorCode: const Uuid().v4(),
+                            ));
+
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Floor(
+                                  bookingsIncoming: widget.bookingList,
+                                  currentSelectedDate: widget.selectedDate,
+                                ),
+                              ),
+                            );
+                          } else {
+                            showCupertinoDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoAlertDialog(
+                                  title: const Text('Errore'),
+                                  content: const Text('Il nome della sala è obbligatorio'),
+                                  actions: <Widget>[
+                                    CupertinoDialogAction(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: const Text('Crea'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+
+          },
+
+          icon: const Icon(Icons.table_restaurant, color: Colors.black),
+        );
       },
     );
   }

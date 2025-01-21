@@ -1,4 +1,4 @@
-# ventimetri_api_restaurant.model.TableConf
+# ventimetri_api_restaurant.model.TableBookingCalendar
 
 ## Load the model package
 ```dart
@@ -8,11 +8,8 @@ import 'package:ventimetri_api_restaurant/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**code** | **String** |  | [optional] 
-**partyNumber** | **int** |  | [optional] 
-**orientation** | **String** |  | [optional] 
-**offsetY** | **double** |  | [optional] 
-**offsetX** | **double** |  | [optional] 
+**date** | [**DateTime**](DateTime.md) |  | [optional] 
+**bookingCode** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -47,7 +47,6 @@ part 'model/date_range20m2.dart';
 part 'model/employee_dto.dart';
 part 'model/employee_presence_report_dto.dart';
 part 'model/employee_report_summary_dto.dart';
-part 'model/floor_calendar.dart';
 part 'model/floor_dto.dart';
 part 'model/form_dto.dart';
 part 'model/holidays_dto.dart';
@@ -57,7 +56,8 @@ part 'model/restaurant_dto.dart';
 part 'model/sending_campain_dto.dart';
 part 'model/special_day_dto.dart';
 part 'model/standard_message.dart';
-part 'model/table_conf.dart';
+part 'model/table_booking_calendar.dart';
+part 'model/table_conf_dto.dart';
 part 'model/time_range.dart';
 part 'model/time_slot.dart';
 

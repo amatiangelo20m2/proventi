@@ -11,13 +11,23 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 import 'package:test/test.dart';
 
-// tests for TableConf
+// tests for TableConfDTO
 void main() {
-  // final instance = TableConf();
+  // final instance = TableConfDTO();
 
-  group('test TableConf', () {
-    // String code
-    test('to test the property `code`', () async {
+  group('test TableConfDTO', () {
+    // int tableConfId
+    test('to test the property `tableConfId`', () async {
+      // TODO
+    });
+
+    // String tableCode
+    test('to test the property `tableCode`', () async {
+      // TODO
+    });
+
+    // String tableName
+    test('to test the property `tableName`', () async {
       // TODO
     });
 
@@ -38,6 +48,11 @@ void main() {
 
     // double offsetX
     test('to test the property `offsetX`', () async {
+      // TODO
+    });
+
+    // List<TableBookingCalendar> tableBookingCalendarConf (default value: const [])
+    test('to test the property `tableBookingCalendarConf`', () async {
       // TODO
     });
 

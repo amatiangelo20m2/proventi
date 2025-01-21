@@ -10,12 +10,11 @@
 
 part of openapi.api;
 
-class FloorCalendar {
-  /// Returns a new [FloorCalendar] instance.
-  FloorCalendar({
+class TableBookingCalendar {
+  /// Returns a new [TableBookingCalendar] instance.
+  TableBookingCalendar({
     this.date,
     this.bookingCode,
-    this.tableConfCode,
   });
 
   ///
@@ -34,29 +33,19 @@ class FloorCalendar {
   ///
   String? bookingCode;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? tableConfCode;
-
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FloorCalendar &&
+  bool operator ==(Object other) => identical(this, other) || other is TableBookingCalendar &&
     other.date == date &&
-    other.bookingCode == bookingCode &&
-    other.tableConfCode == tableConfCode;
+    other.bookingCode == bookingCode;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (date == null ? 0 : date!.hashCode) +
-    (bookingCode == null ? 0 : bookingCode!.hashCode) +
-    (tableConfCode == null ? 0 : tableConfCode!.hashCode);
+    (bookingCode == null ? 0 : bookingCode!.hashCode);
 
   @override
-  String toString() => 'FloorCalendar[date=$date, bookingCode=$bookingCode, tableConfCode=$tableConfCode]';
+  String toString() => 'TableBookingCalendar[date=$date, bookingCode=$bookingCode]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -70,18 +59,13 @@ class FloorCalendar {
     } else {
       json[r'bookingCode'] = null;
     }
-    if (this.tableConfCode != null) {
-      json[r'tableConfCode'] = this.tableConfCode;
-    } else {
-      json[r'tableConfCode'] = null;
-    }
     return json;
   }
 
-  /// Returns a new [FloorCalendar] instance and imports its values from
+  /// Returns a new [TableBookingCalendar] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static FloorCalendar? fromJson(dynamic value) {
+  static TableBookingCalendar? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -90,26 +74,25 @@ class FloorCalendar {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "FloorCalendar[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "FloorCalendar[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "TableBookingCalendar[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "TableBookingCalendar[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return FloorCalendar(
+      return TableBookingCalendar(
         date: mapDateTime(json, r'date', r''),
         bookingCode: mapValueOfType<String>(json, r'bookingCode'),
-        tableConfCode: mapValueOfType<String>(json, r'tableConfCode'),
       );
     }
     return null;
   }
 
-  static List<FloorCalendar> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <FloorCalendar>[];
+  static List<TableBookingCalendar> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <TableBookingCalendar>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = FloorCalendar.fromJson(row);
+        final value = TableBookingCalendar.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -118,12 +101,12 @@ class FloorCalendar {
     return result.toList(growable: growable);
   }
 
-  static Map<String, FloorCalendar> mapFromJson(dynamic json) {
-    final map = <String, FloorCalendar>{};
+  static Map<String, TableBookingCalendar> mapFromJson(dynamic json) {
+    final map = <String, TableBookingCalendar>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = FloorCalendar.fromJson(entry.value);
+        final value = TableBookingCalendar.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -132,14 +115,14 @@ class FloorCalendar {
     return map;
   }
 
-  // maps a json object with a list of FloorCalendar-objects as value to a dart map
-  static Map<String, List<FloorCalendar>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<FloorCalendar>>{};
+  // maps a json object with a list of TableBookingCalendar-objects as value to a dart map
+  static Map<String, List<TableBookingCalendar>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<TableBookingCalendar>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = FloorCalendar.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = TableBookingCalendar.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;

@@ -20,9 +20,9 @@ class EmployeePresenceReportDTO {
     this.workedHours,
     this.note,
     this.illness,
-    this.presentAtDinner,
-    this.holiday,
     this.presentAtLunch,
+    this.holiday,
+    this.presentAtDinner,
     this.rest,
   });
 
@@ -88,7 +88,7 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? presentAtDinner;
+  bool? presentAtLunch;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -104,7 +104,7 @@ class EmployeePresenceReportDTO {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? presentAtLunch;
+  bool? presentAtDinner;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -123,9 +123,9 @@ class EmployeePresenceReportDTO {
     other.workedHours == workedHours &&
     other.note == note &&
     other.illness == illness &&
-    other.presentAtDinner == presentAtDinner &&
-    other.holiday == holiday &&
     other.presentAtLunch == presentAtLunch &&
+    other.holiday == holiday &&
+    other.presentAtDinner == presentAtDinner &&
     other.rest == rest;
 
   @override
@@ -138,13 +138,13 @@ class EmployeePresenceReportDTO {
     (workedHours == null ? 0 : workedHours!.hashCode) +
     (note == null ? 0 : note!.hashCode) +
     (illness == null ? 0 : illness!.hashCode) +
-    (presentAtDinner == null ? 0 : presentAtDinner!.hashCode) +
-    (holiday == null ? 0 : holiday!.hashCode) +
     (presentAtLunch == null ? 0 : presentAtLunch!.hashCode) +
+    (holiday == null ? 0 : holiday!.hashCode) +
+    (presentAtDinner == null ? 0 : presentAtDinner!.hashCode) +
     (rest == null ? 0 : rest!.hashCode);
 
   @override
-  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, illness=$illness, presentAtDinner=$presentAtDinner, holiday=$holiday, presentAtLunch=$presentAtLunch, rest=$rest]';
+  String toString() => 'EmployeePresenceReportDTO[reportId=$reportId, branchCode=$branchCode, employee=$employee, date=$date, workedHours=$workedHours, note=$note, illness=$illness, presentAtLunch=$presentAtLunch, holiday=$holiday, presentAtDinner=$presentAtDinner, rest=$rest]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -183,20 +183,20 @@ class EmployeePresenceReportDTO {
     } else {
       json[r'illness'] = null;
     }
-    if (this.presentAtDinner != null) {
-      json[r'presentAtDinner'] = this.presentAtDinner;
+    if (this.presentAtLunch != null) {
+      json[r'presentAtLunch'] = this.presentAtLunch;
     } else {
-      json[r'presentAtDinner'] = null;
+      json[r'presentAtLunch'] = null;
     }
     if (this.holiday != null) {
       json[r'holiday'] = this.holiday;
     } else {
       json[r'holiday'] = null;
     }
-    if (this.presentAtLunch != null) {
-      json[r'presentAtLunch'] = this.presentAtLunch;
+    if (this.presentAtDinner != null) {
+      json[r'presentAtDinner'] = this.presentAtDinner;
     } else {
-      json[r'presentAtLunch'] = null;
+      json[r'presentAtDinner'] = null;
     }
     if (this.rest != null) {
       json[r'rest'] = this.rest;
@@ -232,9 +232,9 @@ class EmployeePresenceReportDTO {
         workedHours: mapValueOfType<int>(json, r'workedHours'),
         note: mapValueOfType<String>(json, r'note'),
         illness: mapValueOfType<bool>(json, r'illness'),
-        presentAtDinner: mapValueOfType<bool>(json, r'presentAtDinner'),
-        holiday: mapValueOfType<bool>(json, r'holiday'),
         presentAtLunch: mapValueOfType<bool>(json, r'presentAtLunch'),
+        holiday: mapValueOfType<bool>(json, r'holiday'),
+        presentAtDinner: mapValueOfType<bool>(json, r'presentAtDinner'),
         rest: mapValueOfType<bool>(json, r'rest'),
       );
     }

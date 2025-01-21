@@ -10,15 +10,17 @@
 
 part of openapi.api;
 
-class TableConf {
-  /// Returns a new [TableConf] instance.
-  TableConf({
-    this.name,
-    this.code,
+class TableConfDTO {
+  /// Returns a new [TableConfDTO] instance.
+  TableConfDTO({
+    this.tableConfId,
+    this.tableCode,
+    this.tableName,
     this.partyNumber,
     this.orientation,
     this.offsetY,
     this.offsetX,
+    this.tableBookingCalendarConf = const [],
   });
 
   ///
@@ -27,8 +29,23 @@ class TableConf {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? name;
-  String? code;
+  int? tableConfId;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? tableCode;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? tableName;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -38,7 +55,7 @@ class TableConf {
   ///
   int? partyNumber;
 
-  TableConfOrientationEnum? orientation;
+  TableConfDTOOrientationEnum? orientation;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -56,39 +73,50 @@ class TableConf {
   ///
   double? offsetX;
 
+  List<TableBookingCalendar> tableBookingCalendarConf;
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is TableConf &&
-    other.name == name &&
-    other.code == code &&
+  bool operator ==(Object other) => identical(this, other) || other is TableConfDTO &&
+    other.tableConfId == tableConfId &&
+    other.tableCode == tableCode &&
+    other.tableName == tableName &&
     other.partyNumber == partyNumber &&
     other.orientation == orientation &&
     other.offsetY == offsetY &&
-    other.offsetX == offsetX;
+    other.offsetX == offsetX &&
+    _deepEquality.equals(other.tableBookingCalendarConf, tableBookingCalendarConf);
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (name == null ? 0 : name!.hashCode) +
-    (code == null ? 0 : code!.hashCode) +
+    (tableConfId == null ? 0 : tableConfId!.hashCode) +
+    (tableCode == null ? 0 : tableCode!.hashCode) +
+    (tableName == null ? 0 : tableName!.hashCode) +
     (partyNumber == null ? 0 : partyNumber!.hashCode) +
     (orientation == null ? 0 : orientation!.hashCode) +
     (offsetY == null ? 0 : offsetY!.hashCode) +
-    (offsetX == null ? 0 : offsetX!.hashCode);
+    (offsetX == null ? 0 : offsetX!.hashCode) +
+    (tableBookingCalendarConf.hashCode);
 
   @override
-  String toString() => 'TableConf[code=$code, partyNumber=$partyNumber, orientation=$orientation, offsetY=$offsetY, offsetX=$offsetX]';
+  String toString() => 'TableConfDTO[tableConfId=$tableConfId, tableCode=$tableCode, tableName=$tableName, partyNumber=$partyNumber, orientation=$orientation, offsetY=$offsetY, offsetX=$offsetX, tableBookingCalendarConf=$tableBookingCalendarConf]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.code != null) {
-      json[r'code'] = this.code;
+    if (this.tableConfId != null) {
+      json[r'tableConfId'] = this.tableConfId;
     } else {
-      json[r'code'] = null;
+      json[r'tableConfId'] = null;
     }
-    if (this.name != null) {
-      json[r'name'] = this.name;
+    if (this.tableCode != null) {
+      json[r'tableCode'] = this.tableCode;
     } else {
-      json[r'name'] = null;
+      json[r'tableCode'] = null;
+    }
+    if (this.tableName != null) {
+      json[r'tableName'] = this.tableName;
+    } else {
+      json[r'tableName'] = null;
     }
     if (this.partyNumber != null) {
       json[r'partyNumber'] = this.partyNumber;
@@ -110,13 +138,14 @@ class TableConf {
     } else {
       json[r'offsetX'] = null;
     }
+      json[r'tableBookingCalendarConf'] = this.tableBookingCalendarConf;
     return json;
   }
 
-  /// Returns a new [TableConf] instance and imports its values from
+  /// Returns a new [TableConfDTO] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static TableConf? fromJson(dynamic value) {
+  static TableConfDTO? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -125,28 +154,31 @@ class TableConf {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "TableConf[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "TableConf[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "TableConfDTO[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "TableConfDTO[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return TableConf(
-        code: mapValueOfType<String>(json, r'code'),
+      return TableConfDTO(
+        tableConfId: mapValueOfType<int>(json, r'tableConfId'),
+        tableCode: mapValueOfType<String>(json, r'tableCode'),
+        tableName: mapValueOfType<String>(json, r'tableName'),
         partyNumber: mapValueOfType<int>(json, r'partyNumber'),
-        orientation: TableConfOrientationEnum.fromJson(json[r'orientation']),
+        orientation: TableConfDTOOrientationEnum.fromJson(json[r'orientation']),
         offsetY: mapValueOfType<double>(json, r'offsetY'),
         offsetX: mapValueOfType<double>(json, r'offsetX'),
+        tableBookingCalendarConf: TableBookingCalendar.listFromJson(json[r'tableBookingCalendarConf']),
       );
     }
     return null;
   }
 
-  static List<TableConf> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <TableConf>[];
+  static List<TableConfDTO> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <TableConfDTO>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = TableConf.fromJson(row);
+        final value = TableConfDTO.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -155,12 +187,12 @@ class TableConf {
     return result.toList(growable: growable);
   }
 
-  static Map<String, TableConf> mapFromJson(dynamic json) {
-    final map = <String, TableConf>{};
+  static Map<String, TableConfDTO> mapFromJson(dynamic json) {
+    final map = <String, TableConfDTO>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = TableConf.fromJson(entry.value);
+        final value = TableConfDTO.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -169,14 +201,14 @@ class TableConf {
     return map;
   }
 
-  // maps a json object with a list of TableConf-objects as value to a dart map
-  static Map<String, List<TableConf>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<TableConf>>{};
+  // maps a json object with a list of TableConfDTO-objects as value to a dart map
+  static Map<String, List<TableConfDTO>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<TableConfDTO>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = TableConf.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = TableConfDTO.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -188,9 +220,9 @@ class TableConf {
 }
 
 
-class TableConfOrientationEnum {
+class TableConfDTOOrientationEnum {
   /// Instantiate a new enum with the provided [value].
-  const TableConfOrientationEnum._(this.value);
+  const TableConfDTOOrientationEnum._(this.value);
 
   /// The underlying value of this enum member.
   final String value;
@@ -200,22 +232,22 @@ class TableConfOrientationEnum {
 
   String toJson() => value;
 
-  static const VERTICAL = TableConfOrientationEnum._(r'VERTICAL');
-  static const HORIZONTAL = TableConfOrientationEnum._(r'HORIZONTAL');
+  static const VERTICAL = TableConfDTOOrientationEnum._(r'VERTICAL');
+  static const HORIZONTAL = TableConfDTOOrientationEnum._(r'HORIZONTAL');
 
-  /// List of all possible values in this [enum][TableConfOrientationEnum].
-  static const values = <TableConfOrientationEnum>[
+  /// List of all possible values in this [enum][TableConfDTOOrientationEnum].
+  static const values = <TableConfDTOOrientationEnum>[
     VERTICAL,
     HORIZONTAL,
   ];
 
-  static TableConfOrientationEnum? fromJson(dynamic value) => TableConfOrientationEnumTypeTransformer().decode(value);
+  static TableConfDTOOrientationEnum? fromJson(dynamic value) => TableConfDTOOrientationEnumTypeTransformer().decode(value);
 
-  static List<TableConfOrientationEnum> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <TableConfOrientationEnum>[];
+  static List<TableConfDTOOrientationEnum> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <TableConfDTOOrientationEnum>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = TableConfOrientationEnum.fromJson(row);
+        final value = TableConfDTOOrientationEnum.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -225,16 +257,16 @@ class TableConfOrientationEnum {
   }
 }
 
-/// Transformation class that can [encode] an instance of [TableConfOrientationEnum] to String,
-/// and [decode] dynamic data back to [TableConfOrientationEnum].
-class TableConfOrientationEnumTypeTransformer {
-  factory TableConfOrientationEnumTypeTransformer() => _instance ??= const TableConfOrientationEnumTypeTransformer._();
+/// Transformation class that can [encode] an instance of [TableConfDTOOrientationEnum] to String,
+/// and [decode] dynamic data back to [TableConfDTOOrientationEnum].
+class TableConfDTOOrientationEnumTypeTransformer {
+  factory TableConfDTOOrientationEnumTypeTransformer() => _instance ??= const TableConfDTOOrientationEnumTypeTransformer._();
 
-  const TableConfOrientationEnumTypeTransformer._();
+  const TableConfDTOOrientationEnumTypeTransformer._();
 
-  String encode(TableConfOrientationEnum data) => data.value;
+  String encode(TableConfDTOOrientationEnum data) => data.value;
 
-  /// Decodes a [dynamic value][data] to a TableConfOrientationEnum.
+  /// Decodes a [dynamic value][data] to a TableConfDTOOrientationEnum.
   ///
   /// If [allowNull] is true and the [dynamic value][data] cannot be decoded successfully,
   /// then null is returned. However, if [allowNull] is false and the [dynamic value][data]
@@ -242,11 +274,11 @@ class TableConfOrientationEnumTypeTransformer {
   ///
   /// The [allowNull] is very handy when an API changes and a new enum value is added or removed,
   /// and users are still using an old app with the old code.
-  TableConfOrientationEnum? decode(dynamic data, {bool allowNull = true}) {
+  TableConfDTOOrientationEnum? decode(dynamic data, {bool allowNull = true}) {
     if (data != null) {
       switch (data) {
-        case r'VERTICAL': return TableConfOrientationEnum.VERTICAL;
-        case r'HORIZONTAL': return TableConfOrientationEnum.HORIZONTAL;
+        case r'VERTICAL': return TableConfDTOOrientationEnum.VERTICAL;
+        case r'HORIZONTAL': return TableConfDTOOrientationEnum.HORIZONTAL;
         default:
           if (!allowNull) {
             throw ArgumentError('Unknown enum value to decode: $data');
@@ -256,8 +288,8 @@ class TableConfOrientationEnumTypeTransformer {
     return null;
   }
 
-  /// Singleton [TableConfOrientationEnumTypeTransformer] instance.
-  static TableConfOrientationEnumTypeTransformer? _instance;
+  /// Singleton [TableConfDTOOrientationEnumTypeTransformer] instance.
+  static TableConfDTOOrientationEnumTypeTransformer? _instance;
 }
 
 

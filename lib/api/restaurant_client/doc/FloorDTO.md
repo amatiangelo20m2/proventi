@@ -13,8 +13,7 @@ Name | Type | Description | Notes
 **branchCode** | **String** |  | [optional] 
 **floorName** | **String** |  | [optional] 
 **floorDescription** | **String** |  | [optional] 
-**tables** | [**List<TableConf>**](TableConf.md) |  | [optional] [default to const []]
-**floorCalendarConf** | [**List<FloorCalendar>**](FloorCalendar.md) |  | [optional] [default to const []]
+**tables** | [**List<TableConfDTO>**](TableConfDTO.md) |  | [optional] [default to const []]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -11,11 +11,11 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 import 'package:test/test.dart';
 
-// tests for FloorCalendar
+// tests for TableBookingCalendar
 void main() {
-  // final instance = FloorCalendar();
+  // final instance = TableBookingCalendar();
 
-  group('test FloorCalendar', () {
+  group('test TableBookingCalendar', () {
     // DateTime date
     test('to test the property `date`', () async {
       // TODO
@@ -23,11 +23,6 @@ void main() {
 
     // String bookingCode
     test('to test the property `bookingCode`', () async {
-      // TODO
-    });
-
-    // String tableConfCode
-    test('to test the property `tableConfCode`', () async {
       // TODO
     });
 

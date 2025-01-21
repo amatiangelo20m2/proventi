@@ -18,6 +18,8 @@ doc/DateRange20m2.md
 doc/EmployeeDTO.md
 doc/EmployeePresenceReportDTO.md
 doc/EmployeeReportSummaryDTO.md
+doc/FloorControllerApi.md
+doc/FloorDTO.md
 doc/FormControllerApi.md
 doc/FormDTO.md
 doc/HolidaysDTO.md
@@ -28,6 +30,8 @@ doc/RestaurantDTO.md
 doc/SendingCampainDTO.md
 doc/SpecialDayDTO.md
 doc/StandardMessage.md
+doc/TableBookingCalendar.md
+doc/TableConfDTO.md
 doc/TimeRange.md
 doc/TimeSlot.md
 git_push.sh
@@ -35,6 +39,7 @@ lib/api.dart
 lib/api/booking_controller_api.dart
 lib/api/campain_controller_api.dart
 lib/api/customer_controller_api.dart
+lib/api/floor_controller_api.dart
 lib/api/form_controller_api.dart
 lib/api/restaurant_controller_api.dart
 lib/api_client.dart
@@ -57,6 +62,7 @@ lib/model/date_range20m2.dart
 lib/model/employee_dto.dart
 lib/model/employee_presence_report_dto.dart
 lib/model/employee_report_summary_dto.dart
+lib/model/floor_dto.dart
 lib/model/form_dto.dart
 lib/model/holidays_dto.dart
 lib/model/mobile_device_details.dart
@@ -65,6 +71,8 @@ lib/model/restaurant_dto.dart
 lib/model/sending_campain_dto.dart
 lib/model/special_day_dto.dart
 lib/model/standard_message.dart
+lib/model/table_booking_calendar.dart
+lib/model/table_conf_dto.dart
 lib/model/time_range.dart
 lib/model/time_slot.dart
 pubspec.yaml
@@ -83,6 +91,8 @@ test/date_range20m2_test.dart
 test/employee_dto_test.dart
 test/employee_presence_report_dto_test.dart
 test/employee_report_summary_dto_test.dart
+test/floor_controller_api_test.dart
+test/floor_dto_test.dart
 test/form_controller_api_test.dart
 test/form_dto_test.dart
 test/holidays_dto_test.dart
@@ -93,5 +103,7 @@ test/restaurant_dto_test.dart
 test/sending_campain_dto_test.dart
 test/special_day_dto_test.dart
 test/standard_message_test.dart
+test/table_booking_calendar_test.dart
+test/table_conf_dto_test.dart
 test/time_range_test.dart
 test/time_slot_test.dart

@@ -15,9 +15,9 @@ Name | Type | Description | Notes
 **workedHours** | **int** |  | [optional] 
 **note** | **String** |  | [optional] 
 **illness** | **bool** |  | [optional] 
-**presentAtDinner** | **bool** |  | [optional] 
-**holiday** | **bool** |  | [optional] 
 **presentAtLunch** | **bool** |  | [optional] 
+**holiday** | **bool** |  | [optional] 
+**presentAtDinner** | **bool** |  | [optional] 
 **rest** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

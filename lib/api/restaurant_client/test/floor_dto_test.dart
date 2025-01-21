@@ -41,13 +41,8 @@ void main() {
       // TODO
     });
 
-    // List<TableConf> tables (default value: const [])
+    // List<TableConfDTO> tables (default value: const [])
     test('to test the property `tables`', () async {
-      // TODO
-    });
-
-    // List<FloorCalendar> floorCalendarConf (default value: const [])
-    test('to test the property `floorCalendarConf`', () async {
       // TODO
     });
 

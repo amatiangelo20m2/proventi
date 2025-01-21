@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://192.168.1.9:33308/restaurantservice', this.authentication,});
+  ApiClient({this.basePath = 'http://192.168.1.9:12116/restaurantservice', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -206,8 +206,6 @@ class ApiClient {
           return EmployeePresenceReportDTO.fromJson(value);
         case 'EmployeeReportSummaryDTO':
           return EmployeeReportSummaryDTO.fromJson(value);
-        case 'FloorCalendar':
-          return FloorCalendar.fromJson(value);
         case 'FloorDTO':
           return FloorDTO.fromJson(value);
         case 'FormDTO':
@@ -226,8 +224,10 @@ class ApiClient {
           return SpecialDayDTO.fromJson(value);
         case 'StandardMessage':
           return StandardMessage.fromJson(value);
-        case 'TableConf':
-          return TableConf.fromJson(value);
+        case 'TableBookingCalendar':
+          return TableBookingCalendar.fromJson(value);
+        case 'TableConfDTO':
+          return TableConfDTO.fromJson(value);
         case 'TimeRange':
           return TimeRange.fromJson(value);
         case 'TimeSlot':

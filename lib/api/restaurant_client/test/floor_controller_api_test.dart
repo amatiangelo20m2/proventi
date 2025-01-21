@@ -17,18 +17,38 @@ void main() {
   // final instance = FloorControllerApi();
 
   group('tests for FloorControllerApi', () {
-    //Future<FloorDTO> createFloorConfiguration(String branchCode, FloorDTO floorDTO) async
+    //Future<TableConfDTO> addBookingCalendarToTable(String tableCode, TableBookingCalendar tableBookingCalendar) async
+    test('test addBookingCalendarToTable', () async {
+      // TODO
+    });
+
+    //Future<TableConfDTO> addTableToFloor(String branchCode, String floorCode, TableConfDTO tableConfDTO) async
+    test('test addTableToFloor', () async {
+      // TODO
+    });
+
+    //Future<FloorDTO> createFloorConfiguration(FloorDTO floorDTO) async
     test('test createFloorConfiguration', () async {
       // TODO
     });
 
-    //Future deleteConfiguration(String branchCode, String floorCode) async
-    test('test deleteConfiguration', () async {
+    //Future deleteFloorConfiguration(String branchCode, String floorCode) async
+    test('test deleteFloorConfiguration', () async {
       // TODO
     });
 
-    //Future<List<FloorDTO>> getFloorByBranchCodeAndDate(String branchCode) async
-    test('test getFloorByBranchCodeAndDate', () async {
+    //Future deleteTable(String floorCode, String tableCode) async
+    test('test deleteTable', () async {
+      // TODO
+    });
+
+    //Future<List<FloorDTO>> getFloorByBranchCode(String branchCode) async
+    test('test getFloorByBranchCode', () async {
+      // TODO
+    });
+
+    //Future removeBookingCalendarFromTable(String tableCode, String bookingCode) async
+    test('test removeBookingCalendarFromTable', () async {
       // TODO
     });
 

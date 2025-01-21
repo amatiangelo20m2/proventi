@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../environment_config.dart';
 
 class FloorStateManagerProvider extends ChangeNotifier {
@@ -8,8 +9,8 @@ class FloorStateManagerProvider extends ChangeNotifier {
   List<FloorDTO>? floorList = [];
   late FloorDTO currentFloor;
 
-  List<TableConf> tables = [];
-  List<FloorCalendar> floorCalendars = [];
+  bool isEdited = false;
+
   List<BookingDTO> bookings = [];
 
   FloorControllerApi get floorControllerApi => _floorControllerApi;
@@ -29,10 +30,21 @@ class FloorStateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  turnIsEdited(){
+    isEdited = true;
+    notifyListeners();
+  }
+
+  saveCurrentConfiguration() async {
+    isEdited = false;
+    currentFloor = await _floorControllerApi.updateFloorConfiguration(currentFloor.branchCode!, currentFloor).then((value) => value!);
+    notifyListeners();
+  }
+
   Future<void> loadData(String branchCode) async {
     try {
-      floorList = await _floorControllerApi.getFloorByBranchCodeAndDate(branchCode);
-      setCurrentFloor(floorList!.first!.floorCode!);
+      floorList = await _floorControllerApi.getFloorByBranchCode(branchCode);
+      setCurrentFloor(floorList!.first.floorCode!);
       notifyListeners();
     } catch (e) {
       print('Error loading data: $e');
@@ -40,8 +52,7 @@ class FloorStateManagerProvider extends ChangeNotifier {
   }
 
   Future<void> createFloor(FloorDTO floorDTO) async {
-    _floorControllerApi.createFloorConfiguration(floorDTO.branchCode!,
-        floorDTO).then((floorDTO){
+    _floorControllerApi.createFloorConfiguration(floorDTO).then((floorDTO){
       floorList!.add(floorDTO!);
       setCurrentFloor(floorDTO.floorCode!);
     });
@@ -53,29 +64,29 @@ class FloorStateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setFloorList(List<FloorDTO> floorList) {
-    this.floorList = floorList;
-    setCurrentFloor(floorList!.first.floorCode!);
-    tables = List.from(currentFloor.tables); // Create a new list from currentFloor.tables
+  addNewTable(TableConfDTO tableConf) async {
+    final prefs = await SharedPreferences.getInstance();
+    String branchCode = prefs.getString('branchCode').toString();
+
+    print('Adding table to floor ${currentFloor.tables.toString()}');
+
+    TableConfDTO? newTableConfDTO = await _floorControllerApi.addTableToFloor(
+      branchCode,
+      currentFloor.floorCode!,
+      tableConf,
+    );
+
+    if (newTableConfDTO != null) {
+      currentFloor.tables = List.from(currentFloor.tables)..add(newTableConfDTO);
+    }
     notifyListeners();
   }
 
-  void addNewTable(TableConf tableConf) {
-    print('Create table:' + tableConf.toString());
-    try {
-      tables.add(tableConf);
-    } catch (e) {
-      print('Error adding table: $e');
-    }
-
+  Future<void> deleteTable(String tableCode) async {
+    await _floorControllerApi.deleteTable(currentFloor.floorCode!, tableCode);
+    currentFloor.tables = currentFloor.tables.where((element) => element.tableCode != tableCode).toList();
     notifyListeners();
   }
 
-  void updateCoordinatesOfTable(String tableCode, double newX, double newY) {
 
-    var table = tables.firstWhere((element) => element.code == tableCode);
-    table.offsetX = newX;
-    table.offsetY = newY;
-    notifyListeners();
-    }
 }
