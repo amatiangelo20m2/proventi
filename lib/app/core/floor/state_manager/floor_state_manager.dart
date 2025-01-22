@@ -9,6 +9,26 @@ class FloorStateManagerProvider extends ChangeNotifier {
   List<FloorDTO>? floorList = [];
   late FloorDTO currentFloor;
 
+  int currentIndex = 0;
+
+  void selectPreviousFloor(FloorStateManagerProvider floorStateManager) {
+
+    if (currentIndex > 0) {
+      currentIndex--;
+      floorStateManager.setCurrentFloor(floorStateManager.floorList![currentIndex].floorCode!);
+    }
+    notifyListeners();
+  }
+
+  void selectNextFloor(FloorStateManagerProvider floorStateManager) {
+
+    if (currentIndex < floorStateManager.floorList!.length - 1) {
+      currentIndex++;
+      floorStateManager.setCurrentFloor(floorStateManager.floorList![currentIndex].floorCode!);
+    }
+    notifyListeners();
+  }
+
   bool isEdited = false;
 
   FloorControllerApi get floorControllerApi => _floorControllerApi;
@@ -49,7 +69,9 @@ class FloorStateManagerProvider extends ChangeNotifier {
   Future<void> createFloor(FloorDTO floorDTO) async {
     _floorControllerApi.createFloorConfiguration(floorDTO).then((floorDTO){
       floorList!.add(floorDTO!);
-      setCurrentFloor(floorDTO.floorCode!);
+      if(floorList!.length == 1){
+        setCurrentFloor(floorDTO.floorCode!);
+      }
     });
     notifyListeners();
   }
@@ -112,12 +134,33 @@ class FloorStateManagerProvider extends ChangeNotifier {
   }
 
   List<BookingDTO> getFilteredBookings(List<BookingDTO> allBookings) {
-    final assignedBookingCodes = currentFloor.tables
+    final assignedBookingCodes = floorList!
+        .expand((floor) => floor.tables)
         .expand((table) => table.tableBookingCalendarConf)
         .map((conf) => conf.bookingCode)
         .toSet();
 
-    return allBookings.where((booking) => !assignedBookingCodes.contains(booking.bookingCode)).toList();
+    final filteredBookings = allBookings.where((booking) => !assignedBookingCodes.contains(booking.bookingCode)).toList();
+
+    // Sort the filtered bookings by bookingStatus and then by TimeSlot
+    filteredBookings.sort((a, b) {
+      if (a.status == BookingDTOStatusEnum.CONFERMATO && b.status != BookingDTOStatusEnum.CONFERMATO) {
+        return -1;
+      } else if (a.status != BookingDTOStatusEnum.CONFERMATO && b.status == BookingDTOStatusEnum.CONFERMATO) {
+        return 1;
+      } else {
+        final timeSlotA = a.timeSlot!;
+        final timeSlotB = b.timeSlot!;
+        final hourComparison = timeSlotA.bookingHour!.compareTo(timeSlotB.bookingHour!);
+        if (hourComparison != 0) {
+          return hourComparison;
+        } else {
+          return timeSlotA.bookingMinutes!.compareTo(timeSlotB.bookingMinutes!);
+        }
+      }
+    });
+
+    return filteredBookings;
   }
 
   void removeReservationFromTable(String tableCode, String bookingCode) {

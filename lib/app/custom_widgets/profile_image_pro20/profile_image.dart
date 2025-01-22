@@ -19,6 +19,8 @@ class ProfileImage extends StatelessWidget {
     required this.allowNavigation,
     this.noShowBookings = 0,
     this.disableHero = false,
+    this.borderSize = 0,
+    this.borderColor = Colors.transparent,
   });
 
   final CustomerDTO customer;
@@ -27,6 +29,8 @@ class ProfileImage extends StatelessWidget {
   final bool allowNavigation;
   final num noShowBookings;
   final bool? disableHero;
+  final int borderSize;
+  final Color borderColor;
 
   static final Map<String, String?> _photoCache = {};
 
@@ -103,9 +107,9 @@ class ProfileImage extends StatelessWidget {
         radius: avatarRadious * 0.96,
         backgroundColor: Colors.white,
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               colors: [Colors.white, Colors.white],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -174,7 +178,12 @@ class ProfileImage extends StatelessWidget {
 
   Widget _buildAvatarContainer(Widget child) {
     return Container(
+
       decoration: BoxDecoration(
+        border: Border.all(
+          color: borderColor,
+          width: borderSize.toDouble(),
+        ),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(

@@ -52,24 +52,27 @@ getItalianMonthAbbreviation(monthNumber) {
 Color getStatusColor(BookingDTOStatusEnum statusEnum) {
   switch (statusEnum) {
     case BookingDTOStatusEnum.CONFERMATO:
-      return Colors.blueAccent;
+      return Colors.blueAccent.withAlpha(200);
     case BookingDTOStatusEnum.IN_ATTESA:
-      return elegantRed;
+      return elegantRed.withAlpha(200);
     case BookingDTOStatusEnum.RIFIUTATO:
-      return elegantRed;
+      return elegantRed.withAlpha(200);
     case BookingDTOStatusEnum.ARRIVATO:
-      return elegantGreen;
+      return elegantGreen.withAlpha(200);
     case BookingDTOStatusEnum.NON_ARRIVATO:
-      return Colors.grey;
+      return Colors.grey.withAlpha(200);
     case BookingDTOStatusEnum.LISTA_ATTESA:
-      return Colors.pink;
+      return Colors.pink.withAlpha(200);
     case BookingDTOStatusEnum.MODIFICATO_DA_UTENTE:
-      return Colors.deepOrange;
+      return Colors.deepOrange.withAlpha(200);
     case BookingDTOStatusEnum.ELIMINATO:
-      return elegantRed;
+      return elegantRed.withAlpha(200);
+    case BookingDTOStatusEnum.MODIFICA_CONFERMATA:
+      return globalGoldDark.withAlpha(200);
     default:
-      return CupertinoColors.systemGrey;
+      return CupertinoColors.systemGrey.withAlpha(200);
   }
+
 }
 
 String getIconByStatus(BookingDTOStatusEnum statusEnum) {
