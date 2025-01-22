@@ -25,7 +25,7 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
             borderRadius: BorderRadius.circular(5),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+\                color: Colors.blueAccent.withAlpha(150),
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
@@ -63,7 +63,7 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
             borderRadius: BorderRadius.circular(5),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.redAccent,
+                color: Colors.redAccent.withAlpha(180),
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(

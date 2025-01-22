@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +8,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_refused/booking_refused_archive.dart';
 import 'package:proventi/app/core/customer/customer_state_manager.dart';
 import 'package:proventi/app/core/floor/accessories/floor_icon_button.dart';
-import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
 import 'package:proventi/global/date_methods_utility.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
@@ -19,7 +17,6 @@ import 'package:vibration/vibration.dart';
 import '../../../../global/style.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../../custom_widgets/toggle_pro20/appinio_animated_toggle_tab.dart';
-import '../../floor/floor.dart';
 import 'automatic_book_manager/auto_booking_manager.dart';
 import 'confirmed_booking_card.dart';
 import 'confirmedcard_extra/filter_booking_type.dart';
@@ -233,7 +230,8 @@ class _BookingScreenState extends State<BookingScreen> {
                               icon: Icon(CupertinoIcons.calendar,
                                   color: blackDir),
                             ),
-                            FloorIconButton(branchCode: restaurantManager.restaurantConfiguration!.branchCode!, bookingList: restaurantManager.allBookings!
+                            FloorIconButton(branchCode: restaurantManager.restaurantConfiguration!.branchCode!,
+                                bookingList: restaurantManager.allBookings!
                                 .where((element) => isSameDay(element.bookingDate!, _selectedDate))
                                 .toList(), selectedDate: _selectedDate),
                           ],
