@@ -72,7 +72,6 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
       child: Consumer<ChatStateManager>(
         builder: (context, stateManager, child) {
           return Scaffold(
-            backgroundColor: Color(0xffECE5DD),
             appBar: AppBar(
               automaticallyImplyLeading: false,
               iconTheme: const IconThemeData(
@@ -99,33 +98,42 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
                 ],
               ),
             ),
-
-
-            body: stateManager.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : DashChat(
-              inputOptions: InputOptions(
-                  inputDecoration: defaultInputDecoration(
-                  hintText: 'Scrivi un messaggio...', // Override the hintText here
+            body: Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/whatsappback.jpg', // Replace with your image path
+                    fit: BoxFit.scaleDown,
+                    repeat: ImageRepeat.repeat,
+                  ),
                 ),
-              ),
-              messageListOptions: MessageListOptions(
+                stateManager.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : DashChat(
+                  inputOptions: InputOptions(
+                    inputDecoration: defaultInputDecoration(
 
+                      hintText: 'Scrivi un messaggio...', // Override the hintText here
+                    ),
+                  ),
+                  messageListOptions: MessageListOptions(
 
-                dateSeparatorFormat: DateFormat('EEEE dd MMMM yyyy HH:mm', 'it_IT'),
-              ),
-              messageOptions: MessageOptions(
-                currentUserContainerColor: Colors.green.withAlpha(200),
-                containerColor: Colors.white,
-                currentUserTextColor: Colors.white,
-                textColor: Colors.black,
-              ),
-              currentUser: ChatUser(id: chatStateManager.user1Id),
-              messages: stateManager.chatMessages.toList(),
-              onSend: (ChatMessage message) {
-                stateManager.sendNewMessage(message);
-              },
-            ),
+                    dateSeparatorFormat: DateFormat('EEEE dd MMMM yyyy HH:mm', 'it_IT'),
+                  ),
+                  messageOptions: MessageOptions(
+                    currentUserContainerColor: Colors.green.withAlpha(200),
+                    containerColor: blackDir,
+                    currentUserTextColor: Colors.white,
+                    textColor: Colors.white,
+                  ),
+                  currentUser: ChatUser(id: chatStateManager.user1Id),
+                  messages: stateManager.chatMessages.toList(),
+                  onSend: (ChatMessage message) {
+                    stateManager.sendNewMessage(message);
+                  },
+                ),
+              ],
+            )
           );
         },
       ),
