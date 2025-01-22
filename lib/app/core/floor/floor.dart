@@ -216,15 +216,7 @@ class _FloorState extends State<Floor> {
                         : Colors.grey,
                     size: floorStateManager.isEdited ? 30 : 25,
                   )),
-              IconButton(
-                icon: const Icon(
-                  CupertinoIcons.settings,
-                  size: 27,
-                ),
-                onPressed: () {
-                  addTable(floorStateManager);
-                },
-              ),
+
               IconButton(
                 icon: const Icon(
                   Icons.add,

@@ -73,53 +73,57 @@ class _FloorTableState extends State<FloorTable> {
                     ),
                     actions: [
                       ...matchedBookings.map((booking) {
-                        return CupertinoActionSheetAction(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            _showBookingActionMenuConfermato(
-                                context, booking);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8, right: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  children: [
-                                    ProfileImage(
-                                      branchCode: booking.branchCode!,
-                                      avatarRadious: 30,
-                                      customer: booking.customer!,
-                                      allowNavigation: false,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-
-                                          Text(
-                                            '${booking.customer!.firstName!} ${booking.customer!.firstName!}',
-                                            style: TextStyle(
-                                                color: blackDir, fontSize: 15),
-                                          ),
-                                          Text(
-                                            '${booking.numGuests} persone alle ${booking.timeSlot != null ? '${NumberFormat("00").format(booking.timeSlot!.bookingHour)}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes)}' : '🕓N/A'}',
-                                            style: TextStyle(
-                                                color: blackDir, fontSize: 12),
-                                          ),
-                                        ],
+                        return
+                          Material(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      ProfileImage(
+                                        branchCode: booking.branchCode!,
+                                        avatarRadious: 30,
+                                        customer: booking.customer!,
+                                        allowNavigation: false,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                ChatIconWhatsApp(booking: booking, iconSize: 60)
-                              ],
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+
+                                            Text(
+                                              '${booking.customer!.firstName!} ${booking.customer!.firstName!}',
+                                              style: TextStyle(
+                                                  color: blackDir, fontSize: 15),
+                                            ),
+                                            Text(
+                                              '${booking.numGuests} persone alle ${booking.timeSlot != null ? '${NumberFormat("00").format(booking.timeSlot!.bookingHour)}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes)}' : '🕓N/A'}',
+                                              style: TextStyle(
+                                                  color: blackDir, fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(onPressed: (){
+                                    Navigator.pop(context); // Close the sheet
+
+                                    // Remove reservation from table
+                                    Provider.of<FloorStateManagerProvider>(context,
+                                        listen: false)
+                                        .removeReservationFromTable(
+                                        widget.table.tableCode!, booking.bookingCode!);
+                                  }, icon: Icon(CupertinoIcons.delete))
+                                ],
+                              ),
                             ),
-                          ),
-                        );
+                          );
                       }).toList(),
                       CupertinoActionSheetAction(
                         onPressed: () {
@@ -397,145 +401,6 @@ class _FloorTableState extends State<FloorTable> {
         int distanceB = (b.numGuests! - partyNumber).abs();
         return distanceA.compareTo(distanceB);
       });
-  }
-
-  void _showBookingActionMenuConfermato(
-      BuildContext context, BookingDTO booking) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: [
-                  Text(
-                      'Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
-                  Text(booking.customer!.phone!),
-                  Text(booking.customer!.email!),
-                  Text('Stato:${booking.status!.value}'),
-                  Text('Data inserimento: ${DateFormat('dd-MM-yyyy HH:mm').format(booking.createdAt!)}'),
-                  Text('Processata da: ${booking.processedBy ?? 'N/A'}'),
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: IconButton(
-                  onPressed: () {}, icon: const Icon(CupertinoIcons.phone)),
-            ),
-          ],
-        ),
-        actions: [
-
-
-          CupertinoActionSheetAction(
-            onPressed: () async {
-              bool? isArrivedConfirmeed = await _showConfirmationDialog(context,
-                  'Segna ${booking.customer!.firstName!} come arrivato?', 'Si', 'No');
-
-              if(isArrivedConfirmeed!){
-                Provider.of<RestaurantStateManager>(context, listen: false)
-                    .updateBooking(BookingDTO(
-                    bookingCode: booking.bookingCode,
-                    status: BookingDTOStatusEnum.ARRIVATO), false);
-              }
-
-              Navigator.pop(context, null);
-            },
-            child: Text('Arrivato', style: TextStyle(color: blackDir),),
-          ),
-
-          CupertinoActionSheetAction(
-            onPressed: () async {
-              bool? isNotArrivedConfirmeed = await _showConfirmationDialog(context,
-                  'Segna ${booking.customer!.firstName!} come non arrivato?', 'Si', 'No');
-              if(isNotArrivedConfirmeed!){
-                Provider.of<RestaurantStateManager>(context, listen: false)
-                    .updateBooking(BookingDTO(
-                    bookingCode: booking.bookingCode,
-                    status: BookingDTOStatusEnum.NON_ARRIVATO), false);
-              }
-              Navigator.pop(context, null);
-            },
-            child: const Text('Non arrivato'),
-          ),
-
-          CupertinoActionSheetAction(
-            onPressed: () async {
-
-              Navigator.pop(context); // Close the sheet
-
-              // Remove reservation from table
-              Provider.of<FloorStateManagerProvider>(context,
-                  listen: false)
-                  .removeReservationFromTable(
-                  widget.table.tableCode!, booking.bookingCode!);
-            },
-            child: Text('Rimuovi dal tavolo', style: TextStyle(color: globalGoldDark),),
-          ),
-
-          CupertinoActionSheetAction(
-            onPressed: () async {
-              bool? deleteBooking = await _showConfirmationDialog(context,
-                  'Eliminare la prenotazione di ${booking.customer!.firstName!}?', 'Si', 'No');
-              if(deleteBooking!){
-                bool? result = await _showConfirmationDialog(context,
-                    'Invia messaggio ${booking.customer!.firstName!}?', 'Si', 'No');
-
-                Provider.of<RestaurantStateManager>(context, listen: false)
-                    .updateBooking(BookingDTO(
-                    bookingCode: booking.bookingCode,
-                    bookingId: booking.bookingId,
-                    status: BookingDTOStatusEnum.ELIMINATO), result!);
-                Navigator.pop(context, null);
-              }else{
-                Navigator.pop(context, null);
-              }
-            },
-            child: Text('Elimina',style: TextStyle(color: elegantRed),),
-          ),
-        ],
-
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          isDefaultAction: true,
-          child: const Text('Indietro'),
-        ),
-      ),
-    );
-  }
-
-  Future<bool?> _showConfirmationDialog(BuildContext context, String message,
-      String confirmText, String goBackText) async {
-    return await showCupertinoDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(
-            message,
-            style: const TextStyle(fontSize: 15),
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text(goBackText),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(confirmText),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
 }
