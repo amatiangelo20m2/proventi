@@ -8,11 +8,12 @@ import '../api/restaurant_client/lib/api.dart';
 import '../app/core/booking/crud_widget/create_booking_lista_attesa.dart';
 
 var globalGold = const Color(0xFFD4B26A);
-var globalGoldDark = const Color(0xFFae801f);
+var globalGoldDark = const Color(0xFFC76738);
 var elegantRed = const Color(0xFFD32F2F);
-var elegantGreen = const Color(0xFF4CAF50);
+var elegantGreen = const Color(0xFF60A757);
 var elegantBlue = const Color(0xFF001E28);
-var blackDir = const Color(0xFF010A0F);
+var blackDir = const Color(0xFF1E1F22);
+var purple = const Color(0xFFC77DBB);
 
 DateFormat italianDateFormat = DateFormat('EEEE d MMMM y', 'it_IT');
 

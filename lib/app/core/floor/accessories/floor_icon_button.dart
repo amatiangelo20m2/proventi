@@ -4,6 +4,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../global/style.dart';
 import '../floor.dart';
 
 class FloorIconButton extends StatefulWidget {
@@ -40,7 +41,7 @@ class _FloorIconButtonState extends State<FloorIconButton> {
 
         return IconButton(
           onPressed: () async {
-            await floorStateManager.loadData(widget.branchCode);
+            await floorStateManager.loadData(widget.branchCode, widget.selectedDate);
             if(floorStateManager.floorList!.isNotEmpty){
               Navigator.push(
                 context,
@@ -144,7 +145,7 @@ class _FloorIconButtonState extends State<FloorIconButton> {
 
           },
 
-          icon: const Icon(Icons.table_restaurant, color: Colors.black),
+          icon: Icon(Icons.table_restaurant, color: blackDir),
         );
       },
     );

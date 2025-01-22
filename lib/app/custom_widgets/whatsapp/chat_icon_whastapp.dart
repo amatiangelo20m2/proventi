@@ -13,9 +13,10 @@ import 'db/message_helper.dart';
 import 'db/model/message_model.dart';
 
 class ChatIconWhatsApp extends StatefulWidget {
-  const ChatIconWhatsApp({super.key, required this.booking});
+  const ChatIconWhatsApp({super.key, required this.booking, required this.iconSize});
 
   final BookingDTO booking;
+  final int iconSize;
   @override
   State<ChatIconWhatsApp> createState() => _ChatIconWhatsAppState();
 }
@@ -58,7 +59,7 @@ class _ChatIconWhatsAppState extends State<ChatIconWhatsApp> {
               } else if (snapshot.hasData && snapshot.data == true) {
                 return Stack(
                   children: [
-                    Lottie.asset('assets/lotties/whatsapp.json', width: 40),
+                    Lottie.asset('assets/lotties/whatsapp.json', width: widget.iconSize.toDouble()),
                     const Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red)),
                   ],
                 );

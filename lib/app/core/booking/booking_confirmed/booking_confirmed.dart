@@ -230,8 +230,8 @@ class _BookingScreenState extends State<BookingScreen> {
                               onPressed: () {
                                 _selectDate(context, _selectedDate, restaurantManager);
                               },
-                              icon: const Icon(CupertinoIcons.calendar,
-                                  color: Colors.blueGrey),
+                              icon: Icon(CupertinoIcons.calendar,
+                                  color: blackDir),
                             ),
                             FloorIconButton(branchCode: restaurantManager.restaurantConfiguration!.branchCode!, bookingList: restaurantManager.allBookings!
                                 .where((element) => isSameDay(element.bookingDate!, _selectedDate))
@@ -450,7 +450,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       children: [
 
                         FloatingActionButton(
-                          backgroundColor: elegantBlue,
+                          backgroundColor: blackDir,
                           child: const Icon(
                             CupertinoIcons.add,
                             size: 25,
@@ -481,8 +481,8 @@ class _BookingScreenState extends State<BookingScreen> {
 
   Card buildCurrentGuestSituation(RestaurantStateManager restaurantManager) {
     return Card(
-      surfaceTintColor: Colors.grey[900],
-      color: Colors.grey[900],
+      surfaceTintColor: blackDir,
+      color: blackDir,
       child: Padding(
                         padding: const EdgeInsets.only(right: 4, left: 4),
                         child: Padding(
@@ -704,7 +704,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 child: Icon(CupertinoIcons.infinite, size: 25,)
             )),
         badges.Badge(
-            badgeStyle: badges.BadgeStyle(badgeColor: globalGold),
+            badgeStyle: badges.BadgeStyle(badgeColor: globalGoldDark),
             badgeContent: Text(restaurantStateManager!
                 .retrieveTotalTablesNumberForDayAndActiveBookingsLunchTime(_selectedDate, restaurantStateManager.restaurantConfiguration!).toString(),
               style: const TextStyle(fontSize: 10, color: CupertinoColors.white),),

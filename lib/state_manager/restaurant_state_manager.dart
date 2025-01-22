@@ -19,7 +19,7 @@ class RestaurantStateManager extends ChangeNotifier {
 
 
   List<RestaurantDTO>? _restaurantConfigurations = [];
-  RestaurantDTO? _choosedRestaurantConfiguration;
+  RestaurantDTO? _choosedRestaurantConfiguration = RestaurantDTO(restaurantName: 'Loading..', branchCode: 'Loading..');
   List<BookingDTO>? _allBookings = [];
   List<FormDTO>? _currentBranchForms = [];
 

@@ -193,7 +193,7 @@ class BookingConfirmedCard extends StatelessWidget {
                     children: [
 
                       ChatIconWhatsApp(
-                        booking: booking,
+                        booking: booking, iconSize: 40
                       ),
 
                       Padding(

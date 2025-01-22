@@ -34,13 +34,15 @@ class FloorStateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadData(String branchCode) async {
+  Future<void> loadData(String branchCode, DateTime date) async {
     try {
-      floorList = await _floorControllerApi.getFloorByBranchCode(branchCode);
+      floorList = [];
+      floorList = await _floorControllerApi.getFloorByBranchCodeAndDate(branchCode, date);
       setCurrentFloor(floorList!.first.floorCode!);
       notifyListeners();
     } catch (e) {
       print('Error loading data: $e');
+      floorList = [];
     }
   }
 
@@ -82,10 +84,28 @@ class FloorStateManagerProvider extends ChangeNotifier {
   }
 
 
-  void assignBookingToTable(String tableCode, String bookingCode) {
+  void assignBookingToTable(String tableCode, String bookingCode, DateTime selectedDate, List<BookingDTO> allBookings) {
+    isEdited = true;
+
     final table = currentFloor.tables.firstWhere((t) => t.tableCode == tableCode);
     table.tableBookingCalendarConf = List.from(table.tableBookingCalendarConf)
-      ..add(TableBookingCalendar(bookingCode: bookingCode, date: DateTime.now()));
+      ..add(TableBookingCalendar(bookingCode: bookingCode, date: selectedDate));
+
+    // Sort the bookings by bookingHour and bookingMinutes
+    table.tableBookingCalendarConf.sort((a, b) {
+      final bookingA = allBookings.firstWhere((booking) => booking.bookingCode == a.bookingCode);
+      final bookingB = allBookings.firstWhere((booking) => booking.bookingCode == b.bookingCode);
+
+      final timeSlotA = bookingA.timeSlot!;
+      final timeSlotB = bookingB.timeSlot!;
+
+      final hourComparison = timeSlotA.bookingHour!.compareTo(timeSlotB.bookingHour!);
+      if (hourComparison != 0) {
+        return hourComparison;
+      } else {
+        return timeSlotA.bookingMinutes!.compareTo(timeSlotB.bookingMinutes!);
+      }
+    });
 
     // Notify listeners about the change
     notifyListeners();

@@ -89,7 +89,7 @@ class RefusedBookingCard extends StatelessWidget {
                 ],
               ),
 
-              ChatIconWhatsApp(booking: booking,),
+              ChatIconWhatsApp(booking: booking, iconSize: 40),
             ],
           ),
         ),

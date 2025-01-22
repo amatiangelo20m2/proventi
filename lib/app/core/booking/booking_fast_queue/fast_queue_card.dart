@@ -151,7 +151,7 @@ class _FastQueueCardState extends State<FastQueueCard> {
             ),
           if(widget.booking.status == BookingDTOStatusEnum.AVVISATO_LISTA_ATTESA)
             ChatIconWhatsApp(
-                booking: widget.booking
+                booking: widget.booking, iconSize: 40
             ),
           ],
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
-import 'package:badges/badges.dart' as badges;
+
 import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
@@ -10,8 +10,8 @@ import 'package:uuid/uuid.dart';
 import '../../../api/restaurant_client/lib/api.dart';
 import 'accessories/booking_widget.dart';
 import 'accessories/floor_drawer.dart';
+import 'accessories/floor_table.dart';
 import 'accessories/grid_painter.dart';
-import 'accessories/size.dart';
 
 class Floor extends StatefulWidget {
   const Floor(
@@ -59,7 +59,7 @@ class _FloorState extends State<Floor> {
                     ),
                     DropdownButton<int>(
                       value: selectedSize,
-                      items: List.generate(18, (index) => index + 1)
+                      items: List.generate(24, (index) => index + 1)
                           .map((size) => DropdownMenuItem<int>(
                                 value: size,
                                 child: Text('Tavolo per $size',
@@ -151,13 +151,6 @@ class _FloorState extends State<Floor> {
     }
   }
 
-  void assignBookingToTable(FloorStateManagerProvider floorStateManager,
-      String tableCode, String bookingCode) {
-    setState(() {
-      floorStateManager.assignBookingToTable(tableCode, bookingCode);
-    });
-  }
-
   final _controller = SuperTooltipController();
 
   @override
@@ -167,8 +160,7 @@ class _FloorState extends State<Floor> {
     return Consumer<FloorStateManagerProvider>(
       builder: (BuildContext context,
           FloorStateManagerProvider floorStateManager, Widget? child) {
-        final filteredBookings =
-            floorStateManager.getFilteredBookings(bookings);
+        final filteredBookings = floorStateManager.getFilteredBookings(bookings);
 
         return Scaffold(
           drawer: FloorDrawer(),
@@ -188,18 +180,6 @@ class _FloorState extends State<Floor> {
                   style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
                 ),
               ],
-            ),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: blackDir,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(10.0),
-                  ),
-                ),
-                height: 5.0,
-              ),
             ),
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
@@ -325,7 +305,8 @@ class _FloorState extends State<Floor> {
                 painter: GridPainter(gridSize: 15),
               ),
               Container(
-                color: Colors.transparent,
+
+
                 child: Stack(
                   children: floorStateManager.currentFloor.tables.map((table) {
                     return Positioned(
@@ -333,18 +314,20 @@ class _FloorState extends State<Floor> {
                         top: table.offsetY,
                         child: Draggable<TableConfDTO>(
                           data: table,
-                          feedback: TableWidget(
+                          feedback: FloorTable(
                             table: table,
                             isDragging: true,
                             onToggleOrientation: () {},
                             bookings: [],
+                            currentSelectedDate: widget.currentSelectedDate,
                           ),
                           childWhenDragging: Opacity(
                             opacity: 0.2,
-                            child: TableWidget(
+                            child: FloorTable(
                               table: table,
                               onToggleOrientation: () {},
                               bookings: [],
+                              currentSelectedDate: widget.currentSelectedDate,
                             ),
                           ),
                           onDragEnd: (details) {
@@ -367,14 +350,15 @@ class _FloorState extends State<Floor> {
                           },
                           child: DragTarget<String>(
                             onAcceptWithDetails: (bookingCode) {
-                              print('Booking code: $bookingCode');
-                              floorStateManager.turnIsEdited();
-
-                              assignBookingToTable(floorStateManager,
-                                  table.tableCode!, bookingCode.data!);
+                              floorStateManager
+                                  .assignBookingToTable(table.tableCode!,
+                                  bookingCode.data,
+                                  widget.currentSelectedDate,
+                                  widget.bookingsIncoming
+                              );
                             },
                             builder: (context, candidateData, rejectedData) {
-                              return TableWidget(
+                              return FloorTable(
                                 table: table,
                                 highlight: candidateData.isNotEmpty,
                                 bookings: widget.bookingsIncoming,
@@ -387,6 +371,7 @@ class _FloorState extends State<Floor> {
                                   });
                                   floorStateManager.turnIsEdited();
                                 },
+                                currentSelectedDate: widget.currentSelectedDate,
                               );
                             },
                           ),
@@ -416,197 +401,6 @@ class _FloorState extends State<Floor> {
                 ),
               ),
             ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class TableWidget extends StatefulWidget {
-  final TableConfDTO table;
-  final bool isDragging;
-  final bool highlight;
-  final VoidCallback onToggleOrientation;
-  final List<BookingDTO> bookings;
-
-  const TableWidget({
-    super.key,
-    required this.table,
-    this.isDragging = false,
-    this.highlight = false,
-    required this.onToggleOrientation,
-    required this.bookings,
-  });
-
-  @override
-  State<TableWidget> createState() => _TableWidgetState();
-}
-
-class _TableWidgetState extends State<TableWidget> {
-  @override
-  Widget build(BuildContext context) {
-    Size tableSize = getTableSize(widget.table.partyNumber!);
-
-    return Consumer<FloorStateManagerProvider>(
-      builder: (BuildContext context, FloorStateManagerProvider value,
-          Widget? child) {
-        BookingDTO bookingDTO = BookingDTO(
-            numGuests: 0,
-            customer: CustomerDTO(
-              firstName: '',
-              lastName: '',
-            ));
-        if (widget.table.tableBookingCalendarConf.isNotEmpty) {
-          widget.bookings
-              .where((element) =>
-                  element.bookingCode ==
-                  widget.table.tableBookingCalendarConf[0].bookingCode)
-              .forEach((element) {
-            bookingDTO = element;
-          });
-        }
-        return GestureDetector(
-          onDoubleTap: widget.onToggleOrientation,
-          onTap: () {
-            if (widget.table.tableCode != null) {
-              showCupertinoModalPopup(
-                context: context,
-                builder: (BuildContext context) {
-                  return CupertinoActionSheet(
-                    title: const Text(
-                      'Gestione Tavolo',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    message: Text(
-                      'Vuoi rimuovere la prenotazione dal tavolo "${widget.table.tableBookingCalendarConf.length}"?',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    actions: [
-                      ...widget.table.tableBookingCalendarConf.map((conf) {
-                        return CupertinoActionSheetAction(
-                          onPressed: () {
-                            Navigator.pop(context); // Close the sheet
-
-                            // Remove reservation from table
-                            Provider.of<FloorStateManagerProvider>(context,
-                                    listen: false)
-                                .removeReservationFromTable(
-                                    widget.table.tableCode!, conf.bookingCode!);
-                          },
-                          child: Text(
-                            'Rimuovi Prenotazione ${conf.bookingCode}',
-                            style: const TextStyle(
-                                color: CupertinoColors.systemRed, fontSize: 15),
-                          ),
-                        );
-                      }).toList(),
-                      CupertinoActionSheetAction(
-                        onPressed: () {
-                          value.deleteTable(widget.table.tableCode!);
-                          Navigator.pop(context); // Close the sheet
-                        },
-                        child: const Text(
-                          'Elimina Tavolo',
-                          style: TextStyle(color: CupertinoColors.systemRed),
-                        ),
-                      ),
-                    ],
-                    cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.pop(context); // Close the sheet
-                      },
-                      child: const Text('Annulla'),
-                    ),
-                  );
-                },
-              );
-            }
-          },
-          child: Material(
-            color: Colors.transparent,
-            child: Column(
-              children: [
-                badges.Badge(
-                  badgeStyle: badges.BadgeStyle(
-                      badgeColor: bookingDTO.numGuests! > 0
-                          ? Colors.redAccent
-                          : Colors.green.shade600),
-                  badgeContent: Text(
-                    bookingDTO.numGuests! > 0
-                        ? bookingDTO.numGuests.toString()
-                        : widget.table.partyNumber.toString(),
-                    style: const TextStyle(
-                        fontSize: 8, color: CupertinoColors.white),
-                  ),
-                  badgeAnimation: const badges.BadgeAnimation.slide(),
-                  child: Card(
-                    elevation: bookingDTO.numGuests! > 0 ? 1 : 9,
-                    child: Container(
-                      width: widget.table.orientation ==
-                              TableConfDTOOrientationEnum.VERTICAL
-                          ? tableSize.width
-                          : tableSize.height,
-                      height: widget.table.orientation ==
-                              TableConfDTOOrientationEnum.VERTICAL
-                          ? tableSize.height
-                          : tableSize.width,
-                      decoration: BoxDecoration(
-                        color: widget.highlight
-                            ? globalGoldDark.withOpacity(0.5)
-                            : Colors.transparent,
-                        border:
-                            Border.all(color: Colors.grey.shade600, width: 1.5),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Builder(
-                        builder: (BuildContext context) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                widget.table.tableBookingCalendarConf.isNotEmpty
-                                    ? Column(
-                                        children: [
-                                          Text(
-                                            bookingDTO.customer!.firstName!,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: blackDir,
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            bookingDTO.customer!.lastName!,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: blackDir,
-                                              fontSize: 7,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : IconButton(
-                                        onPressed: () {}, icon: Icon(Icons.add))
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Text(
-                  widget.table.tableName!,
-                  style:
-                      const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
           ),
         );
       },

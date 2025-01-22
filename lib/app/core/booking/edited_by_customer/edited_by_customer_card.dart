@@ -54,7 +54,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
             _buildProfileImage(context),
             const SizedBox(width: 12),
             Expanded(child: _buildCustomerDetails(context)),
-            ChatIconWhatsApp(booking: booking),
+            ChatIconWhatsApp(booking: booking, iconSize: 40),
           ],
         ),
         const Divider(height: 20),

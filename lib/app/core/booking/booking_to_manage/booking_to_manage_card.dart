@@ -213,7 +213,7 @@ class BookingToManageCard extends StatelessWidget {
                               },
                             );
                           }, icon: const Icon(CupertinoIcons.settings_solid)),
-                          ChatIconWhatsApp(booking: booking,),
+                          ChatIconWhatsApp(booking: booking, iconSize: 40),
                         ],
                       ),
 
