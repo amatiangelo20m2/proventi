@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
-import 'package:proventi/app/custom_widgets/whatsapp/chat_icon_whastapp.dart';
 import 'package:provider/provider.dart';
 import '../../../../api/restaurant_client/lib/api.dart';
 import '../../../../global/style.dart';
-import '../../../../state_manager/restaurant_state_manager.dart';
 import '../state_manager/floor_state_manager.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -111,6 +109,7 @@ class _FloorTableState extends State<FloorTable> {
                                       ),
                                     ],
                                   ),
+
                                   IconButton(onPressed: (){
                                     Navigator.pop(context); // Close the sheet
 
@@ -119,7 +118,7 @@ class _FloorTableState extends State<FloorTable> {
                                         listen: false)
                                         .removeReservationFromTable(
                                         widget.table.tableCode!, booking.bookingCode!);
-                                  }, icon: Icon(CupertinoIcons.delete))
+                                  }, icon: Icon(CupertinoIcons.delete, color: elegantRed,))
                                 ],
                               ),
                             ),
@@ -178,7 +177,7 @@ class _FloorTableState extends State<FloorTable> {
                 badges.Badge(
                   badgeStyle: badges.BadgeStyle(
                       badgeColor: matchedBookings.isNotEmpty
-                          ? globalGoldDark
+                          ? elegantRed
                           : elegantGreen),
                   badgeContent: Text(
                     matchedBookings.isNotEmpty
@@ -236,7 +235,7 @@ class _FloorTableState extends State<FloorTable> {
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 12,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -290,10 +289,10 @@ class _FloorTableState extends State<FloorTable> {
 
                                                 Navigator.pop(context); // Close the sheet
                                                 floorStateManager.assignBookingToTable(
-                                                  widget.table.tableCode!,
-                                                  booking.bookingCode!,
-                                                  widget.currentSelectedDate,
-                                                  widget.bookings
+                                                    widget.table.tableCode!,
+                                                    booking.bookingCode!,
+                                                    widget.currentSelectedDate,
+                                                    widget.bookings
                                                 );
                                               },
                                               child: Material(
@@ -386,6 +385,14 @@ class _FloorTableState extends State<FloorTable> {
                   style: const TextStyle(
                       fontSize: 8, fontWeight: FontWeight.bold),
                 ),
+                if(widget.table.tableBookingCalendarConf.length > 1)
+                  Text(
+                    ' + ${widget.table.tableBookingCalendarConf.length - 1}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: blackDir,
+                    ),
+                  ),
               ],
             ),
           ),

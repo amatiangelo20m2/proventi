@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proventi/app/core/floor/accessories/update_floor_dialog.dart';
 import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
@@ -67,7 +68,14 @@ class FloorDrawer extends StatelessWidget {
                   ],
                 ),
                 trailing: IconButton(onPressed: (){
-
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return EditFloorDialog(
+                        floorDTO: floor,
+                      );
+                    },
+                  );
                 }, icon: const Icon(CupertinoIcons.settings, color: Colors.grey,),)
               );
             },

@@ -43,8 +43,9 @@ class DialogHelper {
                     floorCode: const Uuid().v4(),
                   );
                   await floorStateProvider.createFloor(newFloor);
-                  Navigator.of(context).pop();
+
                 }
+                Navigator.of(context).pop();
               },
               child: const Text('Save'),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../environment_config.dart';
+import 'package:http/http.dart';
 
 class FloorStateManagerProvider extends ChangeNotifier {
   late ApiClient _restaurantClient;
@@ -56,8 +57,9 @@ class FloorStateManagerProvider extends ChangeNotifier {
 
   Future<void> loadData(String branchCode, DateTime date) async {
     try {
+
       floorList = [];
-      floorList = await _floorControllerApi.getFloorByBranchCodeAndDate(branchCode, date);
+      floorList = (await _floorControllerApi.getFloorByBranchCodeAndDate(branchCode, date))!.toList(growable: true);
       setCurrentFloor(floorList!.first.floorCode!);
       notifyListeners();
     } catch (e) {
@@ -67,13 +69,20 @@ class FloorStateManagerProvider extends ChangeNotifier {
   }
 
   Future<void> createFloor(FloorDTO floorDTO) async {
-    _floorControllerApi.createFloorConfiguration(floorDTO).then((floorDTO){
-      floorList!.add(floorDTO!);
-      if(floorList!.length == 1){
+    print('Creating floor $floorDTO');
+    try{
+      FloorDTO? createdFloor = await _floorControllerApi.createFloorConfiguration(floorDTO);
+
+      print('Created floor: $createdFloor');
+      floorList!.add(createdFloor!);
+      if (floorList!.length == 1) {
         setCurrentFloor(floorDTO.floorCode!);
       }
-    });
-    notifyListeners();
+      notifyListeners();
+    }catch(e){
+      print('Error creating floor: $e');
+    }
+
   }
 
   setCurrentFloor(String floorCode){
@@ -168,6 +177,20 @@ class FloorStateManagerProvider extends ChangeNotifier {
     table.tableBookingCalendarConf = List<TableBookingCalendar>.from(
         table.tableBookingCalendarConf.where((conf) => conf.bookingCode != bookingCode)
     );
+    notifyListeners();
+  }
+
+  deleteFloor(String branchCode, String floorCode) async {
+    Response response = await _floorControllerApi.deleteFloorConfigurationWithHttpInfo(branchCode, floorCode);
+    if(response.statusCode == 204){
+      floorList = floorList!.where((element) => element.floorCode != floorCode).toList();
+    }
+    notifyListeners();
+  }
+
+  void updateFloor(FloorDTO floorDTO) {
+    final index = floorList!.indexWhere((element) => element.floorCode == floorDTO.floorCode);
+    floorList![index] = floorDTO;
     notifyListeners();
   }
 

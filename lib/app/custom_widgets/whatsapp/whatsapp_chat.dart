@@ -1,7 +1,9 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:proventi/app/custom_widgets/whatsapp/whatsapp_chat_state_manager.dart';
 import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
+import 'package:proventi/global/style.dart';
 import 'package:provider/provider.dart';
 
 import '../../../api/restaurant_client/lib/api.dart';
@@ -36,6 +38,7 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
 
 
         print(chatMessagesResponse);
+
         if (chatMessagesResponse != null) {
           return chatMessagesResponse.data
               .map((e) => ChatMessage(
@@ -75,7 +78,7 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
               iconTheme: const IconThemeData(
                 color: Colors.white
               ),
-              backgroundColor: Color(0xFF075E54),
+              backgroundColor: blackDir,
               actions: [Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(icon: Icon(Icons.clear, color: Colors.white,), onPressed: () {
@@ -101,8 +104,18 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
             body: stateManager.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : DashChat(
-              messageOptions: const MessageOptions(
-                currentUserContainerColor: Colors.lightGreen,
+              inputOptions: InputOptions(
+                  inputDecoration: defaultInputDecoration(
+                  hintText: 'Scrivi un messaggio...', // Override the hintText here
+                ),
+              ),
+              messageListOptions: MessageListOptions(
+
+
+                dateSeparatorFormat: DateFormat('EEEE dd MMMM yyyy HH:mm', 'it_IT'),
+              ),
+              messageOptions: MessageOptions(
+                currentUserContainerColor: Colors.green.withAlpha(200),
                 containerColor: Colors.white,
                 currentUserTextColor: Colors.white,
                 textColor: Colors.black,
