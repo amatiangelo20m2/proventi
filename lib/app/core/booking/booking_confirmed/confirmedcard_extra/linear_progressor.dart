@@ -5,12 +5,14 @@ import '../../../../../global/style.dart';
 import '../../../../../state_manager/restaurant_state_manager.dart';
 import 'filter_daily_type.dart';
 
-LinearProgressWidget(RestaurantStateManager? restaurantManager, DateTime day, FilterDailyType filterDailyType) {
+LinearProgressWidget(RestaurantStateManager? restaurantManager,
+    DateTime day,
+    FilterDailyType filterDailyType) {
 
-  if(restaurantManager == null){
+  if(restaurantManager!.restaurantConfiguration == null){
     return const SizedBox(height: 0,);
   }
-  if(restaurantManager!.restaurantConfiguration!.capacity! == 0){
+  if(restaurantManager.restaurantConfiguration!.capacity == null){
     return const SizedBox(height: 0,);
   }
   int pax = 0;

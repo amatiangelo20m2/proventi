@@ -1,0 +1,254 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.12
+
+// ignore_for_file: unused_element, unused_import
+// ignore_for_file: always_put_required_named_parameters_first
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: lines_longer_than_80_chars
+
+part of openapi.api;
+
+class RestaurantDTO {
+  /// Returns a new [RestaurantDTO] instance.
+  RestaurantDTO({
+    this.branchCode,
+    this.creationDate,
+    this.daylyTimeWorkingRange,
+    this.nightTimeWorkingRange,
+    this.capacity,
+    this.closingDateRanges = const [],
+    this.standardMessages = const [],
+    this.afterBookingSchedulerMessages = const [],
+    this.beforeBookingScheduledMessages = const [],
+    this.centralinoMessages = const [],
+    this.automaticApproveRefuseBookConf = const [],
+    this.restaurantName,
+    this.globalTimeRangesTags = const [],
+  });
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? branchCode;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  DateTime? creationDate;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  TimeRange? daylyTimeWorkingRange;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  TimeRange? nightTimeWorkingRange;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? capacity;
+
+  List<DateRange20m2> closingDateRanges;
+
+  List<StandardMessage> standardMessages;
+
+  List<AfterBookingSchedulerMessage> afterBookingSchedulerMessages;
+
+  List<BeforeBookingScheduledMessage> beforeBookingScheduledMessages;
+
+  List<CentralinoMessage> centralinoMessages;
+
+  List<AutomaticApproveRefusedBookConf> automaticApproveRefuseBookConf;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? restaurantName;
+
+  List<String> globalTimeRangesTags;
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is RestaurantDTO &&
+    other.branchCode == branchCode &&
+    other.creationDate == creationDate &&
+    other.daylyTimeWorkingRange == daylyTimeWorkingRange &&
+    other.nightTimeWorkingRange == nightTimeWorkingRange &&
+    other.capacity == capacity &&
+    _deepEquality.equals(other.closingDateRanges, closingDateRanges) &&
+    _deepEquality.equals(other.standardMessages, standardMessages) &&
+    _deepEquality.equals(other.afterBookingSchedulerMessages, afterBookingSchedulerMessages) &&
+    _deepEquality.equals(other.beforeBookingScheduledMessages, beforeBookingScheduledMessages) &&
+    _deepEquality.equals(other.centralinoMessages, centralinoMessages) &&
+    _deepEquality.equals(other.automaticApproveRefuseBookConf, automaticApproveRefuseBookConf) &&
+    other.restaurantName == restaurantName &&
+    _deepEquality.equals(other.globalTimeRangesTags, globalTimeRangesTags);
+
+  @override
+  int get hashCode =>
+    // ignore: unnecessary_parenthesis
+    (branchCode == null ? 0 : branchCode!.hashCode) +
+    (creationDate == null ? 0 : creationDate!.hashCode) +
+    (daylyTimeWorkingRange == null ? 0 : daylyTimeWorkingRange!.hashCode) +
+    (nightTimeWorkingRange == null ? 0 : nightTimeWorkingRange!.hashCode) +
+    (capacity == null ? 0 : capacity!.hashCode) +
+    (closingDateRanges.hashCode) +
+    (standardMessages.hashCode) +
+    (afterBookingSchedulerMessages.hashCode) +
+    (beforeBookingScheduledMessages.hashCode) +
+    (centralinoMessages.hashCode) +
+    (automaticApproveRefuseBookConf.hashCode) +
+    (restaurantName == null ? 0 : restaurantName!.hashCode) +
+    (globalTimeRangesTags.hashCode);
+
+  @override
+  String toString() => 'RestaurantDTO[branchCode=$branchCode, creationDate=$creationDate, daylyTimeWorkingRange=$daylyTimeWorkingRange, nightTimeWorkingRange=$nightTimeWorkingRange, capacity=$capacity, closingDateRanges=$closingDateRanges, standardMessages=$standardMessages, afterBookingSchedulerMessages=$afterBookingSchedulerMessages, beforeBookingScheduledMessages=$beforeBookingScheduledMessages, centralinoMessages=$centralinoMessages, automaticApproveRefuseBookConf=$automaticApproveRefuseBookConf, restaurantName=$restaurantName, globalTimeRangesTags=$globalTimeRangesTags]';
+
+  Map<String, dynamic> toJson() {
+    final json = <String, dynamic>{};
+    if (this.branchCode != null) {
+      json[r'branchCode'] = this.branchCode;
+    } else {
+      json[r'branchCode'] = null;
+    }
+    if (this.creationDate != null) {
+      json[r'creationDate'] = this.creationDate!.toUtc().toIso8601String();
+    } else {
+      json[r'creationDate'] = null;
+    }
+    if (this.daylyTimeWorkingRange != null) {
+      json[r'daylyTimeWorkingRange'] = this.daylyTimeWorkingRange;
+    } else {
+      json[r'daylyTimeWorkingRange'] = null;
+    }
+    if (this.nightTimeWorkingRange != null) {
+      json[r'nightTimeWorkingRange'] = this.nightTimeWorkingRange;
+    } else {
+      json[r'nightTimeWorkingRange'] = null;
+    }
+    if (this.capacity != null) {
+      json[r'capacity'] = this.capacity;
+    } else {
+      json[r'capacity'] = null;
+    }
+      json[r'closingDateRanges'] = this.closingDateRanges;
+      json[r'standardMessages'] = this.standardMessages;
+      json[r'afterBookingSchedulerMessages'] = this.afterBookingSchedulerMessages;
+      json[r'beforeBookingScheduledMessages'] = this.beforeBookingScheduledMessages;
+      json[r'centralinoMessages'] = this.centralinoMessages;
+      json[r'automaticApproveRefuseBookConf'] = this.automaticApproveRefuseBookConf;
+    if (this.restaurantName != null) {
+      json[r'restaurantName'] = this.restaurantName;
+    } else {
+      json[r'restaurantName'] = null;
+    }
+      json[r'globalTimeRangesTags'] = this.globalTimeRangesTags;
+    return json;
+  }
+
+  /// Returns a new [RestaurantDTO] instance and imports its values from
+  /// [value] if it's a [Map], null otherwise.
+  // ignore: prefer_constructors_over_static_methods
+  static RestaurantDTO? fromJson(dynamic value) {
+    if (value is Map) {
+      final json = value.cast<String, dynamic>();
+
+      // Ensure that the map contains the required keys.
+      // Note 1: the values aren't checked for validity beyond being non-null.
+      // Note 2: this code is stripped in release mode!
+      assert(() {
+        requiredKeys.forEach((key) {
+          assert(json.containsKey(key), 'Required key "RestaurantDTO[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "RestaurantDTO[$key]" has a null value in JSON.');
+        });
+        return true;
+      }());
+
+      return RestaurantDTO(
+        branchCode: mapValueOfType<String>(json, r'branchCode'),
+        creationDate: mapDateTime(json, r'creationDate', r''),
+        daylyTimeWorkingRange: TimeRange.fromJson(json[r'daylyTimeWorkingRange']),
+        nightTimeWorkingRange: TimeRange.fromJson(json[r'nightTimeWorkingRange']),
+        capacity: mapValueOfType<int>(json, r'capacity'),
+        closingDateRanges: DateRange20m2.listFromJson(json[r'closingDateRanges']),
+        standardMessages: StandardMessage.listFromJson(json[r'standardMessages']),
+        afterBookingSchedulerMessages: AfterBookingSchedulerMessage.listFromJson(json[r'afterBookingSchedulerMessages']),
+        beforeBookingScheduledMessages: BeforeBookingScheduledMessage.listFromJson(json[r'beforeBookingScheduledMessages']),
+        centralinoMessages: CentralinoMessage.listFromJson(json[r'centralinoMessages']),
+        automaticApproveRefuseBookConf: AutomaticApproveRefusedBookConf.listFromJson(json[r'automaticApproveRefuseBookConf']),
+        restaurantName: mapValueOfType<String>(json, r'restaurantName'),
+        globalTimeRangesTags: json[r'globalTimeRangesTags'] is Iterable
+            ? (json[r'globalTimeRangesTags'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
+      );
+    }
+    return null;
+  }
+
+  static List<RestaurantDTO> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <RestaurantDTO>[];
+    if (json is List && json.isNotEmpty) {
+      for (final row in json) {
+        final value = RestaurantDTO.fromJson(row);
+        if (value != null) {
+          result.add(value);
+        }
+      }
+    }
+    return result.toList(growable: growable);
+  }
+
+  static Map<String, RestaurantDTO> mapFromJson(dynamic json) {
+    final map = <String, RestaurantDTO>{};
+    if (json is Map && json.isNotEmpty) {
+      json = json.cast<String, dynamic>(); // ignore: parameter_assignments
+      for (final entry in json.entries) {
+        final value = RestaurantDTO.fromJson(entry.value);
+        if (value != null) {
+          map[entry.key] = value;
+        }
+      }
+    }
+    return map;
+  }
+
+  // maps a json object with a list of RestaurantDTO-objects as value to a dart map
+  static Map<String, List<RestaurantDTO>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<RestaurantDTO>>{};
+    if (json is Map && json.isNotEmpty) {
+      // ignore: parameter_assignments
+      json = json.cast<String, dynamic>();
+      for (final entry in json.entries) {
+        map[entry.key] = RestaurantDTO.listFromJson(entry.value, growable: growable,);
+      }
+    }
+    return map;
+  }
+
+  /// The list of required keys that must be present in a JSON.
+  static const requiredKeys = <String>{
+  };
+}
+
