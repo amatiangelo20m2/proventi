@@ -466,4 +466,54 @@ class FloorControllerApi {
     }
     return null;
   }
+
+  /// Performs an HTTP 'PUT /api/floor/updateTable/{tableCode}/{tableName}/{partyNumber}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] tableCode (required):
+  ///
+  /// * [String] tableName (required):
+  ///
+  /// * [int] partyNumber (required):
+  Future<Response> updateTableWithHttpInfo(String tableCode, String tableName, int partyNumber,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/floor/updateTable/{tableCode}/{tableName}/{partyNumber}'
+      .replaceAll('{tableCode}', tableCode)
+      .replaceAll('{tableName}', tableName)
+      .replaceAll('{partyNumber}', partyNumber.toString());
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] tableCode (required):
+  ///
+  /// * [String] tableName (required):
+  ///
+  /// * [int] partyNumber (required):
+  Future<void> updateTable(String tableCode, String tableName, int partyNumber,) async {
+    final response = await updateTableWithHttpInfo(tableCode, tableName, partyNumber,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+  }
 }

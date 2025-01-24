@@ -33,16 +33,19 @@ part 'api/campain_controller_api.dart';
 part 'api/customer_controller_api.dart';
 part 'api/floor_controller_api.dart';
 part 'api/form_controller_api.dart';
+part 'api/metrics_controller_api.dart';
 part 'api/restaurant_controller_api.dart';
 
 part 'model/after_booking_scheduler_message.dart';
 part 'model/automatic_approve_refused_book_conf.dart';
 part 'model/before_booking_scheduled_message.dart';
 part 'model/booking_dto.dart';
+part 'model/bookings_metrics.dart';
 part 'model/centralino_message.dart';
 part 'model/customer_campain_detail.dart';
 part 'model/customer_dto.dart';
 part 'model/customer_history_dto.dart';
+part 'model/customers_metrics.dart';
 part 'model/date_range20m2.dart';
 part 'model/employee_dto.dart';
 part 'model/employee_presence_report_dto.dart';
@@ -50,16 +53,20 @@ part 'model/employee_report_summary_dto.dart';
 part 'model/floor_dto.dart';
 part 'model/form_dto.dart';
 part 'model/holidays_dto.dart';
+part 'model/metric.dart';
 part 'model/mobile_device_details.dart';
 part 'model/opening_hours_dto.dart';
+part 'model/overview.dart';
 part 'model/restaurant_dto.dart';
 part 'model/sending_campain_dto.dart';
+part 'model/series.dart';
 part 'model/special_day_dto.dart';
 part 'model/standard_message.dart';
 part 'model/table_booking_calendar.dart';
 part 'model/table_conf_dto.dart';
 part 'model/time_range.dart';
 part 'model/time_slot.dart';
+part 'model/week_metrics.dart';
 
 
 /// An [ApiClient] instance that uses the default values obtained from

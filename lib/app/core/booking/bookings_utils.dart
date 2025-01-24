@@ -22,7 +22,7 @@ buildComponentGuest(String numGuests){
     padding: const EdgeInsets.only(left: 3, right: 13),
     child: Row(
       children: [
-        Icon(CupertinoIcons.person_2, color: blackDir, size : 20),
+        Icon(CupertinoIcons.person_2_fill, color: blackDir, size : 17),
         Text(
           ' $numGuests',
           style: globalStyle
@@ -36,7 +36,7 @@ buildComponentGuest(String numGuests){
 buildHourComponent(TimeSlot timeSlot){
  return Row(
    children: [
-     Icon(CupertinoIcons.clock, color: Colors.grey.shade700, size: 18,),
+     Icon(CupertinoIcons.clock_fill, color: blackDir, size: 16,),
      Text('${timeSlot.bookingHour!}:${NumberFormat("00").format(timeSlot.bookingMinutes!)}', style: globalStyle,),
    ],
  );

@@ -62,5 +62,10 @@ void main() {
       // TODO
     });
 
+    //Future updateTable(String tableCode, String tableName, int partyNumber) async
+    test('test updateTable', () async {
+      // TODO
+    });
+
   });
 }

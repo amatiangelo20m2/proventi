@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://192.168.1.9:31083/restaurantservice', this.authentication,});
+  ApiClient({this.basePath = 'http://192.168.1.9:12528/restaurantservice', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -190,6 +190,8 @@ class ApiClient {
           return BeforeBookingScheduledMessage.fromJson(value);
         case 'BookingDTO':
           return BookingDTO.fromJson(value);
+        case 'BookingsMetrics':
+          return BookingsMetrics.fromJson(value);
         case 'CentralinoMessage':
           return CentralinoMessage.fromJson(value);
         case 'CustomerCampainDetail':
@@ -198,6 +200,8 @@ class ApiClient {
           return CustomerDTO.fromJson(value);
         case 'CustomerHistoryDTO':
           return CustomerHistoryDTO.fromJson(value);
+        case 'CustomersMetrics':
+          return CustomersMetrics.fromJson(value);
         case 'DateRange20m2':
           return DateRange20m2.fromJson(value);
         case 'EmployeeDTO':
@@ -212,14 +216,20 @@ class ApiClient {
           return FormDTO.fromJson(value);
         case 'HolidaysDTO':
           return HolidaysDTO.fromJson(value);
+        case 'Metric':
+          return Metric.fromJson(value);
         case 'MobileDeviceDetails':
           return MobileDeviceDetails.fromJson(value);
         case 'OpeningHoursDTO':
           return OpeningHoursDTO.fromJson(value);
+        case 'Overview':
+          return Overview.fromJson(value);
         case 'RestaurantDTO':
           return RestaurantDTO.fromJson(value);
         case 'SendingCampainDTO':
           return SendingCampainDTO.fromJson(value);
+        case 'Series':
+          return Series.fromJson(value);
         case 'SpecialDayDTO':
           return SpecialDayDTO.fromJson(value);
         case 'StandardMessage':
@@ -232,6 +242,8 @@ class ApiClient {
           return TimeRange.fromJson(value);
         case 'TimeSlot':
           return TimeSlot.fromJson(value);
+        case 'WeekMetrics':
+          return WeekMetrics.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

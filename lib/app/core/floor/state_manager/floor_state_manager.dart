@@ -38,6 +38,20 @@ class FloorStateManagerProvider extends ChangeNotifier {
     _initializeClient();
   }
 
+  Map<BookingDTOStatusEnum, List<BookingDTO>> groupBookingsByStatus(List<BookingDTO> bookings) {
+    Map<BookingDTOStatusEnum, List<BookingDTO>> groupedBookings = {};
+
+    for (var booking in bookings) {
+      BookingDTOStatusEnum status = booking.status!;
+      if (!groupedBookings.containsKey(status)) {
+        groupedBookings[status] = [];
+      }
+      groupedBookings[status]!.add(booking);
+    }
+
+    return groupedBookings;
+  }
+
   Future<void> _initializeClient() async {
     print('Initialize client with $customBasePathRestaurant. Each call will be redirected to this URL.');
     _restaurantClient = ApiClient(basePath: customBasePathRestaurant);
@@ -191,6 +205,14 @@ class FloorStateManagerProvider extends ChangeNotifier {
   void updateFloor(FloorDTO floorDTO) {
     final index = floorList!.indexWhere((element) => element.floorCode == floorDTO.floorCode);
     floorList![index] = floorDTO;
+    notifyListeners();
+  }
+
+  void updateTableConf(String floorCode, String tableCode, String tableName, int partyNumber) {
+    final floorIndex = floorList!.indexWhere((element) => element.floorCode == floorCode);
+    final tableIndex = floorList![floorIndex].tables.indexWhere((element) => element.tableCode == tableCode);
+    floorList![floorIndex].tables[tableIndex].tableName = tableName;
+    floorList![floorIndex].tables[tableIndex].partyNumber = partyNumber;
     notifyListeners();
   }
 

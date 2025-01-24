@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:proventi/app/core/floor/accessories/update_table_floor_dialog.dart';
 import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:provider/provider.dart';
 import '../../../../api/restaurant_client/lib/api.dart';
@@ -11,6 +12,7 @@ import 'package:badges/badges.dart' as badges;
 import 'floor_design.dart';
 
 class FloorTable extends StatefulWidget {
+  final String floorCode;
   final TableConfDTO table;
   final bool isDragging;
   final bool highlight;
@@ -25,7 +27,7 @@ class FloorTable extends StatefulWidget {
     this.highlight = false,
     required this.onToggleOrientation,
     required this.bookings,
-    required this.currentSelectedDate,
+    required this.currentSelectedDate, required this.floorCode,
   });
 
   @override
@@ -62,12 +64,45 @@ class _FloorTableState extends State<FloorTable> {
                 context: context,
                 builder: (BuildContext context) {
                   return CupertinoActionSheet(
-                    title: Text(
-                      'Gestione ${widget.table.tableName!}',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade800),
+
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Gestione ${widget.table.tableName!}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade800),
+                            ),
+                            Text(
+                              'Tavolo x ${widget.table.partyNumber!}',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey.shade800),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return EditTableFloorDialog(
+                                  floorCode: widget.floorCode,
+                                  tableConfDTO: widget.table,
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(CupertinoIcons.settings, color: Colors.grey.shade800),
+                        ),
+                      ],
                     ),
                     actions: [
                       ...matchedBookings.map((booking) {
@@ -142,11 +177,11 @@ class _FloorTableState extends State<FloorTable> {
                                   CupertinoDialogAction(
                                     onPressed: () {
                                       floorStateManager.deleteTable(widget.table.tableCode!);
-                                      Navigator.of(context).pop(); // Close the dialog
-                                      Navigator.pop(context); // Close the sheet
+                                      Navigator.of(context).pop();
+                                      Navigator.pop(context);
                                     },
-                                    child: const Text('Elimina'),
                                     isDestructiveAction: true,
+                                    child: const Text('Elimina'),
                                   ),
                                 ],
                               );
@@ -189,7 +224,8 @@ class _FloorTableState extends State<FloorTable> {
                   badgeAnimation: const badges.BadgeAnimation.slide(),
                   child: Card(
                     color: matchedBookings.isNotEmpty
-                        ? blackDir
+
+                        ? blackDir.withAlpha(250)
                         : Colors.white,
                     elevation: 9,
                     child: Container(

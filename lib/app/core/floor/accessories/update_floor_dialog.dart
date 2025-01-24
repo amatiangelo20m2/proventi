@@ -40,7 +40,7 @@ class EditFloorDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   CupertinoTextField(
-                    placeholder: 'Description',
+                    placeholder: 'Descrizione',
                     controller: TextEditingController(text: description),
                     onChanged: (value) {
                       description = value;
@@ -147,7 +147,7 @@ class EditFloorDialog extends StatelessWidget {
                   );
                 }
               },
-              child: const Text('Delete'),
+              child: Text('Elimina', style: TextStyle(color: elegantRed),),
             ),
           ],
         );

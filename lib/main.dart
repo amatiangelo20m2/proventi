@@ -132,7 +132,7 @@ void showDialogPushNotification(BuildContext context, RemoteMessage message) {
     btnOk: Padding(
       padding: const EdgeInsets.all(18.0),
       child: CupertinoButton(
-        color: globalGold,
+        color: blackDir,
         borderRadius: BorderRadius.circular(8),
         onPressed: () async {
           Navigator.of(context).pushReplacement(

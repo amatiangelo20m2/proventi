@@ -5,7 +5,7 @@
 import 'package:ventimetri_api_restaurant/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.9:31083/restaurantservice*
+All URIs are relative to *http://192.168.1.9:12528/restaurantservice*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -18,6 +18,7 @@ Method | HTTP request | Description
 [**getFloorByBranchCodeAndDate**](FloorControllerApi.md#getfloorbybranchcodeanddate) | **GET** /api/floor/getfloorbybranchcodeanddate/{branchCode} | 
 [**removeBookingCalendarFromTable**](FloorControllerApi.md#removebookingcalendarfromtable) | **DELETE** /api/floor/remvovebookingcalendarfromtable/{tableCode}/{bookingCode} | 
 [**updateFloorConfiguration**](FloorControllerApi.md#updatefloorconfiguration) | **PUT** /api/floor/updatefloorconfiguration/{branchCode} | 
+[**updateTable**](FloorControllerApi.md#updatetable) | **PUT** /api/floor/updateTable/{tableCode}/{tableName}/{partyNumber} | 
 
 
 # **addBookingCalendarToTable**
@@ -399,6 +400,50 @@ No authorization required
 
  - **Content-Type**: application/json
  - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateTable**
+> updateTable(tableCode, tableName, partyNumber)
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_restaurant/api.dart';
+
+final api_instance = FloorControllerApi();
+final tableCode = tableCode_example; // String | 
+final tableName = tableName_example; // String | 
+final partyNumber = 56; // int | 
+
+try {
+    api_instance.updateTable(tableCode, tableName, partyNumber);
+} catch (e) {
+    print('Exception when calling FloorControllerApi->updateTable: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **tableCode** | **String**|  | 
+ **tableName** | **String**|  | 
+ **partyNumber** | **int**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

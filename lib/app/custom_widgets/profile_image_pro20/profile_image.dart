@@ -56,46 +56,50 @@ class ProfileImage extends StatelessWidget {
           );
         }
       },
-      child: Hero(
-        tag: customer.prefix! + customer.phone!,
-        child: Consumer<CommunicationStateManager>(
-          builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
-            // Generate the key for this customer
-            final String cacheKey = customer.prefix! + customer.phone!;
+      child: Material(
+        shape: CircleBorder(),
+        elevation: 5,
+        child: Hero(
+          tag: customer.prefix! + customer.phone!,
+          child: Consumer<CommunicationStateManager>(
+            builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
+              // Generate the key for this customer
+              final String cacheKey = customer.prefix! + customer.phone!;
 
-            // Check if the image URL is already cached
-            if (_photoCache.containsKey(cacheKey)) {
-              final cachedImageUrl = _photoCache[cacheKey];
-              if (cachedImageUrl == null) {
-                // Error case, show fallback image
-                return _buildFallbackAvatar();
-              } else {
-                // Cached image URL exists, display the image
-                return _buildCachedNetworkImage(cachedImageUrl);
-              }
-            }
-
-            // If not cached, fetch from the API
-            return FutureBuilder<String?>(
-              future: communicationStateManager.whatsAppConfigurationControllerApi
-                  .retrieveUserPhoto(
-                branchCode,
-                cacheKey,
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildShimmerAvatar();
-                } else if (snapshot.hasError) {
+              // Check if the image URL is already cached
+              if (_photoCache.containsKey(cacheKey)) {
+                final cachedImageUrl = _photoCache[cacheKey];
+                if (cachedImageUrl == null) {
+                  // Error case, show fallback image
                   return _buildFallbackAvatar();
-                } else if (snapshot.hasData) {
-                  _photoCache[cacheKey] = snapshot.data;
-                  return _buildCachedNetworkImage(snapshot.data!);
                 } else {
-                  return _buildFallbackAvatar();
+                  // Cached image URL exists, display the image
+                  return _buildCachedNetworkImage(cachedImageUrl);
                 }
-              },
-            );
-          },
+              }
+
+              // If not cached, fetch from the API
+              return FutureBuilder<String?>(
+                future: communicationStateManager.whatsAppConfigurationControllerApi
+                    .retrieveUserPhoto(
+                  branchCode,
+                  cacheKey,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return _buildShimmerAvatar();
+                  } else if (snapshot.hasError) {
+                    return _buildFallbackAvatar();
+                  } else if (snapshot.hasData) {
+                    _photoCache[cacheKey] = snapshot.data;
+                    return _buildCachedNetworkImage(snapshot.data!);
+                  } else {
+                    return _buildFallbackAvatar();
+                  }
+                },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -178,8 +182,8 @@ class ProfileImage extends StatelessWidget {
 
   Widget _buildAvatarContainer(Widget child) {
     return Container(
-
       decoration: BoxDecoration(
+        color: Colors.transparent,
         border: Border.all(
           color: borderColor,
           width: borderSize.toDouble(),

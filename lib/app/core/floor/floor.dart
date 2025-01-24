@@ -164,6 +164,7 @@ class _FloorState extends State<Floor> {
         final filteredBookings = floorStateManager.getFilteredBookings(bookings);
 
         return Scaffold(
+          backgroundColor: Colors.white,
           drawer: FloorDrawer(),
           appBar: AppBar(
             title: Column(
@@ -236,11 +237,11 @@ class _FloorState extends State<Floor> {
                   content: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           Icon(Icons.circle, color: Colors.redAccent, size: 16),
-                          const SizedBox(width: 8),
-                          const Text('Tavolo occupato',
+                          SizedBox(width: 8),
+                          Text('Tavolo occupato',
                               style: TextStyle(fontSize: 14)),
                         ],
                       ),
@@ -284,10 +285,63 @@ class _FloorState extends State<Floor> {
                   Icons.clear,
                   size: 30,
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  if (floorStateManager.isEdited) {
+                    bool? shouldSave = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Salvare le modifiche?'),
+                          content: const Text('Vuoi salvare le modifiche prima di uscire?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false); // Don't save
+                              },
+                              child: const Text('No'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true); // Save
+                              },
+                              child: const Text('Sì'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    if (shouldSave == true) {
+                      await floorStateManager.saveCurrentConfiguration();
+                      Fluttertoast.showToast(
+                        msg: "Configurazione salvata",
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: blackDir,
+                        timeInSecForIosWeb: 2,
+                        fontSize: 14.0,
+                      );
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: "Modifiche non salvate",
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.grey,
+                        timeInSecForIosWeb: 2,
+                        fontSize: 14.0,
+                      );
+                    }
+                  } else {
+                    await floorStateManager.saveCurrentConfiguration();
+                    Fluttertoast.showToast(
+                      msg: "Nessuna modifica da salvare",
+                      toastLength: Toast.LENGTH_LONG,
+                      backgroundColor: Colors.grey,
+                      timeInSecForIosWeb: 2,
+                      fontSize: 14.0,
+                    );
+                  }
                   Navigator.of(context).pop();
                 },
-              ),
+              )
             ],
           ),
           body: Stack(
@@ -308,8 +362,8 @@ class _FloorState extends State<Floor> {
                         child: Draggable<TableConfDTO>(
                           data: table,
                           feedback: FloorTable(
+                            floorCode: floorStateManager.currentFloor.floorCode!,
                             table: table,
-                            isDragging: true,
                             onToggleOrientation: () {},
                             bookings: [],
                             currentSelectedDate: widget.currentSelectedDate,
@@ -317,6 +371,7 @@ class _FloorState extends State<Floor> {
                           childWhenDragging: Opacity(
                             opacity: 0.2,
                             child: FloorTable(
+                              floorCode: floorStateManager.currentFloor.floorCode!,
                               table: table,
                               onToggleOrientation: () {},
                               bookings: [],
@@ -352,6 +407,7 @@ class _FloorState extends State<Floor> {
                             },
                             builder: (context, candidateData, rejectedData) {
                               return FloorTable(
+                                floorCode: floorStateManager.currentFloor.floorCode!,
                                 table: table,
                                 highlight: candidateData.isNotEmpty,
                                 bookings: widget.bookingsIncoming,
@@ -374,22 +430,60 @@ class _FloorState extends State<Floor> {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  width: 100,
-                  color: Colors.transparent,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: filteredBookings.length,
-                    itemBuilder: (context, index) {
-                      final booking = filteredBookings[index];
-                      return Draggable<String>(
-                        data: booking.bookingCode,
-                        feedback:
-                            BookingWidget(booking: booking, isDragging: true),
-                        child: BookingWidget(booking: booking),
-                      );
-                    },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    color: blackDir.withAlpha(250),
+                    elevation: 5,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      width: 110,
+                      color: Colors.transparent,
+                      child: Builder(
+                        builder: (BuildContext context) {
+
+                          return RawScrollbar(
+                            thumbColor: Colors.blueAccent,
+                            thumbVisibility: true,
+                            thickness: 4.0,
+                            radius: const Radius.circular(10),
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: floorStateManager.groupBookingsByStatus(filteredBookings).keys.length,
+                              itemBuilder: (context, index) {
+                                final status = floorStateManager.groupBookingsByStatus(filteredBookings).keys.elementAt(index);
+                                final bookings = floorStateManager.groupBookingsByStatus(filteredBookings)[status]!;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: Text(
+                                          status.value.replaceAll('_', ' '),
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: getStatusColor(status),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    ...bookings.map((booking) {
+                                      return Draggable<String>(
+                                        data: booking.bookingCode,
+                                        feedback: BookingWidget(booking: booking, isDragging: true),
+                                        child: BookingWidget(booking: booking, isDragging: false),
+                                      );
+                                    }).toList(),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),

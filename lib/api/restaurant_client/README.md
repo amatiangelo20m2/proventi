@@ -54,7 +54,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.9:31083/restaurantservice*
+All URIs are relative to *http://192.168.1.9:12528/restaurantservice*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -85,6 +85,7 @@ Class | Method | HTTP request | Description
 *FloorControllerApi* | [**getFloorByBranchCodeAndDate**](doc//FloorControllerApi.md#getfloorbybranchcodeanddate) | **GET** /api/floor/getfloorbybranchcodeanddate/{branchCode} | 
 *FloorControllerApi* | [**removeBookingCalendarFromTable**](doc//FloorControllerApi.md#removebookingcalendarfromtable) | **DELETE** /api/floor/remvovebookingcalendarfromtable/{tableCode}/{bookingCode} | 
 *FloorControllerApi* | [**updateFloorConfiguration**](doc//FloorControllerApi.md#updatefloorconfiguration) | **PUT** /api/floor/updatefloorconfiguration/{branchCode} | 
+*FloorControllerApi* | [**updateTable**](doc//FloorControllerApi.md#updatetable) | **PUT** /api/floor/updateTable/{tableCode}/{tableName}/{partyNumber} | 
 *FormControllerApi* | [**addDefaultTimeRangeForAllDays**](doc//FormControllerApi.md#adddefaulttimerangeforalldays) | **PUT** /api/form/create/defaulttimerange/{formCode} | 
 *FormControllerApi* | [**addSpecialDayConf**](doc//FormControllerApi.md#addspecialdayconf) | **PUT** /api/form/add/specialdayconf/{formCode} | 
 *FormControllerApi* | [**addTimeRange**](doc//FormControllerApi.md#addtimerange) | **PUT** /api/form/add/timerange/{formCode}/{dayOfWeek} | 
@@ -101,6 +102,8 @@ Class | Method | HTTP request | Description
 *FormControllerApi* | [**updateForm**](doc//FormControllerApi.md#updateform) | **PUT** /api/form/updateform | 
 *FormControllerApi* | [**updateOpeningHourConfByCode**](doc//FormControllerApi.md#updateopeninghourconfbycode) | **PUT** /api/form/update/openinghourconf/{formCode}/{timeRangeCode} | 
 *FormControllerApi* | [**updateTimeRange**](doc//FormControllerApi.md#updatetimerange) | **PUT** /api/form/update/timerange/{formCode} | 
+*MetricsControllerApi* | [**getBookingsMetricsLastTwoWeeks**](doc//MetricsControllerApi.md#getbookingsmetricslasttwoweeks) | **GET** /api/metrics/bookings/last-two-weeks/{branchCode} | 
+*MetricsControllerApi* | [**getCustomersMetricsByBranchCode**](doc//MetricsControllerApi.md#getcustomersmetricsbybranchcode) | **GET** /api/metrics/customers/{branchCode} | 
 *RestaurantControllerApi* | [**addClosingDateRange**](doc//RestaurantControllerApi.md#addclosingdaterange) | **PUT** /api/restaurant/update/restaurantconf/{branchCode}/addclosingdaterange | 
 *RestaurantControllerApi* | [**createEmployee**](doc//RestaurantControllerApi.md#createemployee) | **POST** /api/restaurant/employee/create/{branchCode} | 
 *RestaurantControllerApi* | [**createReports**](doc//RestaurantControllerApi.md#createreports) | **POST** /api/restaurant/create/reports | 
@@ -136,10 +139,12 @@ Class | Method | HTTP request | Description
  - [AutomaticApproveRefusedBookConf](doc//AutomaticApproveRefusedBookConf.md)
  - [BeforeBookingScheduledMessage](doc//BeforeBookingScheduledMessage.md)
  - [BookingDTO](doc//BookingDTO.md)
+ - [BookingsMetrics](doc//BookingsMetrics.md)
  - [CentralinoMessage](doc//CentralinoMessage.md)
  - [CustomerCampainDetail](doc//CustomerCampainDetail.md)
  - [CustomerDTO](doc//CustomerDTO.md)
  - [CustomerHistoryDTO](doc//CustomerHistoryDTO.md)
+ - [CustomersMetrics](doc//CustomersMetrics.md)
  - [DateRange20m2](doc//DateRange20m2.md)
  - [EmployeeDTO](doc//EmployeeDTO.md)
  - [EmployeePresenceReportDTO](doc//EmployeePresenceReportDTO.md)
@@ -147,16 +152,20 @@ Class | Method | HTTP request | Description
  - [FloorDTO](doc//FloorDTO.md)
  - [FormDTO](doc//FormDTO.md)
  - [HolidaysDTO](doc//HolidaysDTO.md)
+ - [Metric](doc//Metric.md)
  - [MobileDeviceDetails](doc//MobileDeviceDetails.md)
  - [OpeningHoursDTO](doc//OpeningHoursDTO.md)
+ - [Overview](doc//Overview.md)
  - [RestaurantDTO](doc//RestaurantDTO.md)
  - [SendingCampainDTO](doc//SendingCampainDTO.md)
+ - [Series](doc//Series.md)
  - [SpecialDayDTO](doc//SpecialDayDTO.md)
  - [StandardMessage](doc//StandardMessage.md)
  - [TableBookingCalendar](doc//TableBookingCalendar.md)
  - [TableConfDTO](doc//TableConfDTO.md)
  - [TimeRange](doc//TimeRange.md)
  - [TimeSlot](doc//TimeSlot.md)
+ - [WeekMetrics](doc//WeekMetrics.md)
 
 
 ## Documentation For Authorization

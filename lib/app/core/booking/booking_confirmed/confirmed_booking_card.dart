@@ -136,11 +136,13 @@ class BookingConfirmedCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '${booking.customer!.firstName!.toUpperCase()} ${booking.customer!.lastName!.toUpperCase()} ${getFlagByPrefix(booking.customer!.prefix!)}',
+                    '${booking.customer!.firstName!.toUpperCase()} '
+                        '${booking.customer!.lastName!.toUpperCase()} '
+                        '${getFlagByPrefix(booking.customer!.prefix!)}',
                     style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: elegantBlue,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: blackDir,
                     ),
                   ),
                   Consumer<CustomerStateManager>(
@@ -284,7 +286,7 @@ class BookingConfirmedCard extends StatelessWidget {
           ],
         ),
         actions: [
-          CupertinoActionSheetAction(
+          if(booking.bookingDate!.isBefore(DateTime.now())) CupertinoActionSheetAction(
             onPressed: () async {
               bool? isArrivedConfirmeed = await _showConfirmationDialog(context,
                   'Segna ${booking.customer!.firstName!} come arrivato?', 'Si', 'No');
@@ -300,7 +302,7 @@ class BookingConfirmedCard extends StatelessWidget {
             },
             child: const Text('Arrivato'),
           ),
-          CupertinoActionSheetAction(
+          if(booking.bookingDate!.isBefore(DateTime.now())) CupertinoActionSheetAction(
             onPressed: () async {
               bool? isNotArrivedConfirmeed = await _showConfirmationDialog(context,
                   'Segna ${booking.customer!.firstName!} come non arrivato?', 'Si', 'No');
@@ -327,12 +329,13 @@ class BookingConfirmedCard extends StatelessWidget {
                     bookingCode: booking.bookingCode,
                     bookingId: booking.bookingId,
                     status: BookingDTOStatusEnum.ELIMINATO), result!);
+
                 Navigator.pop(context, null);
               }else{
                 Navigator.pop(context, null);
               }
             },
-            child: const Text('Elimina'),
+            child: Text('Elimina', style: TextStyle(color: elegantRed)),
           ),
         ],
 
