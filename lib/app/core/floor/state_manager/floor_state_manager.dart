@@ -202,9 +202,12 @@ class FloorStateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateFloor(FloorDTO floorDTO) {
+  Future<void> updateFloor(FloorDTO floorDTO) async {
     final index = floorList!.indexWhere((element) => element.floorCode == floorDTO.floorCode);
     floorList![index] = floorDTO;
+    if(currentFloor.floorCode == floorDTO.floorCode){
+      currentFloor = floorDTO;
+    }
     notifyListeners();
   }
 
@@ -216,4 +219,11 @@ class FloorStateManagerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateConfiguration(List<FloorDTO> updatedFloors) {
+    floorList = updatedFloors;
+    if (floorList!.isNotEmpty) {
+      setCurrentFloor(floorList!.first.floorCode!);
+    }
+    notifyListeners();
+  }
 }

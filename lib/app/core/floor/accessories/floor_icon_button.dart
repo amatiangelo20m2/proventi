@@ -35,10 +35,6 @@ class _FloorIconButtonState extends State<FloorIconButton> {
   Widget build(BuildContext context) {
     return Consumer<FloorStateManagerProvider>(
       builder: (BuildContext context, FloorStateManagerProvider floorStateManager, Widget? child) {
-
-
-
-
         return IconButton(
           onPressed: () async {
             await floorStateManager.loadData(widget.branchCode, widget.selectedDate);

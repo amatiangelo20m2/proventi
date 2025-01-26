@@ -109,24 +109,20 @@ class ProfileImage extends StatelessWidget {
     return _buildAvatarContainer(
       CircleAvatar(
         radius: avatarRadious * 0.96,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey,
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
-              colors: [Colors.white, Colors.white],
+              colors: [Colors.grey, Colors.grey],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
 
           ),
           child: ClipOval(
-            child: Image.asset(
-              'assets/images/user.png',
-              fit: BoxFit.contain,
-              width: avatarRadious * 1.3,
-              height: avatarRadious * 2,
-            ),
+            child: Icon(CupertinoIcons.person,
+              size: avatarRadious * 1.4, color: Colors.white,),
           ),
         ),
       ),

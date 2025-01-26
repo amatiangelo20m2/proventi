@@ -188,19 +188,20 @@ class _CreateBookingListAttesaState extends State<CreateBookingListAttesa> {
                     const SizedBox(height: 16),
                     CupertinoTextField(
                       textCapitalization: TextCapitalization.words,
-                      controller: _nameController,
-                      placeholder: "Nome",
-                      style: const TextStyle(fontSize: 13),
-                      padding: const EdgeInsets.all(8),
-                    ),
-                    const SizedBox(height: 16),
-                    CupertinoTextField(
-                      textCapitalization: TextCapitalization.words,
                       style: const TextStyle(fontSize: 13),
                       controller: _lastNameController,
                       placeholder: "Cognome",
                       padding: const EdgeInsets.all(8),
                     ),
+                    const SizedBox(height: 16),
+                    CupertinoTextField(
+                      textCapitalization: TextCapitalization.words,
+                      controller: _nameController,
+                      placeholder: "Nome",
+                      style: const TextStyle(fontSize: 13),
+                      padding: const EdgeInsets.all(8),
+                    ),
+
                     const SizedBox(height: 16),
                     CupertinoTextField(
                       controller: _emailController,

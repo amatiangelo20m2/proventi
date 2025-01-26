@@ -141,7 +141,7 @@ class BookingConfirmedCard extends StatelessWidget {
                         '${getFlagByPrefix(booking.customer!.prefix!)}',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.bold,
                       color: blackDir,
                     ),
                   ),

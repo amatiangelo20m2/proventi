@@ -200,18 +200,17 @@ class _CreateBookingState extends State<CreateBooking> {
                     const SizedBox(height: 16),
                     CupertinoTextField(
                       textCapitalization: TextCapitalization.words,
-                      controller: _nameController,
-                      placeholder: "Nome",
+                      controller: _lastNameController,
+                      placeholder: "Cognome",
                       padding: const EdgeInsets.all(8),
                     ),
                     const SizedBox(height: 16),
                     CupertinoTextField(
                       textCapitalization: TextCapitalization.words,
-                      controller: _lastNameController,
-                      placeholder: "Cognome",
+                      controller: _nameController,
+                      placeholder: "Nome",
                       padding: const EdgeInsets.all(8),
                     ),
-
                     const SizedBox(height: 16),
                     CupertinoTextField(
                       controller: _emailController,

@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proventi/environment_config.dart';
 import 'package:proventi/global/style.dart';
+import 'package:provider/provider.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
+import '../api/restaurant_client/lib/api.dart';
 import '../app/login/login_screen.dart';
+import '../state_manager/restaurant_state_manager.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -68,7 +72,14 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _loadData() async {
-    await Future.delayed(const Duration(seconds: 3));
+
+    //RestaurantDTO? restaurantDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
+    //    .restaurantControllerApi.retrieveConfiguration(employeeDTO.branchCode!, 'XXX');
+
+    //await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([restaurantDTO!]);
+
+
+    await Future.delayed(const Duration(seconds: 2));
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const LoginPage()),
     );
@@ -180,20 +191,21 @@ class _SplashScreenState extends State<SplashScreen>
               tag: 'logo_landing',
               child: Image.asset(
                 'assets/images/logo.png',
-                width: MediaQuery.of(context).size.width / 2,
+                width: MediaQuery.of(context).size.width / 3,
               ),
             ),
             Column(
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('1.0.13+1', style: TextStyle(color: Colors.white, fontSize: 13),),
+                  child: Text(version_app, style: TextStyle(color: Colors.white, fontSize: 13),),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 100),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 1.5,
-                    child: LinearProgressIndicator(
+                    child: CupertinoActivityIndicator(
+                      radius: 15,
                       color: globalGold,
                     ),
                   ),

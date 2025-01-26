@@ -191,9 +191,9 @@ class _Pro20State extends State<Pro20> {
         title: 'Pro20',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
-          fontFamily: 'Arial',
+          fontFamily: 'Helvetica',
 
         ),
         home: const SplashScreen(),

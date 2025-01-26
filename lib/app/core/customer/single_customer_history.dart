@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
@@ -93,12 +92,12 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      '📱 ${widget.customerDTO.prefix!} ${widget.customerDTO.phone!}',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      '📱+ ${widget.customerDTO.prefix!} ${widget.customerDTO.phone!}',
+                      style: TextStyle(fontSize: 24, color: Colors.grey[600] , fontWeight: FontWeight.bold),
                     ),
                     Text(
                       '✉️ ${widget.customerDTO.email!}',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -110,7 +109,7 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: Text(
                   'Storico Prenotazioni',
-                  style: headerStyle.copyWith(color: Colors.grey[900]),
+                  style: headerStyle.copyWith(color: Colors.grey[600], fontSize: 14),
                 ),
               ),
 
@@ -138,30 +137,33 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                         return Column(
                           children: [
                             // Stats Row for Booking Statuses
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildBookingStatusColumn(
-                                  bookings.where((element) => element.status == BookingDTOStatusEnum.ARRIVATO).length,
-                                  BookingDTOStatusEnum.ARRIVATO,
-                                  Colors.green,
-                                ),
-                                _buildBookingStatusColumn(
-                                  bookings.where((element) => element.status == BookingDTOStatusEnum.NON_ARRIVATO).length,
-                                  BookingDTOStatusEnum.NON_ARRIVATO,
-                                  Colors.yellow.shade700
-                                ),
-                                _buildBookingStatusColumn(
-                                  bookings.where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO).length,
-                                  BookingDTOStatusEnum.RIFIUTATO,
-                                  Colors.redAccent
-                                ),
-                                _buildBookingStatusColumn(
-                                  bookings.where((element) => element.status == BookingDTOStatusEnum.ELIMINATO).length,
-                                  BookingDTOStatusEnum.ELIMINATO,
-                                  Colors.blueGrey
-                                ),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _buildBookingStatusCard(
+                                    bookings.where((element) => element.status == BookingDTOStatusEnum.ARRIVATO).length,
+                                    'Arrivato',
+                                    Colors.green,
+                                  ),
+                                  _buildBookingStatusCard(
+                                    bookings.where((element) => element.status == BookingDTOStatusEnum.NON_ARRIVATO).length,
+                                    'No Show',
+                                    Colors.yellow.shade700,
+                                  ),
+                                  _buildBookingStatusCard(
+                                    bookings.where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO).length,
+                                    'Rifiutato',
+                                    Colors.redAccent,
+                                  ),
+                                  _buildBookingStatusCard(
+                                    bookings.where((element) => element.status == BookingDTOStatusEnum.ELIMINATO).length,
+                                    'Eliminato',
+                                    Colors.blueGrey,
+                                  ),
+                                ],
+                              ),
                             ),
                             const Divider(),
 
@@ -189,20 +191,27 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
     );
   }
 
-  Widget _buildBookingStatusColumn(int count, BookingDTOStatusEnum status, Color color) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            '$status ${getIconByStatus(status)}',
-            style: TextStyle(fontSize: 14, color: color),
-          ),
-          Text(
-            '$count',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey[900]),
-          ),
-        ],
+  Widget _buildBookingStatusCard(int count, String status, Color color) {
+    return Card(
+      color: color.withAlpha(200),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text(
+              status,
+              style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '$count',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -218,17 +227,26 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
         'Ore: ${booking.timeSlot!.bookingHour!}:${NumberFormat("00").format(booking.timeSlot!.bookingMinutes!)}',
         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
       ),
-      trailing: Text(
+      leading: Text(
         getIconByStatus(booking.status!),
         style: TextStyle(fontSize: 20),
       ),
-      leading: CircleAvatar(
-        backgroundColor: Colors.grey[900],
-        child: Text(
-          booking.numGuests!.toString(),
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      trailing: Card(
+        color: blackDir.withAlpha(150),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-      ),
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: Center(
+            child: Text(
+              booking.numGuests!.toString(),
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+            ),
+          ),
+        ),
+      )
     );
   }
 }

@@ -230,7 +230,8 @@ class _BookingScreenState extends State<BookingScreen> {
                               icon: Icon(CupertinoIcons.calendar,
                                   color: blackDir),
                             ),
-                            FloorIconButton(branchCode: restaurantManager.restaurantConfiguration!.branchCode!,
+
+                            if(MediaQuery.of(context).size.shortestSide >= 600) FloorIconButton(branchCode: restaurantManager.restaurantConfiguration!.branchCode!,
                                 bookingList: restaurantManager.allBookings!
                                 .where((element) => isSameDay(element.bookingDate!, _selectedDate))
                                 .toList(), selectedDate: _selectedDate),

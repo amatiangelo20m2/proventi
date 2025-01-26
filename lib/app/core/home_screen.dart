@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
-                  const AnimatedBorderContainer(),
+                  const WhatsAppButtonStatus(),
                   Consumer<NotificationStateManager>(
                     builder: (BuildContext context,
                         NotificationStateManager value, Widget? child) {
@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                IconButton(icon: const Icon(Icons.arrow_drop_down_circle_outlined), onPressed: () {
+                if(restaurantStateManager.restaurantConfigurations!.isNotEmpty && restaurantStateManager.restaurantConfigurations!.length > 1)IconButton(icon: const Icon(Icons.arrow_drop_down_circle_outlined), onPressed: () {
                   showCupertinoModalPopup(
                     context: context,
                     builder: (BuildContext context) => CupertinoActionSheet(
@@ -257,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-
                                     Text(restaurant.restaurantName!, style: TextStyle(color: blackDir, fontSize: isCurrentRestaurant ? 18 : 15),),
                                     Text(isCurrentRestaurant ? '  ✅' : '' , style: TextStyle(color: blackDir),),
                                   ],
@@ -277,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   restaurantStateManager.restaurantConfiguration != null
                       ? restaurantStateManager.restaurantConfiguration!.restaurantName!
                       : '...',
-                  style: TextStyle(fontSize: 18, color: blackDir, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14, color: Colors.grey.shade800, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

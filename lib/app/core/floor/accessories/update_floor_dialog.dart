@@ -6,6 +6,7 @@ import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/floor/state_manager/floor_state_manager.dart';
 import 'package:http/http.dart';
 import '../../../../global/style.dart';
+import '../../home_screen.dart';
 
 class EditFloorDialog extends StatelessWidget {
   final FloorDTO floorDTO;
@@ -59,15 +60,19 @@ class EditFloorDialog extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
+
                 if (name.isNotEmpty) {
 
                   floorDTO.floorName = name;
                   floorDTO.floorDescription = description;
 
+
                   Response? floorDTOUpdated = await floorStateManager.floorControllerApi.updateFloorConfigurationWithHttpInfo(floorDTO.branchCode!, floorDTO);
 
                   if (floorDTOUpdated.statusCode == 200) {
-                    floorStateManager.updateFloor(floorDTOUpdated.body as FloorDTO);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                    await floorStateManager.updateFloor(floorDTOUpdated.body as FloorDTO);
                     Navigator.of(context).pop();
                     Fluttertoast.showToast(
                       msg: "Sala aggiornata con successo",
@@ -137,7 +142,9 @@ class EditFloorDialog extends StatelessWidget {
 
                 if (confirmDelete == true) {
                   await floorStateManager.deleteFloor(floorDTO.branchCode!, floorDTO.floorCode!);
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
+                  );
                   Fluttertoast.showToast(
                     msg: "Sala eliminata con successo",
                     toastLength: Toast.LENGTH_LONG,

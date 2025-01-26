@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../environment_config.dart';
 import '../../global/style.dart';
 import '../../state_manager/restaurant_state_manager.dart';
 
@@ -79,16 +80,6 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.remove('userCode');
       await prefs.remove('userPassword');
     }
-  }
-
-  Future<void> _checkIfUserAlreadyLoggedIn() async {
-    //var employeeDTO = Provider.of<RestaurantStateManager>(context, listen: false).currentEmployee;
-
-    //if (employeeDTO != null) {
-    //Navigator.of(context).pushReplacement(
-    //MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)),
-    //  );
-    //}
   }
 
   Future<void> _retrieveFcmToken() async {
@@ -172,12 +163,10 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 6),
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 12),
                     child: SingleChildScrollView(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Hero(tag: 'logo_landing', child: Image.asset('assets/images/logo.png', width: 120)),
                           Padding(
                             padding: const EdgeInsets.only(right: 8, left: 8),
                             child: Row(
@@ -186,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Text(_isLoginWithUserCode ? 'Accedi con codice utente' : 'Accedi con codice attività', style: const TextStyle(color: CupertinoColors.white, fontSize: 10)),
                                 Switch(
                                   activeColor: globalGold,
-                                  inactiveThumbColor: globalGoldDark,
+                                  inactiveThumbColor: globalGold,
                                   value: _isLoginWithUserCode,
                                   onChanged: (value) {
                                     setState(() {
@@ -197,7 +186,26 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                           ),
-                          _isLoginWithUserCode ? _buildUserCodeLogin() : _buildBranchCodeLogin(),
+
+                          Column(
+                            children: [
+                              Card(
+                                shadowColor: Colors.black,
+                                surfaceTintColor: blackDir,
+                                color: blackDir,
+                                elevation: 23,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Hero(tag: 'logo_landing', child: Image.asset('assets/images/logo.png', width: 120)),
+
+                                    _isLoginWithUserCode ? _buildUserCodeLogin() : _buildBranchCodeLogin(),
+                                  ],
+                                ),
+                              ),
+                              Text('v. $version_app', style: TextStyle(color: CupertinoColors.white, fontSize: 8)),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -221,36 +229,42 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildBranchCodeLogin() {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        _buildTextField(_branchCodeController, 'Codice Attività', TextInputType.text, toUpperCase: true),
-        const SizedBox(height: 16),
-        _buildTextField(_usernameController, 'Username', TextInputType.text),
-        const SizedBox(height: 16),
-        _buildTextField(_passwordController, 'Password', TextInputType.visiblePassword, obscureText: true, isPassword: true),
-        const SizedBox(height: 32),
-        _buildRememberCredentials(),
-        const SizedBox(height: 15),
-        _buildLoginButton(),
-        const SizedBox(height: 32),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, right: 40, top: 16, bottom: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 16),
+          _buildTextField(_branchCodeController, 'Codice Attività', TextInputType.text, toUpperCase: true),
+          const SizedBox(height: 16),
+          _buildTextField(_usernameController, 'Username', TextInputType.text),
+          const SizedBox(height: 16),
+          _buildTextField(_passwordController, 'Password', TextInputType.visiblePassword, obscureText: true, isPassword: true),
+          const SizedBox(height: 32),
+          _buildRememberCredentials(),
+          const SizedBox(height: 15),
+          _buildLoginButton(),
+          const SizedBox(height: 32),
+        ],
+      ),
     );
   }
 
   Widget _buildUserCodeLogin() {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        _buildTextField(_userCodeController, 'Codice Utente', TextInputType.text, toUpperCase: true),
-        const SizedBox(height: 16),
-        _buildTextField(_passwordUserController, 'Password', TextInputType.visiblePassword, obscureText: true, isPassword: true, isUserPassword: true),
-        const SizedBox(height: 16),
-        _buildRememberCredentials(),
-        const SizedBox(height: 15),
-        _buildLoginButton(),
-        const SizedBox(height: 32),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(38.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 16),
+          _buildTextField(_userCodeController, 'Codice Utente', TextInputType.text, toUpperCase: true),
+          const SizedBox(height: 16),
+          _buildTextField(_passwordUserController, 'Password', TextInputType.visiblePassword, obscureText: true, isPassword: true, isUserPassword: true),
+          const SizedBox(height: 16),
+          _buildRememberCredentials(),
+          const SizedBox(height: 15),
+          _buildLoginButton(),
+          const SizedBox(height: 32),
+        ],
+      ),
     );
   }
 
@@ -265,23 +279,26 @@ class _LoginPageState extends State<LoginPage> {
         LengthLimitingTextInputFormatter(10),
       ],
       style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       suffix: isPassword || isUserPassword
-          ? IconButton(
-        icon: Icon(
-          isPassword ? (_passwordVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye) : (_passwordUserVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
-          color: Colors.grey,
-        ),
-        onPressed: () {
-          setState(() {
-            if (isPassword) {
-              _passwordVisible = !_passwordVisible;
-            } else if (isUserPassword) {
-              _passwordUserVisible = !_passwordUserVisible;
-            }
-          });
-        },
-      )
+          ? Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+                    child: Icon(
+            isPassword ? (_passwordVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye) : (_passwordUserVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
+            color: Colors.grey,
+                    ),
+                    onTap: () {
+            setState(() {
+              if (isPassword) {
+                _passwordVisible = !_passwordVisible;
+              } else if (isUserPassword) {
+                _passwordUserVisible = !_passwordUserVisible;
+              }
+            });
+                    },
+                  ),
+          )
           : null,
       onChanged: (text) {
         controller.value = controller.value.copyWith(
@@ -316,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
       child: CupertinoButton(
         color: globalGold,
         onPressed: _isLoading ? null : _login,
-        child: const Text('ACCEDI', style: TextStyle(color: Colors.white, fontSize: 15)),
+        child: const Text('ACCEDI', style: TextStyle(color: Colors.white, fontSize: 13)),
       ),
     );
   }
@@ -361,11 +378,11 @@ class _LoginPageState extends State<LoginPage> {
             showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');
           }
         } else if (response.statusCode == 204) {
-          showCupertinoAlert(context, 'Error', 'User not found');
+          showCupertinoAlert(context, 'Errore', 'Utente non trovato');
         } else if (response.statusCode == 401) {
-          showCupertinoAlert(context, 'Error', 'Incorrect password');
+          showCupertinoAlert(context, 'Errore', 'Password errata');
         } else {
-          showCupertinoAlert(context, 'Error', 'Errore generico');
+          showCupertinoAlert(context, 'Errore', 'Errore generico');
         }
       } else {
         print("UserCode: ${_userCodeController.text}");
