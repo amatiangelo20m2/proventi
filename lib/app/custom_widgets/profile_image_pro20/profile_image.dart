@@ -18,6 +18,7 @@ class ProfileImage extends StatelessWidget {
     required this.customer,
     required this.allowNavigation,
     this.noShowBookings = 0,
+    this.currentBooking = false,
     this.disableHero = false,
     this.borderSize = 0,
     this.borderColor = Colors.transparent,
@@ -31,6 +32,7 @@ class ProfileImage extends StatelessWidget {
   final bool? disableHero;
   final int borderSize;
   final Color borderColor;
+  final bool currentBooking;
 
   static final Map<String, String?> _photoCache = {};
 
@@ -170,6 +172,12 @@ class ProfileImage extends StatelessWidget {
                 children: [
                   const Icon(Icons.circle, color: Colors.white,),
                   Lottie.asset('assets/lotties/danger.json', width: 20, height: 20, fit: BoxFit.cover)
+                ])),
+            if(currentBooking) Positioned(
+                right: -4, bottom: -4, child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Lottie.asset('assets/lotties/new.json', width: 25, height: 25, fit: BoxFit.cover)
                 ])),
           ]
       ),

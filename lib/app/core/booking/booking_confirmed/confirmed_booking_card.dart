@@ -121,12 +121,31 @@ class BookingConfirmedCard extends StatelessWidget {
                     .first;
                 noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
               }
+
+              int currentBookingsOfTheCurrentCustomer = 0;
+
+              if (customerStateManager.historicalCustomerData!
+                  .where((element) =>
+              element.customerDTO!.customerId ==
+                  booking.customer!.customerId!)
+                  .isNotEmpty) {
+                CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                    .historicalCustomerData!
+                    .where((element) =>
+                element.customerDTO!.customerId ==
+                    booking.customer!.customerId!)
+                    .first;
+                currentBookingsOfTheCurrentCustomer =
+                customerHistoryDTO.historicalBookingsNumber!;
+              }
+
               return ProfileImage(
                 allowNavigation: true,
                 customer: booking.customer!,
                 branchCode: booking.branchCode!,
                 avatarRadious: 25,
                 noShowBookings: noShowBookings,
+                currentBooking: currentBookingsOfTheCurrentCustomer > 0,
               );
             },
           ),
@@ -145,40 +164,6 @@ class BookingConfirmedCard extends StatelessWidget {
                       color: blackDir,
                     ),
                   ),
-                  Consumer<CustomerStateManager>(
-                    builder: (BuildContext context,
-                        CustomerStateManager customerStateManager, Widget? child) {
-                      int currentBookingsOfTheCurrentCustomer = 0;
-
-                      if (customerStateManager.historicalCustomerData!
-                          .where((element) =>
-                              element.customerDTO!.customerId ==
-                              booking.customer!.customerId!)
-                          .isNotEmpty) {
-                        CustomerHistoryDTO customerHistoryDTO = customerStateManager
-                            .historicalCustomerData!
-                            .where((element) =>
-                                element.customerDTO!.customerId ==
-                                booking.customer!.customerId!)
-                            .first;
-                        currentBookingsOfTheCurrentCustomer =
-                            customerHistoryDTO.historicalBookingsNumber!;
-                      }
-
-                      return currentBookingsOfTheCurrentCustomer > 1
-                          ? Center(
-                              child: Text(
-                            '($currentBookingsOfTheCurrentCustomer)',
-                            style: TextStyle(
-                                color: blackDir, fontSize: 10),
-                          ))
-                          : const Icon(
-                              Icons.fiber_new,
-                              color: Colors.green,
-                              size: 22,
-                            );
-                    },
-                  ),
                   Text(getFormEmoji(forms, booking), style: const TextStyle(fontSize: 14),),
                 ],
               ),
@@ -193,13 +178,8 @@ class BookingConfirmedCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-
-                      ChatIconWhatsApp(
-                        booking: booking, iconSize: 40
-                      ),
-
                       Padding(
-                        padding: const EdgeInsets.only(right: 8, left: 8),
+                        padding: const EdgeInsets.only(right: 4, left: 4),
                         child: GestureDetector(
                             onTap: () {
                               showCupertinoModalBottomSheet(
@@ -218,6 +198,11 @@ class BookingConfirmedCard extends StatelessWidget {
                             },
                             child: const Icon(CupertinoIcons.settings_solid)),
                       ),
+                      ChatIconWhatsApp(
+                        booking: booking, iconSize: 40
+                      ),
+
+
                     ],
                   ),
                 ],

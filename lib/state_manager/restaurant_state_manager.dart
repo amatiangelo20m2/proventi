@@ -96,7 +96,9 @@ class RestaurantStateManager extends ChangeNotifier {
 
   retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(DateTime day, RestaurantDTO restaurantDTO) {
     return (_allBookings!.where((element) =>
-    isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO && isLunchTime(element, restaurantDTO))
+    isSameDay(element.bookingDate!, day)
+        && element.status == BookingDTOStatusEnum.CONFERMATO
+        && isLunchTime(element, restaurantDTO))
         .toList().fold(0, (total, booking) => total
         + (booking.numGuests ?? 0)));
   }

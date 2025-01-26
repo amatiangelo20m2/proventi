@@ -71,18 +71,12 @@ class RefusedBookingCard extends StatelessWidget {
                           ),
                         ),
                         _buildGuestInfo(),
-                        if((booking.specialRequests?.isNotEmpty ?? false)) Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Stack(children: [
-                                Text('💬', style: TextStyle(fontSize: 14),),
-                                Positioned(right: -1, child: Icon(Icons.circle, size: 10, color: Colors.redAccent,))
-                              ]),
-                            ),
-                            Text(booking.specialRequests!, style: TextStyle(fontSize: 11, color: Colors.grey[800]),),
-                          ],
-                        ),
+                        if((booking.specialRequests?.isNotEmpty ?? false))
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            child: Text('💬${booking.specialRequests!}', style: TextStyle(fontSize: 12,
+                                color: Colors.grey[800])),
+                          ),
                       ],
                     ),
                   ),

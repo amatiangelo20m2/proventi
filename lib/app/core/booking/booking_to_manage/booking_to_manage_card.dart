@@ -57,11 +57,6 @@ class BookingToManageCard extends StatelessWidget {
             color: Colors.white,
             surfaceTintColor: Colors.white,
             child: ListTile(
-              trailing:
-              Text(
-                formatDuration(DateTime.now().difference(booking.createdAt!)),
-                style: TextStyle(color: Colors.grey[900], fontSize: 14, fontWeight: FontWeight.bold),
-              ),
               title: Row(
                 children: [
                   Stack(
@@ -77,12 +72,32 @@ class BookingToManageCard extends StatelessWidget {
                             => element.customerDTO!.customerId == booking.customer!.customerId!).first;
                             noShowBookings = customerHistoryDTO.historicalNoShowsNumber!;
                           }
+
+                          int currentBookingsOfTheCurrentCustomer = 0;
+
+                          if (customerStateManager.historicalCustomerData!
+                              .where((element) =>
+                          element.customerDTO!.customerId ==
+                              booking.customer!.customerId!)
+                              .isNotEmpty) {
+                            CustomerHistoryDTO customerHistoryDTO = customerStateManager
+                                .historicalCustomerData!
+                                .where((element) =>
+                            element.customerDTO!.customerId ==
+                                booking.customer!.customerId!)
+                                .first;
+
+                            currentBookingsOfTheCurrentCustomer = customerHistoryDTO.historicalBookingsNumber!;
+                          }
+
+
                           return ProfileImage(
                             allowNavigation: true,
                             customer: booking.customer!,
                             branchCode: booking.branchCode!,
                             avatarRadious: 30,
                             noShowBookings: noShowBookings,
+                            currentBooking: currentBookingsOfTheCurrentCustomer == 0,
                           );
                         },
                       ),
@@ -139,47 +154,7 @@ class BookingToManageCard extends StatelessWidget {
                             ),
                           ),
                           Text(getFormEmoji(formDTOs, booking), style: TextStyle(fontSize: 13),),
-                          Consumer<CustomerStateManager>(
-                            builder: (BuildContext context,
-                                CustomerStateManager customerStateManager, Widget? child) {
-                              int currentBookingsOfTheCurrentCustomer = 0;
 
-                              if (customerStateManager.historicalCustomerData!
-                                  .where((element) =>
-                              element.customerDTO!.customerId ==
-                                  booking.customer!.customerId!)
-                                  .isNotEmpty) {
-                                CustomerHistoryDTO customerHistoryDTO = customerStateManager
-                                    .historicalCustomerData!
-                                    .where((element) =>
-                                element.customerDTO!.customerId ==
-                                    booking.customer!.customerId!)
-                                    .first;
-                                currentBookingsOfTheCurrentCustomer =
-                                customerHistoryDTO.historicalBookingsNumber!;
-                              }
-
-                              return currentBookingsOfTheCurrentCustomer > 1
-                                  ? Container(
-                                  width: 15,
-                                  height: 15,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(60),
-                                    color: Colors.black,
-                                  ),
-                                  child: Center(
-                                      child: Text(
-                                        currentBookingsOfTheCurrentCustomer.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 7),
-                                      )))
-                                  : const Icon(
-                                Icons.fiber_new,
-                                color: Colors.green,
-                                size: 30,
-                              );
-                            },
-                          ),
                         ],
                       ),
                       Row(
@@ -212,11 +187,16 @@ class BookingToManageCard extends StatelessWidget {
                                   branchCode: booking.branchCode!,);
                               },
                             );
-                          }, icon: const Icon(CupertinoIcons.settings_solid)),
-                          ChatIconWhatsApp(booking: booking, iconSize: 40),
+                          }, icon: Icon(CupertinoIcons.settings_solid, size: 20, color: Colors.grey,)),
+                          ChatIconWhatsApp(booking: booking, iconSize: 30),
                         ],
                       ),
-
+                      Text(
+                        'Aspetta risposta da ' +
+                            formatDuration(DateTime.now().difference(booking.createdAt!)) +
+                            (DateTime.now().difference(booking.createdAt!).inMinutes < 60 ? ' minuti' : ' ore'),
+                        style: TextStyle(color: Colors.grey[900], fontSize: 10, fontWeight: FontWeight.bold),
+                      ),
                       if(booking.specialRequests?.isNotEmpty ?? false)
                         Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
                     ],

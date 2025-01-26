@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proventi/environment_config.dart';
 import 'package:proventi/global/style.dart';
-import 'package:provider/provider.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
-import '../api/restaurant_client/lib/api.dart';
 import '../app/login/login_screen.dart';
-import '../state_manager/restaurant_state_manager.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -80,6 +77,7 @@ class _SplashScreenState extends State<SplashScreen>
 
 
     await Future.delayed(const Duration(seconds: 2));
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const LoginPage()),
     );

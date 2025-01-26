@@ -195,7 +195,9 @@ class _BookingScreenState extends State<BookingScreen> {
                         RefusedBookingArchive(bookingList:
                         restaurantManager.allBookings!.where((element) => isSameDay(
                             element.bookingDate!,
-                            _selectedDate)).toList(), dateTime: _selectedDate,),
+                            _selectedDate)).toList(),
+                          dateTime: _selectedDate,
+                          iconColor: blackDir,),
                       ],
                     ),
                   ),
@@ -240,20 +242,34 @@ class _BookingScreenState extends State<BookingScreen> {
                       ],
                     ),
                   ),
-                  if(_isScrolledDown) Card(
-                    color: Colors.grey[900],
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '🗓️${italianDateFormat.format(_selectedDate).toUpperCase()}',
-                              style: const TextStyle(color: Colors.white, fontSize: 10),
-                            ),
-                            buildCurrentGuestSituation(restaurantManager),
-                          ],
+                  if(_isScrolledDown) Container(
+                    color: Colors.transparent,
+                    child: Card(
+                      color: Colors.grey[900],
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8, left: 8, top: 2, bottom: 2),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(CupertinoIcons.calendar_today, color: globalGold, size: 30,),
+                                  Text(
+                                    '️${italianDateFormat.format(_selectedDate).toUpperCase().replaceFirst(' ', '\n')}',
+                                    style: TextStyle(color: globalGold, fontSize: 10),
+                                  ),
+                                ],
+                              ),
+                              RefusedBookingArchive(bookingList:
+                              restaurantManager.allBookings!.where((element) => isSameDay(
+                                  element.bookingDate!,
+                                  _selectedDate)).toList(),
+                                dateTime: _selectedDate,
+                                iconColor: Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -350,7 +366,9 @@ class _BookingScreenState extends State<BookingScreen> {
                                             padding: const EdgeInsets.only(right: 15, left: 15, top: 2, bottom: 2),
                                             child: ClipRRect(
                                                 borderRadius: BorderRadius.circular(10),
-                                                child: LinearProgressWidget(restaurantManager, day, FilterDailyType.CENA)
+                                                child: LinearProgressWidget(restaurantManager,
+                                                    day,
+                                                    FilterDailyType.CENA)
                                             ),
                                           )
                                         ],
@@ -602,14 +620,13 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
   void _showToast(String text) {
-
     Fluttertoast.showToast(
       webShowClose: true,
       timeInSecForIosWeb: 1,
       msg: text,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: globalGold,
+      backgroundColor: blackDir,
       textColor: Colors.white,
       fontSize: 15.0,
     );

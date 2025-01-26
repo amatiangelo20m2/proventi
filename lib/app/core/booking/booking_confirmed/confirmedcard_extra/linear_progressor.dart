@@ -15,6 +15,7 @@ LinearProgressWidget(RestaurantStateManager? restaurantManager,
   if(restaurantManager.restaurantConfiguration!.capacity == null){
     return const SizedBox(height: 0,);
   }
+
   int pax = 0;
   if(filterDailyType == FilterDailyType.PRANZO){
     pax = restaurantManager.retrieveTotalGuestsNumberForDayAndActiveBookingsLunchTime(day, restaurantManager.restaurantConfiguration!);

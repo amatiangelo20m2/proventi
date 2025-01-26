@@ -22,7 +22,9 @@ const List<String> months = [
 ];
 
 bool isLunchTime(BookingDTO bookingDTO, RestaurantDTO restaurantConfiguration) {
-  if (bookingDTO.timeSlot == null || restaurantConfiguration.daylyTimeWorkingRange == null || restaurantConfiguration.nightTimeWorkingRange == null) {
+  if (bookingDTO.timeSlot == null
+      || restaurantConfiguration.daylyTimeWorkingRange == null
+      || restaurantConfiguration.nightTimeWorkingRange == null) {
     return false;
   }
 
@@ -36,7 +38,7 @@ bool isLunchTime(BookingDTO bookingDTO, RestaurantDTO restaurantConfiguration) {
   // Check if the booking hour is within the lunch time range
   bool isWithinLunchRange = false;
   if (bookingHour > lunchTimeRange.openingHour! || (bookingHour == lunchTimeRange.openingHour! && bookingMinutes >= lunchTimeRange.openingMinutes!)) {
-    if (bookingHour < lunchTimeRange.closingHour! || (bookingHour == lunchTimeRange.closingHour! && bookingMinutes < lunchTimeRange.closingMinutes!)) {
+    if (bookingHour < lunchTimeRange.closingHour! || (bookingHour == lunchTimeRange.closingHour! && bookingMinutes <= lunchTimeRange.closingMinutes!)) {
       isWithinLunchRange = true;
     }
   }
@@ -49,7 +51,7 @@ bool isLunchTime(BookingDTO bookingDTO, RestaurantDTO restaurantConfiguration) {
   final TimeRange dinnerTimeRange = restaurantConfiguration.nightTimeWorkingRange!;
   bool isWithinDinnerRange = false;
   if (bookingHour > dinnerTimeRange.openingHour! || (bookingHour == dinnerTimeRange.openingHour! && bookingMinutes >= dinnerTimeRange.openingMinutes!)) {
-    if (bookingHour < dinnerTimeRange.closingHour! || (bookingHour == dinnerTimeRange.closingHour! && bookingMinutes < dinnerTimeRange.closingMinutes!)) {
+    if (bookingHour < dinnerTimeRange.closingHour! || (bookingHour == dinnerTimeRange.closingHour! && bookingMinutes <= dinnerTimeRange.closingMinutes!)) {
       isWithinDinnerRange = true;
     }
   }

@@ -12,4 +12,4 @@ String customBasePathNotification = '${host}:8088/notificationservice';
 String customBasePathRestaurant = '${host}:8088/restaurantservice';
 String customBasePathCommunication = '${host}:8088/communicationservice';
 
-String version_app = '1.0.21+1';
+String version_app = '1.0.22+1';

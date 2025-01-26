@@ -163,33 +163,38 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
             children: [
               // Display Customer Information in a non-editable mode using CustomFormRow
               CupertinoFormSection(
-                header: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Informazioni cliente',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14),
-                    ),
-                    ProfileImage(
-                      allowNavigation: false,
-                      customer: widget.bookingDTO.customer!,
-                      branchCode: widget.branchCode,
-                      avatarRadious: 30,
-                    ),
-                  ],
+                header: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Informazioni cliente',
+                          style: TextStyle(
+                            color: blackDir,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14),
+                      ),
+                      ProfileImage(
+                        allowNavigation: false,
+                        customer: widget.bookingDTO.customer!,
+                        branchCode: widget.branchCode,
+                        avatarRadious: 30,
+                      ),
+                    ],
+                  ),
                 ),
                 children: [
-                  CustomFormRow(
-                    label: 'Nome',
-                    controller: _firstNameController,
-                    isEditable: true,
-                  ),
                   CustomFormRow(
                     label: 'Cognome',
                     controller: _lastNameController,
                     isEditable: true,
                   ),
+                  CustomFormRow(
+                    label: 'Nome',
+                    controller: _firstNameController,
+                    isEditable: true,
+                  ),
+
                   CustomFormRow(
                     label: 'Email',
                     controller: _emailCustomerController,

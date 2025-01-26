@@ -10,10 +10,11 @@ import 'package:badges/badges.dart' as badges;
 class RefusedBookingArchive extends StatefulWidget {
   const RefusedBookingArchive({super.key,
     required this.bookingList,
-    required this.dateTime});
+    required this.dateTime, required this.iconColor});
 
   final List<BookingDTO> bookingList;
   final DateTime dateTime;
+  final Color iconColor;
 
   @override
   State<RefusedBookingArchive> createState() => _RefusedBookingArchiveState();
@@ -62,7 +63,7 @@ class _RefusedBookingArchiveState extends State<RefusedBookingArchive> {
                   },
                 );
               },
-              icon: const Icon(CupertinoIcons.archivebox, size: 25),
+              icon: Icon(CupertinoIcons.archivebox, size: 25, color: widget.iconColor,),
             ),
             const Positioned(right: 0, top: 0, child: Icon(Icons.circle, size: 12, color: Colors.red))
           ]

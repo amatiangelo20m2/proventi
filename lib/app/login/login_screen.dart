@@ -31,11 +31,13 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordUserController = TextEditingController(text: '');
 
   MobileDeviceDetails mdd = MobileDeviceDetails();
+
   bool _isLoading = false;
   bool _isLoginWithUserCode = false;
   bool _rememberCredentials = false;
   bool _passwordVisible = false;
   bool _passwordUserVisible = false;
+  bool _showLoadingPage = false;
 
   @override
   void initState() {
@@ -43,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
     _fetchDeviceInfo();
     _retrieveFcmToken();
     _loadSavedCredentials();
-    //_checkIfUserAlreadyLoggedIn();
   }
 
   Future<void> _loadSavedCredentials() async {
@@ -51,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
     setState(() {
       _rememberCredentials = prefs.getBool('rememberCredentials') ?? false;
+      String? loginMethod = prefs.getString('loginMethod');
 
       if (_rememberCredentials) {
         _usernameController.text = prefs.getString('username') ?? '';
@@ -58,10 +60,23 @@ class _LoginPageState extends State<LoginPage> {
         _branchCodeController.text = prefs.getString('branchCode') ?? '';
         _userCodeController.text = prefs.getString('userCode') ?? '';
         _passwordUserController.text = prefs.getString('userPassword') ?? '';
+
+        if (loginMethod == 'with_user_code') {
+          setState(() {
+            _showLoadingPage = true;
+          });
+          print('Auto login with user code');
+          _loginWithUserCode();
+        } else if (loginMethod == 'with_branch_code') {
+          setState(() {
+            _showLoadingPage = true;
+          });
+          print('Auto login with branch code');
+          _loginWithBranchCode();
+        }
       }
     });
   }
-
   Future<void> _saveCredentials() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -72,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.setString('branchCode', _branchCodeController.text);
       await prefs.setString('userCode', _userCodeController.text);
       await prefs.setString('userPassword', _passwordUserController.text);
+      await prefs.setString('loginMethod', _isLoginWithUserCode ? 'with_user_code' : 'with_branch_code');
     } else {
       await prefs.remove('rememberCredentials');
       await prefs.remove('username');
@@ -79,10 +95,14 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.remove('branchCode');
       await prefs.remove('userCode');
       await prefs.remove('userPassword');
+      await prefs.remove('loginMethod');
     }
   }
-
   Future<void> _retrieveFcmToken() async {
+    const int maxRetries = 5;
+    const Duration retryDelay = Duration(seconds: 2);
+    int retryCount = 0;
+
     try {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       NotificationSettings settings = await messaging.requestPermission(
@@ -92,11 +112,19 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        String? token = await messaging.getToken();
-        if (token != null) {
-          setState(() => mdd.fcmToken = token);
-          print('FCM Token: ${mdd.fcmToken}');
-        } else {
+        String? token;
+        while (token == null && retryCount < maxRetries) {
+          token = await messaging.getToken();
+          if (token != null) {
+            setState(() => mdd.fcmToken = token);
+            print('FCM Token: ${mdd.fcmToken}');
+          } else {
+            retryCount++;
+            await Future.delayed(retryDelay);
+          }
+        }
+
+        if (token == null) {
           _showRestartAppDialog();
         }
       } else {
@@ -127,7 +155,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
   Future<void> _fetchDeviceInfo() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
 
@@ -159,11 +186,20 @@ class _LoginPageState extends State<LoginPage> {
         builder: (BuildContext context, RestaurantStateManager value, Widget? child) {
           return Scaffold(
             backgroundColor: blackDir,
-            body: Stack(
+            body: _showLoadingPage ? Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CupertinoActivityIndicator(
+                  color: globalGold,
+                ),
+                const Text('Carico i dati..', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
+              ],
+            )) : Stack(
               children: [
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 12),
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 20),
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -278,17 +314,17 @@ class _LoginPageState extends State<LoginPage> {
       inputFormatters: [
         LengthLimitingTextInputFormatter(10),
       ],
-      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+
       padding: const EdgeInsets.all(10),
       suffix: isPassword || isUserPassword
           ? Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: GestureDetector(
-                    child: Icon(
+        padding: const EdgeInsets.only(right: 8),
+        child: GestureDetector(
+          child: Icon(
             isPassword ? (_passwordVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye) : (_passwordUserVisible ? CupertinoIcons.eye_slash : CupertinoIcons.eye),
             color: Colors.grey,
-                    ),
-                    onTap: () {
+          ),
+          onTap: () {
             setState(() {
               if (isPassword) {
                 _passwordVisible = !_passwordVisible;
@@ -296,9 +332,9 @@ class _LoginPageState extends State<LoginPage> {
                 _passwordUserVisible = !_passwordUserVisible;
               }
             });
-                    },
-                  ),
-          )
+          },
+        ),
+      )
           : null,
       onChanged: (text) {
         controller.value = controller.value.copyWith(
@@ -333,7 +369,8 @@ class _LoginPageState extends State<LoginPage> {
       child: CupertinoButton(
         color: globalGold,
         onPressed: _isLoading ? null : _login,
-        child: const Text('ACCEDI', style: TextStyle(color: Colors.white, fontSize: 13)),
+        child: const Text('ACCEDI',
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -352,73 +389,86 @@ class _LoginPageState extends State<LoginPage> {
       mdd.registrationDate = DateTime.now();
 
       if (!_isLoginWithUserCode) {
-        var response = await Provider.of<RestaurantStateManager>(context, listen: false)
-            .restaurantControllerApi
-            .loginFromMobileDeviceWithHttpInfo(
-          _branchCodeController.text,
-          _usernameController.text,
-          _passwordController.text,
-          mdd,
-        );
-
-        if (response.statusCode == 202) {
-          if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-            EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
-                .restaurantClient.deserializeAsync(await _decodeBodyBytes(response), 'EmployeeDTO') as EmployeeDTO;
-            print('Log in with employeeDTO: $employeeDTO');
-
-            RestaurantDTO? restaurantDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
-                .restaurantControllerApi.retrieveConfiguration(employeeDTO.branchCode!, 'XXX');
-
-            await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([restaurantDTO!]);
-            await _saveCredentials();
-
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
-          } else {
-            showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');
-          }
-        } else if (response.statusCode == 204) {
-          showCupertinoAlert(context, 'Errore', 'Utente non trovato');
-        } else if (response.statusCode == 401) {
-          showCupertinoAlert(context, 'Errore', 'Password errata');
-        } else {
-          showCupertinoAlert(context, 'Errore', 'Errore generico');
-        }
+        await _loginWithBranchCode();
       } else {
-        print("UserCode: ${_userCodeController.text}");
-        print("Password: ${_passwordUserController.text}");
-
-        await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([]);
-
-        print('FCM Token: ${mdd.fcmToken}');
-
-        await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(_userCodeController.text,
-            _passwordUserController.text, mdd.fcmToken!);
-
-        print('User logged in with user code');
-        VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
-
-        //here i will convert a BranchResponseEntity list into a Restaurant configuration in order to have a list of branchConfiguration, when the customer will choose a branch it will refresh the configuration each time
-        List<RestaurantDTO> restaurantDTOs = [];
-        for(BranchResponseEntity branchResEntity in ventiMetriQuadriData.branches){
-          restaurantDTOs.add(RestaurantDTO(
-            branchCode: branchResEntity.branchCode,
-            restaurantName: branchResEntity.name,
-          ));
-        }
-
-        await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList(restaurantDTOs);
-        await _saveCredentials();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
-
-        //await Provider.of<RestaurantStateManager>(context, listen: false).
-
+        await _loginWithUserCode();
       }
     } catch (e) {
       showCupertinoAlert(context, 'Error', 'An error occurred: $e');
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  Future<void> _loginWithBranchCode() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    print("BranchCode: ${_branchCodeController.text}");
+    print("Username: ${_usernameController.text}");
+    print("Password: ${_passwordController.text}");
+    var response = await Provider.of<RestaurantStateManager>(context, listen: false)
+        .restaurantControllerApi
+        .loginFromMobileDeviceWithHttpInfo(
+      _branchCodeController.text,
+      _usernameController.text,
+      _passwordController.text,
+      mdd,
+    );
+
+
+    if (response.statusCode == 202) {
+      if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+        EmployeeDTO employeeDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
+            .restaurantClient.deserializeAsync(await _decodeBodyBytes(response), 'EmployeeDTO') as EmployeeDTO;
+        print('Log in with employeeDTO: $employeeDTO');
+
+        RestaurantDTO? restaurantDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
+            .restaurantControllerApi.retrieveConfiguration(employeeDTO.branchCode!, 'XXX');
+
+        await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([restaurantDTO!]);
+        await _saveCredentials();
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
+      } else {
+        showCupertinoAlert(context, 'Error', 'Non sono riuscito a decodificare oggetto in entrata. Contatta supporto');
+      }
+    } else if (response.statusCode == 204) {
+      showCupertinoAlert(context, 'Errore', 'Utente non trovato');
+    } else if (response.statusCode == 401) {
+      showCupertinoAlert(context, 'Errore', 'Password errata');
+    } else {
+      showCupertinoAlert(context, 'Errore', 'Errore generico');
+    }
+  }
+
+  Future<void> _loginWithUserCode() async {
+    print("UserCode: ${_userCodeController.text}");
+    print("Password: ${_passwordUserController.text}");
+
+    await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([]);
+
+    print('FCM Token: ${mdd.fcmToken}');
+
+    await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(
+      _userCodeController.text,
+      _passwordUserController.text,
+      mdd.fcmToken!,
+    );
+
+    print('User logged in with user code');
+    VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
+
+    List<RestaurantDTO> restaurantDTOs = [];
+    for (BranchResponseEntity branchResEntity in ventiMetriQuadriData.branches) {
+      restaurantDTOs.add(RestaurantDTO(
+        branchCode: branchResEntity.branchCode,
+        restaurantName: branchResEntity.name,
+      ));
+    }
+
+    await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList(restaurantDTOs);
+    await _saveCredentials();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
   }
 
   Future<String> _decodeBodyBytes(Response response) async {

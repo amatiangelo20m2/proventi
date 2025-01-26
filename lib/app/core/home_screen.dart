@@ -14,6 +14,7 @@ import 'package:proventi/app/core/booking/booking_fast_queue/fast_queue.dart';
 import 'package:proventi/app/core/customer/customer_screen.dart';
 import 'package:proventi/global/style.dart';
 import 'package:proventi/state_manager/restaurant_state_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 import '../../api/communication_client/lib/api.dart';
 import '../../landing/landing_page.dart';
@@ -175,8 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 ListTile(
-                  onTap: () {
+                  onTap: () async {
                     Navigator.of(context).pop();
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('loginMethod');
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => const SplashScreen()),
                     );
