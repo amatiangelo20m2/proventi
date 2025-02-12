@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus(); // Close the keyboard when tapping outside
+        FocusScope.of(context).unfocus();
       },
       child: Consumer<RestaurantStateManager>(
         builder: (BuildContext context, RestaurantStateManager value, Widget? child) {
@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                 CupertinoActivityIndicator(
                   color: globalGold,
                 ),
-                const Text('Carico i dati..', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
+                const Text('Carico i dati...', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
               ],
             )) : Stack(
               children: [
@@ -434,41 +434,59 @@ class _LoginPageState extends State<LoginPage> {
       }
     } else if (response.statusCode == 204) {
       showCupertinoAlert(context, 'Errore', 'Utente non trovato');
+      setState(() {
+        _showLoadingPage = false;
+      });
     } else if (response.statusCode == 401) {
       showCupertinoAlert(context, 'Errore', 'Password errata');
+      setState(() {
+        _showLoadingPage = false;
+      });
     } else {
       showCupertinoAlert(context, 'Errore', 'Errore generico');
+      setState(() {
+        _showLoadingPage = false;
+      });
     }
   }
 
   Future<void> _loginWithUserCode() async {
-    print("UserCode: ${_userCodeController.text}");
-    print("Password: ${_passwordUserController.text}");
+    try{
+      print("UserCode: ${_userCodeController.text}");
+      print("Password: ${_passwordUserController.text}");
 
-    await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([]);
+      await _retrieveFcmToken();
+      await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([]);
 
-    print('FCM Token: ${mdd.fcmToken}');
+      print('FCM Token XXX: ${mdd.fcmToken}');
 
-    await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(
-      _userCodeController.text,
-      _passwordUserController.text,
-      mdd.fcmToken!,
-    );
+      await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(
+        _userCodeController.text,
+        _passwordUserController.text,
+        mdd.fcmToken!,
+      );
 
-    print('User logged in with user code');
-    VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
+      print('User logged in with user code');
+      VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
 
-    List<RestaurantDTO> restaurantDTOs = [];
-    for (BranchResponseEntity branchResEntity in ventiMetriQuadriData.branches) {
-      restaurantDTOs.add(RestaurantDTO(
-        branchCode: branchResEntity.branchCode,
-        restaurantName: branchResEntity.name,
-      ));
+      List<RestaurantDTO> restaurantDTOs = [];
+      for (BranchResponseEntity branchResEntity in ventiMetriQuadriData.branches) {
+        restaurantDTOs.add(RestaurantDTO(
+          branchCode: branchResEntity.branchCode,
+          restaurantName: branchResEntity.name,
+        ));
+      }
+
+      await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList(restaurantDTOs);
+      await _saveCredentials();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
+
+    }catch(e){
+      print('Exception' + e.toString());
+      setState(() {
+        _showLoadingPage = false;
+      });
     }
-
-    await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList(restaurantDTOs);
-    await _saveCredentials();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
   }
 
   Future<String> _decodeBodyBytes(Response response) async {

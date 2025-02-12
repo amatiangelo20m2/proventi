@@ -32,7 +32,7 @@ class BookingToManageCard extends StatelessWidget {
       onTap: () {
         _showBookingActionMenuListaAttesta(context, booking);
       },
-      child:  _buildCardContent(context),
+      child: _buildCardContent(context),
     );
   }
 
@@ -139,67 +139,69 @@ class BookingToManageCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${booking.customer?.firstName!} ${booking.customer?.lastName!} ${getFlagByPrefix(booking.customer!.prefix!)}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                              color: elegantBlue,
-                            ),
-                          ),
-                          Text(getFormEmoji(formDTOs, booking), style: TextStyle(fontSize: 13),),
-
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              buildComponentGuest(booking.numGuests.toString()),
-                              Text(
-                                ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
-                                style: TextStyle(
-                                  fontSize: 15,
-
-                                  color: elegantBlue,
-                                ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '${booking.customer?.firstName!} ${booking.customer?.lastName!} ${getFlagByPrefix(booking.customer!.prefix!)}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                                color: elegantBlue,
                               ),
-                            ],
-                          ),
+                            ),
+                            Text(getFormEmoji(formDTOs, booking), style: const TextStyle(fontSize: 13),),
 
-                          IconButton(onPressed: (){
-                            showCupertinoModalBottomSheet(
-                              expand: true,
-                              elevation: 10,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return BookingCustomerEdit(
-                                  bookingDTO: booking,
-                                  restaurantDTO: restaurantDTO,
-                                  isAlsoBookingEditing: true,
-                                  branchCode: booking.branchCode!,);
-                              },
-                            );
-                          }, icon: Icon(CupertinoIcons.settings_solid, size: 20, color: Colors.grey,)),
-                          ChatIconWhatsApp(booking: booking, iconSize: 30),
-                        ],
-                      ),
-                      Text(
-                        'Aspetta risposta da ' +
-                            formatDuration(DateTime.now().difference(booking.createdAt!)) +
-                            (DateTime.now().difference(booking.createdAt!).inMinutes < 60 ? ' minuti' : ' ore'),
-                        style: TextStyle(color: Colors.grey[900], fontSize: 10, fontWeight: FontWeight.bold),
-                      ),
-                      if(booking.specialRequests?.isNotEmpty ?? false)
-                        Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),)
-                    ],
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                buildComponentGuest(booking.numGuests.toString()),
+                                Text(
+                                  ' 🕓${NumberFormat("00").format(booking.timeSlot?.bookingHour)}:${NumberFormat("00").format(booking.timeSlot?.bookingMinutes)}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+
+                                    color: elegantBlue,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            IconButton(onPressed: (){
+                              showCupertinoModalBottomSheet(
+                                expand: true,
+                                elevation: 10,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return BookingCustomerEdit(
+                                    bookingDTO: booking,
+                                    restaurantDTO: restaurantDTO,
+                                    isAlsoBookingEditing: true,
+                                    branchCode: booking.branchCode!,);
+                                },
+                              );
+                            }, icon: const Icon(CupertinoIcons.settings_solid, size: 20, color: Colors.grey,)),
+                            ChatIconWhatsApp(booking: booking, iconSize: 30),
+                          ],
+                        ),
+                        if(booking.specialRequests?.isNotEmpty ?? false)
+                          Text('💬${booking.specialRequests!}', style: const TextStyle(fontSize: 10),),
+                        Text(
+                          'Aspetta risposta da ${formatDuration(DateTime.now().difference(booking.createdAt!))}${DateTime.now().difference(booking.createdAt!).inMinutes < 60 ? ' minuti' : ' ore'}',
+                          style: TextStyle(color: Colors.grey[900], fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -225,7 +227,7 @@ class BookingToManageCard extends StatelessWidget {
                   Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
-                  Text('Data inserimento: ${DateFormat('dd-MM-yyyy HH:mm').format(booking.createdAt!)}', style: TextStyle(fontSize: 10),),
+                  Text('Data inserimento: ${DateFormat('dd-MM-yyyy HH:mm').format(booking.createdAt!)}', style: const TextStyle(fontSize: 10),),
 
 
                   Row(

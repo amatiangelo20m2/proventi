@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../api/communication_client/lib/api.dart';
+import '../../../global/style.dart';
 import 'critical_conf_whatsapp_widget.dart';
 import 'instance_details_pronta.dart';
 
@@ -80,7 +81,7 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
               child: Shimmer.fromColors(
                 baseColor: Colors.grey,
                 highlightColor: Colors.white,
-                child: Icon(
+                child: const Icon(
                   FontAwesomeIcons.squareWhatsapp,
                   size: 36,
                   color: Colors.grey,
@@ -90,6 +91,7 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
           else
             Consumer<CommunicationStateManager>(
               builder: (BuildContext context, CommunicationStateManager value, Widget? child) {
+
                 // State: PRONTA
                 if (value.currentWhatsAppConfigurationDTO?.waApiState ==
                     WhatsAppConfigurationDTOWaApiStateEnum.PRONTA) {
@@ -98,7 +100,7 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
                     icon: Icon(
                       FontAwesomeIcons.squareWhatsapp,
                       size: 36,
-                      color: Colors.green,
+                      color: elegantGreen,
                     ),
                   );
                 }
@@ -127,9 +129,10 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
                 }
                 // State: Other
                 else {
+
                   return IconButton(
                     onPressed: _openCriticalWhatsAppProblemManager,
-                    icon: Icon(
+                    icon: const Icon(
                       FontAwesomeIcons.squareWhatsapp,
                       size: 36,
                       color: Colors.red,
@@ -148,10 +151,17 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shadowColor: Colors.white,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          content: const InstanceDetailsWhenPronta(),
+          shadowColor: blackDir,
+          backgroundColor: blackDir,
+          surfaceTintColor: blackDir,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                InstanceDetailsWhenPronta(),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -171,8 +181,8 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
       builder: (BuildContext context) {
         return AlertDialog(
           shadowColor: Colors.white,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
+          backgroundColor: blackDir,
+          surfaceTintColor: blackDir,
           content: const CriticalWhatsAppConfigurationWidget(),
           actions: [
             TextButton(

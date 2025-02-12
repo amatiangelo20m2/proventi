@@ -15,17 +15,19 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     return Consumer<CommunicationStateManager>(
       builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
         WhatsAppConfigurationDTO configuration = communicationStateManager.currentWhatsAppConfigurationDTO!;
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Column(
                 children: [
-                  Center(child: Text(' ${configuration.displayName ?? 'N/A'}', style: TextStyle(fontSize: 20, color: elegantBlue))),
+
+                  Center(child: Text(' ${configuration.displayName ?? 'N/A'}', style: TextStyle(fontSize: 20, color: Colors.white))),
                   if (configuration.photoUrl != null && configuration.photoUrl!.isNotEmpty)
                     Center(
                       child: Container(
@@ -33,7 +35,7 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
                         height: 200,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: globalGoldDark, width: 8),
+                          border: Border.all(color: Colors.white, width: 8),
                         ),
                         child: ClipOval(
                           child: Image.network(
@@ -51,27 +53,24 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
 
               Column(
                 children: [
-                  Center(child: Text('Numero collegato', style: TextStyle(fontSize: 7, color: elegantBlue))),
-                  Center(child: Text(' ${configuration.phone ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantBlue))),
+                  Center(child: Text('Numero collegato', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Center(child: Text(' ${configuration.phone ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.white))),
 
-                  Center(child: Text('Codice attività associata', style: TextStyle(fontSize: 7, color: elegantBlue))),
-                  Center(child: Text(' ${configuration.branchCode ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantBlue))),
+                  Center(child: Text('Codice attività associata', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Center(child: Text(' ${configuration.branchCode ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.white))),
 
-                  Center(child: Text('Identificativo istanza', style: TextStyle(fontSize: 7, color: elegantBlue))),
-                  Center(child: Text(' ${configuration.waApiInstanceId ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantBlue))),
+                  Center(child: Text('Identificativo istanza', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Center(child: Text(' ${configuration.waApiInstanceId ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.white))),
 
-                  Center(child: Text('Stato', style: TextStyle(fontSize: 7, color: elegantBlue))),
-                  Card(color: elegantBlue, child: Center(child: Text(' ${configuration.waApiState.toString() ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.green.shade600)))),
+                  Center(child: Text('Stato', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Card(color: blackDir, elevation: 10, child: Center(child: Text(' ${configuration.waApiState.toString() ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantGreen)))),
                   
-                  Text('Connesso da ${italianDateFormatWithTime.format(configuration.creationDate!)}', style: TextStyle(fontSize: 10, color: elegantBlue)),
-
+                  SizedBox(height: 40,)
                 ],
               ),
               Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
+                child: CupertinoButton(
+                  color: elegantRed,
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -115,7 +114,12 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
                   },
                   child: const Text('Disconnetti Numero', style: TextStyle(color: Colors.white)),
                 ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Connesso da ${italianDateFormatWithTime.format(configuration.creationDate!)}', style: TextStyle(fontSize: 7, color: Colors.grey)),
+              ),
+
             ],
           ),
         );

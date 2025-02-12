@@ -32,6 +32,7 @@ class CommunicationStateManager extends ChangeNotifier {
   DateTime? _lastApiCallTime;
   static const int _apiCallIntervalSeconds = 30;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
+
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
     final currentTime = DateTime.now();
     // Check if 60 seconds have passed since the last API call

@@ -122,17 +122,23 @@ void showCupertinoAlert(BuildContext context, String title, String message) {
   );
 }
 
-getFormEmoji(List<FormDTO> formDTOs, BookingDTO booking) {
-  if(formDTOs.isEmpty || booking.formCode == ''){
+String getFormEmoji(List<FormDTO> formDTOs, BookingDTO booking) {
+  if (formDTOs.isEmpty || booking.formCode == null || booking.formCode!.isEmpty) {
     return '';
-  }else{
-    if(formDTOs.where((element) => element.formCode == booking.formCode).isEmpty){
-      return '';
-    }else {
-      return formDTOs.where((element) => element.formCode == booking.formCode).first.outputNameForCustomer;
-    }
   }
+
+  var matchingForm = formDTOs.firstWhere(
+        (element) => element.formCode == booking.formCode,
+    orElse: () => FormDTO(formCode: '', outputNameForCustomer: ''),
+  );
+
+  if (matchingForm.outputNameForCustomer == null) {
+    return '';
+  }
+
+  return matchingForm.outputNameForCustomer!;
 }
+
 getSourceEmoji(BookingDTOBookingSourceEnum source) {
   switch(source){
     case BookingDTOBookingSourceEnum.APP:
