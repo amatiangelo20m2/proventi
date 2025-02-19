@@ -30,8 +30,21 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
   Timer? _pollingTimer;
 
   @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(() {
+      final text = _phoneController.text;
+      _phoneController.value = _phoneController.value.copyWith(
+        text: text.replaceAll(RegExp(r'[^0-9]'), ''),
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    });
+  }
+
+  @override
   void dispose() {
     _pollingTimer?.cancel();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -39,97 +52,112 @@ class _PairedCodeWhatsAppState extends State<PairedCodeWhatsApp> {
   Widget build(BuildContext context) {
     return Consumer<CommunicationStateManager>(
       builder: (BuildContext context, CommunicationStateManager communicationStateManager, Widget? child) {
-        return Column(
-          children: [
-            if(pairingCode == '')
-              Column(
-                children: [
-                  Row(
+        return Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if(pairingCode == '')
+                Column(
                   children: [
-                    CupertinoButton(onPressed: (){
-                      showCountryPicker(
-                        context: context,
-                        //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                        exclude: <String>['KN', 'MF'],
-                        favorite: <String>['IT'],
-                        showPhoneCode: true,
-                        onSelect: (Country country) {
-                          setState(() {
-                            _currentSelectedCountry = country;
-                            _prefixController.text = _currentSelectedCountry.countryCode;
-                          });
-                        },
-                        moveAlongWithKeyboard: false,
-                        countryListTheme: CountryListThemeData(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(40.0),
-                            topRight: Radius.circular(40.0),
-                          ),
-                          inputDecoration: InputDecoration(
-                            labelText: 'Ricerca nazione',
+                    Row(
+                    children: [
+                      CupertinoButton(onPressed: (){
+                        showCountryPicker(
+                          context: context,
+                          //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                          exclude: <String>['KN', 'MF'],
+                          favorite: <String>['IT'],
+                          showPhoneCode: true,
+                          onSelect: (Country country) {
+                            setState(() {
+                              _currentSelectedCountry = country;
+                              _prefixController.text = _currentSelectedCountry.countryCode;
+                            });
+                          },
+                          moveAlongWithKeyboard: false,
+                          countryListTheme: CountryListThemeData(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(40.0),
+                              topRight: Radius.circular(40.0),
+                            ),
+                            inputDecoration: InputDecoration(
+                              labelText: 'Ricerca nazione',
 
-                            prefixIcon: const Icon(CupertinoIcons.search),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xFF8C98A8).withOpacity(0.2),
+                              prefixIcon: const Icon(CupertinoIcons.search),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF8C98A8).withOpacity(0.2),
+                                ),
                               ),
                             ),
+                            searchTextStyle: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 15,
+                            ),
                           ),
-                          searchTextStyle: const TextStyle(
-                            color: Colors.blue,
-                            fontSize: 15,
-                          ),
+                        );
+                      }, child: Text('${_currentSelectedCountry.flagEmoji} '
+                          '+${_currentSelectedCountry.phoneCode}',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
+                      Expanded(
+                        child: CupertinoTextField(
+                          keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
+                          controller: _phoneController,
+                          placeholder: "Cellulare",
+                          clearButtonMode: OverlayVisibilityMode.always,
+                          style: const TextStyle(fontSize: 20),
+                          padding: const EdgeInsets.all(8),
                         ),
-                      );
-                    }, child: Text('${_currentSelectedCountry.flagEmoji} '
-                        '+${_currentSelectedCountry.phoneCode}',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
-                    Expanded(
-                      child: CupertinoTextField(
-                        keyboardType: const TextInputType.numberWithOptions(signed: false, decimal: false),
-                        controller: _phoneController,
-                        placeholder: "Cellulare",
-                        clearButtonMode: OverlayVisibilityMode.always,
-                        style: const TextStyle(fontSize: 13),
-                        padding: const EdgeInsets.all(8),
                       ),
-                    ),
-                  ],
-                 ),
-                  ElevatedButton(onPressed: () async {
-                    FocusScope.of(context).unfocus();
-                    final prefs = await SharedPreferences.getInstance();
-                    String branchCode = prefs.getString('branchCode').toString();
-                    if(_phoneController.text == ''){
-                      Fluttertoast.showToast(
-                        msg: "Inserisci un numero di telefono valido",
-                        toastLength: Toast.LENGTH_LONG,
-                        backgroundColor: Colors.red,
-                        fontSize: 18.0,
-                      );
-                    }else{
-                      print('Retrieve pairing code$branchCode${_prefixController.text}${_phoneController.text}');
-                      WhatsAppConfigurationDTO? whatsAppConfigurationDTO = await communicationStateManager
-                          .whatsAppConfigurationControllerApi
-                          .retrievePairingCodeWaApi(branchCode,
-                          _prefixController.text,
-                          _phoneController.text);
+                    ],
+                   ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: blackDir,
+                          shadowColor: Colors.black, // Shadow color
+                          elevation: 5, // Elevation
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // Rounded corners
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Padding
+                        ),
+                        onPressed: () async {
+                      FocusScope.of(context).unfocus();
+                      final prefs = await SharedPreferences.getInstance();
+                      String branchCode = prefs.getString('branchCode').toString();
+                      if(_phoneController.text == ''){
+                        Fluttertoast.showToast(
+                          msg: "Inserisci un numero di telefono valido",
+                          toastLength: Toast.LENGTH_LONG,
+                          backgroundColor: Colors.red,
+                          fontSize: 18.0,
+                        );
+                      }else{
+                        print('Retrieve pairing code$branchCode${_prefixController.text}${_phoneController.text}');
+                        WhatsAppConfigurationDTO? whatsAppConfigurationDTO = await communicationStateManager
+                            .whatsAppConfigurationControllerApi
+                            .retrievePairingCodeWaApi(branchCode,
+                            _prefixController.text,
+                            _phoneController.text);
 
-                      setState(() {
-                        pairingCode = whatsAppConfigurationDTO!.pairingCode!;
-                      });
-                      if (pairingCode != null) {
-                        startPolling(communicationStateManager, branchCode);
+                        setState(() {
+                          pairingCode = whatsAppConfigurationDTO!.pairingCode!;
+                        });
+                        if (pairingCode != null) {
+                          startPolling(communicationStateManager, branchCode);
+                        }
                       }
-                    }
-                  }, child: Text('Richiedi il codice'))
-                ],
-              ),
-            if(pairingCode != '')
-              buildRowWithContainers(pairingCode!),
+                    }, child: Text('Richiedi il codice', style: TextStyle(color: Colors.white),))
+                  ],
+                ),
+              if(pairingCode != '')
+                buildRowWithContainers(pairingCode!),
 
 
-          ],
+            ],
+          ),
         );
       },
 

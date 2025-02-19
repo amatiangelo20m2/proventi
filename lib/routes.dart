@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+import 'app/core/booking/booking_processed/booking_processed.dart';
 import 'app/core/customer/customer_screen.dart';
 import 'app/core/employee/reports/employee_create_update/employee_screen.dart';
 import 'app/core/employee/reports/report_employee_presence.dart';
@@ -14,5 +15,6 @@ class Routes {
     LinkWhatsAppComponent.routeName: (context) => const LinkWhatsAppComponent(),
     EmployeeScreen.routeName: (context) => const EmployeeScreen(),
     ReportEmployeePresence.routeName: (context) => const ReportEmployeePresence(),
+    ProcessedBookings.routeName: (context) => const ProcessedBookings(),
   };
 }

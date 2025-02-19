@@ -33,7 +33,7 @@ class ProcessedBookingCard extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                      'Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
+                      'Prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
                   Text(booking.customer!.phone!),
                   Text(booking.customer!.email!),
                   Text(booking.formCode!),
@@ -49,6 +49,7 @@ class ProcessedBookingCard extends StatelessWidget {
           ],
         ),
         actions: [
+          if (booking.bookingDate!.isAfter(DateTime.now().subtract(Duration(days: 2))))
           CupertinoActionSheetAction(
             onPressed: () async {
 

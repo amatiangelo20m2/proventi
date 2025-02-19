@@ -19,7 +19,7 @@ class RestaurantStateManager extends ChangeNotifier {
 
 
   List<RestaurantDTO>? _restaurantConfigurations = [];
-  RestaurantDTO? _choosedRestaurantConfiguration = RestaurantDTO(restaurantName: 'Loading..', branchCode: 'Loading..');
+  RestaurantDTO? _choosedRestaurantConfiguration = RestaurantDTO(restaurantName: '', branchCode: '');
   List<BookingDTO>? _allBookings = [];
   List<FormDTO>? _currentBranchForms = [];
 
@@ -65,7 +65,7 @@ class RestaurantStateManager extends ChangeNotifier {
 
 
   Future<void> retrieveBranchConfiguration(String branchCode, DateTime dateTime) async {
-    print('Branch code to retrieve: $branchCode');
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('branchCode', branchCode);
 
@@ -76,7 +76,7 @@ class RestaurantStateManager extends ChangeNotifier {
   }
 
   updateBooking(BookingDTO bookingDTO, bool sendMessage) async {
-    print('uipdatetgedgfvdfv');
+
       await _bookingControllerApi.updateBooking(sendMessage, bookingDTO);
       retrieveBranchConfiguration(_choosedRestaurantConfiguration!.branchCode!, DateTime.now());
   }

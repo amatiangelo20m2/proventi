@@ -85,13 +85,17 @@ class _QrCodeWidgetScannerWhatsAppState extends State<QrCodeWidgetScannerWhatsAp
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.memory(
               imageBytes,
               fit: BoxFit.cover, // Adjust as needed
             ),
-            LinearProgressIndicator(
-              color: globalGold,
+            SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              child: LinearProgressIndicator(
+                color: blackDir,
+              ),
             ),
             const Text('Scannerizza il QR code per collegare numero whatsapp', style: TextStyle(fontSize: 7)),
           ],

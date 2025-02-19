@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:proventi/app/core/whatconf/all_chat_widget.dart';
 import 'package:proventi/app/core/whatconf/whatsappconfwidget.dart';
 import 'package:proventi/app/login/login_screen.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
@@ -57,7 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           backgroundColor: Colors.white,
           bottomNavigationBar: BottomNavigationBar(
+
             currentIndex: _pageIndex,
+
             selectedItemColor: Colors.black,
             backgroundColor: Colors.white,
             elevation: 0,
@@ -75,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             items: [
               _buildBottomNavigationBarItem(
+                sizeIcon: 23,
                 svgPath: 'assets/svg/calendar.svg',
                 label: BookingDTOStatusEnum.CONFERMATO.value.replaceAll('_', ' '),
                 badgeColor: getStatusColor(BookingDTOStatusEnum.CONFERMATO),
@@ -88,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 isSelected: _pageIndex == 0,
               ),
               _buildBottomNavigationBarItem(
+                sizeIcon: 23,
                 svgPath: 'assets/svg/hourglass.svg',
                 label: BookingDTOStatusEnum.IN_ATTESA.value.replaceAll('_', ' '),
                 badgeColor: getStatusColor(BookingDTOStatusEnum.IN_ATTESA),
@@ -98,8 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 isSelected: _pageIndex == 1,
               ),
               _buildBottomNavigationBarItem(
+                sizeIcon: 23,
                 svgPath: 'assets/svg/fast_queue.svg',
-                label: BookingDTOStatusEnum.LISTA_ATTESA.value.replaceAll('_', ' '),
+                label: 'PRELAZIONE TAVOLO',
                 badgeColor: getStatusColor(BookingDTOStatusEnum.LISTA_ATTESA),
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
@@ -108,8 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 isSelected: _pageIndex == 2,
               ),
               _buildBottomNavigationBarItem(
+                sizeIcon: 23,
                 svgPath: 'assets/svg/booking_edited.svg',
-                label: BookingDTOStatusEnum.MODIFICATO_DA_UTENTE.value.replaceAll('_', ' '),
+                label: 'MODIFICATO',
                 badgeColor: Colors.deepOrange,
                 badgeCount: restaurantStateManager.allBookings!
                     .where((element) =>
@@ -119,12 +126,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 isSelected: _pageIndex == 3,
               ),
               _buildBottomNavigationBarItem(
-                svgPath: 'assets/svg/check.svg',
-                label: 'PROCESSATE',
+                sizeIcon: 23,
+                svgPath: 'assets/svg/chat.svg',
+                label: 'CHAT',
                 badgeColor: Colors.black,
                 badgeCount: 0,
                 isSelected: _pageIndex == 4,
               ),
+
             ],
           ),
           drawer: Drawer(
@@ -163,6 +172,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () async {
                     Navigator.of(context).pop();
                     await EmployeeStateManager().retrieveCurrentEmployee();
+                    Navigator.pushNamed(context, ProcessedBookings.routeName);
+                  },
+                  title: const Text(
+                    'Storico Prenotazioni',
+                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
+                  ),
+                  leading: const Icon(
+                    CupertinoIcons.square_list,
+                    color: CupertinoColors.white,
+                  ),
+                ),
+                ListTile(
+                  onTap: () async {
+                    Navigator.of(context).pop();
                     Navigator.pushNamed(context, ReportEmployeePresence.routeName);
                   },
                   title: const Text(
@@ -170,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
                   ),
                   leading: const Icon(
-                    CupertinoIcons.doc_plaintext,
+                    CupertinoIcons.calendar_badge_plus,
                     color: CupertinoColors.white,
                   ),
                 ),
@@ -305,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 3:
         return const BookingEditedByCustomer();
       case 4:
-        return const ProcessedBookings();
+        return const AllChatWidget();
     }
   }
 
@@ -315,8 +338,10 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color badgeColor,
     required int badgeCount,
     required bool isSelected,
+    required double sizeIcon,
   }) {
     return BottomNavigationBarItem(
+      backgroundColor: Colors.white,
       icon: badges.Badge(
         showBadge: badgeCount > 0,
         badgeStyle: badges.BadgeStyle(badgeColor: badgeColor),
@@ -327,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SvgPicture.asset(
           color: isSelected ? Colors.black : Colors.grey,
           svgPath,
-          height: 23,
+          height: sizeIcon,
         ),
       ),
       label: label,

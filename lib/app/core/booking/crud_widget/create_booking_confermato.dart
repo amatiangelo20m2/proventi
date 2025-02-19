@@ -85,7 +85,7 @@ class _CreateBookingState extends State<CreateBooking> {
       },
     );
     if (pickedDate != null && pickedDate != _bookingDate) {
-      print('Selected date: ' + pickedDate.toLocal().toString());
+
       setState(() {
         _bookingDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
         print(_bookingDate.toLocal().toString());

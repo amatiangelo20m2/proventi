@@ -296,6 +296,9 @@ class _FastQueueCardState extends State<FastQueueCard> {
               read: '0',
               bookingId: widget.booking.bookingCode!,
               navigationPage: 'QUEUE_FAST',
+              branchCode: widget.booking.branchCode!,
+              branchName: widget.booking.branchName!,
+              notificationType: 'FAST_LANE',
             ),
           );
         }

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/core/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import '../../environment_config.dart';
 import '../../global/style.dart';
 import '../../state_manager/restaurant_state_manager.dart';
@@ -24,6 +25,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final TextEditingController _branchCodeController = TextEditingController(text: '');
   final TextEditingController _usernameController = TextEditingController(text: '');
   final TextEditingController _passwordController = TextEditingController(text: '');
@@ -98,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.remove('loginMethod');
     }
   }
+
   Future<void> _retrieveFcmToken() async {
     const int maxRetries = 5;
     const Duration retryDelay = Duration(seconds: 2);
@@ -115,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
         String? token;
         while (token == null && retryCount < maxRetries) {
           token = await messaging.getToken();
-          if (token != null) {
+          if (token != null && token.isNotEmpty) {
             setState(() => mdd.fcmToken = token);
             print('FCM Token: ${mdd.fcmToken}');
           } else {
@@ -127,6 +130,12 @@ class _LoginPageState extends State<LoginPage> {
         if (token == null) {
           _showRestartAppDialog();
         }
+
+        // Listen for token refresh
+        FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+          setState(() => mdd.fcmToken = newToken);
+          print('FCM Token refreshed: ${mdd.fcmToken}');
+        });
       } else {
         _showRestartAppDialog();
       }
@@ -135,7 +144,6 @@ class _LoginPageState extends State<LoginPage> {
       _showRestartAppDialog();
     }
   }
-
   void _showRestartAppDialog() {
     showCupertinoDialog(
       context: context,
@@ -155,8 +163,19 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
+
   Future<void> _fetchDeviceInfo() async {
     final deviceInfoPlugin = DeviceInfoPlugin();
+    final prefs = await SharedPreferences.getInstance();
+
+    String? uniqueId = prefs.getString('uniqueId');
+    if (uniqueId == null) {
+      uniqueId = const Uuid().v4();
+      await prefs.setString('uniqueId', uniqueId);
+    }
+
+    mdd.uniquePhoneIdentifier = uniqueId;
+    print('Unique Identifier: $uniqueId');
 
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
@@ -169,10 +188,9 @@ class _LoginPageState extends State<LoginPage> {
       mdd.platform = Platform.operatingSystem;
       mdd.machine = iosInfo.utsname.machine;
       mdd.release = iosInfo.utsname.release;
-      mdd.uniquePhoneIdentifier = iosInfo.identifierForVendor;
-      print('identifier: ' + mdd.uniquePhoneIdentifier.toString());
+      //mdd.uniquePhoneIdentifier = iosInfo.identifierForVendor;
+      //print('identifier: ' + mdd.uniquePhoneIdentifier.toString());
       mdd.systemVersion = iosInfo.utsname.nodename;
-      print('nodename: ' + mdd.systemVersion.toString());
     }
   }
 
@@ -193,7 +211,18 @@ class _LoginPageState extends State<LoginPage> {
                 CupertinoActivityIndicator(
                   color: globalGold,
                 ),
-                const Text('Carico i dati...', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
+                Column(
+                  children: [
+                    const Text('Carico i dati...', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _showLoadingPage = false;
+                        });
+                      }, child: Icon(Icons.abc_outlined)
+                    ),
+                  ],
+                ),
               ],
             )) : Stack(
               children: [
@@ -202,6 +231,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 20),
                     child: SingleChildScrollView(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 8, left: 8),
@@ -222,7 +252,6 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                           ),
-
                           Column(
                             children: [
                               Card(
@@ -240,8 +269,11 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               Text('v. $version_app', style: TextStyle(color: CupertinoColors.white, fontSize: 8)),
+
                             ],
                           ),
+                          Text('fcm. ${mdd.fcmToken}', style: TextStyle(color: CupertinoColors.white, fontSize: 2)),
+
                         ],
                       ),
                     ),
@@ -458,7 +490,7 @@ class _LoginPageState extends State<LoginPage> {
       await _retrieveFcmToken();
       await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([]);
 
-      print('FCM Token XXX: ${mdd.fcmToken}');
+      print('FCM Token: ${mdd.fcmToken}');
 
       await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(
         _userCodeController.text,
@@ -482,7 +514,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0)));
 
     }catch(e){
-      print('Exception' + e.toString());
+      print('Exception$e');
       setState(() {
         _showLoadingPage = false;
       });

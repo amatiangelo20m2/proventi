@@ -30,7 +30,7 @@ class CommunicationStateManager extends ChangeNotifier {
     retrieveWaApiConfStatus();
   }
   DateTime? _lastApiCallTime;
-  static const int _apiCallIntervalSeconds = 30;
+  static const int _apiCallIntervalSeconds = 60;
   WhatsAppConfigurationDTO? currentWhatsAppConfigurationDTO;
 
   Future<WhatsAppConfigurationDTO?> retrieveWaApiConfStatus() async {
@@ -52,6 +52,7 @@ class CommunicationStateManager extends ChangeNotifier {
     return currentWhatsAppConfigurationDTO;
   }
   List<AllChatListDataDTO>? chatList = [];
+
   Future<void> retrieveChatData() async {
     try {
       BuildContext? context = navigatorKey.currentContext;
@@ -68,7 +69,7 @@ class CommunicationStateManager extends ChangeNotifier {
           // Log the request details
           //print('Making API call to: ${_communicationClient.basePath}/api/wsapicontroller/fetchallmessages/$branchCode/30');
 
-          chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 5);
+          chatList = await whatsAppConfigurationControllerApi.fetchAllMessages(branchCode, 25);
           //print('API call successful, chat list retrieved' + chatList!.toString());
         } catch (e) {
           print('Error -> : ' + e.toString());
@@ -93,6 +94,7 @@ class CommunicationStateManager extends ChangeNotifier {
 
   }
   List<ChatMessage> messages = [];
+
   Future<ChatMessagesResponseDTO?> retrieveChatSpecificWithUserData(String customerNumber) async {
     //final prefs = await SharedPreferences.getInstance();
     String branchCode = prefs.getString('branchCode').toString();
@@ -101,11 +103,8 @@ class CommunicationStateManager extends ChangeNotifier {
 
     return chatMessageResponseDTO;
   }
-  void setCurrentMessages(List<ChatMessage> mapMessages) {
-    messages = mapMessages;
-    notifyListeners();
 
-  }
+
   Map<String, String> urlsPhotos = Map();
   retrievePhotoUrlByPhone(String branchCode, String phoneNumber) async {
 

@@ -103,12 +103,13 @@ class _CriticalWhatsAppConfigurationWidgetState extends State<CriticalWhatsAppCo
 
                       }, child: _loading ? Column(
                         children: [
-                          Text('Attendi per favore, sto eseguendo il ripristino..', style: TextStyle(fontSize: 20, color: Colors.black),),
+                          Text('Attendi per favore, sto eseguendo il ripristino..', style: TextStyle(fontSize: 13, color: Colors.black),),
                           CupertinoActivityIndicator(
                                             color: globalGold,
-                                            radius: 25,
+                                            radius: 20,
                                           ),
                         ],
+
                       ) : Text('RESET CONFIGURAZIONE', style: TextStyle(fontSize: 15, color: Colors.white),)),
                 ),
               ),
