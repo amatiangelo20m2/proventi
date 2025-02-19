@@ -5,11 +5,12 @@
 import 'package:ventimetri_api_auth/api.dart';
 ```
 
-All URIs are relative to *http://192.168.1.9:64702/ventimetriauth*
+All URIs are relative to *http://192.168.1.22:4657/ventimetriauth*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**deleteUserByEmail**](AuthControllerApi.md#deleteuserbyemail) | **DELETE** /api/auth/delete | 
+[**getAppVersion**](AuthControllerApi.md#getappversion) | **GET** /api/auth/proventi/version | 
 [**getFcmTokenByUserCode**](AuthControllerApi.md#getfcmtokenbyusercode) | **GET** /api/auth/getfcmtoken | 
 [**resetPassword**](AuthControllerApi.md#resetpassword) | **PUT** /api/auth/reset/password | 
 [**retrieveUserByEmail**](AuthControllerApi.md#retrieveuserbyemail) | **GET** /api/auth/retrieve | 
@@ -59,6 +60,43 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getAppVersion**
+> String getAppVersion()
+
+
+
+### Example
+```dart
+import 'package:ventimetri_api_auth/api.dart';
+
+final api_instance = AuthControllerApi();
+
+try {
+    final result = api_instance.getAppVersion();
+    print(result);
+} catch (e) {
+    print('Exception when calling AuthControllerApi->getAppVersion: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

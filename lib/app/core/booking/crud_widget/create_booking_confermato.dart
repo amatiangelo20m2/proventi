@@ -43,7 +43,7 @@ class _CreateBookingState extends State<CreateBooking> {
   String convertMinutesToHMMFormat(int minutes) {
     int hours = minutes ~/ 60;
     int remainingMinutes = minutes % 60;
-    return 'Arrivo alle ${hours}:${remainingMinutes.toString().padLeft(2, '0')}';
+    return 'Arrivo alle $hours:${remainingMinutes.toString().padLeft(2, '0')}';
   }
 
   Country _currentSelectedCountry = Country.parse('IT');
@@ -53,6 +53,7 @@ class _CreateBookingState extends State<CreateBooking> {
   void initState() {
     super.initState();
 
+
     _bookingDate = widget.currentSelectedDate;
 
       _minutesFocusNode.addListener(() {
@@ -61,6 +62,8 @@ class _CreateBookingState extends State<CreateBooking> {
       }
     });
   }
+
+
 
   @override
   void dispose() {
@@ -99,7 +102,6 @@ class _CreateBookingState extends State<CreateBooking> {
   int? selectedMinute;
 
   void _onChipTap(String time) {
-    // Parse the time string to extract hour and minute
     DateTime parsedTime = DateFormat('H:mm').parse(time);
     setState(() {
       selectedTime = time;
@@ -119,8 +121,8 @@ class _CreateBookingState extends State<CreateBooking> {
           List<String> timeSlotDinner = generateTimeSlots(restaurantStateManager.restaurantConfiguration!.nightTimeWorkingRange!);
           return CupertinoPageScaffold(
             backgroundColor: Colors.white,
-            navigationBar: const CupertinoNavigationBar(
-              middle: Text("Crea prenotazione"),
+            navigationBar: CupertinoNavigationBar(
+              middle: Text("Crea prenotazione", style: TextStyle(fontSize: 16, color: Colors.grey.shade900),),
             ),
             child: Stack(
               children: [Padding(
@@ -173,11 +175,19 @@ class _CreateBookingState extends State<CreateBooking> {
                               child: CupertinoTextField(
                                 onChanged: (typingNumber){
 
+                                  print(typingNumber);
+
+                                  if(typingNumber.length < 4){
+                                    setState(() {
+                                      currentCustomerDTOList.clear();
+                                    });
+                                  }
+
                                   setState(() {
                                     currentCustomerDTOList.clear();
-                                    if(typingNumber.length > 4){
+                                    if(typingNumber.replaceAll(' ', '').length > 4){
                                       for (var element in customerStateManager.historicalCustomerData!) {
-                                        if(element.customerDTO!.phone!.contains(typingNumber)){
+                                        if(element.customerDTO!.phone!.contains(typingNumber.replaceAll(' ', ''))){
                                           currentCustomerDTOList.add(element.customerDTO!);
                                         }
                                       }
@@ -242,7 +252,7 @@ class _CreateBookingState extends State<CreateBooking> {
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Chip(
                           label: Text(time),
-                          backgroundColor: isSelected ? globalGold : Colors.orangeAccent.withOpacity(0.1),
+                          backgroundColor: isSelected ? globalGold : globalGold.withAlpha(100),
                           labelStyle: TextStyle(
                             color: isSelected ? Colors.white : Colors.black,
                           ),
@@ -261,7 +271,7 @@ class _CreateBookingState extends State<CreateBooking> {
                             padding: const EdgeInsets.symmetric(horizontal: 4.0),
                             child: Chip(
                               label: Text(time),
-                              backgroundColor: isSelected ? globalGold : Colors.blueAccent.withOpacity(0.1),
+                              backgroundColor: isSelected ? elegantBlue : Colors.blueAccent.withOpacity(0.1),
                               labelStyle: TextStyle(
                                 color: isSelected ? Colors.white : Colors.black,
                               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proventi/global/style.dart';
 import '../../../../../api/restaurant_client/lib/api.dart';
 import '../../bookings_utils.dart';
 
@@ -9,7 +10,7 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
   int refused = getBookingListFilteredByStatus(list, [BookingDTOStatusEnum.RIFIUTATO]).length;
 
   if (bookings == 0 && refused == 0) {
-    return SizedBox(
+    return const SizedBox(
       height: 0,
     );
   }
@@ -23,7 +24,7 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
             borderRadius: BorderRadius.circular(5),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.blueAccent.withAlpha(150),
+                color: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
@@ -38,13 +39,13 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
                 padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Row(
                   children: [
-                    Icon(CupertinoIcons.book,
+                    Icon(CupertinoIcons.book_circle,
                         size: 18,
                         color: Colors.white),
                     Text(
-                      ' $bookings',
+                      '$bookings',
                       style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 11,
                           color: Colors.white),
                     ),
                   ],
@@ -61,7 +62,7 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
             borderRadius: BorderRadius.circular(5),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.redAccent.withAlpha(180),
+                color: elegantRed,
                 borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
@@ -80,9 +81,9 @@ buildCurrentDaySituationWidget(List<BookingDTO> list, bool isSelected) {
                         size: 18,
                         color: Colors.white),
                     Text(
-                      ' $refused',
+                      '$refused',
                       style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 11,
                           color: Colors.white),
                     ),
                   ],

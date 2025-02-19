@@ -53,11 +53,12 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://192.168.1.9:64702/ventimetriauth*
+All URIs are relative to *http://192.168.1.22:4657/ventimetriauth*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AuthControllerApi* | [**deleteUserByEmail**](doc//AuthControllerApi.md#deleteuserbyemail) | **DELETE** /api/auth/delete | 
+*AuthControllerApi* | [**getAppVersion**](doc//AuthControllerApi.md#getappversion) | **GET** /api/auth/proventi/version | 
 *AuthControllerApi* | [**getFcmTokenByUserCode**](doc//AuthControllerApi.md#getfcmtokenbyusercode) | **GET** /api/auth/getfcmtoken | 
 *AuthControllerApi* | [**resetPassword**](doc//AuthControllerApi.md#resetpassword) | **PUT** /api/auth/reset/password | 
 *AuthControllerApi* | [**retrieveUserByEmail**](doc//AuthControllerApi.md#retrieveuserbyemail) | **GET** /api/auth/retrieve | 

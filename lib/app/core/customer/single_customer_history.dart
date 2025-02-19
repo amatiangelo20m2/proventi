@@ -145,22 +145,22 @@ class _SingleCustomerHistoryState extends State<SingleCustomerHistory> {
                                   _buildBookingStatusCard(
                                     bookings.where((element) => element.status == BookingDTOStatusEnum.ARRIVATO).length,
                                     'Arrivato',
-                                    Colors.green,
+                                    Colors.green.withAlpha(180),
                                   ),
                                   _buildBookingStatusCard(
                                     bookings.where((element) => element.status == BookingDTOStatusEnum.NON_ARRIVATO).length,
                                     'No Show',
-                                    Colors.yellow.shade700,
+                                    Colors.yellow.shade700.withAlpha(180),
                                   ),
                                   _buildBookingStatusCard(
                                     bookings.where((element) => element.status == BookingDTOStatusEnum.RIFIUTATO).length,
                                     'Rifiutato',
-                                    Colors.redAccent,
+                                    Colors.redAccent.withAlpha(180),
                                   ),
                                   _buildBookingStatusCard(
                                     bookings.where((element) => element.status == BookingDTOStatusEnum.ELIMINATO).length,
                                     'Eliminato',
-                                    Colors.blueGrey,
+                                    Colors.blueGrey.withAlpha(180),
                                   ),
                                 ],
                               ),

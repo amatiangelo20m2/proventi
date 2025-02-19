@@ -7,7 +7,7 @@ import '../api/auth_client/lib/api.dart' as AUTH;
 import '../environment_config.dart';
 import '../global/style.dart';
 
-class UserStateManager extends ChangeNotifier {
+class AuthenticatorAndUserStateManager extends ChangeNotifier {
 
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -22,8 +22,18 @@ class UserStateManager extends ChangeNotifier {
   ApiClient get apiClient => _apiClient;
   VentiMetriQuadriData get ventiMetriQuadriData => _ventiMetriQuadriData;
 
-  UserStateManager(this.navigatorKey){
+  AuthenticatorAndUserStateManager(this.navigatorKey){
     _initializeClient();
+  }
+
+
+  Future<String> retrieveAppVersion() async {
+    final response = await _authenticationControllerApi.getAppVersionWithHttpInfo();
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Errore durante il recupero della versione dell\'app. Contattare assistenza');
+    }
   }
 
   void _initializeClient() {
@@ -47,8 +57,12 @@ class UserStateManager extends ChangeNotifier {
         AUTH.UserCodeCredential(userCode: userCode, password: password),
       );
 
+      print('Status code: ' + httpResult.statusCode.toString());
+      print(httpResult);
+
       if (httpResult.statusCode == 200) {
         final branchResponse = await _branchControllerApi.retrieveBranches(userCode, BranchResponseEntityTypeEnum.RISTORANTE.value, fcmToken: fcmToken);
+
         if (branchResponse != null) {
           _ventiMetriQuadriData = branchResponse;
           notifyListeners();

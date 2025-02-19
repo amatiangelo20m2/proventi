@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
+import 'package:proventi/state_manager/restaurant_state_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/app/core/notification/state_manager/notification_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../global/style.dart';
+import '../home_screen.dart';
 
 class NotificationsPage extends StatefulWidget {
   static final String routeName = 'notification_screen';
@@ -33,6 +37,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
         title: const Text('Notifiche', style: TextStyle(fontWeight: FontWeight.bold)),
         elevation: 0,
         actions: [
+          IconButton(onPressed: () {
+
+          },
+            icon: Icon(CupertinoIcons.slider_horizontal_3, color: Colors.grey[900],),),
           IconButton(onPressed: (){
             showDialog(
               context: context,
@@ -117,6 +125,64 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 child: ListTile(
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    String currentBranchCode = prefs.getString('branchCode').toString();
+
+                    if(currentBranchCode == notification.branchCode){
+                      if(notificationProvider.notifications[index].navigationPage == 'BOOKING'){
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 1,)),
+                        );
+                      }
+                    }else{
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title: Text('Switch attività'),
+                            content: Text('Per visualizzare la notifica devi passare su ${notification.branchName}'),
+                            actions: <Widget>[
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: Text('Vai a ${notification.branchName}', style: TextStyle(fontSize: 15, color: blackDir),),
+                                onPressed: () async {
+
+                                  final restaurantStateManager = Provider.of<RestaurantStateManager>(context, listen: false);
+                                  await restaurantStateManager.retrieveBranchConfiguration(notification.branchCode, DateTime.now());
+
+                                  Fluttertoast.showToast(
+                                    webShowClose: true,
+                                    timeInSecForIosWeb: 1,
+                                    msg: 'Sei ora su branch ${notification.branchName}',
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    backgroundColor: Colors.black,
+                                    textColor: Colors.white,
+                                    fontSize: 12.0,
+                                  );
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(builder: (context) => const HomeScreen(pageIndex: 0,)),
+                                  );
+
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                child: Text('Indietro', style: TextStyle(fontSize: 12, color: Colors.grey),),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+
+
+                  },
                   leading: CircleAvatar(
                     backgroundColor: blackDir,
                     child: badges.Badge(
@@ -136,9 +202,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       Text(notification.body,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11),),
-                      Text(notification.branchCode + ' - ' + notification.branchName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11),),
+                      Text(notification.branchName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 7),),
                       Divider(color: Colors.grey.shade300, thickness: 1,),
                     ],
                   ),
@@ -154,6 +220,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       },
     );
   }
+
 
   String _formatDate(String date) {
     if(date.isEmpty){

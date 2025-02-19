@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:proventi/environment_config.dart';
 import 'package:proventi/global/style.dart';
+import 'package:provider/provider.dart';
 import 'package:shorebird_code_push/shorebird_code_push.dart';
 import '../app/login/login_screen.dart';
+import '../state_manager/user_state_manager.dart';
+import 'update_app_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,10 +28,10 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-
     setState(() => _isUpdaterAvailable = _updater.isAvailable);
-
     print(_updater.readCurrentPatch());
+
+
 
     _updater.readCurrentPatch().then((currentPatch) {
       setState(() => _currentPatch = currentPatch);
@@ -35,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
       debugPrint('Error reading current patch: $error');
     });
     _checkForUpdate();
-    _loadData();
+
   }
 
 
@@ -69,13 +73,6 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _loadData() async {
-
-    //RestaurantDTO? restaurantDTO = await Provider.of<RestaurantStateManager>(context, listen: false)
-    //    .restaurantControllerApi.retrieveConfiguration(employeeDTO.branchCode!, 'XXX');
-
-    //await Provider.of<RestaurantStateManager>(context, listen: false).setBranchList([restaurantDTO!]);
-
-
     await Future.delayed(const Duration(seconds: 2));
 
     Navigator.of(context).pushReplacement(
@@ -177,42 +174,104 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      backgroundColor: blackDir,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: 0,),
-
-            Hero(
-              tag: 'logo_landing',
-              child: Image.asset(
-                'assets/images/logo.png',
-                width: MediaQuery.of(context).size.width / 3,
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(version_app, style: TextStyle(color: Colors.white, fontSize: 13),),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 100),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.5,
-                    child: CupertinoActivityIndicator(
-                      radius: 15,
-                      color: globalGold,
-                    ),
+    return Consumer<AuthenticatorAndUserStateManager>(
+      builder: (BuildContext context, AuthenticatorAndUserStateManager authStateManager, Widget? child) {
+        return FutureBuilder<String>(
+          future: authStateManager.retrieveAppVersion(),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                backgroundColor: blackDir,
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(width: 0,),
+                      Hero(
+                        tag: 'logo_landing',
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          width: MediaQuery.of(context).size.width / 3,
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 100),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.5,
+                              child: CupertinoActivityIndicator(
+                                radius: 15,
+                                color: globalGold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              );
+            } else if (snapshot.hasError) {
+              return Scaffold(
+                backgroundColor: blackDir,
+                body: Center(
+                  child: Text(
+                    'Errore: ${snapshot.error}',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              );
+            } else {
+
+              if(snapshot.data == version_app){
+                _loadData();
+                return Scaffold(
+                  backgroundColor: blackDir,
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(width: 0,),
+                        Hero(
+                          tag: 'logo_landing',
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            width: MediaQuery.of(context).size.width / 3,
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Versione app: ${snapshot.data}',
+                                style: TextStyle(color: Colors.white, fontSize: 13),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 100),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: CupertinoActivityIndicator(
+                                  radius: 15,
+                                  color: globalGold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }else{
+                return UpdateAppWidget(appVersion: snapshot.data.toString(),);
+              }
+            }
+          },
+        );
+      },
     );
   }
 }

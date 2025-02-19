@@ -155,13 +155,13 @@ class BookingConfirmedCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '${booking.customer!.firstName!.toUpperCase()} '
-                        '${booking.customer!.lastName!.toUpperCase()} '
-                        '${getFlagByPrefix(booking.customer!.prefix!)}',
+                    '${booking.customer!.firstName!} '
+                        '${booking.customer!.lastName!} '
+                        '${getFlagByPrefix(booking.customer!.prefix!)}'.replaceAll('  ', ' '),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: blackDir,
+                      color: Colors.grey.shade900,
                     ),
                   ),
                   Text(getFormEmoji(forms, booking), style: const TextStyle(fontSize: 14),),

@@ -56,7 +56,8 @@ class RestaurantStateManager extends ChangeNotifier {
   }
 
   setBranchList(List<RestaurantDTO> restaurantDTOList) {
-    if(restaurantDTOList!.isNotEmpty) {
+    print('setBranchList' + restaurantDTOList.toString());
+    if(restaurantDTOList.isNotEmpty) {
       _restaurantConfigurations = restaurantDTOList;
       retrieveBranchConfiguration(_restaurantConfigurations!.first.branchCode!, DateTime.now());
     }

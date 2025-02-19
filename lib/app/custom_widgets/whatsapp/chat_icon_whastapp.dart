@@ -53,9 +53,9 @@ class _ChatIconWhatsAppState extends State<ChatIconWhatsApp> {
             future: communication.checkIfChatsContainCurrentNumberWithUnreadChats(widget.booking),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return Icon(FontAwesomeIcons.whatsapp, color: Colors.grey, size: 25);
               } else if (snapshot.hasError) {
-                return const Icon(Icons.error, color: Colors.red);
+                return Icon(FontAwesomeIcons.whatsapp, color: Colors.red, size: 25);
               } else if (snapshot.hasData && snapshot.data == true) {
                 return Stack(
                   children: [

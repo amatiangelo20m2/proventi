@@ -269,6 +269,7 @@ class BookingToManageCard extends StatelessWidget {
                 Response responseUpdate = await Provider.of<RestaurantStateManager>(context, listen: false)
                     .bookingControllerApi.updateBookingWithHttpInfo(true, BookingDTO(
                     bookingCode: booking.bookingCode,
+                    branchCode: booking.branchCode,
                     status: BookingDTOStatusEnum.CONFERMATO
                 ));
                 if(responseUpdate.statusCode == 409){
@@ -278,8 +279,7 @@ class BookingToManageCard extends StatelessWidget {
                   _showSnackbar(context, 'Prenotazione di ${booking.customer!.firstName!} è già stata elaborata' );
 
                 } else if(responseUpdate.statusCode == 200){
-                  await Provider.of<RestaurantStateManager>(context, listen: false)
-                      .refreshDate();
+                  await Provider.of<RestaurantStateManager>(context, listen: false).refreshDate();
                   _showSnackbar(context, 'Prenotazione di ${booking.customer!.firstName!} confermata ✅' );
                 }else{
                   _showSnackbar(context, 'Ho riscontrato un errore generico durante aggiormamento prenotazione di ${booking.customer!.firstName!}. Riprova fra 2 minuti.❌❌' );

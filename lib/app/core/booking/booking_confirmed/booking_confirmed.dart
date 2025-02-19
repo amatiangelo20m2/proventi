@@ -120,8 +120,8 @@ class _BookingScreenState extends State<BookingScreen> {
         _days.indexWhere((day) => day.isAtSameMomentAs(_selectedDate));
     if (selectedIndex != -1) {
       _scrollController.animateTo(
-        selectedIndex * 100.0, // Adjust as needed based on your item width
-        duration: const Duration(milliseconds: 250),
+        selectedIndex * 90.0, // Adjust as needed based on your item width
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
     }
@@ -275,7 +275,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                   if(!_isScrolledDown) SizedBox(
-                    height: 98,
+                    height: 75,
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (scrollNotification) {
                         if (scrollNotification is ScrollUpdateNotification) {
@@ -306,17 +306,17 @@ class _BookingScreenState extends State<BookingScreen> {
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Material(
                                     shadowColor: Colors.grey,
                                     elevation: isSelected ? 1 : 3,
                                     borderRadius: BorderRadius.circular(15),
                                     child: Container(
-                                      width: 100,
+                                      width: 90,
                                       decoration: BoxDecoration(
                                           color: isSelected
-                                              ? elegantBlue
-                                              : Colors.grey.shade100,
+                                              ? blackDir
+                                              : Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(15)),
                                       child: Column(
@@ -330,7 +330,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 .toUpperCase(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 9,
+                                                fontSize: 7,
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black),
@@ -342,7 +342,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontSize: 18),
+                                                fontSize: 12),
                                           ),
                                           Text(
                                             months[day.month - 1].toUpperCase(),
@@ -351,7 +351,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontSize: 7),
+                                                fontSize: 5),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(right: 15, left: 15),

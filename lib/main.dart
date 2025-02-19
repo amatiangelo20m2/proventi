@@ -40,6 +40,7 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const Pro20());
 }
+
 Future<void> _setupFirebaseMessaging() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -197,7 +198,7 @@ class _Pro20State extends State<Pro20> {
         ChangeNotifierProvider(
             create: (context) => FloorStateManagerProvider()),
         ChangeNotifierProvider(
-            create: (context) => UserStateManager(navigatorKey)),
+            create: (context) => AuthenticatorAndUserStateManager(navigatorKey)),
         ChangeNotifierProvider(
             create: (context) => CommunicationStateManager(navigatorKey)),
       ],

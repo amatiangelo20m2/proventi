@@ -136,6 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             ],
           ),
+
           drawer: Drawer(
             backgroundColor: blackDir,
             child: Column(
@@ -143,17 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                Image.asset('assets/images/logo.png', width: 190),
-                const ListTile(
-                  title: Text(
-                    'Proventi',
-                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
-                  ),
-                  leading: Icon(
-                    CupertinoIcons.home,
-                    color: CupertinoColors.white,
-                  ),
-                ),
+                Image.asset('assets/images/logo.png', width: 120),
+
                 ListTile(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -222,11 +214,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
           appBar: AppBar(
 
-            iconTheme: IconThemeData(
-              color: blackDir,
-              size: 27,
-            ),
-
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
             actions: [
@@ -236,12 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const WhatsAppButtonStatus(),
                   Consumer<NotificationStateManager>(
-                    builder: (BuildContext context,
-                        NotificationStateManager value, Widget? child) {
+                    builder: (BuildContext context, NotificationStateManager value, Widget? child) {
                       return IconButton(
                           onPressed: () async {
-                            Navigator.pushNamed(
-                                context, NotificationsPage.routeName);
+                            Navigator.pushNamed(context, NotificationsPage.routeName);
                           },
                           icon: Padding(
                             padding: const EdgeInsets.only(right: 10),
@@ -268,7 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if(restaurantStateManager.restaurantConfigurations!.isNotEmpty && restaurantStateManager.restaurantConfigurations!.length > 1)IconButton(icon: const Icon(Icons.arrow_drop_down_circle_outlined), onPressed: () {
+                if(restaurantStateManager.restaurantConfigurations!.isNotEmpty && restaurantStateManager.restaurantConfigurations!.length > 1)
+                  IconButton(icon: const Icon(Icons.keyboard_arrow_down_rounded), onPressed: () {
                   showCupertinoModalPopup(
                     context: context,
                     builder: (BuildContext context) => CupertinoActionSheet(
@@ -298,11 +284,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },),
-                Text(
-                  restaurantStateManager.restaurantConfiguration != null
-                      ? restaurantStateManager.restaurantConfiguration!.restaurantName!
-                      : '...',
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade800, fontWeight: FontWeight.bold),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      restaurantStateManager.restaurantConfiguration != null
+                          ? restaurantStateManager.restaurantConfiguration!.restaurantName!
+                          : '...',
+                      style: TextStyle(fontSize: 12, color: blackDir, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      restaurantStateManager.restaurantConfiguration != null
+                          ? restaurantStateManager.restaurantConfiguration!.branchCode!
+                          : '...',
+                      style: TextStyle(fontSize: 7, color: blackDir, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),

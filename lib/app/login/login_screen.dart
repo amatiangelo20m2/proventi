@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
         _branchCodeController.text = prefs.getString('branchCode') ?? '';
         _userCodeController.text = prefs.getString('userCode') ?? '';
         _passwordUserController.text = prefs.getString('userPassword') ?? '';
+        _isLoginWithUserCode = prefs.getBool('loginWithUserCode') ?? false;
 
         if (loginMethod == 'with_user_code') {
           setState(() {
@@ -90,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.setString('userCode', _userCodeController.text);
       await prefs.setString('userPassword', _passwordUserController.text);
       await prefs.setString('loginMethod', _isLoginWithUserCode ? 'with_user_code' : 'with_branch_code');
+      await prefs.setBool('loginWithUserCode', _isLoginWithUserCode);
     } else {
       await prefs.remove('rememberCredentials');
       await prefs.remove('username');
@@ -98,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.remove('userCode');
       await prefs.remove('userPassword');
       await prefs.remove('loginMethod');
+      await prefs.remove('loginWithUserCode');
     }
   }
 
@@ -211,16 +214,9 @@ class _LoginPageState extends State<LoginPage> {
                 CupertinoActivityIndicator(
                   color: globalGold,
                 ),
-                Column(
+                const Column(
                   children: [
-                    const Text('Carico i dati...', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _showLoadingPage = false;
-                        });
-                      }, child: Icon(Icons.abc_outlined)
-                    ),
+                    Text('Carico i dati...', style: TextStyle(color: CupertinoColors.white, fontSize: 12)),
                   ],
                 ),
               ],
@@ -438,6 +434,7 @@ class _LoginPageState extends State<LoginPage> {
     print("BranchCode: ${_branchCodeController.text}");
     print("Username: ${_usernameController.text}");
     print("Password: ${_passwordController.text}");
+
     var response = await Provider.of<RestaurantStateManager>(context, listen: false)
         .restaurantControllerApi
         .loginFromMobileDeviceWithHttpInfo(
@@ -492,14 +489,14 @@ class _LoginPageState extends State<LoginPage> {
 
       print('FCM Token: ${mdd.fcmToken}');
 
-      await Provider.of<UserStateManager>(context, listen: false).loginWithUserCodeAndPass(
+      await Provider.of<AuthenticatorAndUserStateManager>(context, listen: false).loginWithUserCodeAndPass(
         _userCodeController.text,
         _passwordUserController.text,
         mdd.fcmToken!,
         context,
       );
 
-      VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
+      VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<AuthenticatorAndUserStateManager>(context, listen: false).ventiMetriQuadriData;
 
       List<RestaurantDTO> restaurantDTOs = [];
       for (BranchResponseEntity branchResEntity in ventiMetriQuadriData.branches) {

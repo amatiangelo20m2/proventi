@@ -21,7 +21,6 @@ class RefusedBookingCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         _showBookingActionMenuRifiutato(context, booking);
-
       },
       child: _buildCardContent(context)
     );
@@ -29,7 +28,7 @@ class RefusedBookingCard extends StatelessWidget {
 
   Widget _buildCardContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 2),
       child: Container(
         decoration: BoxDecoration(
           color: CupertinoColors.white,
@@ -54,7 +53,7 @@ class RefusedBookingCard extends StatelessWidget {
                     allowNavigation: true,
                     customer: booking.customer!,
                     branchCode: booking.branchCode!,
-                    avatarRadious: 30,
+                    avatarRadious: 25,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8),

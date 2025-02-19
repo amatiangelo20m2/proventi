@@ -22,6 +22,11 @@ void main() {
       // TODO
     });
 
+    //Future<String> getAppVersion() async
+    test('test getAppVersion', () async {
+      // TODO
+    });
+
     //Future<String> getFcmTokenByUserCode(String userCode) async
     test('test getFcmTokenByUserCode', () async {
       // TODO
