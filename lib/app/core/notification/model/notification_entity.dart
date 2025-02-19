@@ -6,14 +6,22 @@ class NotificationModel {
   final String read;
   final String bookingId;
   final String navigationPage;
+  final String branchCode;
+  final String branchName;
+  final String notificationType;
 
-  NotificationModel({this.id,
+  NotificationModel({
+    this.id,
     required this.title,
     required this.body,
     required this.dateReceived,
     required this.read,
     required this.bookingId,
-    required this.navigationPage});
+    required this.navigationPage,
+    required this.branchCode,
+    required this.branchName,
+    required this.notificationType,
+  });
 
   // Convert a Notification to a Map (for inserting to the DB)
   Map<String, dynamic> toMap() {
@@ -22,9 +30,12 @@ class NotificationModel {
       'title': title,
       'body': body,
       'dateReceived': dateReceived,
-      'read' : read,
-      'bookingId' : bookingId,
-      'navigationPage' : navigationPage
+      'read': read,
+      'bookingId': bookingId,
+      'navigationPage': navigationPage,
+      'branchCode': branchCode,
+      'branchName': branchName,
+      'notificationType': notificationType,
     };
   }
 
@@ -38,6 +49,9 @@ class NotificationModel {
       read: map['read'],
       bookingId: map['bookingId'],
       navigationPage: map['navigationPage'],
+      branchCode: map['branchCode'],
+      branchName: map['branchName'],
+      notificationType: map['notificationType'],
     );
   }
 }

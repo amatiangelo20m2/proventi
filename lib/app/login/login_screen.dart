@@ -496,9 +496,9 @@ class _LoginPageState extends State<LoginPage> {
         _userCodeController.text,
         _passwordUserController.text,
         mdd.fcmToken!,
+        context,
       );
 
-      print('User logged in with user code');
       VentiMetriQuadriData ventiMetriQuadriData = await Provider.of<UserStateManager>(context, listen: false).ventiMetriQuadriData;
 
       List<RestaurantDTO> restaurantDTOs = [];

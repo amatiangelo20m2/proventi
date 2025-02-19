@@ -116,39 +116,35 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                child: Card(
-                  surfaceTintColor: Colors.white,
-                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.blueGrey.withOpacity(0.1),
-                      child: badges.Badge(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: blackDir,
+                    child: badges.Badge(
 
-                          showBadge: notification.read == '0',
-                          badgeAnimation: const badges.BadgeAnimation.scale(),
-                          child: Icon(Icons.notifications, color: Colors.blueGrey.shade700)),
-                    ),
-                    title: Text(
-                      notification.title,
-                      style:  TextStyle(fontSize: 13, color: elegantBlue),
-                    ),
-                    subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(notification.body,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11),),
-
-                        Text('Codice prenotazione:' + notification.bookingId,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 7),),
-                      ],
-                    ),
-                    trailing: Text(
-                      _formatDate(notification.dateReceived),
-                      style: TextStyle(fontSize: 10, color: elegantBlue),
-                    ),
+                        showBadge: notification.read == '0',
+                        badgeAnimation: const badges.BadgeAnimation.scale(),
+                        child: getIconBasedOnNotificationType(notification.notificationType)),
+                  ),
+                  title: Text(
+                    notification.title,
+                    style:  TextStyle(fontSize: 13, color: elegantBlue),
+                  ),
+                  subtitle: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(notification.body,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11),),
+                      Text(notification.branchCode + ' - ' + notification.branchName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11),),
+                      Divider(color: Colors.grey.shade300, thickness: 1,),
+                    ],
+                  ),
+                  trailing: Text(
+                    _formatDate(notification.dateReceived),
+                    style: TextStyle(fontSize: 10, color: elegantBlue),
                   ),
                 ),
               ),
@@ -171,4 +167,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
   void initState() {
     super.initState();
   }
+
+  Icon getIconBasedOnNotificationType(String notificationType) {
+    switch (notificationType) {
+      case 'WARNING':
+        return Icon(CupertinoIcons.exclamationmark_triangle_fill, color: globalGold);
+      case 'ERROR':
+        return Icon(CupertinoIcons.exclamationmark_octagon_fill, color: elegantRed);
+      case 'INFO':
+        return Icon(CupertinoIcons.info, color: Colors.grey);
+      case 'SUCCESS':
+        return Icon(CupertinoIcons.bell_fill, color: Colors.blueAccent);
+      default:
+        return Icon(CupertinoIcons.info, color: Colors.grey);
+    }
+  }
+
 }
