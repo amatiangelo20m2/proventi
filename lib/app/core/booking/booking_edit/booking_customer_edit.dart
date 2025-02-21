@@ -154,7 +154,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
           trailing: CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: _update,
-            child: const Text('Aggiorna', style: TextStyle(fontWeight: FontWeight.normal)),
+            child: Text('Aggiorna', style: TextStyle(fontWeight: FontWeight.normal, fontFamily: globalFontFamily)),
           ),
         ),
         child: SafeArea(
@@ -172,7 +172,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                           style: TextStyle(
                             color: blackDir,
                               fontWeight: FontWeight.bold,
-                              fontSize: 14),
+                              fontSize: 14, fontFamily: globalFontFamily),
                       ),
                       ProfileImage(
                         allowNavigation: false,
@@ -188,6 +188,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                     label: 'Cognome',
                     controller: _lastNameController,
                     isEditable: true,
+
                   ),
                   CustomFormRow(
                     label: 'Nome',
@@ -337,7 +338,7 @@ class _BookingCustomerEditState extends State<BookingCustomerEdit> {
                       placeholder: 'Note cliente',
                     ),
                     CustomFormRow(
-                      label: 'Note ristoarnte',
+                      label: 'Note ristorante',
                       controller: _privateNotes,
                       placeholder: 'Note ristorante',
                     ),
@@ -415,7 +416,7 @@ class CustomFormRow extends StatelessWidget {
     return CupertinoFormRow(
       prefix: Text(
         label,
-        style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+        style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14, fontFamily: globalFontFamily),
       ),
       child: isEditable
           ? CupertinoTextField(
@@ -424,7 +425,7 @@ class CustomFormRow extends StatelessWidget {
         keyboardType: keyboardType,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         textAlign: TextAlign.end,
-        style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 14,),
+        style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14, fontFamily: globalFontFamily),
       )
           : Text(
         value ?? '',

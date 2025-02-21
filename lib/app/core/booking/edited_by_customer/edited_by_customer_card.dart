@@ -354,7 +354,7 @@ class ReservationEditedByCustomerCard extends StatelessWidget {
             }
             Navigator.pop(context);
           },
-          child: const Text('Rifiuta modifica'),
+          child: Text('Rifiuta modifica', style: TextStyle(fontSize: 14, fontFamily: globalFontFamily, color: elegantRed),),
         ),
       ]);
     }

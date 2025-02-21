@@ -10,9 +10,9 @@ import '../../../api/restaurant_client/lib/api.dart';
 import '../../../state_manager/communication_state_manager.dart';
 
 class DashChatCustomized20 extends StatefulWidget {
-  const DashChatCustomized20({super.key, required this.bookingDTO});
+  const DashChatCustomized20({super.key, required this.customerDTO});
 
-  final BookingDTO bookingDTO;
+  final CustomerDTO customerDTO;
 
   @override
   State<DashChatCustomized20> createState() => _DashChatCustomized20State();
@@ -28,12 +28,12 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
     // Initialize the chat state manager
     chatStateManager = ChatStateManager(
       user1Id: '1', // Replace with the actual user1 ID
-      user2Id: '${widget.bookingDTO.customer!.prefix!}${widget.bookingDTO.customer!.phone!}@c.us',
+      user2Id: '${widget.customerDTO.prefix!}${widget.customerDTO.phone!}@c.us',
       fetchMessages: () async {
         // Define the function to fetch messages from the API
         final communicationStateManager = context.read<CommunicationStateManager>();
         final chatMessagesResponse = await communicationStateManager.retrieveChatSpecificWithUserData(
-          widget.bookingDTO.customer!.prefix! + widget.bookingDTO.customer!.phone!,
+          widget.customerDTO.prefix! + widget.customerDTO.phone!,
         );
 
 
@@ -86,14 +86,14 @@ class _DashChatCustomized20State extends State<DashChatCustomized20> {
               )],
               title: Row(
                 children: [
-
                   ProfileImage(
-                      branchCode: widget.bookingDTO.branchCode!,
+                      branchCode: widget.customerDTO.branchCode!,
                       avatarRadious: 20,
-                      customer: widget.bookingDTO.customer!,
+                      customer: widget.customerDTO,
                       allowNavigation: false),
-
-                  Text(' ${widget.bookingDTO.customer!.firstName!} ${widget.bookingDTO.customer!.lastName!}', style: const TextStyle(color: Colors.white, fontSize: 15),),
+                  Text(' ${widget.customerDTO.firstName!} '
+                      '${widget.customerDTO.lastName!}', 
+                    style: const TextStyle(color: Colors.white, fontSize: 15),),
 
                 ],
               ),

@@ -91,7 +91,7 @@ class RestaurantStateManager extends ChangeNotifier {
 
   retrieveTotalTableNumberForDayAndActiveBookings(DateTime day) {
     return (_allBookings!.where((element) =>
-    isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO)
+    isSameDay(element.bookingDate!, day) && (element.status == BookingDTOStatusEnum.CONFERMATO || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA))
         .toList().length);
   }
 
@@ -105,21 +105,23 @@ class RestaurantStateManager extends ChangeNotifier {
   }
 
   retrieveTotalTablesNumberForDayAndActiveBookingsLunchTime(DateTime day, RestaurantDTO restaurantDTO) {
-    return (_allBookings!.where((element) => isSameDay(element.bookingDate!, day) && element.status
-        == BookingDTOStatusEnum.CONFERMATO && isLunchTime(element, restaurantDTO)).toList().length);
+    return (_allBookings!.where((element) => isSameDay(element.bookingDate!, day)
+        &&  (element.status == BookingDTOStatusEnum.CONFERMATO || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
+        && isLunchTime(element, restaurantDTO)).toList().length);
   }
 
 
   retrieveTotalGuestsNumberForDayAndActiveBookingsDinnerTime(DateTime day, RestaurantDTO restaurantDTO) {
     return (_allBookings!.where((element) =>
-    isSameDay(element.bookingDate!, day) && element.status == BookingDTOStatusEnum.CONFERMATO && !isLunchTime(element, restaurantDTO))
+    isSameDay(element.bookingDate!, day) &&  (element.status == BookingDTOStatusEnum.CONFERMATO || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA) && !isLunchTime(element, restaurantDTO))
         .toList().fold(0, (total, booking) => total
         + (booking.numGuests ?? 0)));
   }
 
   retrieveTotalTablesNumberForDayAndActiveBookingsDinnerTime(DateTime day, RestaurantDTO restaurantDTO) {
-    return (_allBookings!.where((element) => isSameDay(element.bookingDate!, day) && element.status
-        == BookingDTOStatusEnum.CONFERMATO && !isLunchTime(element, restaurantDTO)).toList().length);
+    return (_allBookings!.where((element) => isSameDay(element.bookingDate!, day)
+        &&  (element.status == BookingDTOStatusEnum.CONFERMATO || element.status == BookingDTOStatusEnum.MODIFICA_CONFERMATA)
+        && !isLunchTime(element, restaurantDTO)).toList().length);
   }
 
 

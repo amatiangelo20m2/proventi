@@ -70,8 +70,7 @@ class _ProcessedBookingsState extends State<ProcessedBookings> {
                       },
 
                       clearButtonMode: OverlayVisibilityMode.always,
-                      placeholder: 'Ricerca per nome cliente o numero',
-                      style: TextStyle(fontSize: 16),
+                      placeholder: 'Ricerca per nome cliente o numero', style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),
                     ),
                   ),
                 ),

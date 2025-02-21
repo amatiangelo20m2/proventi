@@ -238,19 +238,19 @@ class _AutoBookingManagerState extends State<AutoBookingManager> {
     return Card(
       surfaceTintColor: Colors.white,
       color: Colors.white,
-      elevation: 3,
+      elevation: 6,
       child: Padding(
         padding: const EdgeInsets.all(3.0),
         child: Row(
           children: [
             Icon(
-              CupertinoIcons.sun_max_fill,
+              CupertinoIcons.sun_min,
               color: sunIconColor,
               size: 30,
             ),
 
             Icon(
-              CupertinoIcons.moon,
+              CupertinoIcons.moon_stars,
               color: moonIconColor,
               size: 30,
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/app/core/booking/booking_edit/booking_customer_edit.dart';
@@ -155,8 +156,8 @@ class BookingConfirmedCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '${booking.customer!.firstName!} '
-                        '${booking.customer!.lastName!} '
+                    '${booking.customer!.lastName!} '
+                        '${booking.customer!.firstName!} '
                         '${getFlagByPrefix(booking.customer!.prefix!)}'.replaceAll('  ', ' '),
                     style: TextStyle(
                       fontSize: 13,
@@ -178,26 +179,7 @@ class BookingConfirmedCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4, left: 4),
-                        child: GestureDetector(
-                            onTap: () {
-                              showCupertinoModalBottomSheet(
-                                expand: true,
-                                elevation: 10,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return BookingCustomerEdit(
-                                    bookingDTO: booking,
-                                    restaurantDTO: restaurantDTO,
-                                    isAlsoBookingEditing: true,
-                                    branchCode: booking.branchCode!,
-                                  );
-                                },
-                              );
-                            },
-                            child: const Icon(CupertinoIcons.settings_solid)),
-                      ),
+
                       ChatIconWhatsApp(
                         booking: booking, iconSize: 40
                       ),
@@ -253,20 +235,37 @@ class BookingConfirmedCard extends StatelessWidget {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  Text(
-                      'Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}'),
-                  Text(booking.customer!.phone!),
-                  Text(booking.customer!.email!),
-                  Text('Stato:${booking.status!.value}'),
-                  Text('Data inserimento: ${DateFormat('dd-MM-yyyy HH:mm').format(booking.createdAt!)}'),
-                  Text('Processata da: ${booking.processedBy ?? 'N/A'}'),
+                  Text('Gestisci prenotazione di\n${booking.customer!.firstName!} ${booking.customer!.lastName!}', style: TextStyle(fontSize: 15, fontFamily: globalFontFamily),),
+                  Text(booking.customer!.phone!, style: TextStyle(fontSize: 14, fontFamily: globalFontFamily),),
+                  Text(booking.customer!.email!, style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),),
+                  Text('Stato:${booking.status!.value}', style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),),
+                  Text('Data inserimento: ${DateFormat('dd-MM-yyyy HH:mm').format(booking.createdAt!)}', style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),),
+                  Text('Processata da: ${booking.processedBy ?? 'N/A'}', style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),),
                 ],
               ),
             ),
             Positioned(
               right: 0,
-              child: IconButton(
-                  onPressed: () {}, icon: const Icon(CupertinoIcons.phone)),
+              child:Padding(
+                padding: const EdgeInsets.only(right: 4, left: 4),
+                child: IconButton(
+                    onPressed: () {
+                      showCupertinoModalBottomSheet(
+                        expand: true,
+                        elevation: 10,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return BookingCustomerEdit(
+                            bookingDTO: booking,
+                            restaurantDTO: restaurantDTO,
+                            isAlsoBookingEditing: true,
+                            branchCode: booking.branchCode!,
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(CupertinoIcons.settings_solid)),
+              ),
             ),
           ],
         ),
@@ -285,7 +284,7 @@ class BookingConfirmedCard extends StatelessWidget {
 
               Navigator.pop(context, null);
             },
-            child: const Text('Arrivato'),
+            child: Text('Arrivato', style: TextStyle(fontFamily: globalFontFamily, color: elegantGreen),),
           ),
           if(booking.bookingDate!.isBefore(DateTime.now())) CupertinoActionSheetAction(
             onPressed: () async {
@@ -299,7 +298,27 @@ class BookingConfirmedCard extends StatelessWidget {
               }
               Navigator.pop(context, null);
             },
-            child: const Text('Non arrivato'),
+            child: Text('Non arrivato', style: TextStyle(fontFamily: globalFontFamily, color: Colors.grey.shade800),),
+          ),
+
+          CupertinoActionSheetAction(
+            onPressed: () {
+
+                showCupertinoModalBottomSheet(
+                  expand: true,
+                  elevation: 10,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return BookingCustomerEdit(
+                      bookingDTO: booking,
+                      restaurantDTO: restaurantDTO,
+                      isAlsoBookingEditing: true,
+                      branchCode: booking.branchCode!,
+                    );
+                  },
+                );
+            },
+            child: Text('Modifica prenotazione', style: TextStyle(fontFamily: globalFontFamily, color: elegantBlue),),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
@@ -320,7 +339,7 @@ class BookingConfirmedCard extends StatelessWidget {
                 Navigator.pop(context, null);
               }
             },
-            child: Text('Elimina', style: TextStyle(color: elegantRed)),
+            child: Text('Elimina', style: TextStyle(fontFamily: globalFontFamily, color: elegantRed),),
           ),
         ],
 

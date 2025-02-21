@@ -111,7 +111,7 @@ class ProfileImage extends StatelessWidget {
     return _buildAvatarContainer(
       CircleAvatar(
         radius: avatarRadious * 0.96,
-        backgroundColor: Colors.grey.withAlpha(130),
+        backgroundColor: blackDir.withAlpha(100),
         child: Container(
           child: ClipOval(
             child: Icon(CupertinoIcons.person,

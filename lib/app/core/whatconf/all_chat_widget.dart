@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:proventi/app/custom_widgets/profile_image_pro20/profile_image.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../api/communication_client/lib/api.dart';
-import '../../../global/style.dart';
 import '../../../state_manager/communication_state_manager.dart';
+import '../../custom_widgets/whatsapp/whatsapp_chat.dart';
 import 'link_whatsapp_component.dart';
 
 class AllChatWidget extends StatefulWidget {
@@ -41,12 +42,14 @@ class _AllChatWidgetState extends State<AllChatWidget> {
         }
         // State: Other
         else {
-          return IconButton(
-            onPressed: (){},
-            icon: const Icon(
-              FontAwesomeIcons.squareWhatsapp,
-              size: 36,
-              color: Colors.red,
+          return Center(
+            child: IconButton(
+              onPressed: (){},
+              icon: const Icon(
+                FontAwesomeIcons.squareWhatsapp,
+                size: 36,
+                color: Colors.red,
+              ),
             ),
           );
         }
@@ -80,15 +83,16 @@ class _AllChatWidgetState extends State<AllChatWidget> {
           ),
           title: Text(
             chat.name ?? 'Unknown',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 firstLine,
-                style: TextStyle(color: Colors.grey.shade800),
+                style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
               ),
+              Divider(color: Colors.grey.shade100,)
             ],
           ),
           trailing: Column(
@@ -96,21 +100,34 @@ class _AllChatWidgetState extends State<AllChatWidget> {
             children: [
               Text(
                 formattedTime,
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: const TextStyle(color: Colors.grey, fontSize: 10),
               ),
               if (chat.unreadCount != null && chat.unreadCount! > 0)
                 CircleAvatar(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.blueAccent.withAlpha(200),
                   radius: 12,
                   child: Text(
                     chat.unreadCount.toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
             ],
           ),
           onTap: () {
-            // Handle tap event
+            showCupertinoModalBottomSheet(
+              expand: true,
+              elevation: 10,
+              context: context,
+              builder: (BuildContext context) {
+                return DashChatCustomized20(customerDTO: CustomerDTO(
+                  firstName: chat.name,
+                  lastName: '',
+                  prefix: chat.fromNumber!.substring(0, 2),
+                  phone: chat.fromNumber!.substring(2).replaceAll('@c.us', ''),
+                  branchCode: communicationStateManager.currentWhatsAppConfigurationDTO!.branchCode!,
+                ));
+              },
+            );
           },
         );
       },

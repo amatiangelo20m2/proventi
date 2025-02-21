@@ -337,6 +337,7 @@ class _LoginPageState extends State<LoginPage> {
       clearButtonMode: OverlayVisibilityMode.always,
       controller: controller,
       keyboardType: keyboardType,
+      style: TextStyle(fontFamily: globalFontFamily),
       placeholder: placeholder,
       obscureText: isPassword ? !_passwordVisible : isUserPassword ? !_passwordUserVisible : obscureText,
       inputFormatters: [
@@ -386,7 +387,7 @@ class _LoginPageState extends State<LoginPage> {
             });
           },
         ),
-        const Text('Ricorda credenziali', style: TextStyle(color: CupertinoColors.white, fontSize: 10)),
+        Text('Ricorda credenziali', style: TextStyle(color: CupertinoColors.white, fontSize: 10)),
       ],
     );
   }
@@ -397,8 +398,8 @@ class _LoginPageState extends State<LoginPage> {
       child: CupertinoButton(
         color: globalGold,
         onPressed: _isLoading ? null : _login,
-        child: const Text('ACCEDI',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        child: Text('ACCEDI',
+            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold, fontFamily: globalFontFamily)),
       ),
     );
   }

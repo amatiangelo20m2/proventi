@@ -45,7 +45,7 @@ class _ChatIconWhatsAppState extends State<ChatIconWhatsApp> {
               elevation: 10,
               context: context,
               builder: (BuildContext context) {
-                return DashChatCustomized20(bookingDTO: widget.booking);
+                return DashChatCustomized20(customerDTO: widget.booking.customer!);
               },
             );
           },
@@ -53,16 +53,18 @@ class _ChatIconWhatsAppState extends State<ChatIconWhatsApp> {
             future: communication.checkIfChatsContainCurrentNumberWithUnreadChats(widget.booking),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Icon(FontAwesomeIcons.whatsapp, color: Colors.grey, size: 25);
+                return const Icon(FontAwesomeIcons.whatsapp, color: Colors.grey, size: 25);
               } else if (snapshot.hasError) {
-                return Icon(FontAwesomeIcons.whatsapp, color: Colors.red, size: 25);
+                return const Icon(FontAwesomeIcons.whatsapp, color: Colors.red, size: 25);
               } else if (snapshot.hasData && snapshot.data == true) {
+                
                 return Stack(
                   children: [
                     Lottie.asset('assets/lotties/whatsapp.json', width: widget.iconSize.toDouble()),
                     const Positioned(right: 0, child: Icon(Icons.circle, size: 14, color: Colors.red)),
                   ],
                 );
+                
               } else {
                 return const Icon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 25);
               }

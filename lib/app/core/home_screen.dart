@@ -23,6 +23,7 @@ import 'booking/booking_confirmed/booking_confirmed.dart';
 import 'booking/booking_processed/booking_processed.dart';
 import 'booking/booking_to_manage/booking_to_manage.dart';
 import 'booking/edited_by_customer/edited_by_customer.dart';
+import 'home_component/proventi_drawer.dart';
 import 'employee/reports/report_employee_presence.dart';
 import 'employee/reports/state_manager/employee_state_manager.dart';
 import 'floor/floor.dart';
@@ -60,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: BottomNavigationBar(
 
             currentIndex: _pageIndex,
-
             selectedItemColor: Colors.black,
             backgroundColor: Colors.white,
             elevation: 0,
@@ -133,132 +133,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 badgeCount: 0,
                 isSelected: _pageIndex == 4,
               ),
-
             ],
           ),
-
-          drawer: Drawer(
-            backgroundColor: blackDir,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Image.asset('assets/images/logo.png', width: 120),
-
-                ListTile(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, CustomerScreen.routeName);
-                  },
-                  title: const Text(
-                    'Lista clienti',
-                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
-                  ),
-                  leading: const Icon(
-                    CupertinoIcons.person_2,
-                    color: CupertinoColors.white,
-                  ),
-                ),
-                ListTile(
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    await EmployeeStateManager().retrieveCurrentEmployee();
-                    Navigator.pushNamed(context, ProcessedBookings.routeName);
-                  },
-                  title: const Text(
-                    'Storico Prenotazioni',
-                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
-                  ),
-                  leading: const Icon(
-                    CupertinoIcons.square_list,
-                    color: CupertinoColors.white,
-                  ),
-                ),
-                ListTile(
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, ReportEmployeePresence.routeName);
-                  },
-                  title: const Text(
-                    'Report Dipendenti',
-                    style: TextStyle(color: CupertinoColors.white, fontWeight: FontWeight.bold),
-                  ),
-                  leading: const Icon(
-                    CupertinoIcons.calendar_badge_plus,
-                    color: CupertinoColors.white,
-                  ),
-                ),
-
-                ListTile(
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.remove('loginMethod');
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const SplashScreen()),
-                    );
-                  },
-                  title: const Text(
-                    'Log out',
-                    style: TextStyle(color: CupertinoColors.destructiveRed, fontWeight: FontWeight.bold),
-                  ),
-                  leading: const Icon(
-                    Icons.logout,
-                    color: CupertinoColors.destructiveRed,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
+          drawer: const ProventiDrawer(),
           appBar: AppBar(
-
-            surfaceTintColor: Colors.white,
-            backgroundColor: Colors.white,
+            iconTheme: const IconThemeData(
+              color: Colors.white, // Set your desired icon color here
+            ),
+            surfaceTintColor: blackDir,
+            backgroundColor: blackDir,
             actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-                  const WhatsAppButtonStatus(),
-                  Consumer<NotificationStateManager>(
-                    builder: (BuildContext context, NotificationStateManager value, Widget? child) {
-                      return IconButton(
-                          onPressed: () async {
-                            Navigator.pushNamed(context, NotificationsPage.routeName);
-                          },
-                          icon: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: badges.Badge(
-                                showBadge: value.notifications
-                                    .where((element) => element.read == '0')
-                                    .isNotEmpty,
-                                badgeContent: Text(
-                                  value.notifications
-                                      .where((element) => element.read == '0')
-                                      .length
-                                      .toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 11),
-                                ),
-                                position: badges.BadgePosition.topEnd(),
-                                child: const Icon(CupertinoIcons.bell)),
-                          ));
-                    },
-                  ),
-                ],
+              const WhatsAppButtonStatus(),
+              Consumer<NotificationStateManager>(
+                builder: (BuildContext context, NotificationStateManager value, Widget? child) {
+                  return IconButton(
+                      onPressed: () async {
+                        Navigator.pushNamed(context, NotificationsPage.routeName);
+                      },
+                      icon: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: badges.Badge(
+                            showBadge: value.notifications
+                                .where((element) => element.read == '0')
+                                .isNotEmpty,
+                            badgeContent: Text(
+                              value.notifications
+                                  .where((element) => element.read == '0')
+                                  .length
+                                  .toString(),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 11),
+                            ),
+                            position: badges.BadgePosition.topEnd(),
+                            child: const Icon(CupertinoIcons.bell)),
+                      ));
+                },
               ),
+
             ],
             title: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if(restaurantStateManager.restaurantConfigurations!.isNotEmpty && restaurantStateManager.restaurantConfigurations!.length > 1)
-                  IconButton(icon: const Icon(Icons.keyboard_arrow_down_rounded), onPressed: () {
+                  IconButton(icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white,), onPressed: () {
                   showCupertinoModalPopup(
                     context: context,
                     builder: (BuildContext context) => CupertinoActionSheet(
-                      title: Text('Seleziona il branch', style: TextStyle(color: blackDir),),
+                      title: Text('Seleziona attività', style: TextStyle(color: blackDir, fontFamily: globalFontFamily),),
                       actions: <CupertinoActionSheetAction>[
                         for (var restaurant in restaurantStateManager.restaurantConfigurations!)
                           CupertinoActionSheetAction(
@@ -267,10 +188,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bool isCurrentRestaurant = restaurantStateManager.restaurantConfiguration!.branchCode == restaurant.branchCode;
 
                                 return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(restaurant.restaurantName!, style: TextStyle(color: blackDir, fontSize: isCurrentRestaurant ? 18 : 15),),
-                                    Text(isCurrentRestaurant ? '  ✅' : '' , style: TextStyle(color: blackDir),),
+                                    Text(restaurant.restaurantName!, style: TextStyle(color: isCurrentRestaurant
+                                        ? blackDir : Colors.grey, fontFamily: globalFontFamily, fontSize: isCurrentRestaurant ? 15 : 12),),
+                                    Icon(
+                                      isCurrentRestaurant
+                                          ? CupertinoIcons.check_mark_circled_solid
+                                          : CupertinoIcons.circle,
+                                      color: isCurrentRestaurant ? blackDir : Colors.grey[900],
+                                    ),
                                   ],
                                 );
                               }
@@ -292,13 +219,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       restaurantStateManager.restaurantConfiguration != null
                           ? restaurantStateManager.restaurantConfiguration!.restaurantName!
                           : '...',
-                      style: TextStyle(fontSize: 12, color: blackDir, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       restaurantStateManager.restaurantConfiguration != null
                           ? restaurantStateManager.restaurantConfiguration!.branchCode!
                           : '...',
-                      style: TextStyle(fontSize: 7, color: blackDir, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 7, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

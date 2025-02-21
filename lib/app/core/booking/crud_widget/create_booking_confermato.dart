@@ -173,9 +173,13 @@ class _CreateBookingState extends State<CreateBooking> {
                               style: TextStyle(fontSize: 17, fontWeight: FontWeight.normal, color: Colors.grey[900]),)),
                             Expanded(
                               child: CupertinoTextField(
+                                controller: _phoneController,
                                 onChanged: (typingNumber){
 
-                                  print(typingNumber);
+                                  typingNumber = typingNumber.replaceAll(RegExp(r'[^0-9+]'), '');
+                                  typingNumber = typingNumber.replaceAll('+39', '').replaceAll('+44', '');
+
+                                  _phoneController.text = typingNumber; // Update the controller's text
 
                                   if(typingNumber.length < 4){
                                     setState(() {
@@ -196,7 +200,6 @@ class _CreateBookingState extends State<CreateBooking> {
 
                                 },
                                 keyboardType: TextInputType.number,
-                                controller: _phoneController,
                                 placeholder: "Cellulare",
                                 clearButtonMode: OverlayVisibilityMode.always,
                                 style: const TextStyle(fontSize: 17),

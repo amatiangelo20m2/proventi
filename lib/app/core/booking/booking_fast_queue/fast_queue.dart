@@ -56,7 +56,7 @@ class _FastQueueState extends State<FastQueue> {
                       },
                       clearButtonMode: OverlayVisibilityMode.always,
                       placeholder: 'Ricerca per nome cliente',
-                      style: TextStyle(fontSize: 12),
+                     style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),
                     ),
                   ),
                 ),

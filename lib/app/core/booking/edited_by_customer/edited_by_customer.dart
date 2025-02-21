@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proventi/api/restaurant_client/lib/api.dart';
 import 'package:super_cupertino_navigation_bar/super_cupertino_navigation_bar.dart';
+import '../../../../global/style.dart';
 import '../../../../state_manager/restaurant_state_manager.dart';
 import 'edited_by_customer_card.dart';
 
@@ -50,8 +51,7 @@ class _BookingEditedByCustomerState extends State<BookingEditedByCustomer> {
                     },
 
                     clearButtonMode: OverlayVisibilityMode.always,
-                    placeholder: 'Ricerca per nome cliente o numero',
-                    style: TextStyle(fontSize: 12),
+                    placeholder: 'Ricerca per nome cliente o numero', style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),
                   ),
                 ),
               ),

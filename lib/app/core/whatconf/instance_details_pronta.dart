@@ -27,7 +27,7 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
               Column(
                 children: [
 
-                  Center(child: Text(' ${configuration.displayName ?? 'N/A'}', style: TextStyle(fontSize: 20, color: Colors.white))),
+                  Center(child: Text(' ${configuration.displayName ?? 'N/A'}', style: const TextStyle(fontSize: 20, color: Colors.white))),
                   if (configuration.photoUrl != null && configuration.photoUrl!.isNotEmpty)
                     Center(
                       child: Container(
@@ -53,19 +53,19 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
 
               Column(
                 children: [
-                  Center(child: Text('Numero collegato', style: TextStyle(fontSize: 7, color: Colors.grey))),
-                  Center(child: Text(' ${configuration.phone ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.white))),
+                  const Center(child: Text('Numero collegato', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Center(child: Text(' ${configuration.phone ?? 'N/A'}', style: const TextStyle(fontSize: 17, color: Colors.white))),
 
-                  Center(child: Text('Codice attività associata', style: TextStyle(fontSize: 7, color: Colors.grey))),
-                  Center(child: Text(' ${configuration.branchCode ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.white))),
+                  const Center(child: Text('Codice attività associata', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Center(child: Text(' ${configuration.branchCode ?? 'N/A'}', style: const TextStyle(fontSize: 17, color: Colors.white))),
 
-                  Center(child: Text('Identificativo istanza', style: TextStyle(fontSize: 7, color: Colors.grey))),
-                  Center(child: Text(' ${configuration.waApiInstanceId ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.white))),
+                  const Center(child: Text('Identificativo istanza', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Center(child: Text(' ${configuration.waApiInstanceId ?? 'N/A'}', style: const TextStyle(fontSize: 17, color: Colors.white))),
 
-                  Center(child: Text('Stato', style: TextStyle(fontSize: 7, color: Colors.grey))),
-                  Card(color: blackDir, elevation: 10, child: Center(child: Text(' ${configuration.waApiState.toString() ?? 'N/A'}', style: TextStyle(fontSize: 17, color: elegantGreen)))),
+                  const Center(child: Text('Stato', style: TextStyle(fontSize: 7, color: Colors.grey))),
+                  Card(color: blackDir.withAlpha(180), elevation: 10, child: Center(child: Text(' ${configuration.waApiState.toString() ?? 'N/A'}', style: TextStyle(fontSize: 17, color: Colors.blueAccent)))),
                   
-                  SizedBox(height: 40,)
+                  const SizedBox(height: 40,)
                 ],
               ),
               Center(
@@ -76,14 +76,14 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Conferma'),
-                          content: Text('Sei sicuro di voler disconnettere il numero?'),
+                          title: const Text('Conferma'),
+                          content: const Text('Sei sicuro di voler disconnettere il numero?'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop(); // Close the dialog
                               },
-                              child: Text('No'),
+                              child: const Text('No'),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -105,19 +105,19 @@ class InstanceDetailsWhenPronta extends StatelessWidget {
 
                                 }
                               },
-                              child: Text('Si'),
+                              child: const Text('Si'),
                             ),
                           ],
                         );
                       },
                     );
                   },
-                  child: const Text('Disconnetti Numero', style: TextStyle(color: Colors.white)),
+                  child: Text('Disconnetti Numero'.toUpperCase(), style: TextStyle(color: Colors.white, fontFamily: globalFontFamily, fontSize: 13)),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Connesso da ${italianDateFormatWithTime.format(configuration.creationDate!)}', style: TextStyle(fontSize: 7, color: Colors.grey)),
+                child: Text('Connesso da ${italianDateFormatWithTime.format(configuration.creationDate!)}', style: const TextStyle(fontSize: 7, color: Colors.grey)),
               ),
 
             ],

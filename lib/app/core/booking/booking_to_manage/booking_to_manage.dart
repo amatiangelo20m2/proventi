@@ -58,8 +58,7 @@ class _BookingManagerState extends State<BookingManager> {
                       });
                     },
                     clearButtonMode: OverlayVisibilityMode.always,
-                    placeholder: 'Ricerca per nome cliente',
-                    style: TextStyle(fontSize: 12),
+                    placeholder: 'Ricerca per nome cliente', style: TextStyle(fontSize: 12, fontFamily: globalFontFamily),
                   ),
                 ),
               ),

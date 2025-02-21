@@ -82,8 +82,8 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
                 baseColor: Colors.grey,
                 highlightColor: Colors.white,
                 child: const Icon(
-                  FontAwesomeIcons.squareWhatsapp,
-                  size: 36,
+                  FontAwesomeIcons.whatsapp,
+                  size: 30,
                   color: Colors.grey,
                 ),
               ),
@@ -98,9 +98,9 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
                   return IconButton(
                     onPressed: _showProntaInstance,
                     icon: Icon(
-                      FontAwesomeIcons.squareWhatsapp,
-                      size: 36,
-                      color: elegantGreen,
+                      FontAwesomeIcons.whatsapp,
+                      size: 30,
+                      color: Colors.greenAccent,
                     ),
                   );
                 }
@@ -133,11 +133,12 @@ class _WhatsAppButtonStatusState extends State<WhatsAppButtonStatus> {
                   return IconButton(
                     onPressed: _openCriticalWhatsAppProblemManager,
                     icon: const Icon(
-                      FontAwesomeIcons.squareWhatsapp,
-                      size: 36,
+                      FontAwesomeIcons.whatsapp,
+                      size: 30,
                       color: Colors.red,
                     ),
                   );
+
                 }
               },
             ),

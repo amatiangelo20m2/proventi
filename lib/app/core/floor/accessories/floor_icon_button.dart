@@ -141,7 +141,7 @@ class _FloorIconButtonState extends State<FloorIconButton> {
 
           },
 
-          icon: Icon(Icons.table_restaurant, color: blackDir),
+          icon: Icon(Icons.table_bar_outlined, color: blackDir),
         );
       },
     );

@@ -1,14 +1,15 @@
 import 'dart:ui';
 
+import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../api/restaurant_client/lib/api.dart';
-import '../app/core/booking/crud_widget/create_booking_lista_attesa.dart';
 
 var globalGold = const Color(0xFFD4B26A);
-var globalGoldDark = const Color(0xFFC76738);
+var globalGoldDark = const Color(0xFFC19738);
 var elegantRed = const Color(0xFFD32F2F);
 var elegantGreen = const Color(0xFF60A757);
 var elegantBlue = const Color(0xFF001E28);
@@ -107,8 +108,8 @@ void showCupertinoAlert(BuildContext context, String title, String message) {
     context: context,
     builder: (BuildContext context) {
       return CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(message),
+        title: Text(title, style: TextStyle(fontFamily: globalFontFamily),),
+        content: Text(message, style: TextStyle(fontFamily: globalFontFamily)),
         actions: [
           CupertinoDialogAction(
             child: const Text("OK"),
@@ -169,3 +170,4 @@ double getRelativeSize(BuildContext context, double size) {
   return relativeSize;
 }
 
+String? globalFontFamily = GoogleFonts.nunito().fontFamily;

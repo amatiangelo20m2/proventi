@@ -27,66 +27,43 @@ class RefusedBookingCard extends StatelessWidget {
   }
 
   Widget _buildCardContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 2),
-      child: Container(
-        decoration: BoxDecoration(
-          color: CupertinoColors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: CupertinoColors.systemGrey.withOpacity(0.2),
-              blurRadius: 4.0,
-              spreadRadius: 1.0,
-              offset: Offset(0, 2), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  ProfileImage(
-                    allowNavigation: true,
-                    customer: booking.customer!,
-                    branchCode: booking.branchCode!,
-                    avatarRadious: 25,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${booking.customer!.firstName!} ${booking.customer!.lastName!}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
-                            color: elegantBlue,
-                          ),
-                        ),
-                        _buildGuestInfo(),
-                        if((booking.specialRequests?.isNotEmpty ?? false))
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            child: Text('💬${booking.specialRequests!}', style: TextStyle(fontSize: 12,
-                                color: Colors.grey[800])),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-              ChatIconWhatsApp(booking: booking, iconSize: 40),
-            ],
-          ),
-        ),
+    return ListTile(
+      leading: ProfileImage(
+        allowNavigation: true,
+        customer: booking.customer!,
+        branchCode: booking.branchCode!,
+        avatarRadious: 25,
       ),
+      title: Row(
+        children: [
+
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${booking.customer!.firstName!} ${booking.customer!.lastName!}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    decoration: booking.status == BookingDTOStatusEnum.NON_ARRIVATO ? TextDecoration.lineThrough : TextDecoration.none,
+                    color: elegantBlue,
+                  ),
+                ),
+                _buildGuestInfo(),
+                if((booking.specialRequests?.isNotEmpty ?? false))
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text('💬${booking.specialRequests!}', style: TextStyle(fontSize: 12,
+                        color: Colors.grey[800])),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      trailing: ChatIconWhatsApp(booking: booking, iconSize: 40),
     );
   }
 

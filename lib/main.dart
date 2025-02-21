@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:proventi/state_manager/communication_state_manager.dart';
 import 'package:proventi/state_manager/user_state_manager.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import 'app/core/home_screen.dart';
 import 'app/core/notification/model/notification_entity.dart';
 import 'app/core/notification/state_manager/notification_state_manager.dart';
 import 'app/core/whatconf/link_whatsapp_component.dart';
+import 'global/style.dart';
 import 'landing/landing_page.dart';
 import 'routes.dart';
 import 'state_manager/restaurant_state_manager.dart';
@@ -220,7 +222,7 @@ class _Pro20State extends State<Pro20> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
-          fontFamily: 'Helvetica',
+          fontFamily: globalFontFamily,
         ),
         home: const SplashScreen(),
       ),
